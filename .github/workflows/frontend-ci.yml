@@ -1,0 +1,22 @@
+name: frontend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm i --prefix ./src/frontend
+
+      - name: Run Type Check
+        run: npm run types --prefix ./src/frontend
+
+      - name: Run ESLint
+        run: npm run lint --prefix ./src/frontend
