@@ -3,12 +3,14 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <EnablePackageVersionOverride>false</EnablePackageVersionOverride>
     </PropertyGroup>
-
+    <ItemGroup>
+        <PackageVersion Include="Mediator.Abstractions" Version="2.1.7"/>
+        <PackageVersion Include="Mediator.SourceGenerator" Version="2.1.7"/>
+    </ItemGroup>
     <!--Analyzers-->
     <ItemGroup>
         <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118"/>
     </ItemGroup>
-
     <!--Tests-->
     <ItemGroup>
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2"/>
