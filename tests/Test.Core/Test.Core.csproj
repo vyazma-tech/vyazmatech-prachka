@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="NUnit" />
         <PackageReference Include="xunit"/>
         <PackageReference Include="xunit.runner.visualstudio">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -19,6 +20,10 @@
 
     <ItemGroup>
         <Folder Include="Domain\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Domain\Domain.Core\Domain.Core.csproj" />
     </ItemGroup>
 
 </Project>
