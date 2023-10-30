@@ -16,7 +16,7 @@ public sealed class UserRegistrationDate : ValueObject
 
     public static Result<UserRegistrationDate> Create(DateTime dateTimeUtc, IDateTimeProvider dateTimeProvider)
     {
-        if (dateTimeUtc <= dateTimeProvider.UtcNow)
+        if (dateTimeUtc < dateTimeProvider.UtcNow)
         {
             var exception = new DomainException(DomainErrors.UserRegistrationDate.InThePast);
             return new Result<UserRegistrationDate>(exception);
