@@ -21,4 +21,8 @@
         <Folder Include="Domain\"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Domain\Domain.Core\Domain.Core.csproj" />
+    </ItemGroup>
+
 </Project>
