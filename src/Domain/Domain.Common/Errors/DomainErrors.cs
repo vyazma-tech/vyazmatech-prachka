@@ -45,4 +45,49 @@ public static class DomainErrors
             $"{nameof(OrderDate)}.{nameof(InThePast)}",
             "The order creation date should not be in the past");
     }
+
+    public static class TelegramId
+    {
+        public static Error NullOrEmpty => new(
+            $"{nameof(TelegramId)}.{nameof(NullOrEmpty)}",
+            "Telegram ID should not be null or empty.");
+
+        public static Error InvalidFormat => new(
+            $"{nameof(TelegramId)}.{nameof(InvalidFormat)}",
+            "Telegram ID should be a number.");
+    }
+
+    public static class Fullname
+    {
+        public static Error FirstnameIsNullOrEmpty => new(
+            $"{nameof(Fullname)}.{nameof(FirstnameIsNullOrEmpty)}",
+            "Firstname should not be null or empty.");
+
+        public static Error MiddlenameIsNullOrEmpty => new(
+            $"{nameof(Fullname)}.{nameof(MiddlenameIsNullOrEmpty)}",
+            "Firstname should not be null or empty.");
+
+        public static Error LastnameIsNullOrEmpty => new(
+            $"{nameof(Fullname)}.{nameof(LastnameIsNullOrEmpty)}",
+            "Firstname should not be null or empty.");
+
+        public static Error InvalidFirstnameFormat => new(
+            $"{nameof(Fullname)}.{nameof(InvalidFirstnameFormat)}",
+            "Firstname should start with uppercase.");
+
+        public static Error InvalidMiddlenameFormat => new(
+            $"{nameof(Fullname)}.{nameof(InvalidMiddlenameFormat)}",
+            "Middlename should start with uppercase.");
+
+        public static Error InvalidLastnameFormat => new(
+            $"{nameof(Fullname)}.{nameof(InvalidLastnameFormat)}",
+            "Lastname should start with uppercase.");
+    }
+
+    public static class UserRegistrationDate
+    {
+        public static Error InThePast => new(
+            $"{nameof(UserRegistrationDate)}.{nameof(InThePast)}",
+            "User registration date should not be in the past");
+    }
 }

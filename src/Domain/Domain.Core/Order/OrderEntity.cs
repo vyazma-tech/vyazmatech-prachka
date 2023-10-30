@@ -2,16 +2,18 @@
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
 using Domain.Common.Exceptions;
-using Domain.Core.Orders.Events;
+using Domain.Core.Order.Events;
 using Domain.Core.Queue;
+using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using LanguageExt.Common;
 
-namespace Domain.Core.Orders;
+namespace Domain.Core.Order;
 
 public sealed class OrderEntity : Entity, IAuditableEntity
 {
     public OrderEntity(UserEntity user, QueueEntity queueEntity, OrderDate creationDate)
+        : base(Guid.NewGuid())
     {
         Guard.Against.Null(user, nameof(user));
         Guard.Against.Null(queueEntity, nameof(queueEntity));
