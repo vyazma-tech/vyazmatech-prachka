@@ -83,4 +83,11 @@ public static class DomainErrors
             $"{nameof(Fullname)}.{nameof(InvalidLastnameFormat)}",
             "Lastname should start with uppercase.");
     }
+
+    public static class UserRegistrationDate
+    {
+        public static Error InThePast => new(
+            $"{nameof(UserRegistrationDate)}.{nameof(InThePast)}",
+            "User registration date should not be in the past");
+    }
 }
