@@ -1,21 +1,23 @@
 ﻿<Project>
-    <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <EnablePackageVersionOverride>false</EnablePackageVersionOverride>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageVersion Include="Mediator.Abstractions" Version="2.1.7"/>
-        <PackageVersion Include="Mediator.SourceGenerator" Version="2.1.7"/>
-    </ItemGroup>
-    <!--Analyzers-->
-    <ItemGroup>
-        <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118"/>
-    </ItemGroup>
-    <!--Tests-->
-    <ItemGroup>
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2"/>
-        <PackageVersion Include="xunit" Version="2.4.2"/>
-        <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5"/>
-        <PackageVersion Include="coverlet.collector" Version="3.1.2"/>
-    </ItemGroup>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <EnablePackageVersionOverride>false</EnablePackageVersionOverride>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Ardalis.GuardClauses" Version="4.1.1" />
+    <PackageVersion Include="LanguageExt.Core" Version="4.4.7" />
+    <PackageVersion Include="Mediator.Abstractions" Version="2.1.7" />
+    <PackageVersion Include="Mediator.SourceGenerator" Version="2.1.7" />
+  </ItemGroup>
+  <!--Analyzers-->
+  <ItemGroup>
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
+  </ItemGroup>
+  <!--Tests-->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+    <PackageVersion Include="xunit" Version="2.4.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
+    <PackageVersion Include="coverlet.collector" Version="3.1.2" />
+  </ItemGroup>
 </Project>
