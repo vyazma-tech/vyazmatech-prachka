@@ -11,9 +11,10 @@ namespace Domain.Core.Queue;
 
 public sealed class QueueEntity : Entity, IAuditableEntity
 {
-    private readonly HashSet<OrderEntity> _orders = new();
+    private readonly HashSet<OrderEntity> _orders;
 
     public QueueEntity(int capacity, QueueDate creationDate)
+        : base(Guid.NewGuid())
     {
         Guard.Against.Zero(capacity, nameof(capacity), "Capacity should be more than 0");
         Guard.Against.Null(creationDate, nameof(creationDate), "Creation date should not be null");
@@ -21,9 +22,13 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         Capacity = capacity;
         CreationDate = creationDate.Value;
         ModifiedOn = null;
+        _orders = new HashSet<OrderEntity>();
     }
 
-    private QueueEntity() { }
+    private QueueEntity()
+    {
+        _orders = new HashSet<OrderEntity>();
+    }
 
     public int Capacity { get; private set; }
     public DateTime CreationDate { get; private set; }
