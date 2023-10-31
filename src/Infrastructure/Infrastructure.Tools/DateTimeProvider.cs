@@ -4,5 +4,5 @@ namespace Infrastructure.Tools;
 
 public class DateTimeProvider : IDateTimeProvider
 {
-    public DateTimeOffset UtcNow => DateTimeOffset.Now;
+    public DateTime UtcNow => DateTime.UtcNow;
 }
