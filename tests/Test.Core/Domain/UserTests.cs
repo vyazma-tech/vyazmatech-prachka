@@ -1,9 +1,12 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.Common.Errors;
+using Domain.Common.Result;
+using Domain.Core.User;
+using Domain.Core.User.Events;
 using Domain.Core.ValueObjects;
 using FluentAssertions;
-using LanguageExt.Common;
 using Moq;
+using Test.Core.Domain.ClassData;
 using Xunit;
 
 namespace Test.Core.Domain;
@@ -16,49 +19,76 @@ public class UserTests
     {
         _dateTimeProvider = new Mock<IDateTimeProvider>();
     }
-    
+
     [Fact]
     public void RegisterUser_ShouldReturnFailureResult_WhenRegistrationDateIsInPast()
     {
-        var dateTimeOffset = new DateTimeOffset(
+        var dateTimeOffset = new DateTime(
             year: 2023,
             month: 1,
             day: 1,
             hour: 1,
             minute: 30,
-            second: 0,
-            offset: TimeSpan.FromHours(3));
+            second: 0);
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTimeOffset);
 
         var registrationDate = new DateTime(year: 2022, month: 12, day: 31);
-        Result<UserRegistrationDate> creationResult = UserRegistrationDate.Create(registrationDate,_dateTimeProvider.Object);
+        Result<UserRegistrationDate> creationResult =
+            UserRegistrationDate.Create(registrationDate, _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
-        creationResult.Match(
-            success => success.Value.ToString().Should().Be(_dateTimeProvider.Object.UtcNow.ToString()),
-            fail => fail.Message.Should().Be(DomainErrors.UserRegistrationDate.InThePast.Message));
+        creationResult.Error.Message.Should().Be(DomainErrors.UserRegistrationDate.InThePast.Message);
     }
-    
+
     [Fact]
     public void RegisterUser_ShouldReturnSuccessResult_WhenRegistrationDateIsNotInPast()
     {
-        var dateTimeOffset = new DateTimeOffset(
+        var dateTime = new DateTime(
             year: 2023,
             month: 1,
             day: 1,
             hour: 1,
             minute: 30,
-            second: 0,
-            offset: TimeSpan.FromHours(1.5));
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTimeOffset);
+            second: 0);
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
 
         Result<UserRegistrationDate> creationResult = UserRegistrationDate.Create(
-            DateTime.SpecifyKind(dateTimeOffset.Date, DateTimeKind.Utc),
+            dateTime,
             _dateTimeProvider.Object);
 
         creationResult.IsSuccess.Should().BeTrue();
-        creationResult.Match(
-            success => success.Value.ToString().Should().Be(DateTime.SpecifyKind(dateTimeOffset.Date, DateTimeKind.Utc).ToString()),
-            fail => fail.Message.Should().Be(DomainErrors.UserRegistrationDate.InThePast.Message));
+        creationResult.Value.Value.Should().Be(dateTime);
+    }
+
+    [Theory]
+    [ClassData(typeof(TelegramIdClassData))]
+    public void RegisterUser_ShouldReturnFailureResult_WhenTelegramIdIsInvalid(string id, string errorMessage)
+    {
+        Result<TelegramId> creationResult = TelegramId.Create(id);
+
+        creationResult.IsFaulted.Should().BeTrue();
+        creationResult.Error.Message.Should().Be(errorMessage);
+    }
+
+    [Fact]
+    public void RegisterUser_ShouldReturnSuccessResult_WhenTelegramIdIsNumber()
+    {
+        const string id = "123456789";
+        Result<TelegramId> creationResult = TelegramId.Create(id);
+
+        creationResult.IsSuccess.Should().BeTrue();
+        creationResult.Value.Value.Should().Be(id);
+    }
+
+    [Fact]
+    public void RegisterUser_ShouldReturnSuccessResult()
+    {
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+
+        var user = new UserEntity(
+            TelegramId.Create("1").Value,
+            UserRegistrationDate.Create(DateTime.UtcNow, _dateTimeProvider.Object).Value);
+
+        user.DomainEvents.Should().ContainSingle(x => x is UserRegisteredDomainEvent);
     }
 }
