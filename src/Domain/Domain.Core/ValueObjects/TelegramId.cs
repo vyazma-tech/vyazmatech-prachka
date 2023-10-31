@@ -2,7 +2,7 @@
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
 using Domain.Common.Exceptions;
-using LanguageExt.Common;
+using Domain.Common.Result;
 
 namespace Domain.Core.ValueObjects;
 

@@ -2,11 +2,11 @@
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
 using Domain.Common.Exceptions;
+using Domain.Common.Result;
 using Domain.Core.Order.Events;
 using Domain.Core.Queue;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
-using LanguageExt.Common;
 
 namespace Domain.Core.Order;
 
