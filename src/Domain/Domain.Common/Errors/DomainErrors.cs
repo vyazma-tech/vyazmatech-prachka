@@ -46,6 +46,13 @@ public static class DomainErrors
             "The order creation date should not be in the past");
     }
 
+    public static class SubscriberDate
+    {
+        public static Error InThePast => new (
+            $"{nameof(OrderDate)}.{nameof(InThePast)}",
+            "The subscriber creation date should not be in the past");
+    }
+
     public static class TelegramId
     {
         public static Error NullOrEmpty => new (
