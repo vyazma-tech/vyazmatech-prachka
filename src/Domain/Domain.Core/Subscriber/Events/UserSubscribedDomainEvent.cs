@@ -2,7 +2,7 @@
 
 namespace Domain.Core.Subscriber.Events;
 
-public class UserSubscribedDomainEvent : IDomainEvent
+public sealed class UserSubscribedDomainEvent : IDomainEvent
 {
     public UserSubscribedDomainEvent(SubscriberEntity subscriber)
     {

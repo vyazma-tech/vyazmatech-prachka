@@ -12,14 +12,14 @@ public class SubscriberEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
 
-    public SubscriberEntity(SubscriberDate creationDate, Guid userId, Guid queueId, HashSet<OrderEntity> orders)
+    public SubscriberEntity(SubscriberDate creationDate, Guid userId, Guid queueId)
         : base(Guid.NewGuid())
     {
         CreationDate = creationDate.Value;
         ModifiedOn = null;
         UserId = userId;
         QueueId = queueId;
-        _orders = orders;
+        _orders = new HashSet<OrderEntity>();
 
         Raise(new UserSubscribedDomainEvent(this));
     }
@@ -41,7 +41,7 @@ public class SubscriberEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order))
         {
-            var exception = new DomainException(DomainErrors.Queue.ContainsOrderWithId(order.Id));
+            var exception = new DomainException(DomainErrors.Subscriber.ContainsOrderWithId(order.Id));
             return new Result<OrderEntity>(exception);
         }
 
@@ -54,7 +54,7 @@ public class SubscriberEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order) is false)
         {
-            var exception = new DomainException(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
+            var exception = new DomainException(DomainErrors.Subscriber.OrderIsNotInSubscription(order.Id));
             return new Result<OrderEntity>(exception);
         }
 

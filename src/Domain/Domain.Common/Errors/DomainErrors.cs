@@ -39,6 +39,17 @@ public static class DomainErrors
             "New queue capacity should not be less then current capacity.");
     }
 
+    public static class Subscriber
+    {
+        public static Error ContainsOrderWithId(Guid id) => new (
+            $"{nameof(Subscriber)}.{nameof(ContainsOrderWithId)}",
+            $"The subscription already contains order with id: {id}");
+
+        public static Error OrderIsNotInSubscription(Guid id) => new (
+            $"{nameof(Subscriber)}.{nameof(OrderIsNotInSubscription)}",
+            $"The subscription does not contain order with id: {id}");
+    }
+
     public static class OrderDate
     {
         public static Error InThePast => new (

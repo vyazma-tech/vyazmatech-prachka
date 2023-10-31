@@ -2,7 +2,7 @@
 
 namespace Domain.Core.Subscriber.Events;
 
-public class EndOfDayDomainEvent : IDomainEvent
+public sealed class EndOfDayDomainEvent : IDomainEvent
 {
     public EndOfDayDomainEvent(SubscriberEntity subscriber)
     {
