@@ -21,7 +21,7 @@ public class UserTests
     }
 
     [Fact]
-    public void RegisterUser_ShouldReturnFailureResult_WhenRegistrationDateIsInPast()
+    public void CreateUserRegistrationDate_ShouldReturnFailureResult_WhenRegistrationDateIsInPast()
     {
         var dateTimeOffset = new DateTime(
             year: 2023,
@@ -41,7 +41,7 @@ public class UserTests
     }
 
     [Fact]
-    public void RegisterUser_ShouldReturnSuccessResult_WhenRegistrationDateIsNotInPast()
+    public void CreateUserRegistrationDate_ShouldReturnSuccessResult_WhenRegistrationDateIsNotInPast()
     {
         var dateTime = new DateTime(
             year: 2023,
@@ -62,7 +62,7 @@ public class UserTests
 
     [Theory]
     [ClassData(typeof(TelegramIdClassData))]
-    public void RegisterUser_ShouldReturnFailureResult_WhenTelegramIdIsInvalid(string id, string errorMessage)
+    public void CreateUserTelegramId_ShouldReturnFailureResult_WhenTelegramIdIsInvalid(string id, string errorMessage)
     {
         Result<TelegramId> creationResult = TelegramId.Create(id);
 
@@ -71,7 +71,7 @@ public class UserTests
     }
 
     [Fact]
-    public void RegisterUser_ShouldReturnSuccessResult_WhenTelegramIdIsNumber()
+    public void CreateUserTelegramId_ShouldReturnSuccessResult_WhenTelegramIdIsNumber()
     {
         const string id = "123456789";
         Result<TelegramId> creationResult = TelegramId.Create(id);
@@ -81,7 +81,7 @@ public class UserTests
     }
 
     [Fact]
-    public void RegisterUser_ShouldReturnSuccessResult()
+    public void RegisterUser_ShouldReturnSuccessResult_AndRaiseDomainEvent()
     {
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
@@ -89,6 +89,8 @@ public class UserTests
             TelegramId.Create("1").Value,
             UserRegistrationDate.Create(DateTime.UtcNow, _dateTimeProvider.Object).Value);
 
-        user.DomainEvents.Should().ContainSingle(x => x is UserRegisteredDomainEvent);
+        user.Should().NotBeNull();
+        user.DomainEvents.Should().ContainSingle()
+            .Which.Should().BeOfType<UserRegisteredDomainEvent>();
     }
 }
