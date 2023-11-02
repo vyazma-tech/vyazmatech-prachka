@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Test.Core.Domain.ClassData;
+namespace Test.Core.Domain.Entities.ClassData;
 
 public sealed class TelegramIdClassData : IEnumerable<object[]>
 {
