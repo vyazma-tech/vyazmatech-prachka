@@ -37,6 +37,10 @@ public static class DomainErrors
         public static Error InvalidNewCapacity => new (
             $"{nameof(Queue)}.{nameof(InvalidNewCapacity)}",
             "New queue capacity should not be less then current capacity.");
+
+        public static Error Overfull => new (
+            $"{nameof(Queue)}.{nameof(Overfull)}",
+            "Queue is overfull. You are not able to enter it now.");
     }
 
     public static class Subscriber
@@ -48,20 +52,6 @@ public static class DomainErrors
         public static Error OrderIsNotInSubscription(Guid id) => new (
             $"{nameof(Subscriber)}.{nameof(OrderIsNotInSubscription)}",
             $"The subscription does not contain order with id: {id}");
-    }
-
-    public static class OrderDate
-    {
-        public static Error InThePast => new (
-            $"{nameof(OrderDate)}.{nameof(InThePast)}",
-            "The order creation date should not be in the past");
-    }
-
-    public static class SubscriberDate
-    {
-        public static Error InThePast => new (
-            $"{nameof(OrderDate)}.{nameof(InThePast)}",
-            "The subscriber creation date should not be in the past");
     }
 
     public static class TelegramId
@@ -102,10 +92,10 @@ public static class DomainErrors
             "Lastname should start with uppercase.");
     }
 
-    public static class UserRegistrationDate
+    public static class Capacity
     {
-        public static Error InThePast => new (
-            $"{nameof(UserRegistrationDate)}.{nameof(InThePast)}",
-            "User registration date should not be in the past");
+        public static Error Negative => new (
+            $"{nameof(Capacity)}.{nameof(Negative)}",
+            "Capacity should be at least zero.");
     }
 }
