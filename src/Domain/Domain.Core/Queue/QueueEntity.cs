@@ -13,24 +13,25 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
 
-    public QueueEntity(int capacity, QueueDate creationDate)
+    public QueueEntity(Capacity capacity, QueueDate creationDate)
         : base(Guid.NewGuid())
     {
-        Guard.Against.Zero(capacity, nameof(capacity), "Capacity should be more than 0");
+        Guard.Against.Null(capacity, nameof(capacity), "Capacity should not be null");
         Guard.Against.Null(creationDate, nameof(creationDate), "Creation date should not be null");
 
         Capacity = capacity;
         CreationDate = creationDate.Value;
-        ModifiedOn = null;
         _orders = new HashSet<OrderEntity>();
     }
 
+#pragma warning disable CS8618
     private QueueEntity()
+#pragma warning restore CS8618
     {
         _orders = new HashSet<OrderEntity>();
     }
 
-    public int Capacity { get; private set; }
+    public Capacity Capacity { get; private set; }
     public DateTime CreationDate { get; private set; }
     public DateTime? ModifiedOn { get; private set; }
     public IReadOnlySet<OrderEntity> Items => _orders;
@@ -40,6 +41,12 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         if (_orders.Contains(order))
         {
             var exception = new DomainException(DomainErrors.Queue.ContainsOrderWithId(order.Id));
+            return new Result<OrderEntity>(exception);
+        }
+
+        if (_orders.Count.Equals(Capacity.Value))
+        {
+            var exception = new DomainException(DomainErrors.Queue.Overfull);
             return new Result<OrderEntity>(exception);
         }
 
@@ -61,9 +68,9 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         return order;
     }
 
-    public Result<QueueEntity> IncreaseCapacity(int newCapacity, DateTime dateTimeUtc)
+    public Result<QueueEntity> IncreaseCapacity(Capacity newCapacity, DateTime dateTimeUtc)
     {
-        if (newCapacity <= Capacity)
+        if (newCapacity.Value <= Capacity.Value)
         {
             var exception = new DomainException(DomainErrors.Queue.InvalidNewCapacity);
             return new Result<QueueEntity>(exception);
