@@ -16,13 +16,13 @@ public sealed class QueueDate : ValueObject
 
     public static Result<QueueDate> Create(DateTime value, IDateTimeProvider dateTimeProvider)
     {
-        if (value <= dateTimeProvider.UtcNow)
+        if (value < dateTimeProvider.UtcNow)
         {
             var exception = new DomainException(DomainErrors.QueueDate.InThePast);
             return new Result<QueueDate>(exception);
         }
 
-        if (value >= dateTimeProvider.UtcNow.AddDays(Week))
+        if (value > dateTimeProvider.UtcNow.AddDays(Week))
         {
             var exception = new DomainException(DomainErrors.QueueDate.NotNextWeek);
             return new Result<QueueDate>(exception);
