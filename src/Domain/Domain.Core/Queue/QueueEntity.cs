@@ -13,13 +13,18 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
 
-    public QueueEntity(Capacity capacity, QueueDate creationDate)
+    public QueueEntity(
+        Capacity capacity,
+        QueueDate creationDate,
+        QueueActivityBoundaries activityBoundaries)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(capacity, nameof(capacity), "Capacity should not be null");
         Guard.Against.Null(creationDate, nameof(creationDate), "Creation date should not be null");
+        Guard.Against.Null(activityBoundaries, nameof(activityBoundaries), "Activity boundaries should not be null");
 
         Capacity = capacity;
+        ActivityBoundaries = activityBoundaries;
         CreationDate = creationDate.Value;
         _orders = new HashSet<OrderEntity>();
     }
@@ -34,7 +39,12 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     public Capacity Capacity { get; private set; }
     public DateTime CreationDate { get; private set; }
     public DateTime? ModifiedOn { get; private set; }
+    public DateTime ExpirationDate { get; private set; }
+    public QueueActivityBoundaries ActivityBoundaries { get; }
     public IReadOnlySet<OrderEntity> Items => _orders;
+
+    public bool Expired
+        => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
 
     public Result<OrderEntity> Add(OrderEntity order)
     {
@@ -68,7 +78,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         return order;
     }
 
-    public Result<QueueEntity> IncreaseCapacity(Capacity newCapacity, DateTime dateTimeUtc)
+    public Result<QueueEntity> IncreaseCapacity(Capacity newCapacity, DateTime modifiedOnUtc)
     {
         if (newCapacity.Value <= Capacity.Value)
         {
@@ -77,9 +87,30 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         }
 
         Capacity = newCapacity;
-        ModifiedOn = dateTimeUtc;
+        ModifiedOn = modifiedOnUtc;
 
         Raise(new QueueCapacityIncreasedDomainEvent(this));
+
+        return this;
+    }
+
+    public bool TryExpire()
+    {
+        if (Expired)
+        {
+            Raise(new QueueExpiredDomainEvent(this));
+            return true;
+        }
+
+        return false;
+    }
+
+    public QueueEntity NotifyAboutAvailablePosition()
+    {
+        if (Expired && _orders.Count.Equals(Capacity.Value) is false)
+        {
+            Raise(new PositionAvailableDomainEvent(this));
+        }
 
         return this;
     }
