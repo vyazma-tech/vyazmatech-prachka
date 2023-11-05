@@ -5,6 +5,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2DD18CEA-A937-4A4C-9F28-5A350E3AF182}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{42299E0B-19FF-4416-96A1-F88E137D1189}"
+	ProjectSection(SolutionItems) = preProject
+		src\Domain\readme.md = src\Domain\readme.md
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{BF188799-DA9B-458D-B290-D3CF5630857C}"
 EndProject
