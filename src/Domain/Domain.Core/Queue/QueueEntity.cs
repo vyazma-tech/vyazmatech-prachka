@@ -15,6 +15,7 @@ namespace Domain.Core.Queue;
 public sealed class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
+    private bool _maxCapacityReachedOnce;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QueueEntity"/> class.
@@ -99,6 +100,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         }
 
         _orders.Add(order);
+        _maxCapacityReachedOnce = _orders.Count.Equals(Capacity.Value);
 
         return order;
     }
@@ -168,7 +170,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     /// <returns>same queue instance.</returns>
     public QueueEntity NotifyAboutAvailablePosition()
     {
-        if (Expired && _orders.Count.Equals(Capacity.Value) is false)
+        if (Expired && _maxCapacityReachedOnce)
         {
             Raise(new PositionAvailableDomainEvent(this));
         }

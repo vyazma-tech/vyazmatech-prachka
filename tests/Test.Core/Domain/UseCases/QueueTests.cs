@@ -1,4 +1,4 @@
-﻿using Domain.Common.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -8,18 +8,19 @@ using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using FluentAssertions;
 using Infrastructure.Tools;
-using Moq;
 using Xunit;
 
 namespace Test.Core.Domain.UseCases;
 
+[SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters")]
 public class QueueTests
 {
-    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
-
     [Theory]
     [MemberData(nameof(QueueWithOneOrderMemberData))]
-    public void EnterQueue_ShouldReturnFailureResult_WhenQueueIsFull(QueueEntity queue, UserEntity user)
+    public void EnterQueue_ShouldReturnFailureResult_WhenQueueIsFull(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
     {
         Result<OrderEntity> incomingOrderResult = OrderEntity.Create(
             user,
@@ -30,17 +31,14 @@ public class QueueTests
         incomingOrderResult.Error.Message.Should().Be(DomainErrors.Queue.Overfull.Message);
     }
 
-    [Fact]
-    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpiredAndNotFull()
+    [Theory]
+    [MemberData(nameof(QueueWithOneOrderMemberData))]
+    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
     {
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
-        var queue = new QueueEntity(
-            Capacity.Create(10).Value,
-            QueueDate.Create(_dateTimeProvider.Object.UtcNow, _dateTimeProvider.Object).Value,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
-                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value);
-
+        queue.Remove(order);
         await Task.Delay(1_000);
         queue.TryExpire();
         queue.ClearDomainEvents();
@@ -58,16 +56,16 @@ public class QueueTests
 
         var queue = new QueueEntity(
             Capacity.Create(1).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), new DateTimeProvider()).Value,
+            QueueDate.Create(DateTime.UtcNow.AddSeconds(5), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow),
-                TimeOnly.FromDateTime(DateTime.UtcNow).AddHours(5)).Value);
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(1))).Value);
 
-        _ = OrderEntity.Create(
+        Result<OrderEntity> order = OrderEntity.Create(
             user,
             queue,
             DateTime.UtcNow);
 
-        yield return new object[] { queue, user };
+        yield return new object[] { queue, user, order.Value };
     }
 }
