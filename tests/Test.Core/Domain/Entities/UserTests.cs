@@ -46,7 +46,7 @@ public class UserTests
 
         user.Should().NotBeNull();
         user.TelegramId.Value.Should().Be("1");
-        user.CreationDate.Should().Be(registrationDate);
+        user.QueueDate.Should().Be(registrationDate);
         user.ModifiedOn.Should().BeNull();
         user.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<UserRegisteredDomainEvent>();

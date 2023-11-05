@@ -21,7 +21,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
         Guard.Against.Null(creationDateUtc, nameof(creationDateUtc), "Creation date should not be null in subscription.");
 
         User = user;
-        CreationDate = creationDateUtc;
+        QueueDate = creationDateUtc;
         _orders = new HashSet<OrderEntity>();
     }
 
@@ -33,7 +33,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     }
 
     public IReadOnlySet<OrderEntity> Orders => _orders;
-    public DateTime CreationDate { get; private set; }
+    public DateTime QueueDate { get; private set; }
     public DateTime? ModifiedOn { get; private set; }
     public UserEntity User { get; private set; }
     public QueueEntity? Queue { get; private set; }

@@ -14,7 +14,7 @@ public sealed class UserEntity : Entity, IAuditableEntity
         Guard.Against.Null(registrationDateUtc, nameof(registrationDateUtc), "Creation date should not be null.");
 
         TelegramId = telegramId;
-        CreationDate = registrationDateUtc;
+        QueueDate = registrationDateUtc;
         ModifiedOn = null;
 
         Raise(new UserRegisteredDomainEvent(this));
@@ -25,6 +25,6 @@ public sealed class UserEntity : Entity, IAuditableEntity
 #pragma warning restore CS8618
 
     public TelegramId TelegramId { get; }
-    public DateTime CreationDate { get; }
+    public DateTime QueueDate { get; }
     public DateTime? ModifiedOn { get; }
 }

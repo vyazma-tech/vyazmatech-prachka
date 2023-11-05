@@ -20,7 +20,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
 
         User = user;
         Queue = queue;
-        CreationDate = creationDateUtc;
+        QueueDate = creationDateUtc;
     }
 
 #pragma warning disable CS8618
@@ -31,7 +31,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     public QueueEntity Queue { get; }
     public bool Paid { get; private set; }
     public bool Ready { get; private set; }
-    public DateTime CreationDate { get; }
+    public DateTime QueueDate { get; }
     public DateTime? ModifiedOn { get; private set; }
 
     public static Result<OrderEntity> Create(UserEntity user, QueueEntity queue, DateTime creationDateUtc)

@@ -41,7 +41,7 @@ public class OrderTests
         orderCreationResult.Value.User.Should().Be(user);
         orderCreationResult.Value.Paid.Should().BeFalse();
         orderCreationResult.Value.Ready.Should().BeFalse();
-        orderCreationResult.Value.CreationDate.Should().Be(_dateTimeProvider.Object.UtcNow);
+        orderCreationResult.Value.QueueDate.Should().Be(_dateTimeProvider.Object.UtcNow);
         orderCreationResult.Value.ModifiedOn.Should().BeNull();
         orderCreationResult.Value.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<OrderCreatedDomainEvent>();

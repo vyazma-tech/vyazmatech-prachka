@@ -15,17 +15,17 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public QueueEntity(
         Capacity capacity,
-        QueueDate creationDate,
+        QueueDate queueDate,
         QueueActivityBoundaries activityBoundaries)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(capacity, nameof(capacity), "Capacity should not be null");
-        Guard.Against.Null(creationDate, nameof(creationDate), "Creation date should not be null");
+        Guard.Against.Null(queueDate, nameof(queueDate), "Creation date should not be null");
         Guard.Against.Null(activityBoundaries, nameof(activityBoundaries), "Activity boundaries should not be null");
 
         Capacity = capacity;
         ActivityBoundaries = activityBoundaries;
-        CreationDate = creationDate.Value;
+        QueueDate = queueDate.Value;
         _orders = new HashSet<OrderEntity>();
     }
 
@@ -37,7 +37,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     }
 
     public Capacity Capacity { get; private set; }
-    public DateTime CreationDate { get; private set; }
+    public DateTime QueueDate { get; private set; }
     public DateTime? ModifiedOn { get; private set; }
     public DateTime ExpirationDate { get; private set; }
     public QueueActivityBoundaries ActivityBoundaries { get; }
