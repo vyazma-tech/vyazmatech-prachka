@@ -5,8 +5,16 @@ using Domain.Core.ValueObjects;
 
 namespace Domain.Core.User;
 
+/// <summary>
+/// Describes user entity.
+/// </summary>
 public sealed class UserEntity : Entity, IAuditableEntity
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserEntity"/> class.
+    /// </summary>
+    /// <param name="telegramId">user telegram id.</param>
+    /// <param name="registrationDateUtc">user registration date.</param>
     public UserEntity(TelegramId telegramId, DateTime registrationDateUtc)
         : base(Guid.NewGuid())
     {
@@ -14,7 +22,7 @@ public sealed class UserEntity : Entity, IAuditableEntity
         Guard.Against.Null(registrationDateUtc, nameof(registrationDateUtc), "Creation date should not be null.");
 
         TelegramId = telegramId;
-        QueueDate = registrationDateUtc;
+        CreationDate = registrationDateUtc;
         ModifiedOn = null;
 
         Raise(new UserRegisteredDomainEvent(this));
@@ -24,7 +32,18 @@ public sealed class UserEntity : Entity, IAuditableEntity
     private UserEntity() { }
 #pragma warning restore CS8618
 
+    /// <summary>
+    /// Gets telegram id.
+    /// </summary>
     public TelegramId TelegramId { get; }
-    public DateTime QueueDate { get; }
+
+    /// <summary>
+    /// Gets registration date.
+    /// </summary>
+    public DateTime CreationDate { get; }
+
+    /// <summary>
+    /// Gets modification date.
+    /// </summary>
     public DateTime? ModifiedOn { get; }
 }

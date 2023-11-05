@@ -92,7 +92,7 @@ public class QueueTests
         queue.Should().NotBeNull();
         queue.Capacity.Value.Should().Be(10);
         queue.Items.Should().BeEmpty();
-        queue.QueueDate.Should().Be(creationDate);
+        queue.CreationDate.Should().Be(creationDate);
         queue.ModifiedOn.Should().BeNull();
     }
 

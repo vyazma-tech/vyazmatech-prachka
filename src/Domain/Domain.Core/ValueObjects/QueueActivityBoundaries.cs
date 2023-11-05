@@ -5,6 +5,10 @@ using Domain.Common.Result;
 
 namespace Domain.Core.ValueObjects;
 
+/// <summary>
+/// Describes queue activity boundaries.
+/// i.e: 1pm - 5pm.
+/// </summary>
 public sealed class QueueActivityBoundaries : ValueObject
 {
     private QueueActivityBoundaries(TimeOnly activeFrom, TimeOnly activeUntil)
@@ -13,18 +17,32 @@ public sealed class QueueActivityBoundaries : ValueObject
         ActiveUntil = activeUntil;
     }
 
+    /// <summary>
+    /// Gets queue active from time.
+    /// </summary>
     public TimeOnly ActiveFrom { get; }
+
+    /// <summary>
+    /// Gets queue active until time.
+    /// </summary>
     public TimeOnly ActiveUntil { get; }
 
-    public static Result<QueueActivityBoundaries> Create(TimeOnly activeFromUtc, TimeOnly activeUntil)
+    /// <summary>
+    /// Validates and creates queue activity boundaries instance.
+    /// </summary>
+    /// <param name="activeFrom">queue active from.</param>
+    /// <param name="activeUntil">queue active until.</param>
+    /// <returns>constructed <see cref="QueueActivityBoundaries"/> instance.</returns>
+    /// <remarks>returns failure result, when provided time range is empty.</remarks>
+    public static Result<QueueActivityBoundaries> Create(TimeOnly activeFrom, TimeOnly activeUntil)
     {
-        if (activeFromUtc >= activeUntil)
+        if (activeFrom >= activeUntil)
         {
             var exception = new DomainException(DomainErrors.QueueActivityBoundaries.EmptyRange);
             return new Result<QueueActivityBoundaries>(exception);
         }
 
-        return new QueueActivityBoundaries(activeFromUtc, activeUntil);
+        return new QueueActivityBoundaries(activeFrom, activeUntil);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
