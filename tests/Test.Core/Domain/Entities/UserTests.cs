@@ -1,0 +1,54 @@
+﻿using Domain.Common.Abstractions;
+using Domain.Common.Errors;
+using Domain.Common.Result;
+using Domain.Core.User;
+using Domain.Core.User.Events;
+using Domain.Core.ValueObjects;
+using FluentAssertions;
+using Moq;
+using Test.Core.Domain.Entities.ClassData;
+using Xunit;
+
+namespace Test.Core.Domain.Entities;
+
+public class UserTests
+{
+    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
+
+    [Theory]
+    [ClassData(typeof(TelegramIdClassData))]
+    public void CreateUserTelegramId_ShouldReturnFailureResult_WhenTelegramIdIsInvalid(string id, string errorMessage)
+    {
+        Result<TelegramId> creationResult = TelegramId.Create(id);
+
+        creationResult.IsFaulted.Should().BeTrue();
+        creationResult.Error.Message.Should().Be(errorMessage);
+    }
+
+    [Fact]
+    public void CreateUserTelegramId_ShouldReturnSuccessResult_WhenTelegramIdIsNumber()
+    {
+        const string id = "123456789";
+        Result<TelegramId> creationResult = TelegramId.Create(id);
+
+        creationResult.IsSuccess.Should().BeTrue();
+        creationResult.Value.Value.Should().Be(id);
+    }
+
+    [Fact]
+    public void RegisterUser_ShouldReturnNotNullUser_AndRaiseDomainEvent()
+    {
+
+        DateTime registrationDate = DateTime.UtcNow;
+        var user = new UserEntity(
+            TelegramId.Create("1").Value,
+            registrationDate);
+
+        user.Should().NotBeNull();
+        user.TelegramId.Value.Should().Be("1");
+        user.CreationDate.Should().Be(registrationDate);
+        user.ModifiedOn.Should().BeNull();
+        user.DomainEvents.Should().ContainSingle()
+            .Which.Should().BeOfType<UserRegisteredDomainEvent>();
+    }
+}
