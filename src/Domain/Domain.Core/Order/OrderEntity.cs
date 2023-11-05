@@ -11,18 +11,16 @@ namespace Domain.Core.Order;
 
 public sealed class OrderEntity : Entity, IAuditableEntity
 {
-    public OrderEntity(UserEntity user, QueueEntity queueEntity, DateTime creationDateUtc)
+    private OrderEntity(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in order.");
-        Guard.Against.Null(queueEntity, nameof(queueEntity), "Queue should not be null in order.");
+        Guard.Against.Null(queue, nameof(queue), "Queue should not be null in order.");
         Guard.Against.Null(creationDateUtc, nameof(creationDateUtc), "Creation date should not be null in order.");
 
         User = user;
-        Queue = queueEntity;
-        queueEntity.Add(this);
+        Queue = queue;
         CreationDate = creationDateUtc;
-        Raise(new OrderCreatedDomainEvent(this));
     }
 
 #pragma warning disable CS8618
@@ -35,6 +33,21 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     public bool Ready { get; private set; }
     public DateTime CreationDate { get; }
     public DateTime? ModifiedOn { get; private set; }
+
+    public static Result<OrderEntity> Create(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
+    {
+        var order = new OrderEntity(user, queue, creationDateUtc);
+        Result<OrderEntity> entranceResult = queue.Add(order);
+
+        if (entranceResult.IsFaulted)
+        {
+            return entranceResult;
+        }
+
+        order.Raise(new OrderCreatedDomainEvent(order));
+
+        return order;
+    }
 
     public Result<OrderEntity> MakePayment(DateTime dateTimeUtc)
     {
