@@ -1,2 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Application.DataAccess.Contracts\Application.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\..\Domain\Domain.Core\Domain.Core.csproj" />
+  </ItemGroup>
 </Project>
