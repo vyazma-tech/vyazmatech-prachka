@@ -58,7 +58,6 @@ public sealed class OrderEntity : Entity, IAuditableEntity
 
     /// <summary>
     /// Validates provided data for order and constructs order instance, when data is valid.
-    /// Produces <see cref="OrderCreatedDomainEvent"/>.
     /// </summary>
     /// <param name="user">order issuer.</param>
     /// <param name="queue">queue of the order.</param>
@@ -75,8 +74,6 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         {
             return entranceResult;
         }
-
-        order.Raise(new OrderCreatedDomainEvent(order));
 
         return order;
     }

@@ -125,7 +125,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Increases queue capacity and raises <see cref="QueueCapacityIncreasedDomainEvent"/>.
+    /// Increases queue capacity.
     /// </summary>
     /// <param name="newCapacity">new capacity value.</param>
     /// <param name="modifiedOnUtc">modification utc date.</param>
@@ -141,8 +141,6 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
         Capacity = newCapacity;
         ModifiedOn = modifiedOnUtc;
-
-        Raise(new QueueCapacityIncreasedDomainEvent(this));
 
         return this;
     }

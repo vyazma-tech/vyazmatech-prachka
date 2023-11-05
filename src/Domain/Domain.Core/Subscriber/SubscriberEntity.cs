@@ -5,7 +5,6 @@ using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
-using Domain.Core.Subscriber.Events;
 using Domain.Core.User;
 
 namespace Domain.Core.Subscriber;
@@ -66,7 +65,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     public QueueEntity? Queue { get; private set; }
 
     /// <summary>
-    /// Subscribes order to the newsletter and raises <see cref="UserSubscribedDomainEvent"/>.
+    /// Subscribes order to the newsletter.
     /// </summary>
     /// <param name="order">order to be subscribed.</param>
     /// <returns>subscribed order entity.</returns>
@@ -81,7 +80,6 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
 
         _orders.Add(order);
         Queue = order.Queue;
-        Raise(new UserSubscribedDomainEvent(this));
 
         return order;
     }

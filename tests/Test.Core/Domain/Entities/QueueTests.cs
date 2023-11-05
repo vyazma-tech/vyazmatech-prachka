@@ -119,7 +119,7 @@ public class QueueTests
     }
 
     [Fact]
-    public void IncreaseQueueCapacity_ShouldReturnSuccessResultAndRaiseDomainEvent_WhenNewCapacityIsGreaterThenCurrent()
+    public void IncreaseQueueCapacity_ShouldReturnSuccessResult_WhenNewCapacityIsGreaterThenCurrent()
     {
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
@@ -134,8 +134,6 @@ public class QueueTests
         increasingResult.IsSuccess.Should().BeTrue();
         queue.ModifiedOn.Should().Be(modificationDate);
         queue.Capacity.Value.Should().Be(11);
-        queue.DomainEvents.Should().ContainSingle()
-            .Which.Should().BeOfType<QueueCapacityIncreasedDomainEvent>();
     }
 
     [Fact]

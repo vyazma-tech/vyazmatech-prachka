@@ -17,7 +17,7 @@ public class OrderTests
     private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
 
     [Fact]
-    public void CreateOrder_ShouldReturnNotNullOrderAndRaiseDomainEvent()
+    public void CreateOrder_ShouldReturnNotNullOrder()
     {
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
@@ -43,8 +43,6 @@ public class OrderTests
         orderCreationResult.Value.Ready.Should().BeFalse();
         orderCreationResult.Value.CreationDate.Should().Be(_dateTimeProvider.Object.UtcNow);
         orderCreationResult.Value.ModifiedOn.Should().BeNull();
-        orderCreationResult.Value.DomainEvents.Should().ContainSingle()
-            .Which.Should().BeOfType<OrderCreatedDomainEvent>();
     }
 
     [Theory]
