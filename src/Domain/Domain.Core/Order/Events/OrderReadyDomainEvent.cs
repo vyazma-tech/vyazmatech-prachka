@@ -4,10 +4,10 @@ namespace Domain.Core.Order.Events;
 
 public sealed class OrderReadyDomainEvent : IDomainEvent
 {
-    public OrderReadyDomainEvent(OrderEntity orderEntity)
+    public OrderReadyDomainEvent(OrderEntity order)
     {
-        OrderEntity = orderEntity;
+        Order = order;
     }
 
-    public OrderEntity OrderEntity { get; }
+    public OrderEntity Order { get; }
 }
