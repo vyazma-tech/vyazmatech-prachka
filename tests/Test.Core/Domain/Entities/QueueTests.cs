@@ -66,7 +66,7 @@ public class QueueTests
         var registrationDate = new DateTime(
             year: 2023,
             month: 1,
-            day: 8,
+            day: 9,
             hour: 1,
             minute: 30,
             second: 0);
@@ -84,7 +84,10 @@ public class QueueTests
         DateTime creationDate = DateTime.UtcNow;
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(creationDate, _dateTimeProvider.Object).Value);
+            QueueDate.Create(creationDate, _dateTimeProvider.Object).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(creationDate),
+                TimeOnly.FromDateTime(creationDate).AddHours(5)).Value);
 
         queue.Should().NotBeNull();
         queue.Capacity.Value.Should().Be(10);
@@ -116,11 +119,14 @@ public class QueueTests
     }
 
     [Fact]
-    public void IncreaseQueueCapacity_ShouldReturnSuccessResultAndRaiseDomainEvent_WhenNewCapacityIsGreaterThenCurrent()
+    public void IncreaseQueueCapacity_ShouldReturnSuccessResult_WhenNewCapacityIsGreaterThenCurrent()
     {
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), new DateTimeProvider()).Value);
+            QueueDate.Create(DateTime.UtcNow.AddDays(1), new DateTimeProvider()).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
 
         DateTime modificationDate = DateTime.UtcNow;
         Result<QueueEntity> increasingResult = queue.IncreaseCapacity(Capacity.Create(11).Value, modificationDate);
@@ -128,8 +134,24 @@ public class QueueTests
         increasingResult.IsSuccess.Should().BeTrue();
         queue.ModifiedOn.Should().Be(modificationDate);
         queue.Capacity.Value.Should().Be(11);
+    }
+
+    [Fact]
+    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpired()
+    {
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        var queue = new QueueEntity(
+            Capacity.Create(10).Value,
+            QueueDate.Create(_dateTimeProvider.Object.UtcNow, _dateTimeProvider.Object).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
+                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value);
+
+        await Task.Delay(1_000);
+        queue.TryExpire();
+
         queue.DomainEvents.Should().ContainSingle()
-            .Which.Should().BeOfType<QueueCapacityIncreasedDomainEvent>();
+            .Which.Should().BeOfType<QueueExpiredDomainEvent>();
     }
 
     public static IEnumerable<object[]> UserWithOrderInQueueMemberData()
@@ -141,13 +163,16 @@ public class QueueTests
 
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), dateTimeProvider).Value);
+            QueueDate.Create(DateTime.UtcNow.AddDays(1), dateTimeProvider).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
 
-        var order = new OrderEntity(
+        Result<OrderEntity> order = OrderEntity.Create(
             user,
             queue,
             DateTime.UtcNow);
 
-        yield return new object[] { queue, order };
+        yield return new object[] { queue, order.Value };
     }
 }

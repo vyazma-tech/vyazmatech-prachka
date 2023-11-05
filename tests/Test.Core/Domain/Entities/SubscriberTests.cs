@@ -3,7 +3,6 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.Subscriber;
-using Domain.Core.Subscriber.Events;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using FluentAssertions;
@@ -35,7 +34,7 @@ public class SubscriberTests
     
     [Theory]
     [MemberData(nameof(OrderAndSubscriptionWithUser))]
-    public void SubscribeOrder_ShouldReturnSuccessResultAndRaiseDomainEvent_WhenOrderIsNotInSubscription(
+    public void SubscribeOrder_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription(
         SubscriberEntity subscriber,
         OrderEntity order)
     {
@@ -43,8 +42,6 @@ public class SubscriberTests
 
         entranceResult.IsSuccess.Should().BeTrue();
         subscriber.Orders.Should().Contain(order);
-        subscriber.DomainEvents.Should().ContainSingle()
-            .Which.Should().BeOfType<UserSubscribedDomainEvent>();
     }
     
     [Theory]
@@ -68,9 +65,12 @@ public class SubscriberTests
         
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), dateTimeProvider).Value);
+            QueueDate.Create(DateTime.UtcNow.AddDays(1), dateTimeProvider).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(DateTime.UtcNow),
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(10))).Value);
 
-        var order = new OrderEntity(
+        var order = OrderEntity.Create(
             user,
             queue,
             DateTime.UtcNow);
@@ -79,6 +79,6 @@ public class SubscriberTests
             user,
             DateTime.UtcNow);
 
-        yield return new object[] { subscriber, order };
+        yield return new object[] { subscriber, order.Value };
     }
 }

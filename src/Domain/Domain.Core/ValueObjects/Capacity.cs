@@ -5,13 +5,25 @@ using Domain.Common.Result;
 
 namespace Domain.Core.ValueObjects;
 
+/// <summary>
+/// Describes queue capacity model.
+/// </summary>
 public sealed class Capacity : ValueObject
 {
     private Capacity(int value)
         => Value = value;
 
+    /// <summary>
+    /// Gets capacity.
+    /// </summary>
     public int Value { get; }
 
+    /// <summary>
+    /// Validates capacity and creates capacity instance.
+    /// </summary>
+    /// <param name="capacity">capacity.</param>
+    /// <returns>constructed capacity instance.</returns>
+    /// <remarks>returns failure result, when capacity is negative.</remarks>
     public static Result<Capacity> Create(int capacity)
     {
         if (capacity < 0)

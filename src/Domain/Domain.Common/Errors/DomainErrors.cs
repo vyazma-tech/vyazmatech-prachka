@@ -98,4 +98,11 @@ public static class DomainErrors
             $"{nameof(Capacity)}.{nameof(Negative)}",
             "Capacity should be at least zero.");
     }
+
+    public static class QueueActivityBoundaries
+    {
+        public static Error EmptyRange => new (
+            $"{nameof(QueueActivityBoundaries)}.{nameof(EmptyRange)}",
+            "The queue activity boundaries should describe time range during the day.");
+    }
 }

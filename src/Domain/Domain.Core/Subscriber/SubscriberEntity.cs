@@ -5,15 +5,22 @@ using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
-using Domain.Core.Subscriber.Events;
 using Domain.Core.User;
 
 namespace Domain.Core.Subscriber;
 
+/// <summary>
+/// Describes subscriber entity.
+/// </summary>
 public sealed class SubscriberEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SubscriberEntity"/> class.
+    /// </summary>
+    /// <param name="user">subscribed user.</param>
+    /// <param name="creationDateUtc">subscription creation utc date.</param>
     public SubscriberEntity(UserEntity user, DateTime creationDateUtc)
         : base(Guid.NewGuid())
     {
@@ -25,19 +32,44 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
         _orders = new HashSet<OrderEntity>();
     }
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8618
     private SubscriberEntity()
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning restore CS8618
     {
         _orders = new HashSet<OrderEntity>();
     }
 
+    /// <summary>
+    /// Gets orders, that are subscribed to the newsletter.
+    /// </summary>
     public IReadOnlySet<OrderEntity> Orders => _orders;
+
+    /// <summary>
+    /// Gets subscription creation date.
+    /// </summary>
     public DateTime CreationDate { get; private set; }
+
+    /// <summary>
+    /// Gets modification date.
+    /// </summary>
     public DateTime? ModifiedOn { get; private set; }
+
+    /// <summary>
+    /// Gets user, who subscription is assigned to.
+    /// </summary>
     public UserEntity User { get; private set; }
+
+    /// <summary>
+    /// Gets queue, orders from which are subscribed to the newsletter.
+    /// </summary>
     public QueueEntity? Queue { get; private set; }
 
+    /// <summary>
+    /// Subscribes order to the newsletter.
+    /// </summary>
+    /// <param name="order">order to be subscribed.</param>
+    /// <returns>subscribed order entity.</returns>
+    /// <remarks>returns failure result, when order is already subscribed.</remarks>
     public Result<OrderEntity> Subscribe(OrderEntity order)
     {
         if (_orders.Contains(order))
@@ -48,11 +80,16 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
 
         _orders.Add(order);
         Queue = order.Queue;
-        Raise(new UserSubscribedDomainEvent(this));
 
         return order;
     }
 
+    /// <summary>
+    /// Unsubscribes order from the newsletter.
+    /// </summary>
+    /// <param name="order">order to be unsubscribed.</param>
+    /// <returns>unsubscribed order.</returns>
+    /// <remarks>returns failure result, when order is not subscribed.</remarks>
     public Result<OrderEntity> Unsubscribe(OrderEntity order)
     {
         if (_orders.Contains(order) is false)

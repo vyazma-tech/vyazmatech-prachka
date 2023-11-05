@@ -1,5 +1,8 @@
 ﻿namespace Domain.Common.Abstractions;
 
+/// <summary>
+/// Base entity class. All entities should be inherited from it.
+/// </summary>
 public abstract class Entity : IEquatable<Entity>
 {
     private readonly List<IDomainEvent> _domainEvents;
@@ -14,15 +17,29 @@ public abstract class Entity : IEquatable<Entity>
     protected Entity() { }
 #pragma warning restore CS8618
 
+    /// <summary>
+    /// Gets unique identifier of an entity.
+    /// </summary>
     public Guid Id { get; }
 
+    /// <summary>
+    /// Gets domain event list for a current entity.
+    /// </summary>
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
 
+    /// <summary>
+    /// Raises domain event for an entity.
+    /// </summary>
+    /// <param name="domainEvent">domain event object.</param>
     public void Raise(IDomainEvent domainEvent)
     {
         _domainEvents.Add(domainEvent);
     }
 
+    /// <summary>
+    /// Clears domain events. Should be called <b>only</b>,
+    /// when domain events are about to publish.
+    /// </summary>
     public void ClearDomainEvents()
     {
         _domainEvents.Clear();

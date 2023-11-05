@@ -2,12 +2,15 @@
 
 namespace Domain.Core.Order.Events;
 
+/// <summary>
+/// Order is paid. Should be deleted from future queues.
+/// </summary>
 public sealed class OrderPaidDomainEvent : IDomainEvent
 {
-    public OrderPaidDomainEvent(OrderEntity orderEntity)
+    public OrderPaidDomainEvent(OrderEntity order)
     {
-        OrderEntity = orderEntity;
+        Order = order;
     }
 
-    public OrderEntity OrderEntity { get; }
+    public OrderEntity Order { get; }
 }

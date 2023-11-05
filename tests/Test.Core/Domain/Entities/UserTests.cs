@@ -13,12 +13,7 @@ namespace Test.Core.Domain.Entities;
 
 public class UserTests
 {
-    private readonly Mock<IDateTimeProvider> _dateTimeProvider;
-
-    public UserTests()
-    {
-        _dateTimeProvider = new Mock<IDateTimeProvider>();
-    }
+    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
 
     [Theory]
     [ClassData(typeof(TelegramIdClassData))]

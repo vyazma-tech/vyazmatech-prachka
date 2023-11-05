@@ -6,6 +6,9 @@ using Domain.Common.Result;
 
 namespace Domain.Core.ValueObjects;
 
+/// <summary>
+/// Describes user fullname model.
+/// </summary>
 public sealed class Fullname : ValueObject
 {
     private const string LetterWithUppercasePattern = @"^\p{Lu}{1}\p{Ll}*$";
@@ -17,10 +20,29 @@ public sealed class Fullname : ValueObject
         Lastname = lastname;
     }
 
+    /// <summary>
+    /// Gets user firstname.
+    /// </summary>
     public string Firstname { get; }
+
+    /// <summary>
+    /// Gets user middlename.
+    /// </summary>
     public string Middlename { get; }
+
+    /// <summary>
+    /// Gets user lastname.
+    /// </summary>
     public string Lastname { get; }
 
+    /// <summary>
+    /// Validates and creates fullname instance.
+    /// </summary>
+    /// <param name="firstname">user firstname.</param>
+    /// <param name="middlename">user middlename.</param>
+    /// <param name="lastname">user lastname.</param>
+    /// <returns>constructed fullname instance.</returns>
+    /// <remarks>returns failure result, when parameters didn't pass validation.</remarks>
     public static Result<Fullname> Create(string firstname, string middlename, string lastname)
     {
         if (string.IsNullOrWhiteSpace(firstname))
