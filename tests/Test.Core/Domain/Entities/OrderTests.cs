@@ -28,18 +28,22 @@ public class OrderTests
         DateTime queueDate = DateTime.UtcNow.AddDays(1);
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(queueDate, _dateTimeProvider.Object).Value);
+            QueueDate.Create(queueDate, _dateTimeProvider.Object).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(queueDate),
+                TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
 
-        var order = new OrderEntity(user, queue, _dateTimeProvider.Object.UtcNow);
+        Result<OrderEntity> orderCreationResult = OrderEntity.Create(user, queue, _dateTimeProvider.Object.UtcNow);
 
-        order.Should().NotBeNull();
-        order.Queue.Should().Be(queue);
-        order.User.Should().Be(user);
-        order.Paid.Should().BeFalse();
-        order.Ready.Should().BeFalse();
-        order.CreationDate.Should().Be(_dateTimeProvider.Object.UtcNow);
-        order.ModifiedOn.Should().BeNull();
-        order.DomainEvents.Should().ContainSingle()
+        orderCreationResult.IsSuccess.Should().BeTrue();
+        orderCreationResult.Value.Should().NotBeNull();
+        orderCreationResult.Value.Queue.Should().Be(queue);
+        orderCreationResult.Value.User.Should().Be(user);
+        orderCreationResult.Value.Paid.Should().BeFalse();
+        orderCreationResult.Value.Ready.Should().BeFalse();
+        orderCreationResult.Value.CreationDate.Should().Be(_dateTimeProvider.Object.UtcNow);
+        orderCreationResult.Value.ModifiedOn.Should().BeNull();
+        orderCreationResult.Value.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<OrderCreatedDomainEvent>();
     }
 
@@ -93,10 +97,14 @@ public class OrderTests
         DateTime queueDate = DateTime.UtcNow.AddDays(1);
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(queueDate, dateTimeProvider).Value);
+            QueueDate.Create(queueDate, dateTimeProvider).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(queueDate),
+                TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
 
-        var order = new OrderEntity(user, queue, dateTimeProvider.UtcNow);
-        order.ClearDomainEvents();
-        yield return new object[] { order };
+        Result<OrderEntity> order = OrderEntity.Create(user, queue, dateTimeProvider.UtcNow);
+        order.Value.ClearDomainEvents();
+        
+        yield return new object[] { order.Value };
     }
 }
