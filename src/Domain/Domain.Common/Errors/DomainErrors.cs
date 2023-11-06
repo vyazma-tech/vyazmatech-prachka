@@ -67,29 +67,13 @@ public static class DomainErrors
 
     public static class Fullname
     {
-        public static Error FirstnameIsNullOrEmpty => new (
-            $"{nameof(Fullname)}.{nameof(FirstnameIsNullOrEmpty)}",
-            "Firstname should not be null or empty.");
+        public static Error NameIsNullOrEmpty => new (
+            $"{nameof(Fullname)}.{nameof(NameIsNullOrEmpty)}",
+            "Name should not be null or empty.");
 
-        public static Error MiddlenameIsNullOrEmpty => new (
-            $"{nameof(Fullname)}.{nameof(MiddlenameIsNullOrEmpty)}",
-            "Firstname should not be null or empty.");
-
-        public static Error LastnameIsNullOrEmpty => new (
-            $"{nameof(Fullname)}.{nameof(LastnameIsNullOrEmpty)}",
-            "Firstname should not be null or empty.");
-
-        public static Error InvalidFirstnameFormat => new (
-            $"{nameof(Fullname)}.{nameof(InvalidFirstnameFormat)}",
-            "Firstname should start with uppercase.");
-
-        public static Error InvalidMiddlenameFormat => new (
-            $"{nameof(Fullname)}.{nameof(InvalidMiddlenameFormat)}",
-            "Middlename should start with uppercase.");
-
-        public static Error InvalidLastnameFormat => new (
-            $"{nameof(Fullname)}.{nameof(InvalidLastnameFormat)}",
-            "Lastname should start with uppercase.");
+        public static Error InvalidNameFormat => new (
+            $"{nameof(Fullname)}.{nameof(InvalidNameFormat)}",
+            "Name should start with uppercase and contain only letters");
     }
 
     public static class Capacity

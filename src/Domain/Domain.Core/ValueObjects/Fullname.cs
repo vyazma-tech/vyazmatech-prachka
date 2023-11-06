@@ -11,81 +11,43 @@ namespace Domain.Core.ValueObjects;
 /// </summary>
 public sealed class Fullname : ValueObject
 {
-    private const string LetterWithUppercasePattern = @"^\p{Lu}{1}\p{Ll}*$";
+    private const string LetterWithUppercasePattern = @"^[\p{Lu}\p{L}' \.\-]+$";
 
-    private Fullname(string firstname, string middlename, string lastname)
+    private Fullname(string value)
     {
-        Firstname = firstname;
-        Middlename = middlename;
-        Lastname = lastname;
+        Value = value;
     }
 
     /// <summary>
-    /// Gets user firstname.
+    /// Gets user name.
     /// </summary>
-    public string Firstname { get; }
-
-    /// <summary>
-    /// Gets user middlename.
-    /// </summary>
-    public string Middlename { get; }
-
-    /// <summary>
-    /// Gets user lastname.
-    /// </summary>
-    public string Lastname { get; }
+    public string Value { get; }
 
     /// <summary>
     /// Validates and creates fullname instance.
     /// </summary>
-    /// <param name="firstname">user firstname.</param>
-    /// <param name="middlename">user middlename.</param>
-    /// <param name="lastname">user lastname.</param>
+    /// <param name="name">user name.</param>
     /// <returns>constructed fullname instance.</returns>
     /// <remarks>returns failure result, when parameters didn't pass validation.</remarks>
-    public static Result<Fullname> Create(string firstname, string middlename, string lastname)
+    public static Result<Fullname> Create(string name)
     {
-        if (string.IsNullOrWhiteSpace(firstname))
+        if (string.IsNullOrWhiteSpace(name))
         {
-            var exception = new DomainException(DomainErrors.Fullname.FirstnameIsNullOrEmpty);
+            var exception = new DomainException(DomainErrors.Fullname.NameIsNullOrEmpty);
             return new Result<Fullname>(exception);
         }
 
-        if (string.IsNullOrWhiteSpace(middlename))
+        if (Regex.IsMatch(name, LetterWithUppercasePattern) is false)
         {
-            var exception = new DomainException(DomainErrors.Fullname.MiddlenameIsNullOrEmpty);
+            var exception = new DomainException(DomainErrors.Fullname.InvalidNameFormat);
             return new Result<Fullname>(exception);
         }
 
-        if (string.IsNullOrWhiteSpace(lastname))
-        {
-            var exception = new DomainException(DomainErrors.Fullname.LastnameIsNullOrEmpty);
-            return new Result<Fullname>(exception);
-        }
-
-        if (Regex.IsMatch(firstname, LetterWithUppercasePattern) is false)
-        {
-            var exception = new DomainException(DomainErrors.Fullname.InvalidFirstnameFormat);
-            return new Result<Fullname>(exception);
-        }
-
-        if (Regex.IsMatch(middlename, LetterWithUppercasePattern) is false)
-        {
-            var exception = new DomainException(DomainErrors.Fullname.InvalidMiddlenameFormat);
-            return new Result<Fullname>(exception);
-        }
-
-        if (Regex.IsMatch(lastname, LetterWithUppercasePattern) is false)
-        {
-            var exception = new DomainException(DomainErrors.Fullname.InvalidLastnameFormat);
-            return new Result<Fullname>(exception);
-        }
-
-        return new Fullname(firstname, middlename, lastname);
+        return new Fullname(name);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        throw new NotImplementedException();
+        yield return Value;
     }
 }
