@@ -3,6 +3,8 @@ using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.Subscriber;
 using Domain.Core.User;
+using Domain.Core.ValueObjects;
+using Infrastructure.DataAccess.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -25,4 +27,15 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
         => Database.BeginTransactionAsync(cancellationToken);
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(IDataAccessMarker.Assembly);
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Properties<Capacity>().HaveConversion<CapacityValueConverter>();
+        configurationBuilder.Properties<TelegramId>().HaveConversion<TelegramIdValueConverter>();
+    }
 }
