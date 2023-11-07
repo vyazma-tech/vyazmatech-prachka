@@ -132,12 +132,14 @@ namespace Infrastructure.DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Subscriptions_QueueId",
                 table: "Subscriptions",
-                column: "QueueId");
+                column: "QueueId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subscriptions_UserId",
                 table: "Subscriptions",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
         }
 
         /// <inheritdoc />

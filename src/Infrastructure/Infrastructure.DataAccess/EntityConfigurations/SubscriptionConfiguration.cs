@@ -8,8 +8,16 @@ public sealed class SubscriptionConfiguration : IEntityTypeConfiguration<Subscri
 {
     public void Configure(EntityTypeBuilder<SubscriberEntity> builder)
     {
-        builder.HasOne(subscription => subscription.User);
-        builder.HasOne(subscription => subscription.Queue);
+        builder.HasOne(subscription => subscription.User)
+            .WithOne()
+            .HasForeignKey<SubscriberEntity>()
+            .IsRequired();
+        
+        builder.HasOne(subscription => subscription.Queue)
+            .WithOne()
+            .HasForeignKey<SubscriberEntity>()
+            .IsRequired(false);
+        
         builder.HasMany(subscription => subscription.Orders)
             .WithOne();
         

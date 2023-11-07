@@ -110,9 +110,11 @@ namespace Infrastructure.DataAccess.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.HasIndex("QueueId");
+                    b.HasIndex("QueueId")
+                        .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Subscriptions");
                 });
@@ -183,12 +185,12 @@ namespace Infrastructure.DataAccess.Migrations
             modelBuilder.Entity("Domain.Core.Subscriber.SubscriberEntity", b =>
                 {
                     b.HasOne("Domain.Core.Queue.QueueEntity", "Queue")
-                        .WithMany()
-                        .HasForeignKey("QueueId");
+                        .WithOne()
+                        .HasForeignKey("Domain.Core.Subscriber.SubscriberEntity", "QueueId");
 
                     b.HasOne("Domain.Core.User.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("Domain.Core.Subscriber.SubscriberEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -8,7 +8,7 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<OrderEntity>
 {
     public void Configure(EntityTypeBuilder<OrderEntity> builder)
     {
-        builder.HasOne(order => order.User);
+        builder.HasOne(order => order.User).WithMany();
         builder.Property(order => order.Paid);
         builder.Property(order => order.Ready);
         builder.HasIndex(order => order.CreationDate)
