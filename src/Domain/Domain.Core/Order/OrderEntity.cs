@@ -12,7 +12,7 @@ namespace Domain.Core.Order;
 /// <summary>
 /// Describes order entity.
 /// </summary>
-public sealed class OrderEntity : Entity, IAuditableEntity
+public class OrderEntity : Entity, IAuditableEntity
 {
     private OrderEntity(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
         : base(Guid.NewGuid())
@@ -31,10 +31,10 @@ public sealed class OrderEntity : Entity, IAuditableEntity
 #pragma warning restore CS8618
 
     /// <inheritdoc cref="UserEntity" />
-    public UserEntity User { get; }
+    public virtual UserEntity User { get; }
 
     /// <inheritdoc cref="QueueEntity" />
-    public QueueEntity Queue { get; }
+    public virtual QueueEntity Queue { get; }
 
     /// <summary>
     /// Gets a value indicating whether order paid or not.

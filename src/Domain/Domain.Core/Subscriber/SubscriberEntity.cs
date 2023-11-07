@@ -12,7 +12,7 @@ namespace Domain.Core.Subscriber;
 /// <summary>
 /// Describes subscriber entity.
 /// </summary>
-public sealed class SubscriberEntity : Entity, IAuditableEntity
+public class SubscriberEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
 
@@ -42,7 +42,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets orders, that are subscribed to the newsletter.
     /// </summary>
-    public IReadOnlySet<OrderEntity> Orders => _orders;
+    public virtual IReadOnlySet<OrderEntity> Orders => _orders;
 
     /// <summary>
     /// Gets subscription creation date.
@@ -57,12 +57,12 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets user, who subscription is assigned to.
     /// </summary>
-    public UserEntity User { get; private set; }
+    public virtual UserEntity User { get; private set; }
 
     /// <summary>
     /// Gets queue, orders from which are subscribed to the newsletter.
     /// </summary>
-    public QueueEntity? Queue { get; private set; }
+    public virtual QueueEntity? Queue { get; private set; }
 
     /// <summary>
     /// Subscribes order to the newsletter.

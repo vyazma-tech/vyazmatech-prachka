@@ -12,7 +12,7 @@ namespace Domain.Core.Queue;
 /// <summary>
 /// Describes queue entity.
 /// </summary>
-public sealed class QueueEntity : Entity, IAuditableEntity
+public class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
     private bool _maxCapacityReachedOnce;
@@ -70,7 +70,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets orders, that currently in the queue.
     /// </summary>
-    public IReadOnlySet<OrderEntity> Items => _orders;
+    public virtual IReadOnlySet<OrderEntity> Items => _orders;
 
     /// <summary>
     /// Gets a value indicating whether queue expired or not.
