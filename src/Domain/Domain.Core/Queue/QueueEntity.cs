@@ -16,7 +16,6 @@ public class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
     private bool _maxCapacityReachedOnce;
-    private bool _isExpired;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QueueEntity"/> class.
@@ -77,8 +76,8 @@ public class QueueEntity : Entity, IAuditableEntity
     /// </summary>
     public bool Expired
     {
-        get => CalculateIfExpired();
-        private set => _isExpired = value;
+        get => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
+        private set => _ = value;
     }
 
     /// <summary>
@@ -179,7 +178,4 @@ public class QueueEntity : Entity, IAuditableEntity
 
         return this;
     }
-
-    private bool CalculateIfExpired()
-        => _isExpired = TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
 }
