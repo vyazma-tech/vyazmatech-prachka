@@ -11,6 +11,10 @@ public static class DomainErrors
         public static Error IsReady => new (
             $"{nameof(Order)}.{nameof(IsReady)}",
             "The order is ready.");
+
+        public static Error UnableToTransferInTheSameQueue => new (
+            $"{nameof(Order)}.{nameof(UnableToTransferInTheSameQueue)}",
+            "The order cannot be transferred in the same queue.");
     }
 
     public static class QueueDate
@@ -43,14 +47,14 @@ public static class DomainErrors
             "Queue is overfull. You are not able to enter it now.");
     }
 
-    public static class Subscriber
+    public static class Subscription
     {
         public static Error ContainsOrderWithId(Guid id) => new (
-            $"{nameof(Subscriber)}.{nameof(ContainsOrderWithId)}",
+            $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
             $"The subscription already contains order with id: {id}");
 
         public static Error OrderIsNotInSubscription(Guid id) => new (
-            $"{nameof(Subscriber)}.{nameof(OrderIsNotInSubscription)}",
+            $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
             $"The subscription does not contain order with id: {id}");
     }
 
