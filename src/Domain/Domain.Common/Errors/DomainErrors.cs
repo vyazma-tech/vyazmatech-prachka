@@ -105,4 +105,11 @@ public static class DomainErrors
             $"{nameof(QueueActivityBoundaries)}.{nameof(EmptyRange)}",
             "The queue activity boundaries should describe time range during the day.");
     }
+
+    public static class User
+    {
+        public static Error NotFound => new Error(
+            $"{nameof(User)}.{nameof(NotFound)}",
+            "The user with the specified identifier was not found.");
+    }
 }
