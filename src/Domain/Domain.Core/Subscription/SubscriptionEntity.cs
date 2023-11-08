@@ -7,21 +7,21 @@ using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.User;
 
-namespace Domain.Core.Subscriber;
+namespace Domain.Core.Subscription;
 
 /// <summary>
 /// Describes subscriber entity.
 /// </summary>
-public sealed class SubscriberEntity : Entity, IAuditableEntity
+public sealed class SubscriptionEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SubscriberEntity"/> class.
+    /// Initializes a new instance of the <see cref="SubscriptionEntity"/> class.
     /// </summary>
     /// <param name="user">subscribed user.</param>
     /// <param name="creationDateUtc">subscription creation utc date.</param>
-    public SubscriberEntity(UserEntity user, DateTime creationDateUtc)
+    public SubscriptionEntity(UserEntity user, DateTime creationDateUtc)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in subscription.");
@@ -33,7 +33,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     }
 
 #pragma warning disable CS8618
-    private SubscriberEntity()
+    private SubscriptionEntity()
 #pragma warning restore CS8618
     {
         _orders = new HashSet<OrderEntity>();
@@ -74,7 +74,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order))
         {
-            var exception = new DomainException(DomainErrors.Subscriber.ContainsOrderWithId(order.Id));
+            var exception = new DomainException(DomainErrors.Subscription.ContainsOrderWithId(order.Id));
             return new Result<OrderEntity>(exception);
         }
 
@@ -94,7 +94,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order) is false)
         {
-            var exception = new DomainException(DomainErrors.Subscriber.OrderIsNotInSubscription(order.Id));
+            var exception = new DomainException(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
             return new Result<OrderEntity>(exception);
         }
 
