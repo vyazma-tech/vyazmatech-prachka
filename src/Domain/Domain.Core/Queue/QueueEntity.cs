@@ -99,6 +99,12 @@ public sealed class QueueEntity : Entity, IAuditableEntity
             return new Result<OrderEntity>(exception);
         }
 
+        if (Expired)
+        {
+            var exception = new DomainException(DomainErrors.Queue.Expired);
+            return new Result<OrderEntity>(exception);
+        }
+
         _orders.Add(order);
         _maxCapacityReachedOnce = _orders.Count.Equals(Capacity.Value);
 

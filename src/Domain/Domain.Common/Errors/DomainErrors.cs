@@ -12,9 +12,13 @@ public static class DomainErrors
             $"{nameof(Order)}.{nameof(IsReady)}",
             "The order is ready.");
 
-        public static Error UnableToTransferInTheSameQueue => new (
-            $"{nameof(Order)}.{nameof(UnableToTransferInTheSameQueue)}",
-            "The order cannot be transferred in the same queue.");
+        public static Error UnableToTransferIntoSameQueue => new (
+            $"{nameof(Order)}.{nameof(UnableToTransferIntoSameQueue)}",
+            "The order cannot be transferred into the same queue.");
+
+        public static Error UnableToTransferIntoFullQueue => new (
+            $"{nameof(Order)}.{nameof(UnableToTransferIntoFullQueue)}",
+            "The order cannot be transferred into full queue.");
     }
 
     public static class QueueDate
@@ -45,6 +49,10 @@ public static class DomainErrors
         public static Error Overfull => new (
             $"{nameof(Queue)}.{nameof(Overfull)}",
             "Queue is overfull. You are not able to enter it now.");
+
+        public static Error Expired => new (
+            $"{nameof(Queue)}.{nameof(Expired)}",
+            "Queue already expired. You cannot perform this action.");
     }
 
     public static class Subscription

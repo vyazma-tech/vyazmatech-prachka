@@ -24,20 +24,26 @@ public class OrderService
     {
         if (order.Queue.Id.Equals(queue.Id))
         {
-            var exception = new DomainException(DomainErrors.Order.UnableToTransferInTheSameQueue);
+            var exception = new DomainException(DomainErrors.Order.UnableToTransferIntoSameQueue);
             return new Result<OrderEntity>(exception);
         }
 
         if (queue.Capacity.Value.Equals(queue.Items.Count))
         {
-            var exception = new DomainException(DomainErrors.Queue.Overfull);
+            var exception = new DomainException(DomainErrors.Order.UnableToTransferIntoFullQueue);
             return new Result<OrderEntity>(exception);
         }
 
-        Result<OrderEntity> removalResult = queue.Remove(order);
+        Result<OrderEntity> removalResult = order.Queue.Remove(order);
         if (removalResult.IsFaulted)
         {
             return removalResult;
+        }
+
+        Result<OrderEntity> entranceResult = queue.Add(order);
+        if (entranceResult.IsFaulted)
+        {
+            return entranceResult;
         }
 
         order.Prolong(queue, prolongedOnUtc);
