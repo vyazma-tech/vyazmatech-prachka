@@ -99,6 +99,12 @@ public sealed class QueueEntity : Entity, IAuditableEntity
             return new Result<OrderEntity>(exception);
         }
 
+        if (Expired)
+        {
+            var exception = new DomainException(DomainErrors.Queue.Expired);
+            return new Result<OrderEntity>(exception);
+        }
+
         _orders.Add(order);
         _maxCapacityReachedOnce = _orders.Count.Equals(Capacity.Value);
 
@@ -165,14 +171,15 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     /// Raises <see cref="PositionAvailableDomainEvent"/>, if queue is expired
     /// and it's not full by that time.
     /// </summary>
-    /// <returns>same queue instance.</returns>
-    public QueueEntity NotifyAboutAvailablePosition()
+    /// <returns>true, if event is raised, false otherwise.</returns>
+    public bool TryNotifyAboutAvailablePosition()
     {
         if (Expired && _maxCapacityReachedOnce)
         {
             Raise(new PositionAvailableDomainEvent(this));
+            return true;
         }
 
-        return this;
+        return false;
     }
 }
