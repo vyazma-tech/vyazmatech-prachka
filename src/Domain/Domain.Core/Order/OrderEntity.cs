@@ -34,7 +34,7 @@ public class OrderEntity : Entity, IAuditableEntity
     public virtual UserEntity User { get; }
 
     /// <inheritdoc cref="QueueEntity" />
-    public virtual QueueEntity Queue { get; }
+    public virtual QueueEntity Queue { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether order paid or not.
@@ -121,14 +121,15 @@ public class OrderEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Raises <see cref="OrderProlongedDomainEvent"/>.
+    /// Sets new queue for an order.
     /// </summary>
+    /// <param name="queue">queue, which order should be assigned to.</param>
     /// <param name="dateTimeUtc">modification date.</param>
     /// <returns>same order instance.</returns>
-    public OrderEntity Prolong(DateTime dateTimeUtc)
+    public OrderEntity Prolong(QueueEntity queue, DateTime dateTimeUtc)
     {
         ModifiedOn = dateTimeUtc;
-        Raise(new OrderProlongedDomainEvent(this));
+        Queue = queue;
 
         return this;
     }

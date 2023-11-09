@@ -1,4 +1,5 @@
-﻿using Domain.Common.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Common.Abstractions;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -9,10 +10,12 @@ using Domain.Core.ValueObjects;
 using FluentAssertions;
 using Infrastructure.Tools;
 using Moq;
+using Test.Core.Domain.Entities.ClassData;
 using Xunit;
 
 namespace Test.Core.Domain.Entities;
 
+[SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters")]
 public class QueueTests
 {
     private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
@@ -77,7 +80,7 @@ public class QueueTests
     }
 
     [Fact]
-    public void CreateQueue_ShouldReturnNotNullQueue()
+    public void CreateQueue_Should_ReturnNotNullQueue()
     {
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
@@ -97,8 +100,11 @@ public class QueueTests
     }
 
     [Theory]
-    [MemberData(nameof(UserWithOrderInQueueMemberData))]
-    public void EnterQueue_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(QueueEntity queue, OrderEntity order)
+    [ClassData(typeof(QueueClassData))]
+    public void EnterQueue_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
     {
         Result<OrderEntity> entranceResult = queue.Add(order);
 
@@ -107,8 +113,11 @@ public class QueueTests
     }
 
     [Theory]
-    [MemberData(nameof(UserWithOrderInQueueMemberData))]
-    public void QuitQueue_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(QueueEntity queue, OrderEntity order)
+    [ClassData(typeof(QueueClassData))]
+    public void QuitQueue_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
     {
         _ = queue.Remove(order);
 
@@ -153,26 +162,37 @@ public class QueueTests
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<QueueExpiredDomainEvent>();
     }
-
-    public static IEnumerable<object[]> UserWithOrderInQueueMemberData()
+    
+    [Theory]
+    [ClassData(typeof(QueueClassData))]
+    public void EnterQueue_ShouldReturnFailureResult_WhenQueueIsFull(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
     {
-        var dateTimeProvider = new DateTimeProvider();
-        var user = new UserEntity(
-            TelegramId.Create("1").Value,
-            DateTime.UtcNow);
-
-        var queue = new QueueEntity(
-            Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), dateTimeProvider).Value,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
-
-        Result<OrderEntity> order = OrderEntity.Create(
+        Result<OrderEntity> incomingOrderResult = OrderEntity.Create(
             user,
             queue,
             DateTime.UtcNow);
 
-        yield return new object[] { queue, order.Value };
+        incomingOrderResult.IsFaulted.Should().BeTrue();
+        incomingOrderResult.Error.Message.Should().Be(DomainErrors.Queue.Overfull.Message);
+    }
+    
+    [Theory]
+    [ClassData(typeof(QueueClassData))]
+    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
+    {
+        queue.Remove(order);
+        await Task.Delay(1_000);
+        queue.TryExpire();
+        queue.ClearDomainEvents();
+        queue.TryNotifyAboutAvailablePosition();
+
+        queue.DomainEvents.Should().ContainSingle()
+            .Which.Should().BeOfType<PositionAvailableDomainEvent>();
     }
 }
