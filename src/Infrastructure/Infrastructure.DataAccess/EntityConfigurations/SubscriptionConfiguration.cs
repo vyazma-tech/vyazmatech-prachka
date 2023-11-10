@@ -1,21 +1,21 @@
-﻿using Domain.Core.Subscriber;
+﻿using Domain.Core.Subscription;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.DataAccess.EntityConfigurations;
 
-public sealed class SubscriptionConfiguration : IEntityTypeConfiguration<SubscriberEntity>
+public sealed class SubscriptionConfiguration : IEntityTypeConfiguration<SubscriptionEntity>
 {
-    public void Configure(EntityTypeBuilder<SubscriberEntity> builder)
+    public void Configure(EntityTypeBuilder<SubscriptionEntity> builder)
     {
         builder.HasOne(subscription => subscription.User)
             .WithOne()
-            .HasForeignKey<SubscriberEntity>()
+            .HasForeignKey<SubscriptionEntity>()
             .IsRequired();
         
         builder.HasOne(subscription => subscription.Queue)
             .WithOne()
-            .HasForeignKey<SubscriberEntity>()
+            .HasForeignKey<SubscriptionEntity>()
             .IsRequired(false);
         
         builder.HasMany(subscription => subscription.Orders)

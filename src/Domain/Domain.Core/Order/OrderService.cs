@@ -16,11 +16,10 @@ public class OrderService
         _queueRepository = queueRepository;
     }
 
-    public async Task<Result<OrderEntity>> ProlongOrder(
+    public Result<OrderEntity> ProlongOrder(
         OrderEntity order,
         QueueEntity queue,
-        DateTime prolongedOnUtc,
-        CancellationToken cancellationToken)
+        DateTime prolongedOnUtc)
     {
         if (order.Queue.Id.Equals(queue.Id))
         {
@@ -47,8 +46,8 @@ public class OrderService
         }
 
         order.Prolong(queue, prolongedOnUtc);
-        await _orderRepository.UpdateAsync(order, cancellationToken);
-        await _queueRepository.UpdateAsync(queue, cancellationToken);
+        _orderRepository.Update(order);
+        _queueRepository.Update(queue);
 
         return order;
     }

@@ -21,17 +21,16 @@ public class OrderServiceTests
 
     [Theory]
     [ClassData(typeof(OrderServiceClassData))]
-    public async Task ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoSameQueue(
+    public void ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoSameQueue(
         QueueEntity queue,
         OrderEntity order)
     {
         var service = new OrderService(_orderRepository.Object, _queueRepository.Object);
 
-        Result<OrderEntity> prolongationResult = await service.ProlongOrder(
+        Result<OrderEntity> prolongationResult = service.ProlongOrder(
             order,
             queue,
-            DateTime.Now,
-            CancellationToken.None);
+            DateTime.Now);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Message.Should().Be(DomainErrors.Order.UnableToTransferIntoSameQueue.Message);
@@ -39,7 +38,7 @@ public class OrderServiceTests
 
     [Theory]
     [ClassData(typeof(OrderServiceClassData))]
-    public async Task ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoFullQueue(
+    public void ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoFullQueue(
         QueueEntity queue,
         OrderEntity order)
     {
@@ -52,11 +51,10 @@ public class OrderServiceTests
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(1),
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value);
 
-        Result<OrderEntity> prolongationResult = await service.ProlongOrder(
+        Result<OrderEntity> prolongationResult = service.ProlongOrder(
             order,
             newQueue,
-            DateTime.Now,
-            CancellationToken.None);
+            DateTime.Now);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Message.Should().Be(DomainErrors.Order.UnableToTransferIntoFullQueue.Message);
@@ -78,11 +76,10 @@ public class OrderServiceTests
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(1))).Value);
 
         await Task.Delay(1000);
-        Result<OrderEntity> prolongationResult = await service.ProlongOrder(
+        Result<OrderEntity> prolongationResult = service.ProlongOrder(
             order,
             newQueue,
-            DateTime.Now,
-            CancellationToken.None);
+            DateTime.Now);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Message.Should().Be(DomainErrors.Queue.Expired.Message);

@@ -11,5 +11,5 @@ public interface ISubscriptionRepository
 
     Task InsertAsync(SubscriptionEntity subscription, CancellationToken cancellationToken);
 
-    Task Update(SubscriptionEntity subscription, CancellationToken cancellationToken);
+    void Update(SubscriptionEntity subscription);
 }

@@ -13,7 +13,7 @@ public interface IOrderRepository
 
     Task InsertRangeAsync(IReadOnlyCollection<OrderEntity> orders, CancellationToken cancellationToken);
 
-    Task UpdateAsync(OrderEntity order, CancellationToken cancellationToken);
+    void Update(OrderEntity order);
 
     Task<long> CountAsync(CancellationToken cancellationToken);
 }

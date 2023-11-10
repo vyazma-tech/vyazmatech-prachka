@@ -13,7 +13,7 @@ public interface IQueueRepository
 
     Task InsertRangeAsync(IReadOnlyCollection<QueueEntity> queues, CancellationToken cancellationToken);
 
-    Task UpdateAsync(QueueEntity queue, CancellationToken cancellationToken);
+    void Update(QueueEntity queue);
 
     Task<long> CountAsync(CancellationToken cancellationToken);
 }

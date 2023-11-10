@@ -1,5 +1,4 @@
-﻿using Application.DataAccess.Contracts.Repositories;
-using Domain.Common.Errors;
+﻿using Domain.Common.Errors;
 using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.User;

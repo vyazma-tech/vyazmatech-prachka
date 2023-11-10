@@ -4,6 +4,14 @@ public static class DomainErrors
 {
     public static class Order
     {
+        public static Error NotFound => new (
+            $"{nameof(Order)}.{nameof(NotFound)}",
+            "The order with the specified identifier was not found.");
+
+        public static Error NotFoundForRequest => new (
+            $"{nameof(Order)}.{nameof(NotFoundForRequest)}",
+            "The order for this request was not found");
+
         public static Error AlreadyPaid => new (
             $"{nameof(Order)}.{nameof(AlreadyPaid)}",
             "The order was already paid.");
@@ -34,6 +42,14 @@ public static class DomainErrors
 
     public static class Queue
     {
+        public static Error NotFound => new (
+            $"{nameof(Queue)}.{nameof(NotFound)}",
+            "The queue with the specified identifier was not found.");
+
+        public static Error NotFoundForRequest => new (
+            $"{nameof(Queue)}.{nameof(NotFoundForRequest)}",
+            "The queue for this request was not found");
+
         public static Error ContainsOrderWithId(Guid id) => new (
             $"{nameof(Queue)}.{nameof(ContainsOrderWithId)}",
             $"The queue already contains order with id: {id}");
@@ -57,6 +73,14 @@ public static class DomainErrors
 
     public static class Subscription
     {
+        public static Error NotFound => new (
+            $"{nameof(Subscription)}.{nameof(NotFound)}",
+            "The subscription with the specified identifier was not found.");
+
+        public static Error NotFoundForRequest => new (
+            $"{nameof(Subscription)}.{nameof(NotFoundForRequest)}",
+            "The subscription for this request was not found");
+
         public static Error ContainsOrderWithId(Guid id) => new (
             $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
             $"The subscription already contains order with id: {id}");
@@ -104,7 +128,7 @@ public static class DomainErrors
 
     public static class User
     {
-        public static Error NotFound => new Error(
+        public static Error NotFound => new (
             $"{nameof(User)}.{nameof(NotFound)}",
             "The user with the specified identifier was not found.");
     }
