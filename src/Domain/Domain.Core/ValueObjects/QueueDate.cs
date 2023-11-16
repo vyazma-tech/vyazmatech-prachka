@@ -6,22 +6,24 @@ using Domain.Common.Result;
 namespace Domain.Core.ValueObjects;
 
 /// <summary>
-/// Describes queue date model.
+///     Describes queue date model.
 /// </summary>
 public sealed class QueueDate : ValueObject
 {
     public const int Week = 7;
 
     private QueueDate(DateTime value)
-        => Value = value;
+    {
+        Value = value;
+    }
 
     /// <summary>
-    /// Gets queue date.
+    ///     Gets queue date.
     /// </summary>
     public DateTime Value { get; }
 
     /// <summary>
-    /// Validates and creates queue date instance.
+    ///     Validates and creates queue date instance.
     /// </summary>
     /// <param name="assignmentDate">date, which queue is assigned to.</param>
     /// <param name="dateTimeProvider">time provider.</param>

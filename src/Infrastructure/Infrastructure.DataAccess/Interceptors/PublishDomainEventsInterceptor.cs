@@ -25,10 +25,7 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 
     private async Task PublishDomainEvents(DbContext? context, CancellationToken cancellationToken)
     {
-        if (context is null)
-        {
-            return;
-        }
+        if (context is null) return;
 
         var entities = context.ChangeTracker
             .Entries<Entity>()
@@ -44,10 +41,7 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 
         IEnumerable<ValueTask> tasks = domainEvents.Select(e => _publisher.Publish(e, cancellationToken));
 
-        foreach (ValueTask task in tasks)
-        {
-            await task;
-        }
+        foreach (ValueTask task in tasks) await task;
 
         await Task.CompletedTask;
     }

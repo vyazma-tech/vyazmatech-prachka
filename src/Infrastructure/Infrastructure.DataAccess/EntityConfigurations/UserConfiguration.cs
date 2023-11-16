@@ -1,5 +1,4 @@
 ﻿using Domain.Core.User;
-using Infrastructure.DataAccess.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -26,7 +26,9 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
     public DbSet<SubscriptionEntity> Subscriptions { get; private init; } = null!;
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
-        => Database.BeginTransactionAsync(cancellationToken);
+    {
+        return Database.BeginTransactionAsync(cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

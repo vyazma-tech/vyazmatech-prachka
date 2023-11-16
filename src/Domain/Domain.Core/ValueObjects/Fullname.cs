@@ -7,7 +7,7 @@ using Domain.Common.Result;
 namespace Domain.Core.ValueObjects;
 
 /// <summary>
-/// Describes user fullname model.
+///     Describes user fullname model.
 /// </summary>
 public sealed class Fullname : ValueObject
 {
@@ -19,12 +19,12 @@ public sealed class Fullname : ValueObject
     }
 
     /// <summary>
-    /// Gets user name.
+    ///     Gets user name.
     /// </summary>
     public string Value { get; }
 
     /// <summary>
-    /// Validates and creates fullname instance.
+    ///     Validates and creates fullname instance.
     /// </summary>
     /// <param name="name">user name.</param>
     /// <returns>constructed fullname instance.</returns>

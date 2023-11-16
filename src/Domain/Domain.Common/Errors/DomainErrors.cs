@@ -4,9 +4,12 @@ public static class DomainErrors
 {
     public static class Entity
     {
-        public static Error NotFoundFor<TEntity>(string searchInfo) => new (
-            $"{nameof(Entity)}.{nameof(NotFoundFor)}",
-            $"The entity of type {typeof(TEntity)} with {searchInfo} was not found.");
+        public static Error NotFoundFor<TEntity>(string searchInfo)
+        {
+            return new Error(
+                $"{nameof(Entity)}.{nameof(NotFoundFor)}",
+                $"The entity of type {typeof(TEntity)} with {searchInfo} was not found.");
+        }
     }
 
     public static class Order
@@ -57,14 +60,6 @@ public static class DomainErrors
             $"{nameof(Queue)}.{nameof(NotFoundForRequest)}",
             "The queue for this request was not found");
 
-        public static Error ContainsOrderWithId(Guid id) => new (
-            $"{nameof(Queue)}.{nameof(ContainsOrderWithId)}",
-            $"The queue already contains order with id: {id}");
-
-        public static Error OrderIsNotInQueue(Guid id) => new (
-            $"{nameof(Queue)}.{nameof(OrderIsNotInQueue)}",
-            $"The queue does not contain order with id: {id}");
-
         public static Error InvalidNewCapacity => new (
             $"{nameof(Queue)}.{nameof(InvalidNewCapacity)}",
             "New queue capacity should not be less then current capacity.");
@@ -76,6 +71,20 @@ public static class DomainErrors
         public static Error Expired => new (
             $"{nameof(Queue)}.{nameof(Expired)}",
             "Queue already expired. You cannot perform this action.");
+
+        public static Error ContainsOrderWithId(Guid id)
+        {
+            return new Error(
+                $"{nameof(Queue)}.{nameof(ContainsOrderWithId)}",
+                $"The queue already contains order with id: {id}");
+        }
+
+        public static Error OrderIsNotInQueue(Guid id)
+        {
+            return new Error(
+                $"{nameof(Queue)}.{nameof(OrderIsNotInQueue)}",
+                $"The queue does not contain order with id: {id}");
+        }
     }
 
     public static class Subscription
@@ -88,13 +97,19 @@ public static class DomainErrors
             $"{nameof(Subscription)}.{nameof(NotFoundForRequest)}",
             "The subscription for this request was not found");
 
-        public static Error ContainsOrderWithId(Guid id) => new (
-            $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
-            $"The subscription already contains order with id: {id}");
+        public static Error ContainsOrderWithId(Guid id)
+        {
+            return new Error(
+                $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
+                $"The subscription already contains order with id: {id}");
+        }
 
-        public static Error OrderIsNotInSubscription(Guid id) => new (
-            $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
-            $"The subscription does not contain order with id: {id}");
+        public static Error OrderIsNotInSubscription(Guid id)
+        {
+            return new Error(
+                $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
+                $"The subscription does not contain order with id: {id}");
+        }
     }
 
     public static class TelegramId

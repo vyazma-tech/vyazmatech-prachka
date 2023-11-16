@@ -14,5 +14,7 @@ public sealed class UserByRegistrationDateSpecification : Specification<UserEnti
     }
 
     public override string ToString()
-        => $"{typeof(UserEntity)}: {_registrationDate}";
+    {
+        return $"{typeof(UserEntity)}: {_registrationDate}";
+    }
 }

@@ -14,7 +14,7 @@ namespace Test.Core.Domain.Entities;
 
 public class OrderTests
 {
-    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
+    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new ();
 
     [Fact]
     public void CreateOrder_Should_ReturnNotNullOrder()

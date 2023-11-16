@@ -13,7 +13,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
         if (obj is null)
             return false;
 
-        if (this.GetType() != obj.GetType())
+        if (GetType() != obj.GetType())
             return false;
 
         if (!(obj is ValueObject valueObject))
@@ -26,10 +26,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
     {
         HashCode hashCode = default;
 
-        foreach (object obj in GetEqualityComponents())
-        {
-            hashCode.Add(obj);
-        }
+        foreach (object obj in GetEqualityComponents()) hashCode.Add(obj);
 
         return hashCode.ToHashCode();
     }

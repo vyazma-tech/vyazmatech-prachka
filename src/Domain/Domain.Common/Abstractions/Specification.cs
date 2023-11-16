@@ -6,7 +6,9 @@ public abstract class Specification<TEntity>
     where TEntity : Entity
 {
     protected Specification(Expression<Func<TEntity, bool>> criteria)
-        => Criteria = criteria;
+    {
+        Criteria = criteria;
+    }
 
     public Expression<Func<TEntity, bool>> Criteria { get; }
 
@@ -17,8 +19,12 @@ public abstract class Specification<TEntity>
     public abstract override string ToString();
 
     protected void AddOrderBy(Expression<Func<TEntity, bool>> orderByExpression)
-        => OrderByExpression = orderByExpression;
+    {
+        OrderByExpression = orderByExpression;
+    }
 
     protected void AddOrderByDescending(Expression<Func<TEntity, bool>> orderByDescendingExpression)
-        => OrderByDescendingExpression = orderByDescendingExpression;
+    {
+        OrderByDescendingExpression = orderByDescendingExpression;
+    }
 }

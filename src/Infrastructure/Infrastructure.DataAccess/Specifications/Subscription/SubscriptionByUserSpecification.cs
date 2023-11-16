@@ -15,5 +15,7 @@ public sealed class SubscriptionByUserSpecification : Specification<Subscription
     }
 
     public override string ToString()
-        => $"{typeof(UserEntity)}: {_userId}";
+    {
+        return $"{typeof(UserEntity)}: {_userId}";
+    }
 }

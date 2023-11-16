@@ -3,7 +3,6 @@ using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
-using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using FluentAssertions;
 using Infrastructure.Tools;
@@ -16,8 +15,8 @@ namespace Test.Core.Domain.UseCases;
 [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters")]
 public class OrderServiceTests
 {
-    private readonly Mock<IOrderRepository> _orderRepository = new Mock<IOrderRepository>();
-    private readonly Mock<IQueueRepository> _queueRepository = new Mock<IQueueRepository>();
+    private readonly Mock<IOrderRepository> _orderRepository = new ();
+    private readonly Mock<IQueueRepository> _queueRepository = new ();
 
     [Theory]
     [ClassData(typeof(OrderServiceClassData))]

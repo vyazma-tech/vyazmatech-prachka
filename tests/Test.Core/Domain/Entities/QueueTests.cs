@@ -18,7 +18,7 @@ namespace Test.Core.Domain.Entities;
 [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters")]
 public class QueueTests
 {
-    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
+    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new ();
 
     [Fact]
     public void CreateQueueCapacity_ShouldReturnFailureResult_WhenCapacityIsNegative()
@@ -33,21 +33,21 @@ public class QueueTests
     public void CreateQueueDate_ShouldReturnFailureResult_WhenCreationDateIsInThePast()
     {
         var dateTime = new DateTime(
-            year: 2023,
-            month: 1,
-            day: 1,
-            hour: 1,
-            minute: 30,
-            second: 0);
+            2023,
+            1,
+            1,
+            1,
+            30,
+            0);
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
 
         var registrationDate = new DateTime(
-            year: 2023,
-            month: 1,
-            day: 1,
-            hour: 1,
-            minute: 29,
-            second: 59);
+            2023,
+            1,
+            1,
+            1,
+            29,
+            59);
         Result<QueueDate> creationResult = QueueDate.Create(registrationDate, _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
@@ -58,21 +58,21 @@ public class QueueTests
     public void CreateQueueDate_ShouldReturnFailureResult_WhenCreationDateIsNotNextWeek()
     {
         var dateTime = new DateTime(
-            year: 2023,
-            month: 1,
-            day: 1,
-            hour: 1,
-            minute: 30,
-            second: 0);
+            2023,
+            1,
+            1,
+            1,
+            30,
+            0);
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
 
         var registrationDate = new DateTime(
-            year: 2023,
-            month: 1,
-            day: 9,
-            hour: 1,
-            minute: 30,
-            second: 0);
+            2023,
+            1,
+            9,
+            1,
+            30,
+            0);
         Result<QueueDate> creationResult = QueueDate.Create(registrationDate, _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
@@ -162,7 +162,7 @@ public class QueueTests
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<QueueExpiredDomainEvent>();
     }
-    
+
     [Theory]
     [ClassData(typeof(QueueClassData))]
     public void EnterQueue_ShouldReturnFailureResult_WhenQueueIsFull(
@@ -178,7 +178,7 @@ public class QueueTests
         incomingOrderResult.IsFaulted.Should().BeTrue();
         incomingOrderResult.Error.Message.Should().Be(DomainErrors.Queue.Overfull.Message);
     }
-    
+
     [Theory]
     [ClassData(typeof(QueueClassData))]
     public async Task Queue_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(

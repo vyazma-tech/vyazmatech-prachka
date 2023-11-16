@@ -10,7 +10,7 @@ using Domain.Core.ValueObjects;
 namespace Domain.Core.Queue;
 
 /// <summary>
-/// Describes queue entity.
+///     Describes queue entity.
 /// </summary>
 public class QueueEntity : Entity, IAuditableEntity
 {
@@ -18,7 +18,7 @@ public class QueueEntity : Entity, IAuditableEntity
     private bool _maxCapacityReachedOnce;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="QueueEntity"/> class.
+    ///     Initializes a new instance of the <see cref="QueueEntity" /> class.
     /// </summary>
     /// <param name="capacity">queue capacity.</param>
     /// <param name="queueDate">queue date, what queue assigned to.</param>
@@ -47,32 +47,22 @@ public class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Gets current capacity.
+    ///     Gets current capacity.
     /// </summary>
     public Capacity Capacity { get; private set; }
 
     /// <summary>
-    /// Gets date, what queue is assigned to.
-    /// </summary>
-    public DateTime CreationDate { get; private set; }
-
-    /// <summary>
-    /// Gets modification date.
-    /// </summary>
-    public DateTime? ModifiedOn { get; private set; }
-
-    /// <summary>
-    /// Gets time range for a queue activity.
+    ///     Gets time range for a queue activity.
     /// </summary>
     public QueueActivityBoundaries ActivityBoundaries { get; }
 
     /// <summary>
-    /// Gets orders, that currently in the queue.
+    ///     Gets orders, that currently in the queue.
     /// </summary>
     public virtual IReadOnlySet<OrderEntity> Items => _orders;
 
     /// <summary>
-    /// Gets a value indicating whether queue expired or not.
+    ///     Gets a value indicating whether queue expired or not.
     /// </summary>
     public bool Expired
     {
@@ -81,8 +71,18 @@ public class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Add order into a queue. Should <b>never</b> be called from queue instance,
-    /// because it does not update order queue reference.
+    ///     Gets date, what queue is assigned to.
+    /// </summary>
+    public DateTime CreationDate { get; }
+
+    /// <summary>
+    ///     Gets modification date.
+    /// </summary>
+    public DateTime? ModifiedOn { get; private set; }
+
+    /// <summary>
+    ///     Add order into a queue. Should <b>never</b> be called from queue instance,
+    ///     because it does not update order queue reference.
     /// </summary>
     /// <param name="order">order to be added.</param>
     /// <returns>added order instance.</returns>
@@ -115,7 +115,7 @@ public class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Removes order from a queue.
+    ///     Removes order from a queue.
     /// </summary>
     /// <param name="order">order to be removed.</param>
     /// <returns>removed order entity.</returns>
@@ -134,7 +134,7 @@ public class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Increases queue capacity.
+    ///     Increases queue capacity.
     /// </summary>
     /// <param name="newCapacity">new capacity value.</param>
     /// <param name="modifiedOnUtc">modification utc date.</param>
@@ -155,8 +155,8 @@ public class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Makes an attempt to expire queue and raises <see cref="QueueExpiredDomainEvent"/>.
-    /// Should be called in some kind of background worker.
+    ///     Makes an attempt to expire queue and raises <see cref="QueueExpiredDomainEvent" />.
+    ///     Should be called in some kind of background worker.
     /// </summary>
     /// <returns>true, if event is raised, false otherwise.</returns>
     public bool TryExpire()
@@ -171,8 +171,8 @@ public class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Raises <see cref="PositionAvailableDomainEvent"/>, if queue is expired
-    /// and it's not full by that time.
+    ///     Raises <see cref="PositionAvailableDomainEvent" />, if queue is expired
+    ///     and it's not full by that time.
     /// </summary>
     /// <returns>true, if event is raised, false otherwise.</returns>
     public bool TryNotifyAboutAvailablePosition()

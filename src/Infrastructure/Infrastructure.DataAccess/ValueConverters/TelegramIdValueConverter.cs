@@ -1,5 +1,4 @@
-﻿using System.Linq.Expressions;
-using Domain.Core.ValueObjects;
+﻿using Domain.Core.ValueObjects;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.DataAccess.ValueConverters;

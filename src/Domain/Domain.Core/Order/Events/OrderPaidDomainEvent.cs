@@ -3,7 +3,7 @@
 namespace Domain.Core.Order.Events;
 
 /// <summary>
-/// Order is paid. Should be deleted from future queues.
+///     Order is paid. Should be deleted from future queues.
 /// </summary>
 public sealed class OrderPaidDomainEvent : IDomainEvent
 {

@@ -14,5 +14,7 @@ public sealed class UserByIdSpecification : Specification<UserEntity>
     }
 
     public override string ToString()
-        => $"{typeof(Guid)}: {_id}";
+    {
+        return $"{typeof(Guid)}: {_id}";
+    }
 }

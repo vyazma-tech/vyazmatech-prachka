@@ -14,5 +14,7 @@ public sealed class QueueByIdSpecification : Specification<QueueEntity>
     }
 
     public override string ToString()
-        => $"{typeof(QueueEntity)}: {_id}";
+    {
+        return $"{typeof(QueueEntity)}: {_id}";
+    }
 }

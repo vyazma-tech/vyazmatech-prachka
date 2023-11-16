@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.Subscription;
@@ -16,7 +17,7 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
         var user = new UserEntity(
             TelegramId.Create("1").Value,
             DateTime.UtcNow);
-        
+
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
             QueueDate.Create(DateTime.UtcNow.AddDays(1), dateTimeProvider).Value,
@@ -24,7 +25,7 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
                 TimeOnly.FromDateTime(DateTime.UtcNow),
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(10))).Value);
 
-        var order = OrderEntity.Create(
+        Result<OrderEntity> order = OrderEntity.Create(
             user,
             queue,
             DateTime.UtcNow);

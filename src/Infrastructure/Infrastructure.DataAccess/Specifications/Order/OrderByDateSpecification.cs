@@ -14,5 +14,7 @@ public sealed class OrderByDateSpecification : Specification<OrderEntity>
     }
 
     public override string ToString()
-        => string.Empty;
+    {
+        return string.Empty;
+    }
 }
