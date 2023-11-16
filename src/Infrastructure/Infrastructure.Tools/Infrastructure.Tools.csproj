@@ -2,5 +2,11 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Domain\Domain.Common\Domain.Common.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="StyleCop.Analyzers">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
 
 </Project>
