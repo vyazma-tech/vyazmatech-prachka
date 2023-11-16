@@ -1,10 +1,11 @@
-﻿using Domain.Core.Queue;
+﻿using Domain.Common.Abstractions;
+using Domain.Core.Queue;
 
 namespace Infrastructure.DataAccess.Specifications.Queue;
 
 public sealed class QueueByAssignmentDateSpecification : Specification<QueueEntity>
 {
-    public QueueByAssignmentDateSpecification(DateTime assignmentDate) 
+    public QueueByAssignmentDateSpecification(DateTime assignmentDate)
         : base(queue => queue.CreationDate == assignmentDate)
     {
     }

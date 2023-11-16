@@ -1,4 +1,5 @@
-﻿using Domain.Common.Errors;
+﻿using Domain.Common.Abstractions;
+using Domain.Common.Errors;
 using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.User;
@@ -20,47 +21,6 @@ internal sealed class UserRepository : GenericRepository<UserEntity>, IUserRepos
     {
     }
 
-    public async Task<Result<UserEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
-        UserEntity? entity = await
-            ApplySpecification(new UserByIdSpecification(id))
-                .FirstOrDefaultAsync(cancellationToken);
-        
-        if (entity is null)
-        {
-            var exception = new DomainException(DomainErrors.User.NotFound);
-            return new Result<UserEntity>(exception);
-        }
-
-        return entity;
-    }
-
-    public async Task<Result<UserEntity>> FindByTelegramIdAsync(
-        TelegramId telegramId,
-        CancellationToken cancellationToken)
-    {
-        UserEntity? entity = await
-            ApplySpecification(new UserByTelegramIdSpecification(telegramId))
-                .FirstOrDefaultAsync(cancellationToken);
-        
-        if (entity is null)
-        {
-            var exception = new DomainException(DomainErrors.User.NotFound);
-            return new Result<UserEntity>(exception);
-        }
-
-        return entity;
-    }
-
-    public async Task<Result<IReadOnlyCollection<UserEntity>>> FindByRegistrationDateAsync(
-        DateTime registrationDateUtc,
-        CancellationToken cancellationToken)
-    {
-        return await
-            ApplySpecification(new UserByRegistrationDateSpecification(registrationDateUtc))
-                .ToListAsync(cancellationToken);
-    }
-
-    public async Task<long> CountAsync(CancellationToken cancellationToken) 
+    public async Task<long> CountAsync(CancellationToken cancellationToken)
         => await DbSet.CountAsync(cancellationToken);
 }

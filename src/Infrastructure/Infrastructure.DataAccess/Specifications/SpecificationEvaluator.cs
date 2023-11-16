@@ -22,7 +22,7 @@ public static class SpecificationEvaluator
         {
             queryable = queryable.OrderByDescending(specification.OrderByDescendingExpression);
         }
-        
+
         return queryable;
     }
 }

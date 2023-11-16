@@ -16,7 +16,7 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<QueueEntity>
 
         builder.HasIndex(queue => queue.CreationDate)
             .IsDescending();
-        
+
         builder.OwnsOne(queue => queue.ActivityBoundaries, navigationBuilder =>
         {
             navigationBuilder.Property(boundary => boundary.ActiveFrom)
@@ -25,7 +25,7 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<QueueEntity>
             navigationBuilder.Property(boundary => boundary.ActiveUntil)
                 .HasColumnName("ActiveUntil");
         });
-        
+
         builder.Property(queue => queue.ModifiedOn);
         builder.Property(queue => queue.Expired)
             .UsePropertyAccessMode(PropertyAccessMode.Property);

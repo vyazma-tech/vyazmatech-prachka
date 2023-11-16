@@ -48,7 +48,7 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
         {
             await task;
         }
-        
+
         await Task.CompletedTask;
     }
 }

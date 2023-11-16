@@ -9,14 +9,15 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infrastructure.DataAccess.Repositories;
 
-internal abstract class GenericRepository<TEntity> where TEntity : Entity
+internal abstract class GenericRepository<TEntity>
+    where TEntity : Entity
 {
     private readonly DatabaseContext _context;
 
     /// <summary>
-    /// 
+    /// Initializes a new instance of the <see cref="GenericRepository{TEntity}"/> class.
     /// </summary>
-    /// <param name="context"></param>
+    /// <param name="context">database context.</param>
     protected GenericRepository(DatabaseContext context)
         => _context = context;
 
@@ -25,7 +26,8 @@ internal abstract class GenericRepository<TEntity> where TEntity : Entity
     /// </summary>
     protected virtual DbSet<TEntity> DbSet => _context.Set<TEntity>();
 
-    public async Task<Result<TEntity>> FindByAsync(Specification<TEntity> specification,
+    public async Task<Result<TEntity>> FindByAsync(
+        Specification<TEntity> specification,
         CancellationToken cancellationToken)
     {
         TEntity? entity = await
@@ -46,7 +48,6 @@ internal abstract class GenericRepository<TEntity> where TEntity : Entity
         CancellationToken cancellationToken)
         => await ApplySpecification(specification)
             .ToListAsync(cancellationToken);
-
 
     public void Insert(TEntity entity)
         => DbSet.Add(entity);

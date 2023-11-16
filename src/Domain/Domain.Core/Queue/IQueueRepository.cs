@@ -1,15 +1,11 @@
-﻿using Domain.Common.Result;
-using Domain.Core.Order;
+﻿using Domain.Common.Abstractions;
+using Domain.Common.Result;
 
 namespace Domain.Core.Queue;
 
 public interface IQueueRepository
 {
-    Task<Result<QueueEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken);
-
-    Task<Result<QueueEntity>> FindByOrderAsync(OrderEntity order, CancellationToken cancellationToken);
-
-    Task<Result<QueueEntity>> FindByCreationDate(DateTime creationDateUtc, CancellationToken cancellationToken);
+    Task<Result<QueueEntity>> FindByAsync(Specification<QueueEntity> specification, CancellationToken cancellationToken);
 
     Task InsertRangeAsync(IReadOnlyCollection<QueueEntity> queues, CancellationToken cancellationToken);
 

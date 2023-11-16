@@ -1,15 +1,13 @@
-﻿using Domain.Common.Result;
-using Domain.Core.User;
+﻿using Domain.Common.Abstractions;
+using Domain.Common.Result;
 
 namespace Domain.Core.Order;
 
 public interface IOrderRepository
 {
-    Task<Result<OrderEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<Result<OrderEntity>> FindByAsync(Specification<OrderEntity> specification, CancellationToken cancellationToken);
 
-    Task<Result<IReadOnlyCollection<OrderEntity>>> FindByCreationDateAsync(DateTime creationDateUtc, CancellationToken cancellationToken);
-
-    Task<Result<IReadOnlyCollection<OrderEntity>>> FindByUserAsync(UserEntity user, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<OrderEntity>> FindAllByAsync(Specification<OrderEntity> specification, CancellationToken cancellationToken);
 
     Task InsertRangeAsync(IReadOnlyCollection<OrderEntity> orders, CancellationToken cancellationToken);
 

@@ -1,13 +1,11 @@
-﻿using Domain.Common.Result;
-using Domain.Core.User;
+﻿using Domain.Common.Abstractions;
+using Domain.Common.Result;
 
 namespace Domain.Core.Subscription;
 
 public interface ISubscriptionRepository
 {
-    Task<Result<SubscriptionEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken);
-
-    Task<Result<SubscriptionEntity>> FindByUserAsync(UserEntity user, CancellationToken cancellationToken);
+    Task<Result<SubscriptionEntity>> FindByAsync(Specification<SubscriptionEntity> specification, CancellationToken cancellationToken);
 
     void Insert(SubscriptionEntity subscription);
 
