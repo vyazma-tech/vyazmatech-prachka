@@ -11,7 +11,7 @@ public interface IUserRepository
 
     Task<Result<IReadOnlyCollection<UserEntity>>> FindByRegistrationDateAsync(DateTime registrationDateUtc, CancellationToken cancellationToken);
 
-    Task InsertAsync(UserEntity user, CancellationToken cancellationToken);
+    void Insert(UserEntity user);
 
     Task<long> CountAsync(CancellationToken cancellationToken);
 }

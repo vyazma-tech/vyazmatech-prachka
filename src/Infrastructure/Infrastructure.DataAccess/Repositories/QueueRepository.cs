@@ -3,27 +3,28 @@ using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
-using Domain.Core.User;
 using Infrastructure.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
 
-internal sealed class QueueRepository : GenericRepository, IQueueRepository
+internal sealed class QueueRepository : GenericRepository<QueueEntity>, IQueueRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="QueueRepository"/> class.
     /// </summary>
-    /// <param name="dbContext">The database context.</param>
-    public QueueRepository(DatabaseContext dbContext)
-        : base(dbContext)
+    /// <param name="context">The database context.</param>
+    public QueueRepository(DatabaseContext context)
+        : base(context)
     {
     }
 
     public async Task<Result<QueueEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        QueueEntity? entity = await DbContext.Queues.
-            FirstOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
+        QueueEntity? entity = await DbSet
+            .FirstOrDefaultAsync(
+                u => u.Id == id,
+                cancellationToken: cancellationToken);
         
         if (entity is null)
         {
@@ -36,8 +37,10 @@ internal sealed class QueueRepository : GenericRepository, IQueueRepository
 
     public async Task<Result<QueueEntity>> FindByOrderAsync(OrderEntity order, CancellationToken cancellationToken)
     {
-        QueueEntity? entity = await DbContext.Queues.
-            FirstOrDefaultAsync(u => u.Items.Contains(order), cancellationToken: cancellationToken);
+        QueueEntity? entity = await DbSet
+            .FirstOrDefaultAsync(
+                u => u.Items.Contains(order),
+                cancellationToken: cancellationToken);
         
         if (entity is null)
         {
@@ -48,10 +51,14 @@ internal sealed class QueueRepository : GenericRepository, IQueueRepository
         return entity;
     }
 
-    public async Task<Result<QueueEntity>> FindByCreationDate(DateTime creationDateUtc, CancellationToken cancellationToken)
+    public async Task<Result<QueueEntity>> FindByCreationDate(
+        DateTime creationDateUtc,
+        CancellationToken cancellationToken)
     {
-        QueueEntity? entity = await DbContext.Queues.
-            FirstOrDefaultAsync(u => u.CreationDate == creationDateUtc, cancellationToken: cancellationToken);
+        QueueEntity? entity = await DbSet
+            .FirstOrDefaultAsync(
+                u => u.CreationDate == creationDateUtc,
+                cancellationToken: cancellationToken);
         
         if (entity is null)
         {
@@ -60,20 +67,10 @@ internal sealed class QueueRepository : GenericRepository, IQueueRepository
         }
 
         return entity;
-    }
-
-    public async Task InsertRangeAsync(IReadOnlyCollection<QueueEntity> queues, CancellationToken cancellationToken)
-    {
-        await DbContext.Queues.AddRangeAsync(queues, cancellationToken);
-    }
-
-    public void Update(QueueEntity queue)
-    {
-        DbContext.Queues.Update(queue);
     }
 
     public async Task<long> CountAsync(CancellationToken cancellationToken)
     {
-        return await DbContext.Queues.CountAsync(cancellationToken: cancellationToken);
+        return await DbSet.CountAsync(cancellationToken: cancellationToken);
     }
 }

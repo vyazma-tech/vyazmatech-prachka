@@ -8,21 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
 
-internal sealed class UserRepository : GenericRepository, IUserRepository
+internal sealed class UserRepository : GenericRepository<UserEntity>, IUserRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserRepository"/> class.
     /// </summary>
-    /// <param name="dbContext">The database context.</param>
-    public UserRepository(DatabaseContext dbContext)
-        : base(dbContext)
+    /// <param name="context">The database context.</param>
+    public UserRepository(DatabaseContext context)
+        : base(context)
     {
     }
 
     public async Task<Result<UserEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        UserEntity? entity = await DbContext.Users.
-            FirstOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
+        UserEntity? entity = await DbSet
+            .FirstOrDefaultAsync(
+                u => u.Id == id,
+                cancellationToken);
         
         if (entity is null)
         {
@@ -33,10 +35,14 @@ internal sealed class UserRepository : GenericRepository, IUserRepository
         return entity;
     }
 
-    public async Task<Result<UserEntity>> FindByTelegramIdAsync(TelegramId telegramId, CancellationToken cancellationToken)
+    public async Task<Result<UserEntity>> FindByTelegramIdAsync(
+        TelegramId telegramId,
+        CancellationToken cancellationToken)
     {
-        UserEntity? entity = await DbContext.Users
-            .FirstOrDefaultAsync(u => u.TelegramId == telegramId, cancellationToken: cancellationToken);
+        UserEntity? entity = await DbSet
+            .FirstOrDefaultAsync(
+                u => u.TelegramId == telegramId,
+                cancellationToken);
         
         if (entity is null)
         {
@@ -47,19 +53,17 @@ internal sealed class UserRepository : GenericRepository, IUserRepository
         return entity;
     }
 
-    public async Task<Result<IReadOnlyCollection<UserEntity>>> FindByRegistrationDateAsync
-        (DateTime registrationDateUtc, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyCollection<UserEntity>>> FindByRegistrationDateAsync(
+        DateTime registrationDateUtc,
+        CancellationToken cancellationToken)
     {
-        List<UserEntity> entities = await DbContext.Users
+        List<UserEntity> entities = await DbSet
             .Where(u => u.CreationDate == registrationDateUtc)
             .ToListAsync(cancellationToken: cancellationToken);
 
         return entities;
     }
 
-    public async Task InsertAsync(UserEntity user, CancellationToken cancellationToken) 
-        => await DbContext.Users.AddAsync(user, cancellationToken);
-
     public async Task<long> CountAsync(CancellationToken cancellationToken) 
-        => await DbContext.Users.CountAsync(cancellationToken);
+        => await DbSet.CountAsync(cancellationToken);
 }

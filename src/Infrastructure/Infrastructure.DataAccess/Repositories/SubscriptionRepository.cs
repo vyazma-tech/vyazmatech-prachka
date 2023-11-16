@@ -8,20 +8,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
 
-internal class SubscriptionRepository : GenericRepository, ISubscriptionRepository
+internal class SubscriptionRepository : GenericRepository<SubscriptionEntity>, ISubscriptionRepository
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="SubscriptionRepository"/> class.
     /// </summary>
-    /// <param name="dbContext">The database context.</param>
-    public SubscriptionRepository(DatabaseContext dbContext) : base(dbContext)
+    /// <param name="context">The database context.</param>
+    public SubscriptionRepository(DatabaseContext context) : base(context)
     {
     }
 
     public async Task<Result<SubscriptionEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        SubscriptionEntity? entity = await DbContext.Subscriptions.
-            FirstOrDefaultAsync(u => u.Id == id, cancellationToken: cancellationToken);
+        SubscriptionEntity? entity = await DbSet
+            .FirstOrDefaultAsync(
+                u => u.Id == id,
+                cancellationToken: cancellationToken);
         
         if (entity is null)
         {
@@ -32,10 +34,14 @@ internal class SubscriptionRepository : GenericRepository, ISubscriptionReposito
         return entity;
     }
 
-    public async Task<Result<SubscriptionEntity>> FindByUserAsync(UserEntity user, CancellationToken cancellationToken)
+    public async Task<Result<SubscriptionEntity>> FindByUserAsync(
+        UserEntity user,
+        CancellationToken cancellationToken)
     {
-        SubscriptionEntity? entity = await DbContext.Subscriptions.
-            FirstOrDefaultAsync(u => u.User == user, cancellationToken: cancellationToken);
+        SubscriptionEntity? entity = await DbSet
+            .FirstOrDefaultAsync(
+                u => u.User == user,
+                cancellationToken: cancellationToken);
         
         if (entity is null)
         {
@@ -44,15 +50,5 @@ internal class SubscriptionRepository : GenericRepository, ISubscriptionReposito
         }
 
         return entity;
-    }
-
-    public async Task InsertAsync(SubscriptionEntity subscription, CancellationToken cancellationToken)
-    {
-        await DbContext.Subscriptions.AddAsync(subscription, cancellationToken);
-    }
-
-    public void Update(SubscriptionEntity subscription)
-    {
-        DbContext.Subscriptions.Update(subscription);
     }
 }

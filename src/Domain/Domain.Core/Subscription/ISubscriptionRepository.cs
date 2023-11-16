@@ -9,7 +9,7 @@ public interface ISubscriptionRepository
 
     Task<Result<SubscriptionEntity>> FindByUserAsync(UserEntity user, CancellationToken cancellationToken);
 
-    Task InsertAsync(SubscriptionEntity subscription, CancellationToken cancellationToken);
+    void Insert(SubscriptionEntity subscription);
 
     void Update(SubscriptionEntity subscription);
 }
