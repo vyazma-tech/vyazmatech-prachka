@@ -4,6 +4,7 @@ using Domain.Common.Result;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using Infrastructure.DataAccess.Contexts;
+using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
@@ -21,10 +22,9 @@ internal sealed class UserRepository : GenericRepository<UserEntity>, IUserRepos
 
     public async Task<Result<UserEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        UserEntity? entity = await DbSet
-            .FirstOrDefaultAsync(
-                u => u.Id == id,
-                cancellationToken);
+        UserEntity? entity = await
+            ApplySpecification(new UserByIdSpecification(id))
+                .FirstOrDefaultAsync(cancellationToken);
         
         if (entity is null)
         {
@@ -39,10 +39,9 @@ internal sealed class UserRepository : GenericRepository<UserEntity>, IUserRepos
         TelegramId telegramId,
         CancellationToken cancellationToken)
     {
-        UserEntity? entity = await DbSet
-            .FirstOrDefaultAsync(
-                u => u.TelegramId == telegramId,
-                cancellationToken);
+        UserEntity? entity = await
+            ApplySpecification(new UserByTelegramIdSpecification(telegramId))
+                .FirstOrDefaultAsync(cancellationToken);
         
         if (entity is null)
         {
@@ -57,11 +56,9 @@ internal sealed class UserRepository : GenericRepository<UserEntity>, IUserRepos
         DateTime registrationDateUtc,
         CancellationToken cancellationToken)
     {
-        List<UserEntity> entities = await DbSet
-            .Where(u => u.CreationDate == registrationDateUtc)
-            .ToListAsync(cancellationToken: cancellationToken);
-
-        return entities;
+        return await
+            ApplySpecification(new UserByRegistrationDateSpecification(registrationDateUtc))
+                .ToListAsync(cancellationToken);
     }
 
     public async Task<long> CountAsync(CancellationToken cancellationToken) 

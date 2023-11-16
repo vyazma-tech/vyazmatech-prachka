@@ -4,6 +4,7 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.User;
 using Infrastructure.DataAccess.Contexts;
+using Infrastructure.DataAccess.Specifications.Order;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
@@ -20,9 +21,9 @@ internal class OrderRepository : GenericRepository<OrderEntity>, IOrderRepositor
 
     public async Task<Result<OrderEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        OrderEntity? entity = await DbSet.FirstOrDefaultAsync(
-            u => u.Id == id,
-            cancellationToken: cancellationToken);
+        OrderEntity? entity = await
+            ApplySpecification(new OrderByIdSpecification(id))
+                .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null)
         {
@@ -38,22 +39,18 @@ internal class OrderRepository : GenericRepository<OrderEntity>, IOrderRepositor
         CancellationToken cancellationToken
     )
     {
-        List<OrderEntity> entity = await DbSet
-            .Where(u => u.CreationDate == creationDateUtc)
-            .ToListAsync(cancellationToken: cancellationToken);
-
-        return entity;
+        return await
+            ApplySpecification(new OrderByDateSpecification(creationDateUtc))
+                .ToListAsync(cancellationToken);
     }
 
     public async Task<Result<IReadOnlyCollection<OrderEntity>>> FindByUserAsync(
         UserEntity user,
         CancellationToken cancellationToken)
     {
-        List<OrderEntity> entity = await DbSet
-            .Where(u => u.User == user)
-            .ToListAsync(cancellationToken: cancellationToken);
-
-        return entity;
+        return await
+            ApplySpecification(new OrderByUserSpecification(user))
+                .ToListAsync(cancellationToken);
     }
 
     public async Task<long> CountAsync(CancellationToken cancellationToken)

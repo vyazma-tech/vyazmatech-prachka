@@ -4,6 +4,7 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Infrastructure.DataAccess.Contexts;
+using Infrastructure.DataAccess.Specifications.Queue;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
@@ -21,11 +22,10 @@ internal sealed class QueueRepository : GenericRepository<QueueEntity>, IQueueRe
 
     public async Task<Result<QueueEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        QueueEntity? entity = await DbSet
-            .FirstOrDefaultAsync(
-                u => u.Id == id,
-                cancellationToken: cancellationToken);
-        
+        QueueEntity? entity = await
+            ApplySpecification(new QueueByIdSpecification(id))
+                .FirstOrDefaultAsync(cancellationToken);
+
         if (entity is null)
         {
             var exception = new DomainException(DomainErrors.Queue.NotFound);
@@ -37,10 +37,10 @@ internal sealed class QueueRepository : GenericRepository<QueueEntity>, IQueueRe
 
     public async Task<Result<QueueEntity>> FindByOrderAsync(OrderEntity order, CancellationToken cancellationToken)
     {
-        QueueEntity? entity = await DbSet
-            .FirstOrDefaultAsync(
-                u => u.Items.Contains(order),
-                cancellationToken: cancellationToken);
+
+        QueueEntity? entity = await
+            ApplySpecification(new QueueByOrderSpecification(order))
+                .FirstOrDefaultAsync(cancellationToken);
         
         if (entity is null)
         {
@@ -55,10 +55,9 @@ internal sealed class QueueRepository : GenericRepository<QueueEntity>, IQueueRe
         DateTime creationDateUtc,
         CancellationToken cancellationToken)
     {
-        QueueEntity? entity = await DbSet
-            .FirstOrDefaultAsync(
-                u => u.CreationDate == creationDateUtc,
-                cancellationToken: cancellationToken);
+        QueueEntity? entity = await
+            ApplySpecification(new QueueByAssignmentDateSpecification(creationDateUtc))
+                .FirstOrDefaultAsync(cancellationToken);
         
         if (entity is null)
         {

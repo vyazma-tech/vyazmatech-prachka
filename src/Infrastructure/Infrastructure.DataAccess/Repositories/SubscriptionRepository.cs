@@ -4,6 +4,7 @@ using Domain.Common.Result;
 using Domain.Core.Subscription;
 using Domain.Core.User;
 using Infrastructure.DataAccess.Contexts;
+using Infrastructure.DataAccess.Specifications.Subscription;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
@@ -20,10 +21,9 @@ internal class SubscriptionRepository : GenericRepository<SubscriptionEntity>, I
 
     public async Task<Result<SubscriptionEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        SubscriptionEntity? entity = await DbSet
-            .FirstOrDefaultAsync(
-                u => u.Id == id,
-                cancellationToken: cancellationToken);
+        SubscriptionEntity? entity = await
+            ApplySpecification(new SubscriptionByIdSpecification(id))
+                .FirstOrDefaultAsync(cancellationToken);
         
         if (entity is null)
         {
@@ -38,10 +38,9 @@ internal class SubscriptionRepository : GenericRepository<SubscriptionEntity>, I
         UserEntity user,
         CancellationToken cancellationToken)
     {
-        SubscriptionEntity? entity = await DbSet
-            .FirstOrDefaultAsync(
-                u => u.User == user,
-                cancellationToken: cancellationToken);
+        SubscriptionEntity? entity = await
+            ApplySpecification(new SubscriptionByUserSpecification(user))
+                .FirstOrDefaultAsync(cancellationToken);
         
         if (entity is null)
         {

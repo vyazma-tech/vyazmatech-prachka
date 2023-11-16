@@ -1,5 +1,9 @@
 ﻿using Domain.Common.Abstractions;
+using Domain.Common.Errors;
+using Domain.Common.Exceptions;
+using Domain.Common.Result;
 using Infrastructure.DataAccess.Contexts;
+using Infrastructure.DataAccess.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -21,6 +25,29 @@ internal abstract class GenericRepository<TEntity> where TEntity : Entity
     /// </summary>
     protected virtual DbSet<TEntity> DbSet => _context.Set<TEntity>();
 
+    public async Task<Result<TEntity>> FindByAsync(Specification<TEntity> specification,
+        CancellationToken cancellationToken)
+    {
+        TEntity? entity = await
+            ApplySpecification(specification)
+                .FirstOrDefaultAsync(cancellationToken);
+
+        if (entity is null)
+        {
+            var exception = new DomainException(DomainErrors.Entity.NotFoundFor<TEntity>(specification.ToString()));
+            return new Result<TEntity>(exception);
+        }
+
+        return entity;
+    }
+
+    public async Task<IReadOnlyCollection<TEntity>> FindAllByAsync(
+        Specification<TEntity> specification,
+        CancellationToken cancellationToken)
+        => await ApplySpecification(specification)
+            .ToListAsync(cancellationToken);
+
+
     public void Insert(TEntity entity)
         => DbSet.Add(entity);
 
@@ -29,13 +56,18 @@ internal abstract class GenericRepository<TEntity> where TEntity : Entity
 
     public void Update(TEntity entity)
         => DbSet.Update(entity);
-    
+
     public void Remove(TEntity entity)
     {
         EntityEntry<TEntity> entry = GetEntry(entity);
         entry.State = entry.State is EntityState.Added ? EntityState.Detached : EntityState.Deleted;
     }
-    
+
+    protected IQueryable<TEntity> ApplySpecification(Specification<TEntity> specification)
+    {
+        return SpecificationEvaluator.GetQuery(DbSet, specification);
+    }
+
     private EntityEntry<TEntity> GetEntry(TEntity entity)
     {
         TEntity? existing = DbSet.Local.FirstOrDefault(model => entity.Id.Equals(model.Id));

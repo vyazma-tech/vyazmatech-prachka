@@ -2,6 +2,13 @@
 
 public static class DomainErrors
 {
+    public static class Entity
+    {
+        public static Error NotFoundFor<TEntity>(string searchInfo) => new (
+            $"{nameof(Entity)}.{nameof(NotFoundFor)}",
+            $"The entity of type {typeof(TEntity)} with {searchInfo} was not found.");
+    }
+
     public static class Order
     {
         public static Error NotFound => new (
