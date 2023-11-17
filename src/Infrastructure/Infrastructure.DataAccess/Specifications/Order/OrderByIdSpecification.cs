@@ -1,5 +1,5 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Core.Order;
+﻿using Domain.Core.Order;
+using Domain.Kernel;
 
 namespace Infrastructure.DataAccess.Specifications.Order;
 

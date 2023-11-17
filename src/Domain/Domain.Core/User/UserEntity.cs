@@ -2,6 +2,7 @@
 using Domain.Common.Abstractions;
 using Domain.Core.User.Events;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 
 namespace Domain.Core.User;
 

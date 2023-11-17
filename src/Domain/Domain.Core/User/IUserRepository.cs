@@ -1,5 +1,5 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Common.Result;
+﻿using Domain.Common.Result;
+using Domain.Kernel;
 
 namespace Domain.Core.User;
 

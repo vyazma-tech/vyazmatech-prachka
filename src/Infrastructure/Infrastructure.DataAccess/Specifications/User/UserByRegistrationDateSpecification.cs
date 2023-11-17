@@ -1,5 +1,5 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Core.User;
+﻿using Domain.Core.User;
+using Domain.Kernel;
 
 namespace Infrastructure.DataAccess.Specifications.User;
 

@@ -1,4 +1,4 @@
-﻿using Domain.Common.Abstractions;
+﻿using Domain.Kernel;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

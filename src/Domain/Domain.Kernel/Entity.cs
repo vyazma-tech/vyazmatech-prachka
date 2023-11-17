@@ -1,4 +1,4 @@
-﻿namespace Domain.Common.Abstractions;
+﻿namespace Domain.Kernel;
 
 /// <summary>
 /// Base entity class. All entities should be inherited from it.

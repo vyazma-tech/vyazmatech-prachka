@@ -1,8 +1,8 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Common.Result;
+﻿using Domain.Common.Result;
 using Domain.Core.User;
 using Domain.Core.User.Events;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 using FluentAssertions;
 using Moq;
 using Test.Core.Domain.Entities.ClassData;

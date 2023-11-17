@@ -1,6 +1,6 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Core.Subscription;
+﻿using Domain.Core.Subscription;
 using Domain.Core.User;
+using Domain.Kernel;
 
 namespace Infrastructure.DataAccess.Specifications.Subscription;
 

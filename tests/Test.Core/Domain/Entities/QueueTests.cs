@@ -7,6 +7,7 @@ using Domain.Core.Queue;
 using Domain.Core.Queue.Events;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 using FluentAssertions;
 using Infrastructure.Tools;
 using Moq;

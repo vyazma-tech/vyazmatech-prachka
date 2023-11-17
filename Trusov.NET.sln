@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.DataAccess",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.DataAccess.Contracts", "src\Application\Application.DataAccess.Contracts\Application.DataAccess.Contracts.csproj", "{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Kernel", "src\Domain\Domain.Kernel\Domain.Kernel.csproj", "{2CB1F38E-717E-4567-A10B-B0F72C6A4808}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,7 @@ Global
 		{0C438E6A-5E93-4907-B438-A2174C22E256} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
 		{42B68564-A20E-40B4-8591-9021ABBB8000} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
 		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808} = {42299E0B-19FF-4416-96A1-F88E137D1189}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -72,5 +75,9 @@ Global
 		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

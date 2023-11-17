@@ -1,7 +1,7 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Common.Errors;
+﻿using Domain.Common.Errors;
 using Domain.Common.Exceptions;
 using Domain.Common.Result;
+using Domain.Kernel;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Specifications;
 using Microsoft.EntityFrameworkCore;

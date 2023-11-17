@@ -6,6 +6,7 @@ using Domain.Common.Result;
 using Domain.Core.Order.Events;
 using Domain.Core.Queue;
 using Domain.Core.User;
+using Domain.Kernel;
 
 namespace Domain.Core.Order;
 

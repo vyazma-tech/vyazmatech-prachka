@@ -8,5 +8,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Domain.Common\Domain.Common.csproj"/>
+        <ProjectReference Include="..\Domain.Kernel\Domain.Kernel.csproj" />
     </ItemGroup>
 </Project>

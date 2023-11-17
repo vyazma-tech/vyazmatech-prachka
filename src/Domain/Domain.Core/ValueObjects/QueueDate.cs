@@ -2,6 +2,7 @@
 using Domain.Common.Errors;
 using Domain.Common.Exceptions;
 using Domain.Common.Result;
+using Domain.Kernel;
 
 namespace Domain.Core.ValueObjects;
 

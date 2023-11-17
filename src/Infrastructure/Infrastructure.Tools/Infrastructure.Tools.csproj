@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-        <ProjectReference Include="..\..\Domain\Domain.Common\Domain.Common.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="StyleCop.Analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\Domain\Domain.Kernel\Domain.Kernel.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace Domain.Common.Abstractions;
+namespace Domain.Kernel;
 
 public abstract class Specification<TEntity>
     where TEntity : Entity

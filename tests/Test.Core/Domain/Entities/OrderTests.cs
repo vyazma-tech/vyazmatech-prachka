@@ -1,10 +1,10 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Common.Result;
+﻿using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Order.Events;
 using Domain.Core.Queue;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 using FluentAssertions;
 using Moq;
 using Test.Core.Domain.Entities.ClassData;
