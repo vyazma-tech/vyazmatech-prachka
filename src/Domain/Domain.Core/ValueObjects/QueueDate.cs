@@ -2,6 +2,7 @@
 using Domain.Common.Errors;
 using Domain.Common.Exceptions;
 using Domain.Common.Result;
+using Domain.Kernel;
 
 namespace Domain.Core.ValueObjects;
 
@@ -13,7 +14,9 @@ public sealed class QueueDate : ValueObject
     public const int Week = 7;
 
     private QueueDate(DateTime value)
-        => Value = value;
+    {
+        Value = value;
+    }
 
     /// <summary>
     /// Gets queue date.

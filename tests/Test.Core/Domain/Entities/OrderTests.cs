@@ -1,10 +1,10 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Common.Result;
+﻿using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Order.Events;
 using Domain.Core.Queue;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 using FluentAssertions;
 using Moq;
 using Test.Core.Domain.Entities.ClassData;
@@ -14,7 +14,7 @@ namespace Test.Core.Domain.Entities;
 
 public class OrderTests
 {
-    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
+    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new ();
 
     [Fact]
     public void CreateOrder_Should_ReturnNotNullOrder()

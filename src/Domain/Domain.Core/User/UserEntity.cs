@@ -2,6 +2,7 @@
 using Domain.Common.Abstractions;
 using Domain.Core.User.Events;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 
 namespace Domain.Core.User;
 
@@ -11,7 +12,7 @@ namespace Domain.Core.User;
 public sealed class UserEntity : Entity, IAuditableEntity
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="UserEntity"/> class.
+    /// Initializes a new instance of the <see cref="UserEntity" /> class.
     /// </summary>
     /// <param name="telegramId">user telegram id.</param>
     /// <param name="registrationDateUtc">user registration date.</param>

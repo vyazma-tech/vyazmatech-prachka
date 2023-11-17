@@ -3,7 +3,6 @@ using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
-using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using FluentAssertions;
 using Infrastructure.Tools;
@@ -16,22 +15,21 @@ namespace Test.Core.Domain.UseCases;
 [SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters")]
 public class OrderServiceTests
 {
-    private readonly Mock<IOrderRepository> _orderRepository = new Mock<IOrderRepository>();
-    private readonly Mock<IQueueRepository> _queueRepository = new Mock<IQueueRepository>();
+    private readonly Mock<IOrderRepository> _orderRepository = new ();
+    private readonly Mock<IQueueRepository> _queueRepository = new ();
 
     [Theory]
     [ClassData(typeof(OrderServiceClassData))]
-    public async Task ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoSameQueue(
+    public void ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoSameQueue(
         QueueEntity queue,
         OrderEntity order)
     {
         var service = new OrderService(_orderRepository.Object, _queueRepository.Object);
 
-        Result<OrderEntity> prolongationResult = await service.ProlongOrder(
+        Result<OrderEntity> prolongationResult = service.ProlongOrder(
             order,
             queue,
-            DateTime.Now,
-            CancellationToken.None);
+            DateTime.Now);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Message.Should().Be(DomainErrors.Order.UnableToTransferIntoSameQueue.Message);
@@ -39,7 +37,7 @@ public class OrderServiceTests
 
     [Theory]
     [ClassData(typeof(OrderServiceClassData))]
-    public async Task ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoFullQueue(
+    public void ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoFullQueue(
         QueueEntity queue,
         OrderEntity order)
     {
@@ -52,11 +50,10 @@ public class OrderServiceTests
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(1),
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value);
 
-        Result<OrderEntity> prolongationResult = await service.ProlongOrder(
+        Result<OrderEntity> prolongationResult = service.ProlongOrder(
             order,
             newQueue,
-            DateTime.Now,
-            CancellationToken.None);
+            DateTime.Now);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Message.Should().Be(DomainErrors.Order.UnableToTransferIntoFullQueue.Message);
@@ -78,11 +75,10 @@ public class OrderServiceTests
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(1))).Value);
 
         await Task.Delay(1000);
-        Result<OrderEntity> prolongationResult = await service.ProlongOrder(
+        Result<OrderEntity> prolongationResult = service.ProlongOrder(
             order,
             newQueue,
-            DateTime.Now,
-            CancellationToken.None);
+            DateTime.Now);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Message.Should().Be(DomainErrors.Queue.Expired.Message);

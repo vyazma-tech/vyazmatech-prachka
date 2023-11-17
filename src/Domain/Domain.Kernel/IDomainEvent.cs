@@ -1,6 +1,6 @@
 ﻿using Mediator;
 
-namespace Domain.Common.Abstractions;
+namespace Domain.Kernel;
 
 public interface IDomainEvent : INotification
 {

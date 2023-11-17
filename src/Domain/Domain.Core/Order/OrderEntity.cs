@@ -6,13 +6,14 @@ using Domain.Common.Result;
 using Domain.Core.Order.Events;
 using Domain.Core.Queue;
 using Domain.Core.User;
+using Domain.Kernel;
 
 namespace Domain.Core.Order;
 
 /// <summary>
 /// Describes order entity.
 /// </summary>
-public sealed class OrderEntity : Entity, IAuditableEntity
+public class OrderEntity : Entity, IAuditableEntity
 {
     private OrderEntity(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
         : base(Guid.NewGuid())
@@ -31,10 +32,10 @@ public sealed class OrderEntity : Entity, IAuditableEntity
 #pragma warning restore CS8618
 
     /// <inheritdoc cref="UserEntity" />
-    public UserEntity User { get; }
+    public virtual UserEntity User { get; }
 
     /// <inheritdoc cref="QueueEntity" />
-    public QueueEntity Queue { get; private set; }
+    public virtual QueueEntity Queue { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether order paid or not.
@@ -79,7 +80,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Pays order and raises <see cref="OrderPaidDomainEvent"/>.
+    /// Pays order and raises <see cref="OrderPaidDomainEvent" />.
     /// </summary>
     /// <param name="dateTimeUtc">payment utc date.</param>
     /// <returns>same order instance.</returns>
@@ -100,7 +101,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Makes order ready and raises <see cref="OrderReadyDomainEvent"/>.
+    /// Makes order ready and raises <see cref="OrderReadyDomainEvent" />.
     /// </summary>
     /// <param name="dateTimeUtc">ready utc date.</param>
     /// <returns>same order instance.</returns>

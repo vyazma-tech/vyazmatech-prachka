@@ -1,4 +1,4 @@
-﻿namespace Domain.Common.Abstractions;
+﻿namespace Domain.Kernel;
 
 public interface IDateTimeProvider
 {

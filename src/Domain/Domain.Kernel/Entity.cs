@@ -1,4 +1,4 @@
-﻿namespace Domain.Common.Abstractions;
+﻿namespace Domain.Kernel;
 
 /// <summary>
 /// Base entity class. All entities should be inherited from it.
@@ -26,6 +26,20 @@ public abstract class Entity : IEquatable<Entity>
     /// Gets domain event list for a current entity.
     /// </summary>
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
+
+    public bool Equals(Entity? other)
+    {
+        if (other is null)
+            return false;
+
+        if (ReferenceEquals(this, other))
+            return true;
+
+        if (Id == Guid.Empty || other.Id == Guid.Empty)
+            return false;
+
+        return Id == other.Id;
+    }
 
     /// <summary>
     /// Raises domain event for an entity.
@@ -59,20 +73,6 @@ public abstract class Entity : IEquatable<Entity>
     public static bool operator !=(Entity? left, Entity? right)
     {
         return !(left == right);
-    }
-
-    public bool Equals(Entity? other)
-    {
-        if (other is null)
-            return false;
-
-        if (ReferenceEquals(this, other))
-            return true;
-
-        if (Id == Guid.Empty || other.Id == Guid.Empty)
-            return false;
-
-        return Id == other.Id;
     }
 
     public override bool Equals(object? obj)

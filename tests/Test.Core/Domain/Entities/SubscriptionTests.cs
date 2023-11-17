@@ -23,14 +23,14 @@ public class SubscriptionTests
         var subscription = new SubscriptionEntity(
             user,
             creationDate);
-        
+
         subscription.Should().NotBeNull();
         subscription.Orders.Should().BeEmpty();
         subscription.CreationDate.Should().Be(creationDate);
         subscription.ModifiedOn.Should().BeNull();
         subscription.Queue.Should().BeNull();
     }
-    
+
     [Theory]
     [ClassData(typeof(SubscriptionClassData))]
     public void SubscribeOrder_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription(
@@ -42,7 +42,7 @@ public class SubscriptionTests
         entranceResult.IsSuccess.Should().BeTrue();
         subscription.Orders.Should().Contain(order);
     }
-    
+
     [Theory]
     [ClassData(typeof(SubscriptionClassData))]
     public void UnsubscribeOrder_ShouldReturnFailureResult_WhenUserOrderIsNotInSubscription(

@@ -1,15 +1,15 @@
 ﻿using Domain.Common.Result;
-using Domain.Core.User;
+using Domain.Kernel;
 
 namespace Domain.Core.Subscription;
 
 public interface ISubscriptionRepository
 {
-    Task<Result<SubscriptionEntity>> FindByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<Result<SubscriptionEntity>> FindByAsync(
+        Specification<SubscriptionEntity> specification,
+        CancellationToken cancellationToken);
 
-    Task<Result<SubscriptionEntity>> FindByUserAsync(UserEntity user, CancellationToken cancellationToken);
+    void Insert(SubscriptionEntity subscription);
 
-    Task InsertAsync(SubscriptionEntity subscription, CancellationToken cancellationToken);
-
-    Task Update(SubscriptionEntity subscription, CancellationToken cancellationToken);
+    void Update(SubscriptionEntity subscription);
 }
