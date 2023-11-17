@@ -14,7 +14,5 @@ public sealed class SubscriptionByIdSpecification : Specification<SubscriptionEn
     }
 
     public override string ToString()
-    {
-        return $"{typeof(Guid)}: {_id}";
-    }
+        => $"{typeof(Guid)}: {_id}";
 }

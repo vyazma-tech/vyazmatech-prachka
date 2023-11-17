@@ -13,10 +13,15 @@ public static class SpecificationEvaluator
 
         queryable = queryable.Where(specification.Criteria);
 
-        if (specification.OrderByExpression is not null) queryable = queryable.OrderBy(specification.OrderByExpression);
+        if (specification.OrderByExpression is not null)
+        {
+            queryable = queryable.OrderBy(specification.OrderByExpression);
+        }
 
         if (specification.OrderByDescendingExpression is not null)
+        {
             queryable = queryable.OrderByDescending(specification.OrderByDescendingExpression);
+        }
 
         return queryable;
     }

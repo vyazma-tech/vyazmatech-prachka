@@ -7,7 +7,7 @@ namespace Infrastructure.DataAccess.Repositories;
 internal sealed class UserRepository : GenericRepository<UserEntity>, IUserRepository
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="UserRepository" /> class.
+    /// Initializes a new instance of the <see cref="UserRepository" /> class.
     /// </summary>
     /// <param name="context">The database context.</param>
     public UserRepository(DatabaseContext context)

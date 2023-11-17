@@ -6,7 +6,7 @@ using Domain.Common.Result;
 namespace Domain.Core.ValueObjects;
 
 /// <summary>
-///     Describes queue capacity model.
+/// Describes queue capacity model.
 /// </summary>
 public sealed class Capacity : ValueObject
 {
@@ -16,12 +16,12 @@ public sealed class Capacity : ValueObject
     }
 
     /// <summary>
-    ///     Gets capacity.
+    /// Gets capacity.
     /// </summary>
     public int Value { get; }
 
     /// <summary>
-    ///     Validates capacity and creates capacity instance.
+    /// Validates capacity and creates capacity instance.
     /// </summary>
     /// <param name="capacity">capacity.</param>
     /// <returns>constructed capacity instance.</returns>

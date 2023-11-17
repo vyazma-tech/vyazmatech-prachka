@@ -15,7 +15,7 @@ internal abstract class GenericRepository<TEntity>
     private readonly DatabaseContext _context;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="GenericRepository{TEntity}" /> class.
+    /// Initializes a new instance of the <see cref="GenericRepository{TEntity}" /> class.
     /// </summary>
     /// <param name="context">database context.</param>
     protected GenericRepository(DatabaseContext context)
@@ -24,7 +24,7 @@ internal abstract class GenericRepository<TEntity>
     }
 
     /// <summary>
-    ///     Gets the database set.
+    /// Gets the database set.
     /// </summary>
     protected virtual DbSet<TEntity> DbSet => _context.Set<TEntity>();
 
@@ -54,19 +54,13 @@ internal abstract class GenericRepository<TEntity>
     }
 
     public void Insert(TEntity entity)
-    {
-        DbSet.Add(entity);
-    }
+        => DbSet.Add(entity);
 
     public async Task InsertRangeAsync(IReadOnlyCollection<TEntity> entities, CancellationToken cancellationToken)
-    {
-        await DbSet.AddRangeAsync(entities, cancellationToken);
-    }
+        => await DbSet.AddRangeAsync(entities, cancellationToken);
 
     public void Update(TEntity entity)
-    {
-        DbSet.Update(entity);
-    }
+        => DbSet.Update(entity);
 
     public void Remove(TEntity entity)
     {
@@ -75,9 +69,7 @@ internal abstract class GenericRepository<TEntity>
     }
 
     protected IQueryable<TEntity> ApplySpecification(Specification<TEntity> specification)
-    {
-        return SpecificationEvaluator.GetQuery(DbSet, specification);
-    }
+        => SpecificationEvaluator.GetQuery(DbSet, specification);
 
     private EntityEntry<TEntity> GetEntry(TEntity entity)
     {

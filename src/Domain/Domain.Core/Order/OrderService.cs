@@ -34,10 +34,16 @@ public class OrderService
         }
 
         Result<OrderEntity> removalResult = order.Queue.Remove(order);
-        if (removalResult.IsFaulted) return removalResult;
+        if (removalResult.IsFaulted)
+        {
+            return removalResult;
+        }
 
         Result<OrderEntity> entranceResult = queue.Add(order);
-        if (entranceResult.IsFaulted) return entranceResult;
+        if (entranceResult.IsFaulted)
+        {
+            return entranceResult;
+        }
 
         order.Prolong(queue, prolongedOnUtc);
         _orderRepository.Update(order);

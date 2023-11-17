@@ -72,19 +72,13 @@ public static class DomainErrors
             $"{nameof(Queue)}.{nameof(Expired)}",
             "Queue already expired. You cannot perform this action.");
 
-        public static Error ContainsOrderWithId(Guid id)
-        {
-            return new Error(
-                $"{nameof(Queue)}.{nameof(ContainsOrderWithId)}",
-                $"The queue already contains order with id: {id}");
-        }
+        public static Error ContainsOrderWithId(Guid id) => new (
+            $"{nameof(Queue)}.{nameof(ContainsOrderWithId)}",
+            $"The queue already contains order with id: {id}");
 
-        public static Error OrderIsNotInQueue(Guid id)
-        {
-            return new Error(
-                $"{nameof(Queue)}.{nameof(OrderIsNotInQueue)}",
-                $"The queue does not contain order with id: {id}");
-        }
+        public static Error OrderIsNotInQueue(Guid id) => new (
+            $"{nameof(Queue)}.{nameof(OrderIsNotInQueue)}",
+            $"The queue does not contain order with id: {id}");
     }
 
     public static class Subscription
@@ -97,19 +91,13 @@ public static class DomainErrors
             $"{nameof(Subscription)}.{nameof(NotFoundForRequest)}",
             "The subscription for this request was not found");
 
-        public static Error ContainsOrderWithId(Guid id)
-        {
-            return new Error(
-                $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
-                $"The subscription already contains order with id: {id}");
-        }
+        public static Error ContainsOrderWithId(Guid id) => new (
+            $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
+            $"The subscription already contains order with id: {id}");
 
-        public static Error OrderIsNotInSubscription(Guid id)
-        {
-            return new Error(
-                $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
-                $"The subscription does not contain order with id: {id}");
-        }
+        public static Error OrderIsNotInSubscription(Guid id) => new (
+            $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
+            $"The subscription does not contain order with id: {id}");
     }
 
     public static class TelegramId

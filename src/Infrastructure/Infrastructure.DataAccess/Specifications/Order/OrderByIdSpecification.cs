@@ -14,7 +14,5 @@ public sealed class OrderByIdSpecification : Specification<OrderEntity>
     }
 
     public override string ToString()
-    {
-        return $"{typeof(Guid)}: {_orderId}";
-    }
+        => $"{typeof(Guid)}: {_orderId}";
 }

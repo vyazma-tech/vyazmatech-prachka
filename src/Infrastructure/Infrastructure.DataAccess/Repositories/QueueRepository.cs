@@ -7,7 +7,7 @@ namespace Infrastructure.DataAccess.Repositories;
 internal sealed class QueueRepository : GenericRepository<QueueEntity>, IQueueRepository
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="QueueRepository" /> class.
+    /// Initializes a new instance of the <see cref="QueueRepository" /> class.
     /// </summary>
     /// <param name="context">The database context.</param>
     public QueueRepository(DatabaseContext context)

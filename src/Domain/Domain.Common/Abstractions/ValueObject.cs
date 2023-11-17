@@ -26,7 +26,10 @@ public abstract class ValueObject : IEquatable<ValueObject>
     {
         HashCode hashCode = default;
 
-        foreach (object obj in GetEqualityComponents()) hashCode.Add(obj);
+        foreach (object obj in GetEqualityComponents())
+        {
+            hashCode.Add(obj);
+        }
 
         return hashCode.ToHashCode();
     }

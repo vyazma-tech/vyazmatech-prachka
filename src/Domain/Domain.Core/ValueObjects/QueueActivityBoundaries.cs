@@ -6,8 +6,8 @@ using Domain.Common.Result;
 namespace Domain.Core.ValueObjects;
 
 /// <summary>
-///     Describes queue activity boundaries.
-///     i.e: 1pm - 5pm.
+/// Describes queue activity boundaries.
+/// i.e: 1pm - 5pm.
 /// </summary>
 public sealed class QueueActivityBoundaries : ValueObject
 {
@@ -18,17 +18,17 @@ public sealed class QueueActivityBoundaries : ValueObject
     }
 
     /// <summary>
-    ///     Gets queue active from time.
+    /// Gets queue active from time.
     /// </summary>
     public TimeOnly ActiveFrom { get; }
 
     /// <summary>
-    ///     Gets queue active until time.
+    /// Gets queue active until time.
     /// </summary>
     public TimeOnly ActiveUntil { get; }
 
     /// <summary>
-    ///     Validates and creates queue activity boundaries instance.
+    /// Validates and creates queue activity boundaries instance.
     /// </summary>
     /// <param name="activeFrom">queue active from.</param>
     /// <param name="activeUntil">queue active until.</param>

@@ -15,7 +15,5 @@ public sealed class OrderByUserSpecification : Specification<OrderEntity>
     }
 
     public override string ToString()
-    {
-        return $"{typeof(UserEntity)}: {_userId}";
-    }
+        => $"{typeof(UserEntity)}: {_userId}";
 }

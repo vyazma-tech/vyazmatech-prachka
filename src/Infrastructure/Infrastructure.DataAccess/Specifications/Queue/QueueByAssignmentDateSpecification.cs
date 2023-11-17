@@ -11,7 +11,5 @@ public sealed class QueueByAssignmentDateSpecification : Specification<QueueEnti
     }
 
     public override string ToString()
-    {
-        return string.Empty;
-    }
+        => string.Empty;
 }

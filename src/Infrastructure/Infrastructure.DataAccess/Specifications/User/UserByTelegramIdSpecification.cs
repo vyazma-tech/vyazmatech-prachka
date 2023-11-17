@@ -15,7 +15,5 @@ public sealed class UserByTelegramIdSpecification : Specification<UserEntity>
     }
 
     public override string ToString()
-    {
-        return $"{typeof(TelegramId)}: {_telegramId.Value}";
-    }
+        => $"{typeof(TelegramId)}: {_telegramId.Value}";
 }

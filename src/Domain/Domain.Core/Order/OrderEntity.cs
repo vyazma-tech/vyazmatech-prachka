@@ -10,7 +10,7 @@ using Domain.Core.User;
 namespace Domain.Core.Order;
 
 /// <summary>
-///     Describes order entity.
+/// Describes order entity.
 /// </summary>
 public class OrderEntity : Entity, IAuditableEntity
 {
@@ -37,27 +37,27 @@ public class OrderEntity : Entity, IAuditableEntity
     public virtual QueueEntity Queue { get; private set; }
 
     /// <summary>
-    ///     Gets a value indicating whether order paid or not.
+    /// Gets a value indicating whether order paid or not.
     /// </summary>
     public bool Paid { get; private set; }
 
     /// <summary>
-    ///     Gets a value indicating whether order ready or not.
+    /// Gets a value indicating whether order ready or not.
     /// </summary>
     public bool Ready { get; private set; }
 
     /// <summary>
-    ///     Gets order creation date.
+    /// Gets order creation date.
     /// </summary>
     public DateTime CreationDate { get; }
 
     /// <summary>
-    ///     Gets modification date.
+    /// Gets modification date.
     /// </summary>
     public DateTime? ModifiedOn { get; private set; }
 
     /// <summary>
-    ///     Validates provided data for order and constructs order instance, when data is valid.
+    /// Validates provided data for order and constructs order instance, when data is valid.
     /// </summary>
     /// <param name="user">order issuer.</param>
     /// <param name="queue">queue of the order.</param>
@@ -70,13 +70,16 @@ public class OrderEntity : Entity, IAuditableEntity
         var order = new OrderEntity(user, queue, creationDateUtc);
         Result<OrderEntity> entranceResult = queue.Add(order);
 
-        if (entranceResult.IsFaulted) return entranceResult;
+        if (entranceResult.IsFaulted)
+        {
+            return entranceResult;
+        }
 
         return order;
     }
 
     /// <summary>
-    ///     Pays order and raises <see cref="OrderPaidDomainEvent" />.
+    /// Pays order and raises <see cref="OrderPaidDomainEvent" />.
     /// </summary>
     /// <param name="dateTimeUtc">payment utc date.</param>
     /// <returns>same order instance.</returns>
@@ -97,7 +100,7 @@ public class OrderEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    ///     Makes order ready and raises <see cref="OrderReadyDomainEvent" />.
+    /// Makes order ready and raises <see cref="OrderReadyDomainEvent" />.
     /// </summary>
     /// <param name="dateTimeUtc">ready utc date.</param>
     /// <returns>same order instance.</returns>
@@ -118,7 +121,7 @@ public class OrderEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    ///     Sets new queue for an order.
+    /// Sets new queue for an order.
     /// </summary>
     /// <param name="queue">queue, which order should be assigned to.</param>
     /// <param name="dateTimeUtc">modification date.</param>

@@ -3,8 +3,8 @@
 namespace Domain.Core.Queue.Events;
 
 /// <summary>
-///     There is available position(s) in a queue. Subscribers
-///     should be notified.
+/// There is available position(s) in a queue. Subscribers
+/// should be notified.
 /// </summary>
 public sealed class PositionAvailableDomainEvent : IDomainEvent
 {
