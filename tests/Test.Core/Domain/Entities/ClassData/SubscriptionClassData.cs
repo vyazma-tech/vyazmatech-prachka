@@ -14,9 +14,7 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
     public IEnumerator<object[]> GetEnumerator()
     {
         var dateTimeProvider = new DateTimeProvider();
-        var user = new UserEntity(
-            TelegramId.Create("1").Value,
-            DateTime.UtcNow);
+        UserEntity user = UserClassData.Create();
 
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
