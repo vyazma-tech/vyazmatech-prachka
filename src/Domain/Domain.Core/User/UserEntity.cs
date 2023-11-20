@@ -22,6 +22,7 @@ public sealed class UserEntity : Entity, IAuditableEntity
     {
         Guard.Against.Null(telegramId, nameof(telegramId), "Telegram ID should not be null.");
         Guard.Against.Null(registrationDateUtc, nameof(registrationDateUtc), "Creation date should not be null.");
+        Guard.Against.Null(fullname, nameof(fullname), "Name should not be null.");
 
         TelegramId = telegramId;
         Fullname = fullname;
