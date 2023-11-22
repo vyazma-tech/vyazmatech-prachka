@@ -21,6 +21,7 @@
   </ItemGroup>
   <!--Tests-->
   <ItemGroup>
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.14" />
     <PackageVersion Include="Respawn" Version="6.1.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="3.6.0" />
     <PackageVersion Include="xunit.extensibility.core" Version="2.4.2" />
