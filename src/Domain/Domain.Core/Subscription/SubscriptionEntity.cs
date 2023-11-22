@@ -6,22 +6,23 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.User;
+using Domain.Kernel;
 
-namespace Domain.Core.Subscriber;
+namespace Domain.Core.Subscription;
 
 /// <summary>
 /// Describes subscriber entity.
 /// </summary>
-public sealed class SubscriberEntity : Entity, IAuditableEntity
+public class SubscriptionEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SubscriberEntity"/> class.
+    /// Initializes a new instance of the <see cref="SubscriptionEntity" /> class.
     /// </summary>
     /// <param name="user">subscribed user.</param>
     /// <param name="creationDateUtc">subscription creation utc date.</param>
-    public SubscriberEntity(UserEntity user, DateTime creationDateUtc)
+    public SubscriptionEntity(UserEntity user, DateTime creationDateUtc)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in subscription.");
@@ -33,7 +34,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     }
 
 #pragma warning disable CS8618
-    private SubscriberEntity()
+    private SubscriptionEntity()
 #pragma warning restore CS8618
     {
         _orders = new HashSet<OrderEntity>();
@@ -42,27 +43,27 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets orders, that are subscribed to the newsletter.
     /// </summary>
-    public IReadOnlySet<OrderEntity> Orders => _orders;
-
-    /// <summary>
-    /// Gets subscription creation date.
-    /// </summary>
-    public DateTime CreationDate { get; private set; }
-
-    /// <summary>
-    /// Gets modification date.
-    /// </summary>
-    public DateTime? ModifiedOn { get; private set; }
+    public virtual IReadOnlySet<OrderEntity> Orders => _orders;
 
     /// <summary>
     /// Gets user, who subscription is assigned to.
     /// </summary>
-    public UserEntity User { get; private set; }
+    public virtual UserEntity User { get; private set; }
 
     /// <summary>
     /// Gets queue, orders from which are subscribed to the newsletter.
     /// </summary>
-    public QueueEntity? Queue { get; private set; }
+    public virtual QueueEntity? Queue { get; private set; }
+
+    /// <summary>
+    /// Gets subscription creation date.
+    /// </summary>
+    public DateTime CreationDate { get; }
+
+    /// <summary>
+    /// Gets modification date.
+    /// </summary>
+    public DateTime? ModifiedOn { get; }
 
     /// <summary>
     /// Subscribes order to the newsletter.
@@ -74,7 +75,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order))
         {
-            var exception = new DomainException(DomainErrors.Subscriber.ContainsOrderWithId(order.Id));
+            var exception = new DomainException(DomainErrors.Subscription.ContainsOrderWithId(order.Id));
             return new Result<OrderEntity>(exception);
         }
 
@@ -94,7 +95,7 @@ public sealed class SubscriberEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order) is false)
         {
-            var exception = new DomainException(DomainErrors.Subscriber.OrderIsNotInSubscription(order.Id));
+            var exception = new DomainException(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
             return new Result<OrderEntity>(exception);
         }
 

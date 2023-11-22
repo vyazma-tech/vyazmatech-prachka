@@ -32,7 +32,7 @@ public sealed class QueueActivityBoundaries : ValueObject
     /// </summary>
     /// <param name="activeFrom">queue active from.</param>
     /// <param name="activeUntil">queue active until.</param>
-    /// <returns>constructed <see cref="QueueActivityBoundaries"/> instance.</returns>
+    /// <returns>constructed <see cref="QueueActivityBoundaries" /> instance.</returns>
     /// <remarks>returns failure result, when provided time range is empty.</remarks>
     public static Result<QueueActivityBoundaries> Create(TimeOnly activeFrom, TimeOnly activeUntil)
     {

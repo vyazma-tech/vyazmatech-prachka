@@ -11,7 +11,9 @@ namespace Domain.Core.ValueObjects;
 public sealed class Capacity : ValueObject
 {
     private Capacity(int value)
-        => Value = value;
+    {
+        Value = value;
+    }
 
     /// <summary>
     /// Gets capacity.

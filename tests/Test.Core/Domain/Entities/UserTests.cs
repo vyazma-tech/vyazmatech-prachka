@@ -1,9 +1,8 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Common.Errors;
-using Domain.Common.Result;
+﻿using Domain.Common.Result;
 using Domain.Core.User;
 using Domain.Core.User.Events;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 using FluentAssertions;
 using Moq;
 using Test.Core.Domain.Entities.ClassData;
@@ -13,7 +12,7 @@ namespace Test.Core.Domain.Entities;
 
 public class UserTests
 {
-    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
+    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new ();
 
     [Theory]
     [ClassData(typeof(TelegramIdClassData))]
@@ -38,7 +37,6 @@ public class UserTests
     [Fact]
     public void RegisterUser_ShouldReturnNotNullUser_AndRaiseDomainEvent()
     {
-
         DateTime registrationDate = DateTime.UtcNow;
         var user = new UserEntity(
             TelegramId.Create("1").Value,
