@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.DataAccess.Cont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Kernel", "src\Domain\Domain.Kernel\Domain.Kernel.csproj", "{2CB1F38E-717E-4567-A10B-B0F72C6A4808}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Core", "src\Application\Application.Core\Application.Core.csproj", "{8791CAB3-2D2A-426D-9161-0E623F783A9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
