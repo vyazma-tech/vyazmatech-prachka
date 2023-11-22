@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Handlers", "tests\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Endpoints", "tests\Test.Endpoints\Test.Endpoints.csproj", "{29AF4C6A-D751-4990-B1B5-1F711C2D6BCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrusovNET.Playground", "src\Playground\TrusovNET.Playground\TrusovNET.Playground.csproj", "{55CF322A-B520-4518-B4C3-2C5CD56B686D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,7 @@ Global
 		{FE29D14D-F51B-4911-B9CB-09E0CC599076} = {2DD18CEA-A937-4A4C-9F28-5A350E3AF182}
 		{4C4EEEFE-BB6C-4401-897C-4449A7E3560F} = {2DD18CEA-A937-4A4C-9F28-5A350E3AF182}
 		{29AF4C6A-D751-4990-B1B5-1F711C2D6BCF} = {2DD18CEA-A937-4A4C-9F28-5A350E3AF182}
+		{55CF322A-B520-4518-B4C3-2C5CD56B686D} = {907F152B-4CB7-48FA-9F08-3591E8DBE29E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -102,5 +105,9 @@ Global
 		{29AF4C6A-D751-4990-B1B5-1F711C2D6BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29AF4C6A-D751-4990-B1B5-1F711C2D6BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29AF4C6A-D751-4990-B1B5-1F711C2D6BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55CF322A-B520-4518-B4C3-2C5CD56B686D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55CF322A-B520-4518-B4C3-2C5CD56B686D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55CF322A-B520-4518-B4C3-2C5CD56B686D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55CF322A-B520-4518-B4C3-2C5CD56B686D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
