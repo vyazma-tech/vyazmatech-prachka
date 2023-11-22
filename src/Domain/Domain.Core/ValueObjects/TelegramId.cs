@@ -14,7 +14,9 @@ public sealed class TelegramId : ValueObject
     private const string DigitNumberPattern = @"^\d*$";
 
     private TelegramId(string value)
-        => Value = value;
+    {
+        Value = value;
+    }
 
     /// <summary>
     /// Gets telegram id.

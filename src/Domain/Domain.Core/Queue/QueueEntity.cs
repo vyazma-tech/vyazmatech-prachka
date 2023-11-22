@@ -6,19 +6,20 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue.Events;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 
 namespace Domain.Core.Queue;
 
 /// <summary>
 /// Describes queue entity.
 /// </summary>
-public sealed class QueueEntity : Entity, IAuditableEntity
+public class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
     private bool _maxCapacityReachedOnce;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="QueueEntity"/> class.
+    /// Initializes a new instance of the <see cref="QueueEntity" /> class.
     /// </summary>
     /// <param name="capacity">queue capacity.</param>
     /// <param name="queueDate">queue date, what queue assigned to.</param>
@@ -52,16 +53,6 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     public Capacity Capacity { get; private set; }
 
     /// <summary>
-    /// Gets date, what queue is assigned to.
-    /// </summary>
-    public DateTime CreationDate { get; private set; }
-
-    /// <summary>
-    /// Gets modification date.
-    /// </summary>
-    public DateTime? ModifiedOn { get; private set; }
-
-    /// <summary>
     /// Gets time range for a queue activity.
     /// </summary>
     public QueueActivityBoundaries ActivityBoundaries { get; }
@@ -69,13 +60,26 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets orders, that currently in the queue.
     /// </summary>
-    public IReadOnlySet<OrderEntity> Items => _orders;
+    public virtual IReadOnlySet<OrderEntity> Items => _orders;
 
     /// <summary>
     /// Gets a value indicating whether queue expired or not.
     /// </summary>
     public bool Expired
-        => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
+    {
+        get => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
+        private set => _ = value;
+    }
+
+    /// <summary>
+    /// Gets date, what queue is assigned to.
+    /// </summary>
+    public DateTime CreationDate { get; }
+
+    /// <summary>
+    /// Gets modification date.
+    /// </summary>
+    public DateTime? ModifiedOn { get; private set; }
 
     /// <summary>
     /// Add order into a queue. Should <b>never</b> be called from queue instance,
@@ -96,6 +100,12 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         if (_orders.Count.Equals(Capacity.Value))
         {
             var exception = new DomainException(DomainErrors.Queue.Overfull);
+            return new Result<OrderEntity>(exception);
+        }
+
+        if (Expired)
+        {
+            var exception = new DomainException(DomainErrors.Queue.Expired);
             return new Result<OrderEntity>(exception);
         }
 
@@ -146,7 +156,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Makes an attempt to expire queue and raises <see cref="QueueExpiredDomainEvent"/>.
+    /// Makes an attempt to expire queue and raises <see cref="QueueExpiredDomainEvent" />.
     /// Should be called in some kind of background worker.
     /// </summary>
     /// <returns>true, if event is raised, false otherwise.</returns>
@@ -162,17 +172,18 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     }
 
     /// <summary>
-    /// Raises <see cref="PositionAvailableDomainEvent"/>, if queue is expired
+    /// Raises <see cref="PositionAvailableDomainEvent" />, if queue is expired
     /// and it's not full by that time.
     /// </summary>
-    /// <returns>same queue instance.</returns>
-    public QueueEntity NotifyAboutAvailablePosition()
+    /// <returns>true, if event is raised, false otherwise.</returns>
+    public bool TryNotifyAboutAvailablePosition()
     {
         if (Expired && _maxCapacityReachedOnce)
         {
             Raise(new PositionAvailableDomainEvent(this));
+            return true;
         }
 
-        return this;
+        return false;
     }
 }

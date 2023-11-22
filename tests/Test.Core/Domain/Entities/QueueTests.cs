@@ -1,4 +1,5 @@
-﻿using Domain.Common.Abstractions;
+﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Common.Abstractions;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -6,16 +7,19 @@ using Domain.Core.Queue;
 using Domain.Core.Queue.Events;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 using FluentAssertions;
 using Infrastructure.Tools;
 using Moq;
+using Test.Core.Domain.Entities.ClassData;
 using Xunit;
 
 namespace Test.Core.Domain.Entities;
 
+[SuppressMessage("Usage", "xUnit1026:Theory methods should use all of their parameters")]
 public class QueueTests
 {
-    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new Mock<IDateTimeProvider>();
+    private readonly Mock<IDateTimeProvider> _dateTimeProvider = new ();
 
     [Fact]
     public void CreateQueueCapacity_ShouldReturnFailureResult_WhenCapacityIsNegative()
@@ -30,21 +34,21 @@ public class QueueTests
     public void CreateQueueDate_ShouldReturnFailureResult_WhenCreationDateIsInThePast()
     {
         var dateTime = new DateTime(
-            year: 2023,
-            month: 1,
-            day: 1,
-            hour: 1,
-            minute: 30,
-            second: 0);
+            2023,
+            1,
+            1,
+            1,
+            30,
+            0);
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
 
         var registrationDate = new DateTime(
-            year: 2023,
-            month: 1,
-            day: 1,
-            hour: 1,
-            minute: 29,
-            second: 59);
+            2023,
+            1,
+            1,
+            1,
+            29,
+            59);
         Result<QueueDate> creationResult = QueueDate.Create(registrationDate, _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
@@ -55,21 +59,21 @@ public class QueueTests
     public void CreateQueueDate_ShouldReturnFailureResult_WhenCreationDateIsNotNextWeek()
     {
         var dateTime = new DateTime(
-            year: 2023,
-            month: 1,
-            day: 1,
-            hour: 1,
-            minute: 30,
-            second: 0);
+            2023,
+            1,
+            1,
+            1,
+            30,
+            0);
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
 
         var registrationDate = new DateTime(
-            year: 2023,
-            month: 1,
-            day: 9,
-            hour: 1,
-            minute: 30,
-            second: 0);
+            2023,
+            1,
+            9,
+            1,
+            30,
+            0);
         Result<QueueDate> creationResult = QueueDate.Create(registrationDate, _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
@@ -77,7 +81,7 @@ public class QueueTests
     }
 
     [Fact]
-    public void CreateQueue_ShouldReturnNotNullQueue()
+    public void CreateQueue_Should_ReturnNotNullQueue()
     {
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
@@ -97,8 +101,11 @@ public class QueueTests
     }
 
     [Theory]
-    [MemberData(nameof(UserWithOrderInQueueMemberData))]
-    public void EnterQueue_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(QueueEntity queue, OrderEntity order)
+    [ClassData(typeof(QueueClassData))]
+    public void EnterQueue_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
     {
         Result<OrderEntity> entranceResult = queue.Add(order);
 
@@ -107,8 +114,11 @@ public class QueueTests
     }
 
     [Theory]
-    [MemberData(nameof(UserWithOrderInQueueMemberData))]
-    public void QuitQueue_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(QueueEntity queue, OrderEntity order)
+    [ClassData(typeof(QueueClassData))]
+    public void QuitQueue_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
     {
         _ = queue.Remove(order);
 
@@ -154,25 +164,36 @@ public class QueueTests
             .Which.Should().BeOfType<QueueExpiredDomainEvent>();
     }
 
-    public static IEnumerable<object[]> UserWithOrderInQueueMemberData()
+    [Theory]
+    [ClassData(typeof(QueueClassData))]
+    public void EnterQueue_ShouldReturnFailureResult_WhenQueueIsFull(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
     {
-        var dateTimeProvider = new DateTimeProvider();
-        var user = new UserEntity(
-            TelegramId.Create("1").Value,
-            DateTime.UtcNow);
-
-        var queue = new QueueEntity(
-            Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), dateTimeProvider).Value,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
-
-        Result<OrderEntity> order = OrderEntity.Create(
+        Result<OrderEntity> incomingOrderResult = OrderEntity.Create(
             user,
             queue,
             DateTime.UtcNow);
 
-        yield return new object[] { queue, order.Value };
+        incomingOrderResult.IsFaulted.Should().BeTrue();
+        incomingOrderResult.Error.Message.Should().Be(DomainErrors.Queue.Overfull.Message);
+    }
+
+    [Theory]
+    [ClassData(typeof(QueueClassData))]
+    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(
+        QueueEntity queue,
+        UserEntity user,
+        OrderEntity order)
+    {
+        queue.Remove(order);
+        await Task.Delay(1_000);
+        queue.TryExpire();
+        queue.ClearDomainEvents();
+        queue.TryNotifyAboutAvailablePosition();
+
+        queue.DomainEvents.Should().ContainSingle()
+            .Which.Should().BeOfType<PositionAvailableDomainEvent>();
     }
 }

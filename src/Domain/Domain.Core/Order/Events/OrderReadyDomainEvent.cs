@@ -1,4 +1,4 @@
-﻿using Domain.Common.Abstractions;
+﻿using Domain.Kernel;
 
 namespace Domain.Core.Order.Events;
 
