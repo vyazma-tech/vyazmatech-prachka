@@ -15,14 +15,17 @@ public sealed class UserEntity : Entity, IAuditableEntity
     /// Initializes a new instance of the <see cref="UserEntity" /> class.
     /// </summary>
     /// <param name="telegramId">user telegram id.</param>
+    /// <param name="fullname">user full name.</param>
     /// <param name="registrationDateUtc">user registration date.</param>
-    public UserEntity(TelegramId telegramId, DateTime registrationDateUtc)
+    public UserEntity(TelegramId telegramId, Fullname fullname, DateTime registrationDateUtc)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(telegramId, nameof(telegramId), "Telegram ID should not be null.");
         Guard.Against.Null(registrationDateUtc, nameof(registrationDateUtc), "Creation date should not be null.");
+        Guard.Against.Null(fullname, nameof(fullname), "Name should not be null.");
 
         TelegramId = telegramId;
+        Fullname = fullname;
         CreationDate = registrationDateUtc;
         ModifiedOn = null;
 
@@ -37,6 +40,11 @@ public sealed class UserEntity : Entity, IAuditableEntity
     /// Gets telegram id.
     /// </summary>
     public TelegramId TelegramId { get; }
+
+    /// <summary>
+    /// Gets telegram id.
+    /// </summary>
+    public Fullname Fullname { get; }
 
     /// <summary>
     /// Gets registration date.

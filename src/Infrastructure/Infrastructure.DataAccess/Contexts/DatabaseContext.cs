@@ -39,5 +39,6 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
     {
         configurationBuilder.Properties<Capacity>().HaveConversion<CapacityValueConverter>();
         configurationBuilder.Properties<TelegramId>().HaveConversion<TelegramIdValueConverter>();
+        configurationBuilder.Properties<Fullname>().HaveConversion<FullnameValueConverter>();
     }
 }

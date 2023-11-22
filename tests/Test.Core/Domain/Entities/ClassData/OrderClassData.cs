@@ -13,9 +13,7 @@ public sealed class OrderClassData : IEnumerable<object[]>
     public IEnumerator<object[]> GetEnumerator()
     {
         var dateTimeProvider = new DateTimeProvider();
-        var user = new UserEntity(
-            TelegramId.Create("1").Value,
-            dateTimeProvider.UtcNow);
+        var user = UserClassData.Create();
 
         DateTime queueDate = DateTime.UtcNow.AddDays(1);
         var queue = new QueueEntity(

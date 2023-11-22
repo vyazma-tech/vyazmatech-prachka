@@ -38,9 +38,7 @@ public class UserTests
     public void RegisterUser_ShouldReturnNotNullUser_AndRaiseDomainEvent()
     {
         DateTime registrationDate = DateTime.UtcNow;
-        var user = new UserEntity(
-            TelegramId.Create("1").Value,
-            registrationDate);
+        UserEntity user = UserClassData.Create();
 
         user.Should().NotBeNull();
         user.TelegramId.Value.Should().Be("1");

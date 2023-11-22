@@ -21,9 +21,7 @@ public class OrderTests
     {
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
-        var user = new UserEntity(
-            TelegramId.Create("1").Value,
-            _dateTimeProvider.Object.UtcNow);
+        UserEntity user = UserClassData.Create();
 
         DateTime queueDate = DateTime.UtcNow.AddDays(1);
         var queue = new QueueEntity(

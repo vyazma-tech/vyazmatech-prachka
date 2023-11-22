@@ -16,9 +16,7 @@ public class SubscriptionTests
     public void CreateSubscription_Should_ReturnNotNullSubscriber()
     {
         DateTime creationDate = DateTime.UtcNow;
-        var user = new UserEntity(
-            TelegramId.Create("1").Value,
-            creationDate);
+        UserEntity user = UserClassData.Create();
 
         var subscription = new SubscriptionEntity(
             user,

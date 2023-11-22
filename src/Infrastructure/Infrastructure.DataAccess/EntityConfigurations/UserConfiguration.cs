@@ -11,5 +11,6 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<UserEntity>
         builder.Property(user => user.TelegramId);
         builder.Property(user => user.ModifiedOn);
         builder.Property(user => user.CreationDate);
+        builder.Property(user => user.Fullname);
     }
 }

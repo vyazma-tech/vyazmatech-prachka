@@ -5,6 +5,7 @@ using Domain.Core.Queue;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using Infrastructure.Tools;
+using Test.Core.Domain.Entities.ClassData;
 
 namespace Test.Core.Domain.UseCases.ClassData;
 
@@ -19,9 +20,7 @@ public sealed class OrderServiceClassData : IEnumerable<object[]>
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(1),
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value);
 
-        var user = new UserEntity(
-            TelegramId.Create("1").Value,
-            DateTime.Today);
+        UserEntity user = UserClassData.Create();
 
         Result<OrderEntity> orderCreationResult = OrderEntity.Create(
             user,
