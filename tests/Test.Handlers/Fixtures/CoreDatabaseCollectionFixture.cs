@@ -1,6 +1,6 @@
 ﻿using Xunit;
 
-namespace Test.Common.Fixtures.Database;
+namespace Test.Handlers.Fixtures;
 
 [CollectionDefinition(nameof(CoreDatabaseCollectionFixture))]
 public class CoreDatabaseCollectionFixture : ICollectionFixture<CoreDatabaseFixture>

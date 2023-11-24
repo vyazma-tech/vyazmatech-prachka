@@ -4,7 +4,7 @@ using Infrastructure.DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Test.Common.Fixtures.Database;
+namespace Test.Handlers.Fixtures;
 
 public class CoreDatabaseFixture : DatabaseFixture
 {
@@ -14,7 +14,9 @@ public class CoreDatabaseFixture : DatabaseFixture
     protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddDatabase(x =>
-            x.UseLazyLoadingProxies().UseNpgsql(Container.GetConnectionString()));
+            x
+                // .UseLazyLoadingProxies()
+                .UseNpgsql(Container.GetConnectionString()));
     }
 
     public override async Task ResetAsync()
@@ -34,12 +36,11 @@ public class CoreDatabaseFixture : DatabaseFixture
         return Context.Database.GetDbConnection();
     }
 
-    protected override Task UseProviderAsync(IServiceProvider provider)
+    protected override async Task UseProviderAsync(IServiceProvider provider)
     {
         Scope = provider.CreateAsyncScope();
+        await Scope.UseDatabase();
 
         Context = Scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-
-        return Task.CompletedTask;
     }
 }

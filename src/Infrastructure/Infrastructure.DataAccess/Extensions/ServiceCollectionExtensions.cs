@@ -14,4 +14,10 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
+    public static async Task UseDatabase(this IServiceScope scope)
+    {
+        DatabaseContext context = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+        await context.Database.MigrateAsync();
+    }
 }
