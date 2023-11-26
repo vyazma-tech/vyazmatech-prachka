@@ -7,10 +7,7 @@
     <PackageVersion Include="Ardalis.GuardClauses" Version="4.1.1" />
     <PackageVersion Include="FastEndpoints" Version="5.19.2" />
     <PackageVersion Include="Mediator.Abstractions" Version="2.1.7" />
-    <PackageVersion Include="Mediator.SourceGenerator" Version="2.1.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageVersion>
+    <PackageVersion Include="Mediator.SourceGenerator" Version="2.1.7" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.14" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
