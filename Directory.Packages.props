@@ -23,6 +23,8 @@
   </ItemGroup>
   <!--Tests-->
   <ItemGroup>
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.14" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="7.0.14" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.14" />
     <PackageVersion Include="Respawn" Version="6.1.0" />
     <PackageVersion Include="Testcontainers.PostgreSql" Version="3.6.0" />
