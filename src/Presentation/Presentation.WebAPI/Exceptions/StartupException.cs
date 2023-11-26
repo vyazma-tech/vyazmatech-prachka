@@ -2,7 +2,8 @@
 
 public class StartupException : Exception
 {
-    public StartupException() : base() {}
+    public StartupException() { }
 
-    public StartupException(string? message) : base(message) {}
+    public StartupException(string? message)
+        : base(message) { }
 }
