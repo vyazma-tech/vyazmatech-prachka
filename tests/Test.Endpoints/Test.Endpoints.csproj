@@ -8,6 +8,8 @@
         <PackageReference Include="FastEndpoints" />
         <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" />
         <PackageReference Include="Microsoft.NET.Test.Sdk"/>
         <PackageReference Include="Moq" />
         <PackageReference Include="xunit"/>
@@ -26,6 +28,7 @@
       <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.Tools\Infrastructure.Tools.csproj" />
       <ProjectReference Include="..\..\src\Playground\TrusovNET.Playground\TrusovNET.Playground.csproj" />
       <ProjectReference Include="..\..\src\Presentation\Presentation.Endpoints\Presentation.Endpoints.csproj" />
+      <ProjectReference Include="..\..\src\Presentation\Presentation.WebAPI\Presentation.WebAPI.csproj" />
     </ItemGroup>
 
 </Project>

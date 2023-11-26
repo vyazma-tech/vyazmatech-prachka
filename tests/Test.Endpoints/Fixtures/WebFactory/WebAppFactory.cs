@@ -1,21 +1,34 @@
-﻿using FastEndpoints;
+﻿using Application.Handlers;
+using FastEndpoints;
+using Infrastructure.DataAccess.Contexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using TrusovNET.Playground;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Presentation.WebAPI;
 using Xunit;
 
 namespace Test.Endpoints.Fixtures.WebFactory;
 
-public class WebAppFactory : WebApplicationFactory<IPlaygroundMarker>, IAsyncLifetime
+public class WebAppFactory : WebApplicationFactory<IWebAPIMarker>, IAsyncLifetime
 {
-    protected HttpClient Client { get; private set; } = default!;
+    public HttpClient Client { get; private set; } = default!;
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(s =>
         {
-            s.AddFastEndpoints();
+            ServiceDescriptor? descriptor = s.SingleOrDefault(
+                d => d.ServiceType == typeof(DbContextOptions<DatabaseContext>));
+
+            if (descriptor is not null)
+                s.Remove(descriptor);
+
+            s.AddDbContext<DatabaseContext>(x =>
+                x.UseSqlite("Data Source=staging.db"));
         });
+
+        builder.UseEnvironment("Staging");
     }
 
     public Task InitializeAsync()

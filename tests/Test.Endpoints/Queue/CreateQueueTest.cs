@@ -4,8 +4,6 @@ using Domain.Kernel;
 using FastEndpoints;
 using FluentAssertions;
 using Infrastructure.Tools;
-using Mediator;
-using Moq;
 using Presentation.Endpoints.Queue.CreateQueues;
 using Test.Endpoints.Fixtures.WebFactory;
 using Xunit;
@@ -16,14 +14,11 @@ namespace Test.Endpoints.Queue;
 public class CreateQueueTest
 {
     private readonly HttpClient _client;
-    private readonly CreateQueuesEndpoint _endpoint;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public CreateQueueTest(WebAppFactory factory)
     {
-        IMediator mediator = new Mock<IMediator>().Object;
-        _endpoint = new CreateQueuesEndpoint(mediator);
-        _client = factory.CreateClient();
+        _client = factory.Client;
         _dateTimeProvider = new DateTimeProvider();
     }
 
