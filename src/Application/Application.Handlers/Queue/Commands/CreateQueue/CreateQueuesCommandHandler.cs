@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Handlers.Queue.Commands.CreateQueue;
 
-public sealed class CreateQueuesCommandHandler : ICommandHandler<CreateQueuesCommand, CreateQueuesResponse>
+internal sealed class CreateQueuesCommandHandler : ICommandHandler<CreateQueuesCommand, CreateQueuesResponse>
 {
     private readonly ILogger<CreateQueuesCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
