@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Presentation.Endpoints;
+namespace Presentation.Endpoints.Extensions;
 
-public static class Registration
+public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddEndpoints(this IServiceCollection services)
     {
