@@ -1,8 +1,6 @@
-using Application.Handlers;
 using Application.Handlers.Extensions;
 using Infrastructure.DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Endpoints;
 using Presentation.Endpoints.Extensions;
 using Presentation.WebAPI.Configuration;
 using Presentation.WebAPI.Exceptions;
@@ -16,7 +14,7 @@ PostgresConfiguration? postgresConfiguration = builder.Configuration
 builder.Services.AddSingleton(postgresConfiguration);
 builder.Services.AddDatabase(o =>
 {
-    o.UseNpgsql(postgresConfiguration.ToConnectionString("default"));
+    o.UseNpgsql(postgresConfiguration.ToConnectionString("trusov_net"));
 });
 
 builder.Services.AddApplication();
@@ -24,7 +22,7 @@ builder.Services.AddEndpoints();
 
 WebApplication app = builder.Build();
 
-using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
+await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
 {
     await scope.UseDatabase();
 }
