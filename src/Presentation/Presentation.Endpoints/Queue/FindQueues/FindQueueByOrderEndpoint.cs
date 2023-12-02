@@ -1,5 +1,5 @@
 ﻿using Application.Handlers.Queue.Queries;
-using Application.Handlers.Queue.Queries.FindByIdQueue;
+using Application.Handlers.Queue.Queries.FindByOrderQueue;
 using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Endpoints.Queue.FindQueues;
 
-internal class FindQueueByIdEndpoint : Endpoint<FindQueueByIdQuery, QueueResponse>
+internal class FindQueueByOrderEndpoint : Endpoint<FindQueueByOrderQuery, QueueResponse>
 {
     private readonly IMediator _mediator;
 
-    public FindQueueByIdEndpoint(IMediator mediator)
+    public FindQueueByOrderEndpoint(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -19,13 +19,13 @@ internal class FindQueueByIdEndpoint : Endpoint<FindQueueByIdQuery, QueueRespons
     public override void Configure()
     {
         Verbs(Http.GET);
-        Routes("api/queue/queueId/{QueueId}");
+        Routes("api/queue/orderId/{orderId}");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(FindQueueByIdQuery query, CancellationToken ct)
+    public override async Task HandleAsync(FindQueueByOrderQuery orderQuery, CancellationToken ct)
     {
-        Result<QueueResponse> response = await _mediator.Send(query, ct);
+        Result<QueueResponse> response = await _mediator.Send(orderQuery, ct);
 
         if (response.IsSuccess)
         {

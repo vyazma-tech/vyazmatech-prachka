@@ -1,9 +1,12 @@
 ﻿using System.Net;
+using Application.Handlers.Queue.Commands.CreateQueue;
 using Application.Handlers.Queue.Queries;
+using Application.Handlers.Queue.Queries.FindByIdQueue;
 using Domain.Kernel;
 using FastEndpoints;
 using FluentAssertions;
 using Infrastructure.Tools;
+using Presentation.Endpoints.Queue.CreateQueues;
 using Presentation.Endpoints.Queue.FindQueues;
 using Test.Endpoints.Fixtures.WebFactory;
 using Xunit;
@@ -14,10 +17,12 @@ namespace Test.Endpoints.Queue;
 public class FindQueueByIdTest
 {
     private readonly HttpClient _client;
+    private readonly IDateTimeProvider _dateTimeProvider;
     
     public FindQueueByIdTest(WebAppFactory factory)
     {
         _client = factory.Client;
+        _dateTimeProvider = new DateTimeProvider();
     }
 
     [Fact]

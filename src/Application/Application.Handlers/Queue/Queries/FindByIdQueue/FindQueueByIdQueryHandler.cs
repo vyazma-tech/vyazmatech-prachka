@@ -4,7 +4,7 @@ using Domain.Common.Result;
 using Domain.Core.Queue;
 using Infrastructure.DataAccess.Specifications.Queue;
 
-namespace Application.Handlers.Queue.Queries;
+namespace Application.Handlers.Queue.Queries.FindByIdQueue;
 
 public class FindQueueByIdQueryHandler : IQueryHandler<FindQueueByIdQuery, Result<QueueResponse>>
 {

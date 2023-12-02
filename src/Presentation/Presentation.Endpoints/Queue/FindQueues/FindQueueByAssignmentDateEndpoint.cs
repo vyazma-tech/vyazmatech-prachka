@@ -1,5 +1,5 @@
 ﻿using Application.Handlers.Queue.Queries;
-using Application.Handlers.Queue.Queries.FindByIdQueue;
+using Application.Handlers.Queue.Queries.FindByAssignmentDateQueue;
 using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
@@ -7,11 +7,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Endpoints.Queue.FindQueues;
 
-internal class FindQueueByIdEndpoint : Endpoint<FindQueueByIdQuery, QueueResponse>
+internal class FindQueueByAssignmentDateEndpoint : Endpoint<FindQueueByAssignmentDateQuery, Result<QueueResponse>>
 {
     private readonly IMediator _mediator;
 
-    public FindQueueByIdEndpoint(IMediator mediator)
+    public FindQueueByAssignmentDateEndpoint(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -19,17 +19,17 @@ internal class FindQueueByIdEndpoint : Endpoint<FindQueueByIdQuery, QueueRespons
     public override void Configure()
     {
         Verbs(Http.GET);
-        Routes("api/queue/queueId/{QueueId}");
+        Routes("api/queue/assignmentDate/{AssignmentDate}");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(FindQueueByIdQuery query, CancellationToken ct)
+    public override async Task HandleAsync(FindQueueByAssignmentDateQuery dateQuery, CancellationToken ct)
     {
-        Result<QueueResponse> response = await _mediator.Send(query, ct);
+        Result<QueueResponse> response = await _mediator.Send(dateQuery, ct);
 
         if (response.IsSuccess)
         {
-            await SendOkAsync(response.Value, ct);
+            await SendOkAsync(response, ct);
         }
         else
         {

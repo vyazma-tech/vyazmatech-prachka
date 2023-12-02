@@ -1,9 +1,9 @@
 ﻿using Application.Core.Contracts;
 using Domain.Common.Result;
 
-namespace Application.Handlers.Queue.Queries;
+namespace Application.Handlers.Queue.Queries.FindByIdQueue;
 
-public class FindQueueByIdQuery : IQuery<Result<QueueResponse>>
+public sealed class FindQueueByIdQuery : IQuery<Result<QueueResponse>>
 {
     public FindQueueByIdQuery(Guid queueId) => QueueId = queueId;
     
