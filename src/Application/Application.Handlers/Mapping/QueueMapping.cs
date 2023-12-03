@@ -11,6 +11,8 @@ public static class QueueMapping
         {
             Id = queueEntity.Id,
             Capacity = queueEntity.Capacity.Value,
+            Expired = queueEntity.Expired,
+            ModifiedOn = queueEntity.ModifiedOn,
             AssignmentDate = queueEntity.CreationDate,
             ActiveFrom = queueEntity.ActivityBoundaries.ActiveFrom,
             ActiveUntil = queueEntity.ActivityBoundaries.ActiveUntil,

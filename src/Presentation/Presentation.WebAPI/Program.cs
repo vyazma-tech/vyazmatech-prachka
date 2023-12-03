@@ -1,3 +1,4 @@
+using Application.Core.Configuration;
 using Application.Handlers.Extensions;
 using Infrastructure.DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,9 @@ builder.Services.AddDatabase(o =>
 {
     o.UseNpgsql(postgresConfiguration.ToConnectionString("trusov_net"));
 });
+
+builder.Services.Configure<PaginationConfiguration>(
+    builder.Configuration.GetSection(PaginationConfiguration.SectionKey));
 
 builder.Services.AddApplication();
 builder.Services.AddEndpoints();
