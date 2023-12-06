@@ -17,7 +17,7 @@ public class FindQueueByIdQueryHandler : IQueryHandler<FindQueueByIdQuery, Resul
 
     public async ValueTask<Result<QueueResponse>> Handle(FindQueueByIdQuery request, CancellationToken cancellationToken)
     {
-        QueueByIdSpecification queueByIdSpecification = new QueueByIdSpecification(request.QueueId);
+        var queueByIdSpecification = new QueueByIdSpecification(request.QueueId);
         Result<QueueEntity> queueEntityResult = await _queueRepository
             .FindByAsync(queueByIdSpecification, cancellationToken);
         

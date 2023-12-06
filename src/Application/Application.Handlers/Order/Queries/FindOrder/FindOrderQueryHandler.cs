@@ -35,7 +35,8 @@ internal sealed class FindOrderQueryHandler : IQueryHandler<FindOrderQuery, Page
         var orders = new List<OrderEntity>();
         if (request.CreationDate.HasValue)
         {
-            var creationDateSpec = new OrderByDateSpecification(request.CreationDate.Value);
+            DateTime creationDateUtc = request.CreationDate.Value.ToUniversalTime();
+            var creationDateSpec = new OrderByDateSpecification(creationDateUtc);
             IReadOnlyCollection<OrderEntity> ordersByDate = await _orderRepository
                 .FindAllByAsync(creationDateSpec, cancellationToken);
             orders.AddRange(ordersByDate);
