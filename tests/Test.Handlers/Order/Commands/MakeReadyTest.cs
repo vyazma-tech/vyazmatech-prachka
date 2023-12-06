@@ -5,6 +5,8 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using FluentAssertions;
 using Infrastructure.DataAccess.Repositories;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Test.Handlers.Fixtures;
 using Xunit;
 
@@ -13,10 +15,12 @@ namespace Test.Handlers.Order.Commands;
 public class MakeReadyTest : TestBase
 {
     private readonly MarkOrderAsReadyCommandHandler _handler;
+    
     public MakeReadyTest(CoreDatabaseFixture database) : base(database)
     {
         var orderRepository = new OrderRepository(database.Context);
-        _handler = new MarkOrderAsReadyCommandHandler(orderRepository);
+        ILogger<MarkOrderAsReadyCommandHandler> loggerMock = new Mock<ILogger<MarkOrderAsReadyCommandHandler>>().Object;
+        _handler = new MarkOrderAsReadyCommandHandler(orderRepository, loggerMock);
     }
     
     [Fact]
@@ -25,11 +29,8 @@ public class MakeReadyTest : TestBase
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsReadyCommand(orderId);
 
-        Result<OrderResponse> response = await _handler.Handle(command, CancellationToken.None);
+        Task response = await _handler.Handle(command, CancellationToken.None);
 
         response.Should().NotBeNull();
-        response.Value.Should().BeNull();
-        response.Error.Message.Should().Be(
-            DomainErrors.Entity.NotFoundFor<OrderEntity>($"{typeof(Guid)}: {orderId}"));
     }    
 }

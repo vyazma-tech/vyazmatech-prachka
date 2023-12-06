@@ -6,7 +6,7 @@ using Mediator;
 
 namespace Presentation.Endpoints.Order.MarkAsReady;
 
-public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Result<OrderResponse>>
+public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Task>
 {
     private readonly IMediator _mediator;
 
@@ -24,15 +24,15 @@ public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Result<Orde
 
     public override async Task HandleAsync(MarkOrderAsReadyCommand req, CancellationToken ct)
     {
-        Result<OrderResponse> response = await _mediator.Send(req, ct);
+        Task response = await _mediator.Send(req, ct);
 
-        if (response.IsSuccess)
+        try
         {
             await SendOkAsync(response, ct);
         }
-        else
+        catch (Exception ex)
         {
-            AddError(response.Error.Message);
+            AddError(ex.Message);
             await SendNotFoundAsync(ct);
         }
     }
