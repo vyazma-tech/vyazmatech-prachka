@@ -13,7 +13,7 @@ public sealed class QueueDate : ValueObject
 {
     public const int Week = 7;
 
-    private QueueDate(DateTime value)
+    private QueueDate(DateOnly value)
     {
         Value = value;
     }
@@ -21,7 +21,7 @@ public sealed class QueueDate : ValueObject
     /// <summary>
     /// Gets queue date.
     /// </summary>
-    public DateTime Value { get; }
+    public DateOnly Value { get; }
 
     /// <summary>
     /// Validates and creates queue date instance.
@@ -30,15 +30,15 @@ public sealed class QueueDate : ValueObject
     /// <param name="dateTimeProvider">time provider.</param>
     /// <returns>constructed queue date instance.</returns>
     /// <remarks>returns failure result, when assignment date is not around closest 7 days.</remarks>
-    public static Result<QueueDate> Create(DateTime assignmentDate, IDateTimeProvider dateTimeProvider)
+    public static Result<QueueDate> Create(DateOnly assignmentDate, IDateTimeProvider dateTimeProvider)
     {
-        if (assignmentDate < dateTimeProvider.UtcNow)
+        if (assignmentDate < dateTimeProvider.DateNow)
         {
             var exception = new DomainException(DomainErrors.QueueDate.InThePast);
             return new Result<QueueDate>(exception);
         }
 
-        if (assignmentDate > dateTimeProvider.UtcNow.AddDays(Week))
+        if (assignmentDate > dateTimeProvider.DateNow.AddDays(Week))
         {
             var exception = new DomainException(DomainErrors.QueueDate.NotNextWeek);
             return new Result<QueueDate>(exception);

@@ -74,7 +74,7 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets date, what queue is assigned to.
     /// </summary>
-    public DateTime CreationDate { get; }
+    public DateOnly CreationDate { get; }
 
     /// <summary>
     /// Gets modification date.

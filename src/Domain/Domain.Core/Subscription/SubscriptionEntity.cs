@@ -22,7 +22,7 @@ public class SubscriptionEntity : Entity, IAuditableEntity
     /// </summary>
     /// <param name="user">subscribed user.</param>
     /// <param name="creationDateUtc">subscription creation utc date.</param>
-    public SubscriptionEntity(UserEntity user, DateTime creationDateUtc)
+    public SubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in subscription.");
@@ -58,7 +58,7 @@ public class SubscriptionEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets subscription creation date.
     /// </summary>
-    public DateTime CreationDate { get; }
+    public DateOnly CreationDate { get; }
 
     /// <summary>
     /// Gets modification date.

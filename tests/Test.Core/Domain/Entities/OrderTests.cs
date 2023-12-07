@@ -19,19 +19,19 @@ public class OrderTests
     [Fact]
     public void CreateOrder_Should_ReturnNotNullOrder()
     {
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
 
         UserEntity user = UserClassData.Create();
 
         DateTime queueDate = DateTime.UtcNow.AddDays(1);
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(queueDate, _dateTimeProvider.Object).Value,
+            QueueDate.Create(DateOnly.FromDateTime(queueDate), _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(queueDate),
                 TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
 
-        Result<OrderEntity> orderCreationResult = OrderEntity.Create(user, queue, _dateTimeProvider.Object.UtcNow);
+        Result<OrderEntity> orderCreationResult = OrderEntity.Create(user, queue, _dateTimeProvider.Object.DateNow);
 
         orderCreationResult.IsSuccess.Should().BeTrue();
         orderCreationResult.Value.Should().NotBeNull();
@@ -39,7 +39,7 @@ public class OrderTests
         orderCreationResult.Value.User.Should().Be(user);
         orderCreationResult.Value.Paid.Should().BeFalse();
         orderCreationResult.Value.Ready.Should().BeFalse();
-        orderCreationResult.Value.CreationDate.Should().Be(_dateTimeProvider.Object.UtcNow);
+        orderCreationResult.Value.CreationDate.Should().Be(_dateTimeProvider.Object.DateNow);
         orderCreationResult.Value.ModifiedOn.Should().BeNull();
     }
 

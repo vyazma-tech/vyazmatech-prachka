@@ -15,7 +15,7 @@ namespace Domain.Core.Order;
 /// </summary>
 public class OrderEntity : Entity, IAuditableEntity
 {
-    private OrderEntity(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
+    private OrderEntity(UserEntity user, QueueEntity queue, DateOnly creationDateUtc)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in order.");
@@ -50,7 +50,7 @@ public class OrderEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets order creation date.
     /// </summary>
-    public DateTime CreationDate { get; }
+    public DateOnly CreationDate { get; }
 
     /// <summary>
     /// Gets modification date.
@@ -66,7 +66,7 @@ public class OrderEntity : Entity, IAuditableEntity
     /// <returns>order instance.</returns>
     /// <remarks>returns failure result, when order is being enqueued into full queue.</remarks>
     /// <remarks>returns failure result, when order is already in the queue.</remarks>
-    public static Result<OrderEntity> Create(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
+    public static Result<OrderEntity> Create(UserEntity user, QueueEntity queue, DateOnly creationDateUtc)
     {
         var order = new OrderEntity(user, queue, creationDateUtc);
         Result<OrderEntity> entranceResult = queue.Add(order);

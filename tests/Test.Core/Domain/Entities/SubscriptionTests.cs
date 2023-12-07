@@ -15,7 +15,7 @@ public class SubscriptionTests
     [Fact]
     public void CreateSubscription_Should_ReturnNotNullSubscriber()
     {
-        DateTime creationDate = DateTime.UtcNow;
+        var creationDate = DateOnly.FromDateTime(DateTime.UtcNow);
         UserEntity user = UserClassData.Create();
 
         var subscription = new SubscriptionEntity(
