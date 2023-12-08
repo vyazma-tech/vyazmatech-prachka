@@ -6,29 +6,34 @@ using Application.Handlers.Mapping;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.User;
+using Infrastructure.DataAccess.Quering.Abstractions;
 using Infrastructure.DataAccess.Specifications.Order;
 using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.Extensions.Options;
 
-namespace Application.Handlers.Order.Queries.FindOrder;
+namespace Application.Handlers.Order.Queries;
 
-internal sealed class FindOrderQueryHandler : IQueryHandler<FindOrderQuery, PagedResponse<OrderResponse>>
+internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedResponse<OrderResponse>>
 {
     private readonly IOrderRepository _orderRepository;
     private readonly IUserRepository _userRepository;
     private readonly PaginationConfiguration _paginationConfiguration;
+    
+    private readonly IModelFilter<OrderEntity, OrderQueryParameter> _filter;
 
-    public FindOrderQueryHandler(
+    public OrderQueryHandler(
         IOrderRepository orderRepository,
         IUserRepository userRepository,
-        IOptionsMonitor<PaginationConfiguration> paginationConfiguration)
+        IOptionsMonitor<PaginationConfiguration> paginationConfiguration,
+        IModelFilter<OrderEntity, OrderQueryParameter> filter)
     {
         _orderRepository = orderRepository;
         _userRepository = userRepository;
+        _filter = filter;
         _paginationConfiguration = paginationConfiguration.CurrentValue;
     }
 
-    public async ValueTask<PagedResponse<OrderResponse>> Handle(FindOrderQuery request, CancellationToken cancellationToken)
+    public async ValueTask<PagedResponse<OrderResponse>> Handle(OrderQuery request, CancellationToken cancellationToken)
     {
         long totalRecords = await _userRepository.CountAsync(cancellationToken);
         
@@ -75,7 +80,7 @@ internal sealed class FindOrderQueryHandler : IQueryHandler<FindOrderQuery, Page
             Bunch = readonlyOrders,
             TotalPages = totalRecords / _paginationConfiguration.RecordsPerPage,
             RecordPerPage = _paginationConfiguration.RecordsPerPage,
-            CurrentPage = request.Page
+            CurrentPage = request.Page ?? 1
         };
     }
 }

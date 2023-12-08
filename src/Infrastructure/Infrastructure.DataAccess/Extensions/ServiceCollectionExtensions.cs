@@ -1,4 +1,5 @@
-﻿using Application.DataAccess.Contracts;
+﻿using Application.Core.Configuration;
+using Application.DataAccess.Contracts;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.Subscription;
@@ -8,6 +9,7 @@ using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.DataAccess.Extensions;

@@ -21,7 +21,11 @@ builder.Services.AddDatabase(o =>
 builder.Services.Configure<PaginationConfiguration>(
     builder.Configuration.GetSection(PaginationConfiguration.SectionKey));
 
-builder.Services.AddApplication();
+builder.Services
+    .AddFilterChains()
+    .AddQueryChains()
+    .AddApplication();
+
 builder.Services.AddEndpoints();
 
 WebApplication app = builder.Build();

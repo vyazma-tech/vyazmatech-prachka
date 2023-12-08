@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="Ardalis.GuardClauses" Version="4.1.1" />
     <PackageVersion Include="FastEndpoints" Version="5.19.2" />
+    <PackageVersion Include="FluentChaining" Version="1.0.4" />
     <PackageVersion Include="FluentValidation" Version="11.8.0" />
     <PackageVersion Include="Mediator.Abstractions" Version="2.1.7" />
     <PackageVersion Include="Mediator.SourceGenerator" Version="2.1.7" />
