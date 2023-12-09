@@ -1,11 +1,11 @@
 ﻿using Application.Core.Contracts;
-using Application.DataAccess.Contracts;
 using Application.Handlers.Mapping;
 using Application.Handlers.Queue.Commands.CreateQueue;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.User;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
 using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.Extensions.Logging;

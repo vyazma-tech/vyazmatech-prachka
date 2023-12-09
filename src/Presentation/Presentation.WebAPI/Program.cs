@@ -1,5 +1,6 @@
 using Application.Core.Configuration;
 using Application.Handlers.Extensions;
+using FastEndpoints.Swagger;
 using Infrastructure.DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Endpoints.Extensions;
@@ -24,7 +25,8 @@ builder.Services.Configure<PaginationConfiguration>(
 builder.Services
     .AddFilterChains()
     .AddQueryChains()
-    .AddApplication();
+    .AddApplication()
+    .SwaggerDocument();
 
 builder.Services.AddEndpoints();
 
@@ -35,5 +37,8 @@ await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
     await scope.UseDatabase();
 }
 
-app.UseEndpoints();
+app
+    .UseEndpoints()
+    .UseSwaggerGen();
+
 app.Run();
