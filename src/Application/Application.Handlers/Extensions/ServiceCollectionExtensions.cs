@@ -1,10 +1,13 @@
-﻿using Application.Handlers.Order.Queries;
+﻿using Application.Core.Behaviours;
+using Application.Handlers.Order.Queries;
 using Domain.Core.Order;
 using FluentChaining;
 using FluentChaining.Configurators;
+using FluentValidation;
 using Infrastructure.DataAccess.Quering.Abstractions;
 using Infrastructure.DataAccess.Quering.Adapters;
 using Infrastructure.DataAccess.Quering.Requests;
+using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Handlers.Extensions;
@@ -13,11 +16,16 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        return services.AddMediator(s =>
+        services.AddMediator(s =>
         {
             s.Namespace = "Application.Handlers";
             s.ServiceLifetime = ServiceLifetime.Transient;
         });
+
+        services.AddValidatorsFromAssembly(IApplicationHandlersMarker.Assembly);
+        
+        return services
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
     }
     
     public static IServiceCollection AddQueryChains(this IServiceCollection services)

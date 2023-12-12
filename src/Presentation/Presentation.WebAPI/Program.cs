@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Presentation.Endpoints.Extensions;
 using Presentation.WebAPI.Configuration;
 using Presentation.WebAPI.Exceptions;
+using Presentation.WebAPI.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -27,9 +28,9 @@ builder.Services
     .AddFilterChains()
     .AddQueryChains()
     .AddApplication()
+    .AddCustomExceptionHandler()
+    .AddEndpoints()
     .SwaggerDocument();
-
-builder.Services.AddEndpoints();
 
 WebApplication app = builder.Build();
 
@@ -37,6 +38,8 @@ await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
 {
     await scope.UseDatabase();
 }
+
+app.UseCustomExceptionHandler();
 
 app
     .UseEndpoints()

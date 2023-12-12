@@ -10,4 +10,11 @@ public static class ValidationErrors
             $"{nameof(MarkOrderAsReady)}.{nameof(OrderIdIsRequired)}",
             "The order identifier is required.");
     }
+
+    public static class MarkOrderAsPaid
+    {
+        public static Error OrderIdIsRequired => new (
+            $"{nameof(MarkOrderAsPaid)}.{nameof(OrderIdIsRequired)}",
+            "The order identifier is required.");
+    }
 }
