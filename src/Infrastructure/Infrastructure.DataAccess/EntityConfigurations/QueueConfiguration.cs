@@ -9,7 +9,7 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<QueueEntity>
     public void Configure(EntityTypeBuilder<QueueEntity> builder)
     {
         builder.HasMany(queue => queue.Items)
-            .WithOne();
+            .WithOne(order => order.Queue);
 
         builder.Property(queue => queue.Capacity);
 
@@ -26,7 +26,6 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<QueueEntity>
         });
 
         builder.Property(queue => queue.ModifiedOn);
-        builder.Property(queue => queue.Expired)
-            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Ignore(queue => queue.Expired);
     }
 }
