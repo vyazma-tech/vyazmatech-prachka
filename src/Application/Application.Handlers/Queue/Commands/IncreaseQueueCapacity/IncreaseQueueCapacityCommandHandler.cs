@@ -13,18 +13,17 @@ public class IncreaseQueueCapacityCommandHandler : ICommandHandler<IncreaseQueue
 {
     private readonly ILogger<IncreaseQueueCapacityCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IQueueRepository _queueRepository;
+    private readonly IRepository<QueueEntity> _queueRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public IncreaseQueueCapacityCommandHandler(
         ILogger<IncreaseQueueCapacityCommandHandler> logger,
         IUnitOfWork unitOfWork,
-        IQueueRepository queueRepository,
         IDateTimeProvider dateTimeProvider)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
-        _queueRepository = queueRepository;
+        _queueRepository = unitOfWork.GetRepository<QueueEntity>();
         _dateTimeProvider = dateTimeProvider;
     }
 

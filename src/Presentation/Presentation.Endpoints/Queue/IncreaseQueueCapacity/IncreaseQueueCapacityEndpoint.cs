@@ -15,7 +15,7 @@ public class IncreaseQueueCapacityEndpoint : Endpoint<IncreaseQueueCapacityComma
 
     public override void Configure()
     {
-        Verbs(Http.GET);
+        Verbs(Http.POST);
         Routes("api/queue/increase-capacity");
         AllowAnonymous();
     }

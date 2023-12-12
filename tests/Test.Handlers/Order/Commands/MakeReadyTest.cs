@@ -28,7 +28,7 @@ public class MakeReadyTest : TestBase
     }
     
     [Fact]
-    public async Task CreateOneQueue_Should_ReturnCreatedQueue_WhenDataIsValid()
+    public async Task MarkAsReadyOrder_WhenOrderNotFoundById()
     {
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsReadyCommand(orderId);
