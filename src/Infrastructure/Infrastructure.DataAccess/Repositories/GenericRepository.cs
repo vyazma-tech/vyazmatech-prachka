@@ -3,13 +3,14 @@ using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Contexts;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infrastructure.DataAccess.Repositories;
 
-internal abstract class GenericRepository<TEntity>
+internal class GenericRepository<TEntity> : IRepository<TEntity>
     where TEntity : Entity
 {
     private readonly DatabaseContext _context;
@@ -18,7 +19,7 @@ internal abstract class GenericRepository<TEntity>
     /// Initializes a new instance of the <see cref="GenericRepository{TEntity}" /> class.
     /// </summary>
     /// <param name="context">database context.</param>
-    protected GenericRepository(DatabaseContext context)
+    internal GenericRepository(DatabaseContext context)
     {
         _context = context;
     }

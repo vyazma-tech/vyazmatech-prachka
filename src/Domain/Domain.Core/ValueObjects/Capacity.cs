@@ -10,6 +10,9 @@ namespace Domain.Core.ValueObjects;
 /// </summary>
 public sealed class Capacity : ValueObject
 {
+#pragma warning disable CS8618
+    private Capacity() { }
+#pragma warning restore CS8618
     private Capacity(int value)
     {
         Value = value;

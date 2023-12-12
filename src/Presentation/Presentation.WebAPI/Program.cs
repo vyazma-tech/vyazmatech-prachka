@@ -1,8 +1,8 @@
-using Application.Handlers;
+using Application.Core.Configuration;
 using Application.Handlers.Extensions;
+using FastEndpoints.Swagger;
 using Infrastructure.DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Presentation.Endpoints;
 using Presentation.Endpoints.Extensions;
 using Presentation.WebAPI.Configuration;
 using Presentation.WebAPI.Exceptions;
@@ -16,18 +16,30 @@ PostgresConfiguration? postgresConfiguration = builder.Configuration
 builder.Services.AddSingleton(postgresConfiguration);
 builder.Services.AddDatabase(o =>
 {
-    o.UseNpgsql(postgresConfiguration.ToConnectionString("test"));
+    o.UseNpgsql(postgresConfiguration.ToConnectionString("trusov_net"))
+        .UseLazyLoadingProxies();
 });
 
-builder.Services.AddApplication();
+builder.Services.Configure<PaginationConfiguration>(
+    builder.Configuration.GetSection(PaginationConfiguration.SectionKey));
+
+builder.Services
+    .AddFilterChains()
+    .AddQueryChains()
+    .AddApplication()
+    .SwaggerDocument();
+
 builder.Services.AddEndpoints();
 
 WebApplication app = builder.Build();
 
-using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
+await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
 {
     await scope.UseDatabase();
 }
 
-app.UseEndpoints();
+app
+    .UseEndpoints()
+    .UseSwaggerGen();
+
 app.Run();

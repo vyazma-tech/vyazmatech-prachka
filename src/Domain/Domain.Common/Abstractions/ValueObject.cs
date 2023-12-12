@@ -2,6 +2,9 @@
 
 public abstract class ValueObject : IEquatable<ValueObject>
 {
+#pragma warning disable CS8618
+    protected ValueObject() { }
+#pragma warning restore CS8618
     public bool Equals(ValueObject? other)
     {
         return other is not null

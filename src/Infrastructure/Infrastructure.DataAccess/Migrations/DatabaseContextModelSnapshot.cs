@@ -69,7 +69,7 @@ namespace Infrastructure.DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Core.Queue.QueueEntity", b =>
@@ -88,7 +88,7 @@ namespace Infrastructure.DataAccess.Migrations
                     b.HasIndex("CreationDate")
                         .IsDescending();
 
-                    b.ToTable("Queues");
+                    b.ToTable("Queues", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Core.Subscription.SubscriptionEntity", b =>
@@ -113,7 +113,7 @@ namespace Infrastructure.DataAccess.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Subscriptions", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Core.User.UserEntity", b =>
@@ -134,7 +134,7 @@ namespace Infrastructure.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Core.Order.OrderEntity", b =>
@@ -162,7 +162,7 @@ namespace Infrastructure.DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Core.Queue.QueueEntity", b =>
                 {
-                    b.OwnsOne("Domain.Core.ValueObjects.QueueActivityBoundaries", "ActivityBoundaries", b1 =>
+                    b.OwnsOne("Domain.Core.Queue.QueueEntity.ActivityBoundaries#Domain.Core.ValueObjects.QueueActivityBoundaries", "ActivityBoundaries", b1 =>
                         {
                             b1.Property<Guid>("QueueEntityId")
                                 .HasColumnType("uuid");
@@ -177,7 +177,7 @@ namespace Infrastructure.DataAccess.Migrations
 
                             b1.HasKey("QueueEntityId");
 
-                            b1.ToTable("Queues");
+                            b1.ToTable("Queues", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("QueueEntityId");
