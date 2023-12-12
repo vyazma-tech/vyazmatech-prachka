@@ -1,14 +1,14 @@
-﻿using Application.Handlers.Order.Commands.MarkOrderAsReady;
+﻿using Application.Handlers.Order.Commands.MarkOrderAsPaid;
 using FastEndpoints;
 using Mediator;
 
-namespace Presentation.Endpoints.Order.MarkAsReady;
+namespace Presentation.Endpoints.Order.MarkAsPaid;
 
-public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Task>
+public class MarkAsPaidEndpoint : Endpoint<MarkOrderAsPaidCommand, Task>
 {
     private readonly IMediator _mediator;
 
-    public MarkAsReadyEndpoint(IMediator mediator)
+    public MarkAsPaidEndpoint(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -16,11 +16,11 @@ public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Task>
     public override void Configure()
     {
         Verbs(Http.POST);
-        Routes("api/order/mark-as-ready");
+        Routes("api/order/mark-as-paid");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(MarkOrderAsReadyCommand req, CancellationToken ct)
+    public override async Task HandleAsync(MarkOrderAsPaidCommand req, CancellationToken ct)
     {
         Task response = await _mediator.Send(req, ct);
 

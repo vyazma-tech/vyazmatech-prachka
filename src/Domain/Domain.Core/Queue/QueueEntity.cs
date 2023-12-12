@@ -53,9 +53,9 @@ public class QueueEntity : Entity, IAuditableEntity
     public virtual Capacity Capacity { get; private set; }
 
     /// <summary>
-    /// Gets or sets time range for a queue activity.
+    /// Gets time range for a queue activity.
     /// </summary>
-    public virtual QueueActivityBoundaries ActivityBoundaries { get; set; }
+    public virtual QueueActivityBoundaries ActivityBoundaries { get; }
 
     /// <summary>
     /// Gets orders, that currently in the queue.
