@@ -82,9 +82,6 @@ namespace Infrastructure.DataAccess.Migrations
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("Expired")
-                        .HasColumnType("boolean");
-
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp with time zone");
 

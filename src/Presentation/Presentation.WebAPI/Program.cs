@@ -16,7 +16,7 @@ PostgresConfiguration? postgresConfiguration = builder.Configuration
 builder.Services.AddSingleton(postgresConfiguration);
 builder.Services.AddDatabase(o =>
 {
-    o.UseNpgsql(postgresConfiguration.ToConnectionString("default"));
+    o.UseNpgsql(postgresConfiguration.ToConnectionString("test"));
 });
 
 builder.Services.AddApplication();

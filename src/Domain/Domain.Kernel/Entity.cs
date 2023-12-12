@@ -25,7 +25,7 @@ public abstract class Entity : IEquatable<Entity>
     /// <summary>
     /// Gets domain event list for a current entity.
     /// </summary>
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
+    public virtual IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
 
     public bool Equals(Entity? other)
     {

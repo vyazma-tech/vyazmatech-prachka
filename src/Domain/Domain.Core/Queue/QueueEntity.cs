@@ -55,7 +55,7 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets time range for a queue activity.
     /// </summary>
-    public QueueActivityBoundaries ActivityBoundaries { get; }
+    public virtual QueueActivityBoundaries ActivityBoundaries { get; }
 
     /// <summary>
     /// Gets orders, that currently in the queue.
@@ -65,11 +65,7 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets a value indicating whether queue expired or not.
     /// </summary>
-    public bool Expired
-    {
-        get => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
-        private set => _ = value;
-    }
+    public bool Expired => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
 
     /// <summary>
     /// Gets date, what queue is assigned to.
