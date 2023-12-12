@@ -16,7 +16,8 @@ PostgresConfiguration? postgresConfiguration = builder.Configuration
 builder.Services.AddSingleton(postgresConfiguration);
 builder.Services.AddDatabase(o =>
 {
-    o.UseNpgsql(postgresConfiguration.ToConnectionString("trusov_net"));
+    o.UseNpgsql(postgresConfiguration.ToConnectionString("trusov_net"))
+        .UseLazyLoadingProxies();
 });
 
 builder.Services.Configure<PaginationConfiguration>(

@@ -9,7 +9,7 @@ namespace Domain.Core.User;
 /// <summary>
 /// Describes user entity.
 /// </summary>
-public sealed class UserEntity : Entity, IAuditableEntity
+public class UserEntity : Entity, IAuditableEntity
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserEntity" /> class.

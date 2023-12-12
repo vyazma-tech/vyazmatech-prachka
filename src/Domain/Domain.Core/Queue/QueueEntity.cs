@@ -41,7 +41,7 @@ public class QueueEntity : Entity, IAuditableEntity
     }
 
 #pragma warning disable CS8618
-    private QueueEntity()
+    protected QueueEntity()
 #pragma warning restore CS8618
     {
         _orders = new HashSet<OrderEntity>();
@@ -50,12 +50,12 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets current capacity.
     /// </summary>
-    public Capacity Capacity { get; private set; }
+    public virtual Capacity Capacity { get; private set; }
 
     /// <summary>
-    /// Gets time range for a queue activity.
+    /// Gets or sets time range for a queue activity.
     /// </summary>
-    public QueueActivityBoundaries ActivityBoundaries { get; }
+    public virtual QueueActivityBoundaries ActivityBoundaries { get; set; }
 
     /// <summary>
     /// Gets orders, that currently in the queue.

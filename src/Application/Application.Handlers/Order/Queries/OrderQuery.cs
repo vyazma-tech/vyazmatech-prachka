@@ -5,7 +5,6 @@ namespace Application.Handlers.Order.Queries;
 
 public class OrderQuery : IQuery<PagedResponse<OrderResponse>>
 {
-    public static QueryBuilder Builder => new QueryBuilder();
     public OrderQuery(Guid? orderId, Guid? userId, DateTime? creationDate, int? page)
     {
         OrderId = orderId;
@@ -13,7 +12,8 @@ public class OrderQuery : IQuery<PagedResponse<OrderResponse>>
         CreationDate = creationDate;
         Page = page;
     }
-
+    
+    public static QueryBuilder Builder => new QueryBuilder();
     public Guid? OrderId { get; set; }
     public Guid? UserId { get; set; }
     public DateTime? CreationDate { get; set; }
