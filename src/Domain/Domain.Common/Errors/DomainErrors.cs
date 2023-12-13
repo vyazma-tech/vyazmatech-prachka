@@ -93,11 +93,19 @@ public static class DomainErrors
 
         public static Error ContainsOrderWithId(Guid id) => new (
             $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
-            $"The subscription already contains order with id: {id}");
+            $"Already subscribed on newsletter about order with id: {id}");
 
         public static Error OrderIsNotInSubscription(Guid id) => new (
             $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
-            $"The subscription does not contain order with id: {id}");
+            $"Not subscribed on newsletter about order with id: {id}");
+
+        public static Error ContainsQueueWithId(Guid id) => new (
+            $"{nameof(Subscription)}.{nameof(ContainsQueueWithId)}",
+            $"Already subscribed on newsletter about queue with id: {id}");
+
+        public static Error QueueIsNotInSubscription(Guid id) => new (
+            $"{nameof(Subscription)}.{nameof(QueueIsNotInSubscription)}",
+            $"Not subscribed on newsletter about queue with id: {id}");
     }
 
     public static class TelegramId
