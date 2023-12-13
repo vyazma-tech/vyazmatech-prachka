@@ -9,6 +9,6 @@ public sealed class OrderSubscriptionConfiguration : IEntityTypeConfiguration<Or
     public void Configure(EntityTypeBuilder<OrderSubscriptionEntity> builder)
     {
         builder.HasMany(subscription => subscription.SubscribedOrders)
-            .WithOne();
+            .WithMany();
     }
 }

@@ -38,6 +38,36 @@ namespace Infrastructure.DataAccess.Migrations
                     b.UseTpcMappingStrategy();
                 });
 
+            modelBuilder.Entity("OrderEntityOrderSubscriptionEntity", b =>
+                {
+                    b.Property<Guid>("OrderSubscriptionEntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SubscribedOrdersId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("OrderSubscriptionEntityId", "SubscribedOrdersId");
+
+                    b.HasIndex("SubscribedOrdersId");
+
+                    b.ToTable("OrderEntityOrderSubscriptionEntity");
+                });
+
+            modelBuilder.Entity("QueueEntityQueueSubscriptionEntity", b =>
+                {
+                    b.Property<Guid>("QueueSubscriptionEntityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SubscribedQueuesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("QueueSubscriptionEntityId", "SubscribedQueuesId");
+
+                    b.HasIndex("SubscribedQueuesId");
+
+                    b.ToTable("QueueEntityQueueSubscriptionEntity");
+                });
+
             modelBuilder.Entity("Domain.Core.Order.OrderEntity", b =>
                 {
                     b.HasBaseType("Domain.Kernel.Entity");
@@ -47,9 +77,6 @@ namespace Infrastructure.DataAccess.Migrations
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid?>("OrderSubscriptionEntityId")
-                        .HasColumnType("uuid");
 
                     b.Property<bool>("Paid")
                         .HasColumnType("boolean");
@@ -65,8 +92,6 @@ namespace Infrastructure.DataAccess.Migrations
 
                     b.HasIndex("CreationDate")
                         .IsDescending();
-
-                    b.HasIndex("OrderSubscriptionEntityId");
 
                     b.HasIndex("QueueId");
 
@@ -88,13 +113,8 @@ namespace Infrastructure.DataAccess.Migrations
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid?>("QueueSubscriptionEntityId")
-                        .HasColumnType("uuid");
-
                     b.HasIndex("CreationDate")
                         .IsDescending();
-
-                    b.HasIndex("QueueSubscriptionEntityId");
 
                     b.ToTable("Queues");
                 });
@@ -153,12 +173,38 @@ namespace Infrastructure.DataAccess.Migrations
                     b.ToTable("QueueSubscriptions");
                 });
 
-            modelBuilder.Entity("Domain.Core.Order.OrderEntity", b =>
+            modelBuilder.Entity("OrderEntityOrderSubscriptionEntity", b =>
                 {
                     b.HasOne("Domain.Core.Subscription.OrderSubscriptionEntity", null)
-                        .WithMany("SubscribedOrders")
-                        .HasForeignKey("OrderSubscriptionEntityId");
+                        .WithMany()
+                        .HasForeignKey("OrderSubscriptionEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
+                    b.HasOne("Domain.Core.Order.OrderEntity", null)
+                        .WithMany()
+                        .HasForeignKey("SubscribedOrdersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("QueueEntityQueueSubscriptionEntity", b =>
+                {
+                    b.HasOne("Domain.Core.Subscription.QueueSubscriptionEntity", null)
+                        .WithMany()
+                        .HasForeignKey("QueueSubscriptionEntityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Core.Queue.QueueEntity", null)
+                        .WithMany()
+                        .HasForeignKey("SubscribedQueuesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Core.Order.OrderEntity", b =>
+                {
                     b.HasOne("Domain.Core.Queue.QueueEntity", "Queue")
                         .WithMany("Items")
                         .HasForeignKey("QueueId")
@@ -178,10 +224,6 @@ namespace Infrastructure.DataAccess.Migrations
 
             modelBuilder.Entity("Domain.Core.Queue.QueueEntity", b =>
                 {
-                    b.HasOne("Domain.Core.Subscription.QueueSubscriptionEntity", null)
-                        .WithMany("SubscribedQueues")
-                        .HasForeignKey("QueueSubscriptionEntityId");
-
                     b.OwnsOne("Domain.Core.ValueObjects.QueueActivityBoundaries", "ActivityBoundaries", b1 =>
                         {
                             b1.Property<Guid>("QueueEntityId")
@@ -221,16 +263,6 @@ namespace Infrastructure.DataAccess.Migrations
             modelBuilder.Entity("Domain.Core.Queue.QueueEntity", b =>
                 {
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("Domain.Core.Subscription.OrderSubscriptionEntity", b =>
-                {
-                    b.Navigation("SubscribedOrders");
-                });
-
-            modelBuilder.Entity("Domain.Core.Subscription.QueueSubscriptionEntity", b =>
-                {
-                    b.Navigation("SubscribedQueues");
                 });
 #pragma warning restore 612, 618
         }
