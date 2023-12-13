@@ -44,7 +44,6 @@ public class QueueEntity : Entity, IAuditableEntity
     protected QueueEntity()
 #pragma warning restore CS8618
     {
-        _orders = new HashSet<OrderEntity>();
     }
 
     /// <summary>
