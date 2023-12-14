@@ -35,7 +35,7 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
 
     public async ValueTask<PagedResponse<OrderResponse>> Handle(OrderQuery request, CancellationToken cancellationToken)
     {
-        long totalRecords = await _userRepository.CountAsync(cancellationToken);
+        long totalRecords = await _orderRepository.CountAsync(cancellationToken);
         
         var orders = new List<OrderEntity>();
         if (request.CreationDate.HasValue)

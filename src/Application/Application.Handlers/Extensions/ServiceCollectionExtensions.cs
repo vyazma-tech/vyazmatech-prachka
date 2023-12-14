@@ -1,6 +1,8 @@
 ﻿using Application.Core.Behaviours;
 using Application.Handlers.Order.Queries;
+using Application.Handlers.Queue.Queries;
 using Domain.Core.Order;
+using Domain.Core.Queue;
 using FluentChaining;
 using FluentChaining.Configurators;
 using FluentValidation;
@@ -35,6 +37,12 @@ public static class ServiceCollectionExtensions
         services
             .AddFluentChaining(x => x.ChainLifetime = ServiceLifetime.Singleton)
             .AddQueryChain<OrderQuery.QueryBuilder, OrderQueryParameter>();
+        
+        services.AddModelQuery<QueueQuery.QueryBuilder, QueueQueryParameter>();
+
+        services
+            .AddFluentChaining(x => x.ChainLifetime = ServiceLifetime.Singleton)
+            .AddQueryChain<QueueQuery.QueryBuilder, QueueQueryParameter>();
 
         return services;
     }
@@ -47,6 +55,12 @@ public static class ServiceCollectionExtensions
             .AddFluentChaining(x => x.ChainLifetime = ServiceLifetime.Singleton)
             .AddFilterChain<OrderEntity, OrderQueryParameter>();
 
+        services.AddModelFilter<QueueEntity, QueueQueryParameter>();
+
+        services
+            .AddFluentChaining(x => x.ChainLifetime = ServiceLifetime.Singleton)
+            .AddFilterChain<QueueEntity, QueueQueryParameter>();
+        
         return services;
     }
     

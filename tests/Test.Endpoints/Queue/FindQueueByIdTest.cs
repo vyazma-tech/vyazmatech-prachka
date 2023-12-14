@@ -1,13 +1,12 @@
-﻿using System.Net;
-using Application.Handlers.Queue.Commands.CreateQueue;
+﻿using System.Collections.ObjectModel;
+using System.Net;
 using Application.Handlers.Queue.Queries;
-using Application.Handlers.Queue.Queries.FindByIdQueue;
 using Domain.Kernel;
 using FastEndpoints;
 using FluentAssertions;
+using Infrastructure.DataAccess.Quering.Abstractions;
 using Infrastructure.Tools;
-using Presentation.Endpoints.Queue.CreateQueues;
-using Presentation.Endpoints.Queue.FindQueues;
+using Presentation.Endpoints.Queue.FindQueue;
 using Test.Endpoints.Fixtures.WebFactory;
 using Xunit;
 
@@ -28,9 +27,19 @@ public class FindQueueByIdTest
     [Fact]
     public async Task TryFindQueueByIdRequest_ShouldReturnNotFound_WhenNothingAddedToDB()
     {
-        FindQueueByIdQuery query = new FindQueueByIdQuery(Guid.NewGuid());
+        string queueId = Guid.NewGuid().ToString();
+        IList<QueryParameter<QueueQueryParameter>> queryParameters = new[]
+        {
+            new QueryParameter<QueueQueryParameter>
+            (
+                QueueQueryParameter.QueueId,
+                queueId
+            )
+        };
+        var readOnlyCollection = new ReadOnlyCollection<QueryParameter<QueueQueryParameter>>(queryParameters);
+        var conf = new QueryConfiguration<QueueQueryParameter>(readOnlyCollection);
         TestResult<QueueResponse> response = await _client
-            .GETAsync<FindQueueByIdEndpoint, FindQueueByIdQuery, QueueResponse>(query);
+            .GETAsync<FindQueueEndpoint, QueryConfiguration<QueueQueryParameter>, QueueResponse>(conf);
 
         response.Result.Should().BeNull();
         response.Response.StatusCode.Should().Be(HttpStatusCode.NotFound);
