@@ -1,6 +1,4 @@
-﻿using Application.Handlers;
-using FastEndpoints;
-using Infrastructure.DataAccess.Contexts;
+﻿using Infrastructure.DataAccess.Contexts;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;

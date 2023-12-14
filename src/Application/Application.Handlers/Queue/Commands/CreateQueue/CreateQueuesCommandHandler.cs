@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts;
+using Application.Handlers.Mapping.QueueMapping;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
@@ -48,14 +49,7 @@ internal sealed class CreateQueuesCommandHandler : ICommandHandler<CreateQueuesC
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         var response = new CreateQueuesResponse(queuesToCreate
-            .Select(x => new QueueResponseModel
-            {
-                Id = x.Id,
-                Capacity = x.Capacity.Value,
-                AssignmentDate = x.CreationDate,
-                ActiveFrom = x.ActivityBoundaries.ActiveFrom,
-                ActiveUntil = x.ActivityBoundaries.ActiveUntil
-            }).ToList());
+            .Select(x => x.ToCreationDto()).ToList());
 
         return response;
     }

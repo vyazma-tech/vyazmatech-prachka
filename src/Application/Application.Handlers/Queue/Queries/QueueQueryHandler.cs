@@ -3,6 +3,7 @@ using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
 using Application.Handlers.Mapping;
+using Application.Handlers.Mapping.QueueMapping;
 using Application.Handlers.Order.Queries;
 using Domain.Common.Result;
 using Domain.Core.Order;

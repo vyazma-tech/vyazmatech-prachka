@@ -3,6 +3,7 @@ using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
 using Application.Handlers.Mapping;
+using Application.Handlers.Mapping.OrderMapping;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.User;

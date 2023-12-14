@@ -1,6 +1,5 @@
 ﻿using Application.Core.Contracts;
-using Application.Handlers.Mapping;
-using Application.Handlers.Queue.Commands.CreateQueue;
+using Application.Handlers.Mapping.OrderMapping;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
@@ -8,7 +7,6 @@ using Domain.Core.User;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
 using Infrastructure.DataAccess.Specifications.User;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Handlers.Order.Commands.CreateOrder;
 
@@ -53,15 +51,7 @@ internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrderCom
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
         var response = new CreateOrderResponse(ordersToCreate
-            .Select(x => new CreateOrderResponseModel
-            {
-                Id = x.Id,
-                CreationDateUtc = x.CreationDate,
-                ModifiedOn = x.ModifiedOn,
-                Paid = x.Paid,
-                Ready = x.Ready,
-                Queue = x.Queue.ToDto(),
-            }).ToList());
+            .Select(x => x.ToCreationDto()).ToList());
 
         return response;
     }

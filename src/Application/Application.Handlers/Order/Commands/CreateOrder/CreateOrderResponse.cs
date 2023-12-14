@@ -7,8 +7,7 @@ public readonly record struct CreateOrderResponseModel(
     Guid Id,
     bool Paid,
     bool Ready,
-    QueueResponseModel Queue,
     DateTime? ModifiedOn,
-    DateTime CreationDateUtc);
+    DateTime CreationDate);
 
 public sealed record CreateOrderResponse(IReadOnlyCollection<CreateOrderResponseModel> OrderModel);
