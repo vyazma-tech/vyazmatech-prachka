@@ -23,8 +23,7 @@ public class MakeReadyTest : TestBase
     {
         var orderRepository = new OrderRepository(database.Context);
         _dateTimeProvider = new DateTimeProvider();
-        ILogger<MarkOrderAsReadyCommandHandler> loggerMock = new Mock<ILogger<MarkOrderAsReadyCommandHandler>>().Object;
-        _handler = new MarkOrderAsReadyCommandHandler(orderRepository, loggerMock, _dateTimeProvider);
+        _handler = new MarkOrderAsReadyCommandHandler(orderRepository, _dateTimeProvider);
     }
     
     [Fact]

@@ -19,11 +19,9 @@ public class CreateQueuesTests : TestBase
 
     public CreateQueuesTests(CoreDatabaseFixture database) : base(database)
     {
-        ILogger<CreateQueuesCommandHandler> loggerMock = new Mock<ILogger<CreateQueuesCommandHandler>>().Object;
         _dateTimeProvider = new DateTimeProvider();
 
         _handler = new CreateQueuesCommandHandler(
-            loggerMock,
             database.Context,
             _dateTimeProvider);
     }

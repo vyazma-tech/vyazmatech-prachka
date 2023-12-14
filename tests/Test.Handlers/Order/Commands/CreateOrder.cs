@@ -21,7 +21,6 @@ public class CreateOrdersTests : TestBase
 
     public CreateOrdersTests(CoreDatabaseFixture database) : base(database)
     {
-        ILogger<CreateOrderCommandHandler> loggerMock = new Mock<ILogger<CreateOrderCommandHandler>>().Object;
         var queueRepository = new QueueRepository(database.Context);
         var orderRepository = new OrderRepository(database.Context);
         var userRepository = new UserRepository(database.Context);
@@ -32,7 +31,6 @@ public class CreateOrdersTests : TestBase
             userRepository,
             queueRepository,
             orderRepository,
-            loggerMock,
             database.Context);
     }
 }

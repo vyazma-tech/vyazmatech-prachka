@@ -10,16 +10,13 @@ namespace Application.Handlers.Order.Commands.MarkOrderAsReady;
 internal sealed class MarkOrderAsReadyCommandHandler : ICommandHandler<MarkOrderAsReadyCommand, Task>
 {
     private readonly IOrderRepository _orderRepository;
-    private readonly ILogger<MarkOrderAsReadyCommandHandler> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public MarkOrderAsReadyCommandHandler(
         IOrderRepository orderRepository,
-        ILogger<MarkOrderAsReadyCommandHandler> logger,
         IDateTimeProvider dateTimeProvider)
     {
         _orderRepository = orderRepository;
-        _logger = logger;
         _dateTimeProvider = dateTimeProvider;
     }
 
@@ -29,22 +26,7 @@ internal sealed class MarkOrderAsReadyCommandHandler : ICommandHandler<MarkOrder
         Result<OrderEntity> orderByIdResult = await _orderRepository
             .FindByAsync(idSpec, cancellationToken);
 
-        if (orderByIdResult.IsFaulted)
-        {
-            _logger.LogWarning(
-                "Order {Order} cannot be found due to: {Error}",
-                orderByIdResult.Value,
-                orderByIdResult.Error.Message);
-        }
-
-        Result<OrderEntity> makeReadyResult = orderByIdResult.Value.MakeReady(_dateTimeProvider.UtcNow);
-        if (makeReadyResult.IsFaulted)
-        {
-            _logger.LogWarning(
-                "Order {Order} cannot be marked as ready due to: {Error}",
-                makeReadyResult.Value,
-                makeReadyResult.Error.Message);
-        }
+        orderByIdResult.Value.MakeReady(_dateTimeProvider.UtcNow);
 
         return Task.CompletedTask;
     }

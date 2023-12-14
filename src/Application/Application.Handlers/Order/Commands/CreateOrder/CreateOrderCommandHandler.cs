@@ -17,20 +17,17 @@ internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrderCom
     private readonly IUserRepository _userRepository;
     private readonly IQueueRepository _queueRepository;
     private readonly IOrderRepository _orderRepository;
-    private readonly ILogger<CreateOrderCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateOrderCommandHandler(
         IUserRepository userRepository,
         IQueueRepository queueRepository,
         IOrderRepository orderRepository,
-        ILogger<CreateOrderCommandHandler> logger,
         IUnitOfWork unitOfWork)
     {
         _userRepository = userRepository;
         _queueRepository = queueRepository;
         _orderRepository = orderRepository;
-        _logger = logger;
         _unitOfWork = unitOfWork;
     }
 
@@ -42,43 +39,13 @@ internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrderCom
             var orderIdSpec = new UserByIdSpecification(order.UserId);
             Result<UserEntity> userByIdResult = await _userRepository
                 .FindByAsync(orderIdSpec, cancellationToken);
-
-            if (userByIdResult.IsFaulted)
-            {
-                _logger.LogWarning(
-                    "Order {Order} cannot be created due to: {Error}",
-                    order,
-                    userByIdResult.Error.Message);
-
-                continue;
-            }
         
             var queueIdSpec = new QueueByIdSpecification(order.QueueId);
             Result<QueueEntity> queueByIdResult = await _queueRepository
                 .FindByAsync(queueIdSpec, cancellationToken);
             
-            if (queueByIdResult.IsFaulted)
-            {
-                _logger.LogWarning(
-                    "Order {Order} cannot be created due to: {Error}",
-                    order,
-                    queueByIdResult.Error.Message);
-
-                continue;
-            }
-            
             DateTime dateUtc = order.CreationDate.ToUniversalTime();
             Result<OrderEntity> newOrderResult = OrderEntity.Create(userByIdResult.Value, queueByIdResult.Value, dateUtc);
-
-            if (newOrderResult.IsFaulted)
-            {
-                _logger.LogWarning(
-                    "Order {Order} cannot be created due to: {Error}",
-                    order,
-                    newOrderResult.Error.Message);
-
-                continue;
-            }
             
             ordersToCreate.Add(newOrderResult.Value);
         }

@@ -10,17 +10,14 @@ namespace Application.Handlers.Queue.Commands.CreateQueue;
 
 internal sealed class CreateQueuesCommandHandler : ICommandHandler<CreateQueuesCommand, CreateQueuesResponse>
 {
-    private readonly ILogger<CreateQueuesCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<QueueEntity> _queueRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public CreateQueuesCommandHandler(
-        ILogger<CreateQueuesCommandHandler> logger,
         IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider)
     {
-        _logger = logger;
         _unitOfWork = unitOfWork;
         _queueRepository = _unitOfWork.GetRepository<QueueEntity>();
         _dateTimeProvider = dateTimeProvider;
@@ -35,41 +32,11 @@ internal sealed class CreateQueuesCommandHandler : ICommandHandler<CreateQueuesC
         {
             Result<Capacity> capacityCreationResult = Capacity.Create(queue.Capacity);
 
-            if (capacityCreationResult.IsFaulted)
-            {
-                _logger.LogWarning(
-                    "Queue {Queue} cannot be created due to: {Error}",
-                    queue,
-                    capacityCreationResult.Error.Message);
-
-                continue;
-            }
-
             Result<QueueActivityBoundaries> activityBoundariesCreationResult =
                 QueueActivityBoundaries.Create(queue.ActiveFrom, queue.ActiveUntil);
 
-            if (activityBoundariesCreationResult.IsFaulted)
-            {
-                _logger.LogWarning(
-                    "Queue {Queue} cannot be created due to: {Error}",
-                    queue,
-                    activityBoundariesCreationResult.Error.Message);
-
-                continue;
-            }
-
             Result<QueueDate> assignmentDateCreationResult =
                 QueueDate.Create(queue.AssignmentDate, _dateTimeProvider);
-
-            if (assignmentDateCreationResult.IsFaulted)
-            {
-                _logger.LogWarning(
-                    "Queue {Queue} cannot be created due to: {Error}",
-                    queue,
-                    assignmentDateCreationResult.Error.Message);
-                
-                continue;
-            }
 
             queuesToCreate.Add(new QueueEntity(
                 capacityCreationResult.Value,
