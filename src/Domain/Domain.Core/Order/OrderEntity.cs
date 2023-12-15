@@ -15,6 +15,10 @@ namespace Domain.Core.Order;
 /// </summary>
 public class OrderEntity : Entity, IAuditableEntity
 {
+#pragma warning disable CS8618
+    protected OrderEntity() { }
+#pragma warning restore CS8618
+
     private OrderEntity(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
         : base(Guid.NewGuid())
     {
@@ -26,10 +30,6 @@ public class OrderEntity : Entity, IAuditableEntity
         Queue = queue;
         CreationDate = creationDateUtc;
     }
-
-#pragma warning disable CS8618
-    private OrderEntity() { }
-#pragma warning restore CS8618
 
     /// <inheritdoc cref="UserEntity" />
     public virtual UserEntity User { get; }

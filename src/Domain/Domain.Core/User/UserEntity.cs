@@ -33,7 +33,7 @@ public class UserEntity : Entity, IAuditableEntity
     }
 
 #pragma warning disable CS8618
-    private UserEntity() { }
+    protected UserEntity() { }
 #pragma warning restore CS8618
 
     /// <summary>

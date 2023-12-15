@@ -44,7 +44,6 @@ public class QueueEntity : Entity, IAuditableEntity
     protected QueueEntity()
 #pragma warning restore CS8618
     {
-        _orders = new HashSet<OrderEntity>();
     }
 
     /// <summary>
@@ -65,11 +64,7 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets a value indicating whether queue expired or not.
     /// </summary>
-    public bool Expired
-    {
-        get => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
-        private set => _ = value;
-    }
+    public bool Expired => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
 
     /// <summary>
     /// Gets date, what queue is assigned to.

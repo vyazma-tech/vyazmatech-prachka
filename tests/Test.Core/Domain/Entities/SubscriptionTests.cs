@@ -18,33 +18,32 @@ public class SubscriptionTests
         DateTime creationDate = DateTime.UtcNow;
         UserEntity user = UserClassData.Create();
 
-        var subscription = new SubscriptionEntity(
+        var subscription = new OrderSubscriptionEntity(
             user,
             creationDate);
 
         subscription.Should().NotBeNull();
-        subscription.Orders.Should().BeEmpty();
+        subscription.SubscribedOrders.Should().BeEmpty();
         subscription.CreationDate.Should().Be(creationDate);
         subscription.ModifiedOn.Should().BeNull();
-        subscription.Queue.Should().BeNull();
     }
 
     [Theory]
     [ClassData(typeof(SubscriptionClassData))]
     public void SubscribeOrder_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription(
-        SubscriptionEntity subscription,
+        OrderSubscriptionEntity subscription,
         OrderEntity order)
     {
         Result<OrderEntity> entranceResult = subscription.Subscribe(order);
 
         entranceResult.IsSuccess.Should().BeTrue();
-        subscription.Orders.Should().Contain(order);
+        subscription.SubscribedOrders.Should().Contain(order);
     }
 
     [Theory]
     [ClassData(typeof(SubscriptionClassData))]
     public void UnsubscribeOrder_ShouldReturnFailureResult_WhenUserOrderIsNotInSubscription(
-        SubscriptionEntity subscription,
+        OrderSubscriptionEntity subscription,
         OrderEntity order)
     {
         Result<OrderEntity> quitResult = subscription.Unsubscribe(order);
