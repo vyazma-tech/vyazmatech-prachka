@@ -1,3 +1,6 @@
+using Application.BackgroundWorkers.Extensions;
+using Application.BackgroundWorkers.Queue;
+using Application.Handlers;
 using Application.Core.Configuration;
 using Application.Handlers.Extensions;
 using FastEndpoints.Swagger;
@@ -14,6 +17,10 @@ PostgresConfiguration? postgresConfiguration = builder.Configuration
     .GetSection(nameof(PostgresConfiguration))
     .Get<PostgresConfiguration>() ?? throw new StartupException(nameof(PostgresConfiguration));
 
+builder.Services.AddWorkersConfiguration(builder.Configuration);
+builder.Services
+    .AddHostedService<QueueActivityBackgroundWorker>()
+    .AddHostedService<QueueAvailablePositionBackgroundWorker>();
 builder.Services.AddSingleton(postgresConfiguration);
 builder.Services.AddDatabase(o =>
 {

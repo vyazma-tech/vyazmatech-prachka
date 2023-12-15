@@ -37,7 +37,7 @@ public class UserTests
     [Fact]
     public void RegisterUser_ShouldReturnNotNullUser_AndRaiseDomainEvent()
     {
-        DateTime registrationDate = DateTime.UtcNow;
+        var registrationDate = DateOnly.FromDateTime(DateTime.UtcNow);
         UserEntity user = UserClassData.Create();
 
         user.Should().NotBeNull();

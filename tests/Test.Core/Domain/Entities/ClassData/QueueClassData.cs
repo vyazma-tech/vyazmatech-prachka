@@ -16,7 +16,7 @@ public sealed class QueueClassData : IEnumerable<object[]>
 
         var queue = new QueueEntity(
             Capacity.Create(1).Value,
-            QueueDate.Create(DateTime.UtcNow.AddSeconds(5), new DateTimeProvider()).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.Today), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow),
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(1))).Value);
@@ -24,7 +24,7 @@ public sealed class QueueClassData : IEnumerable<object[]>
         Result<OrderEntity> order = OrderEntity.Create(
             user,
             queue,
-            DateTime.UtcNow);
+            DateOnly.FromDateTime(DateTime.UtcNow));
 
         yield return new object[] { queue, user, order.Value };
     }

@@ -11,7 +11,7 @@ public static class UserClassData
         var user = new UserEntity(
             TelegramId.Create("1").Value,
             Fullname.Create("Test User").Value,
-            DateTime.UtcNow);
+            DateOnly.FromDateTime(DateTime.UtcNow));
         return user;
     }
 }

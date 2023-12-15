@@ -4,7 +4,7 @@ namespace Application.Handlers.Queue.Commands.CreateQueue;
 
 public readonly record struct QueueModel(
     int Capacity,
-    DateTime AssignmentDate,
+    DateOnly AssignmentDate,
     TimeOnly ActiveFrom,
     TimeOnly ActiveUntil);
 
