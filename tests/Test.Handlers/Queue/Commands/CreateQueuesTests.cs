@@ -1,6 +1,8 @@
 ﻿using Application.Handlers.Queue.Commands.CreateQueue;
+using Domain.Core.Queue;
 using Domain.Kernel;
 using FluentAssertions;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;
 using Microsoft.Extensions.Logging;
@@ -18,13 +20,11 @@ public class CreateQueuesTests : TestBase
     public CreateQueuesTests(CoreDatabaseFixture database) : base(database)
     {
         ILogger<CreateQueuesCommandHandler> loggerMock = new Mock<ILogger<CreateQueuesCommandHandler>>().Object;
-        var queueRepository = new QueueRepository(database.Context);
         _dateTimeProvider = new DateTimeProvider();
 
         _handler = new CreateQueuesCommandHandler(
             loggerMock,
             database.Context,
-            queueRepository,
             _dateTimeProvider);
     }
 

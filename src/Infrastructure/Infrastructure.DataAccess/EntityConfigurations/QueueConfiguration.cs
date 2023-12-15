@@ -9,7 +9,10 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<QueueEntity>
     public void Configure(EntityTypeBuilder<QueueEntity> builder)
     {
         builder.HasMany(queue => queue.Items)
-            .WithOne();
+            .WithOne(order => order.Queue)
+            .HasForeignKey("QueueId");
+
+        builder.Navigation(queue => queue.Items).HasField("_orders");
 
         builder.Property(queue => queue.Capacity);
 
@@ -23,10 +26,10 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<QueueEntity>
 
             navigationBuilder.Property(boundary => boundary.ActiveUntil)
                 .HasColumnName("ActiveUntil");
-        });
+        })
+            .Navigation(queue => queue.ActivityBoundaries).AutoInclude();
 
         builder.Property(queue => queue.ModifiedOn);
-        builder.Property(queue => queue.Expired)
-            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Ignore(queue => queue.Expired);
     }
 }

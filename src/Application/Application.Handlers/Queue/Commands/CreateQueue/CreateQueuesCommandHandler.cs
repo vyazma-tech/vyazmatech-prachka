@@ -1,9 +1,9 @@
 ﻿using Application.Core.Contracts;
-using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Handlers.Queue.Commands.CreateQueue;
@@ -12,18 +12,17 @@ internal sealed class CreateQueuesCommandHandler : ICommandHandler<CreateQueuesC
 {
     private readonly ILogger<CreateQueuesCommandHandler> _logger;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IQueueRepository _queueRepository;
+    private readonly IRepository<QueueEntity> _queueRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public CreateQueuesCommandHandler(
         ILogger<CreateQueuesCommandHandler> logger,
         IUnitOfWork unitOfWork,
-        IQueueRepository queueRepository,
         IDateTimeProvider dateTimeProvider)
     {
         _logger = logger;
         _unitOfWork = unitOfWork;
-        _queueRepository = queueRepository;
+        _queueRepository = _unitOfWork.GetRepository<QueueEntity>();
         _dateTimeProvider = dateTimeProvider;
     }
 

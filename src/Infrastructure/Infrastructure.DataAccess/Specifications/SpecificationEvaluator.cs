@@ -1,4 +1,5 @@
 ﻿using Domain.Kernel;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Specifications;
 
@@ -10,6 +11,11 @@ public static class SpecificationEvaluator
         where TEntity : Entity
     {
         IQueryable<TEntity> queryable = inputQueryable;
+
+        queryable = specification.Includes
+            .Aggregate(
+                queryable,
+                (current, include) => current.Include(include));
 
         queryable = queryable.Where(specification.Criteria);
 

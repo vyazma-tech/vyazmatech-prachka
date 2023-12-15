@@ -1,11 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
+        <ProjectReference Include="..\..\Application\Application.Core\Application.Core.csproj" />
         <ProjectReference Include="..\..\Application\Application.DataAccess.Contracts\Application.DataAccess.Contracts.csproj"/>
         <ProjectReference Include="..\..\Domain\Domain.Core\Domain.Core.csproj"/>
         <ProjectReference Include="..\..\Domain\Domain.Kernel\Domain.Kernel.csproj" />
         <ProjectReference Include="..\Infrastructure.Tools\Infrastructure.Tools.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="FluentChaining" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design"/>
         <PackageReference Include="StyleCop.Analyzers">
             <PrivateAssets>all</PrivateAssets>

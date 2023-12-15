@@ -11,6 +11,7 @@ public sealed class QueueByIdSpecification : Specification<QueueEntity>
         : base(queue => queue.Id == id)
     {
         _id = id;
+        AddInclude(queue => queue.ActivityBoundaries);
     }
 
     public override string ToString()

@@ -14,6 +14,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="FastEndpoints.Swagger" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="StyleCop.Analyzers">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

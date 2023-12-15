@@ -1,12 +1,15 @@
 using Application.BackgroundWorkers.Extensions;
 using Application.BackgroundWorkers.Queue;
 using Application.Handlers;
+using Application.Core.Configuration;
 using Application.Handlers.Extensions;
+using FastEndpoints.Swagger;
 using Infrastructure.DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Endpoints.Extensions;
 using Presentation.WebAPI.Configuration;
 using Presentation.WebAPI.Exceptions;
+using Presentation.WebAPI.Middlewares;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -21,18 +24,32 @@ builder.Services
 builder.Services.AddSingleton(postgresConfiguration);
 builder.Services.AddDatabase(o =>
 {
-    o.UseNpgsql(postgresConfiguration.ToConnectionString("default"));
+    o.UseNpgsql(postgresConfiguration.ToConnectionString("trusov_net"))
+        .UseLazyLoadingProxies();
 });
 
-builder.Services.AddApplication();
-builder.Services.AddEndpoints();
+builder.Services.Configure<PaginationConfiguration>(
+    builder.Configuration.GetSection(PaginationConfiguration.SectionKey));
+
+builder.Services
+    .AddFilterChains()
+    .AddQueryChains()
+    .AddApplication()
+    .AddCustomExceptionHandler()
+    .AddEndpoints()
+    .SwaggerDocument();
 
 WebApplication app = builder.Build();
 
-using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
+await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
 {
     await scope.UseDatabase();
 }
 
-app.UseEndpoints();
+app.UseCustomExceptionHandler();
+
+app
+    .UseEndpoints()
+    .UseSwaggerGen();
+
 app.Run();

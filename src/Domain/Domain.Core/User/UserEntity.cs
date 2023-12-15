@@ -9,7 +9,7 @@ namespace Domain.Core.User;
 /// <summary>
 /// Describes user entity.
 /// </summary>
-public sealed class UserEntity : Entity, IAuditableEntity
+public class UserEntity : Entity, IAuditableEntity
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserEntity" /> class.
@@ -33,7 +33,7 @@ public sealed class UserEntity : Entity, IAuditableEntity
     }
 
 #pragma warning disable CS8618
-    private UserEntity() { }
+    protected UserEntity() { }
 #pragma warning restore CS8618
 
     /// <summary>

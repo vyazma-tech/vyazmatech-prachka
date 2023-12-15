@@ -28,7 +28,7 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
             queue,
             DateOnly.FromDateTime(DateTime.UtcNow));
 
-        var subscription = new SubscriptionEntity(
+        var subscription = new OrderSubscriptionEntity(
             user,
             DateOnly.FromDateTime(DateTime.UtcNow));
 
