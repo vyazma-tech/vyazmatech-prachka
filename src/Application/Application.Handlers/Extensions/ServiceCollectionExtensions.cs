@@ -1,8 +1,10 @@
 ﻿using Application.Core.Behaviours;
 using Application.Handlers.Order.Queries;
 using Application.Handlers.Queue.Queries;
+using Application.Handlers.User.Queries;
 using Domain.Core.Order;
 using Domain.Core.Queue;
+using Domain.Core.User;
 using FluentChaining;
 using FluentChaining.Configurators;
 using FluentValidation;
@@ -32,6 +34,12 @@ public static class ServiceCollectionExtensions
     
     public static IServiceCollection AddQueryChains(this IServiceCollection services)
     {
+        services.AddModelQuery<UserQuery.QueryBuilder, UserQueryParameter>();
+
+        services
+            .AddFluentChaining(x => x.ChainLifetime = ServiceLifetime.Singleton)
+            .AddQueryChain<UserQuery.QueryBuilder, UserQueryParameter>();
+        
         services.AddModelQuery<OrderQuery.QueryBuilder, OrderQueryParameter>();
 
         services
@@ -49,6 +57,12 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddFilterChains(this IServiceCollection services)
     {
+        services.AddModelFilter<UserEntity, UserQueryParameter>();
+
+        services
+            .AddFluentChaining(x => x.ChainLifetime = ServiceLifetime.Singleton)
+            .AddFilterChain<UserEntity, UserQueryParameter>();
+        
         services.AddModelFilter<OrderEntity, OrderQueryParameter>();
 
         services
