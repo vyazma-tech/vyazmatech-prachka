@@ -5,12 +5,11 @@
 /// </summary>
 public abstract class Entity : IEquatable<Entity>
 {
-    private readonly List<IDomainEvent> _domainEvents;
+    private readonly List<IDomainEvent> _domainEvents = new ();
 
     protected Entity(Guid id)
     {
         Id = id;
-        _domainEvents = new List<IDomainEvent>();
     }
 
 #pragma warning disable CS8618
@@ -25,7 +24,7 @@ public abstract class Entity : IEquatable<Entity>
     /// <summary>
     /// Gets domain event list for a current entity.
     /// </summary>
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents;
+    public virtual IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     public bool Equals(Entity? other)
     {

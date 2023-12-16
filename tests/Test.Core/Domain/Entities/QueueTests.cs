@@ -36,20 +36,21 @@ public class QueueTests
         var dateTime = new DateTime(
             2023,
             1,
-            1,
+            2,
             1,
             30,
             0);
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(dateTime));
 
         var registrationDate = new DateTime(
             2023,
             1,
             1,
             1,
-            29,
-            59);
-        Result<QueueDate> creationResult = QueueDate.Create(registrationDate, _dateTimeProvider.Object);
+            30,
+            30);
+        Result<QueueDate> creationResult =
+            QueueDate.Create(DateOnly.FromDateTime(registrationDate), _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
         creationResult.Error.Message.Should().Be(DomainErrors.QueueDate.InThePast.Message);
@@ -65,7 +66,7 @@ public class QueueTests
             1,
             30,
             0);
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(dateTime));
 
         var registrationDate = new DateTime(
             2023,
@@ -74,7 +75,8 @@ public class QueueTests
             1,
             30,
             0);
-        Result<QueueDate> creationResult = QueueDate.Create(registrationDate, _dateTimeProvider.Object);
+        Result<QueueDate> creationResult =
+            QueueDate.Create(DateOnly.FromDateTime(registrationDate), _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
         creationResult.Error.Message.Should().Be(DomainErrors.QueueDate.NotNextWeek.Message);
@@ -83,12 +85,12 @@ public class QueueTests
     [Fact]
     public void CreateQueue_Should_ReturnNotNullQueue()
     {
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
 
         DateTime creationDate = DateTime.UtcNow;
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(creationDate, _dateTimeProvider.Object).Value,
+            QueueDate.Create(DateOnly.FromDateTime(creationDate), _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(creationDate),
                 TimeOnly.FromDateTime(creationDate).AddHours(5)).Value);
@@ -96,7 +98,7 @@ public class QueueTests
         queue.Should().NotBeNull();
         queue.Capacity.Value.Should().Be(10);
         queue.Items.Should().BeEmpty();
-        queue.CreationDate.Should().Be(creationDate);
+        queue.CreationDate.Should().Be(DateOnly.FromDateTime(creationDate));
         queue.ModifiedOn.Should().BeNull();
     }
 
@@ -133,7 +135,7 @@ public class QueueTests
     {
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), new DateTimeProvider()).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
@@ -149,10 +151,10 @@ public class QueueTests
     [Fact]
     public async Task Queue_ShouldRaiseDomainEvent_WhenItExpired()
     {
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(_dateTimeProvider.Object.UtcNow, _dateTimeProvider.Object).Value,
+            QueueDate.Create(_dateTimeProvider.Object.DateNow, _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value);
@@ -174,7 +176,7 @@ public class QueueTests
         Result<OrderEntity> incomingOrderResult = OrderEntity.Create(
             user,
             queue,
-            DateTime.UtcNow);
+            DateOnly.FromDateTime(DateTime.UtcNow));
 
         incomingOrderResult.IsFaulted.Should().BeTrue();
         incomingOrderResult.Error.Message.Should().Be(DomainErrors.Queue.Overfull.Message);

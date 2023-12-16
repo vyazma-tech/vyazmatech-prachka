@@ -18,7 +18,7 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
 
         var queue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), dateTimeProvider).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), dateTimeProvider).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow),
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(10))).Value);
@@ -26,11 +26,11 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
         Result<OrderEntity> order = OrderEntity.Create(
             user,
             queue,
-            DateTime.UtcNow);
+            DateOnly.FromDateTime(DateTime.UtcNow));
 
-        var subscription = new SubscriptionEntity(
+        var subscription = new OrderSubscriptionEntity(
             user,
-            DateTime.UtcNow);
+            DateOnly.FromDateTime(DateTime.UtcNow));
 
         yield return new object[] { subscription, order.Value };
     }

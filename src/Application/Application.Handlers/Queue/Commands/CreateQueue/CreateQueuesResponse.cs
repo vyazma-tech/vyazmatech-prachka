@@ -3,7 +3,7 @@
 public record struct CreateQueueResponseModel(
     Guid Id,
     int Capacity,
-    DateTime AssignmentDate,
+    DateOnly AssignmentDate,
     TimeOnly ActiveFrom,
     TimeOnly ActiveUntil);
 

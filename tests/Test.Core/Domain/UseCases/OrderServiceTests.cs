@@ -45,7 +45,7 @@ public class OrderServiceTests
 
         var newQueue = new QueueEntity(
             Capacity.Create(0).Value,
-            QueueDate.Create(DateTime.Today.AddDays(1), new DateTimeProvider()).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(1),
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value);
@@ -69,7 +69,7 @@ public class OrderServiceTests
 
         var newQueue = new QueueEntity(
             Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.Today.AddDays(1), new DateTimeProvider()).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow),
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(1))).Value);

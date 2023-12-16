@@ -2,7 +2,7 @@
 
 public interface IAuditableEntity
 {
-    DateTime CreationDate { get; }
+    DateOnly CreationDate { get; }
 
     DateTime? ModifiedOn { get; }
 }

@@ -5,7 +5,7 @@ namespace Infrastructure.DataAccess.Specifications.Order;
 
 public sealed class OrderByDateSpecification : Specification<OrderEntity>
 {
-    public OrderByDateSpecification(DateTime creationDate)
+    public OrderByDateSpecification(DateOnly creationDate)
         : base(order => order.CreationDate == creationDate)
     {
     }

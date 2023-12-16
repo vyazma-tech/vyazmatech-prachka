@@ -17,7 +17,7 @@ public class UserEntity : Entity, IAuditableEntity
     /// <param name="telegramId">user telegram id.</param>
     /// <param name="fullname">user full name.</param>
     /// <param name="registrationDateUtc">user registration date.</param>
-    public UserEntity(TelegramId telegramId, Fullname fullname, DateTime registrationDateUtc)
+    public UserEntity(TelegramId telegramId, Fullname fullname, DateOnly registrationDateUtc)
         : base(Guid.NewGuid())
     {
         Guard.Against.Null(telegramId, nameof(telegramId), "Telegram ID should not be null.");
@@ -33,7 +33,7 @@ public class UserEntity : Entity, IAuditableEntity
     }
 
 #pragma warning disable CS8618
-    private UserEntity() { }
+    protected UserEntity() { }
 #pragma warning restore CS8618
 
     /// <summary>
@@ -49,7 +49,7 @@ public class UserEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets registration date.
     /// </summary>
-    public DateTime CreationDate { get; }
+    public DateOnly CreationDate { get; }
 
     /// <summary>
     /// Gets modification date.

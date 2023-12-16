@@ -29,7 +29,7 @@ public class CreateQueueTest
         {
             new (
                 10,
-                _dateTimeProvider.UtcNow.AddDays(1),
+                 _dateTimeProvider.DateNow.AddDays(1),
                 TimeOnly.FromDateTime(_dateTimeProvider.UtcNow.AddHours(2)),
                 TimeOnly.FromDateTime(_dateTimeProvider.UtcNow.AddHours(4)))
         });

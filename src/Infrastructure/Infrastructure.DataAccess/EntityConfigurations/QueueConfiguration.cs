@@ -30,7 +30,6 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<QueueEntity>
             .Navigation(queue => queue.ActivityBoundaries).AutoInclude();
 
         builder.Property(queue => queue.ModifiedOn);
-        builder.Property(queue => queue.Expired)
-            .UsePropertyAccessMode(PropertyAccessMode.Property);
+        builder.Ignore(queue => queue.Expired);
     }
 }

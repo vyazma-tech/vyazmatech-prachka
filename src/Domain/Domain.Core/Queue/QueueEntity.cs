@@ -17,6 +17,7 @@ public class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
     private bool _maxCapacityReachedOnce;
+    private bool _queueExpiredOnce;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="QueueEntity" /> class.
@@ -44,7 +45,6 @@ public class QueueEntity : Entity, IAuditableEntity
     protected QueueEntity()
 #pragma warning restore CS8618
     {
-        _orders = new HashSet<OrderEntity>();
     }
 
     /// <summary>
@@ -65,16 +65,12 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets a value indicating whether queue expired or not.
     /// </summary>
-    public bool Expired
-    {
-        get => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
-        private set => _ = value;
-    }
+    public bool Expired => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
 
     /// <summary>
     /// Gets date, what queue is assigned to.
     /// </summary>
-    public DateTime CreationDate { get; }
+    public DateOnly CreationDate { get; }
 
     /// <summary>
     /// Gets modification date.
@@ -110,7 +106,8 @@ public class QueueEntity : Entity, IAuditableEntity
         }
 
         _orders.Add(order);
-        _maxCapacityReachedOnce = _orders.Count.Equals(Capacity.Value);
+        if (_orders.Count.Equals(Capacity.Value) is true)
+            _maxCapacityReachedOnce = true;
 
         return order;
     }
@@ -162,10 +159,12 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <returns>true, if event is raised, false otherwise.</returns>
     public bool TryExpire()
     {
-        if (Expired)
+        if (Expired && _queueExpiredOnce is false)
         {
             Raise(new QueueExpiredDomainEvent(this));
-            return true;
+            _queueExpiredOnce = true;
+
+            return _queueExpiredOnce;
         }
 
         return false;
@@ -178,7 +177,7 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <returns>true, if event is raised, false otherwise.</returns>
     public bool TryNotifyAboutAvailablePosition()
     {
-        if (Expired && _maxCapacityReachedOnce)
+        if (_queueExpiredOnce && _maxCapacityReachedOnce)
         {
             Raise(new PositionAvailableDomainEvent(this));
             return true;

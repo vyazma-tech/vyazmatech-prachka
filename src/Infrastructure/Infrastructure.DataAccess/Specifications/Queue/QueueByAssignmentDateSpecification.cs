@@ -5,7 +5,7 @@ namespace Infrastructure.DataAccess.Specifications.Queue;
 
 public sealed class QueueByAssignmentDateSpecification : Specification<QueueEntity>
 {
-    public QueueByAssignmentDateSpecification(DateTime assignmentDate)
+    public QueueByAssignmentDateSpecification(DateOnly assignmentDate)
         : base(queue => queue.CreationDate == assignmentDate)
     {
     }

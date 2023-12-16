@@ -8,6 +8,7 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="FluentChaining" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design"/>
         <PackageReference Include="StyleCop.Analyzers">
             <PrivateAssets>all</PrivateAssets>
@@ -16,7 +17,6 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Migrations\"/>
-        <Folder Include="Tools\" />
     </ItemGroup>
     
     <ItemGroup>

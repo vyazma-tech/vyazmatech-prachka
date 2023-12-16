@@ -28,7 +28,9 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
 
     public DbSet<QueueEntity> Queues { get; private init; } = null!;
 
-    public DbSet<SubscriptionEntity> Subscriptions { get; private init; } = null!;
+    public DbSet<OrderSubscriptionEntity> OrderSubscriptions { get; private init; } = null!;
+
+    public DbSet<QueueSubscriptionEntity> QueueSubscriptions { get; private init; } = null!;
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
