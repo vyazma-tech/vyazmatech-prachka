@@ -1,10 +1,12 @@
 ﻿using Application.Handlers.Order.Commands.MarkOrderAsReady;
+using Application.Handlers.Order.Queries;
+using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
 
 namespace Presentation.Endpoints.Order.MarkAsReady;
 
-public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Task>
+public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Result<OrderResponse>>
 {
     private readonly IMediator _mediator;
 
@@ -22,7 +24,7 @@ public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Task>
 
     public override async Task HandleAsync(MarkOrderAsReadyCommand req, CancellationToken ct)
     {
-        Task response = await _mediator.Send(req, ct);
+        Result<OrderResponse> response = await _mediator.Send(req, ct);
 
         try
         {

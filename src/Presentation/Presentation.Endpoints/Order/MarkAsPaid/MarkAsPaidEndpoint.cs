@@ -1,10 +1,12 @@
 ﻿using Application.Handlers.Order.Commands.MarkOrderAsPaid;
+using Application.Handlers.Order.Queries;
+using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
 
 namespace Presentation.Endpoints.Order.MarkAsPaid;
 
-public class MarkAsPaidEndpoint : Endpoint<MarkOrderAsPaidCommand, Task>
+public class MarkAsPaidEndpoint : Endpoint<MarkOrderAsPaidCommand, Result<OrderResponse>>
 {
     private readonly IMediator _mediator;
 
@@ -22,7 +24,7 @@ public class MarkAsPaidEndpoint : Endpoint<MarkOrderAsPaidCommand, Task>
 
     public override async Task HandleAsync(MarkOrderAsPaidCommand req, CancellationToken ct)
     {
-        Task response = await _mediator.Send(req, ct);
+        Result<OrderResponse> response = await _mediator.Send(req, ct);
 
         try
         {

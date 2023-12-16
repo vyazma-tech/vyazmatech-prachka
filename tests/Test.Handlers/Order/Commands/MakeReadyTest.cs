@@ -21,9 +21,8 @@ public class MakeReadyTest : TestBase
     
     public MakeReadyTest(CoreDatabaseFixture database) : base(database)
     {
-        var orderRepository = new OrderRepository(database.Context);
         _dateTimeProvider = new DateTimeProvider();
-        _handler = new MarkOrderAsReadyCommandHandler(orderRepository, _dateTimeProvider);
+        _handler = new MarkOrderAsReadyCommandHandler(_dateTimeProvider, database.Context);
     }
     
     [Fact]
@@ -32,7 +31,7 @@ public class MakeReadyTest : TestBase
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsReadyCommand(orderId);
 
-        Task response = await _handler.Handle(command, CancellationToken.None);
+        Result<OrderResponse> response = await _handler.Handle(command, CancellationToken.None);
 
         response.Should().NotBeNull();
     }
