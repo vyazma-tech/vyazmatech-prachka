@@ -1,5 +1,4 @@
-﻿using Application.Handlers.Order.Commands.CreateOrder;
-using Application.Handlers.Queue.Commands.CreateQueue;
+﻿using Application.Handlers.Queue.Commands.CreateQueue;
 using Application.Handlers.Queue.Queries;
 using Domain.Core.Queue;
 

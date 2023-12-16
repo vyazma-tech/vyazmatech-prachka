@@ -53,7 +53,7 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
             var idSpec = new OrderByIdSpecification(request.OrderId.Value);
             IReadOnlyCollection<OrderEntity> ordersById = await _orderRepository
                 .FindAllByAsync(idSpec, cancellationToken);
-            orders.AddRange(ordersById.Where(o => orders.Contains(o)));
+            orders.AddRange(orders.Any() ? ordersById.Where(o => orders.Contains(o)) : ordersById);
         }
         
         
@@ -69,7 +69,7 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
                 OrderByUserSpecification userSpec = new OrderByUserSpecification(userResult.Value);
                 IReadOnlyCollection<OrderEntity> ordersByUser = await _orderRepository
                     .FindAllByAsync(userSpec, cancellationToken);
-                orders.AddRange(ordersByUser.Where(o => orders.Contains(o)));
+                orders.AddRange(orders.Any() ? ordersByUser.Where(o => orders.Contains(o)) : ordersByUser);
             }
         }
 
