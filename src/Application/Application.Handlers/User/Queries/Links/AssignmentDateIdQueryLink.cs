@@ -22,7 +22,7 @@ public class RegistrationDateQueryLink : QueryLinkBase<UserQuery.QueryBuilder, U
         try
         {
             return requestQueryBuilder.WithRegistrationDate(
-                DateTime.Parse(requestParameter.Pattern).ToUniversalTime());
+                DateOnly.Parse(requestParameter.Pattern));
         }
         catch (Exception e)
         {

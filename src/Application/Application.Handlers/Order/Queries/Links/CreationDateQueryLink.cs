@@ -22,7 +22,7 @@ public class CreationDateQueryLink : QueryLinkBase<OrderQuery.QueryBuilder, Orde
         try
         {
             return requestQueryBuilder
-                .WithCreationDate(DateTime.Parse(requestParameter.Pattern).ToUniversalTime());
+                .WithCreationDate(DateOnly.Parse(requestParameter.Pattern));
         }
         catch (Exception e)
         {

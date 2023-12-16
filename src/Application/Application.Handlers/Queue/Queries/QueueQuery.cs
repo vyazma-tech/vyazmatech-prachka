@@ -5,7 +5,7 @@ namespace Application.Handlers.Queue.Queries;
 
 public class QueueQuery : IQuery<QueueResponse>
 {
-    public QueueQuery(Guid? orderId, Guid? queueId, DateTime? assignmentDate)
+    public QueueQuery(Guid? orderId, Guid? queueId, DateOnly? assignmentDate)
     {
         OrderId = orderId;
         QueueId = queueId;
@@ -15,13 +15,13 @@ public class QueueQuery : IQuery<QueueResponse>
     public static QueryBuilder Builder => new QueryBuilder();
     public Guid? OrderId { get; set; }
     public Guid? QueueId { get; set; }
-    public DateTime? AssignmentDate { get; set; }
+    public DateOnly? AssignmentDate { get; set; }
 
     public sealed class QueryBuilder
     {
         private Guid? _orderId;
         private Guid? _queueId;
-        private DateTime? _assignmentDate;
+        private DateOnly? _assignmentDate;
         
         public QueryBuilder WithOrderId(Guid orderId)
         {
@@ -35,7 +35,7 @@ public class QueueQuery : IQuery<QueueResponse>
             return this;
         }
 
-        public QueryBuilder WithAssignmentDate(DateTime assignmentDate)
+        public QueryBuilder WithAssignmentDate(DateOnly assignmentDate)
         {
             _assignmentDate = assignmentDate;
             return this;

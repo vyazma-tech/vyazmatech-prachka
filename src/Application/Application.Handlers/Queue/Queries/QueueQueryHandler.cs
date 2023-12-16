@@ -43,7 +43,7 @@ internal sealed class QueueQueryHandler : IQueryHandler<QueueQuery, QueueRespons
         var queues = new List<QueueEntity>();
         if (request.AssignmentDate.HasValue)
         {
-            DateTime assignmentDate = request.AssignmentDate.Value;
+            DateOnly assignmentDate = request.AssignmentDate.Value;
             var assignmentDateSpec = new QueueByAssignmentDateSpecification(assignmentDate);
             Result<QueueEntity> queueByDate = await _queueRepository
                 .FindByAsync(assignmentDateSpec, cancellationToken);

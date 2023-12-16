@@ -5,7 +5,7 @@ namespace Application.Handlers.Order.Queries;
 
 public class OrderQuery : IQuery<PagedResponse<OrderResponse>>
 {
-    public OrderQuery(Guid? orderId, Guid? userId, DateTime? creationDate, int? page)
+    public OrderQuery(Guid? orderId, Guid? userId, DateOnly? creationDate, int? page)
     {
         OrderId = orderId;
         UserId = userId;
@@ -16,14 +16,14 @@ public class OrderQuery : IQuery<PagedResponse<OrderResponse>>
     public static QueryBuilder Builder => new QueryBuilder();
     public Guid? OrderId { get; set; }
     public Guid? UserId { get; set; }
-    public DateTime? CreationDate { get; set; }
+    public DateOnly? CreationDate { get; set; }
     public int? Page { get; set; }
 
     public sealed class QueryBuilder
     {
         private Guid? _orderId;
         private Guid? _userId;
-        private DateTime? _creationDate;
+        private DateOnly? _creationDate;
         private int? _page;
 
         public QueryBuilder WithId(Guid id)
@@ -38,7 +38,7 @@ public class OrderQuery : IQuery<PagedResponse<OrderResponse>>
             return this;
         }
 
-        public QueryBuilder WithCreationDate(DateTime creationDate)
+        public QueryBuilder WithCreationDate(DateOnly creationDate)
         {
             _creationDate = creationDate;
             return this;

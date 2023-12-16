@@ -42,8 +42,12 @@ internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrderCom
             Result<QueueEntity> queueByIdResult = await _queueRepository
                 .FindByAsync(queueIdSpec, cancellationToken);
             
-            DateTime dateUtc = order.CreationDate.ToUniversalTime();
-            Result<OrderEntity> newOrderResult = OrderEntity.Create(userByIdResult.Value, queueByIdResult.Value, dateUtc);
+            // UTC?
+            DateOnly dateUtc = order.CreationDate;
+            Result<OrderEntity> newOrderResult = OrderEntity.Create(
+                userByIdResult.Value,
+                queueByIdResult.Value,
+                dateUtc);
             
             ordersToCreate.Add(newOrderResult.Value);
         }

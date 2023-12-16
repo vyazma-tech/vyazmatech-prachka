@@ -5,7 +5,7 @@ namespace Application.Handlers.User.Queries;
 
 public class UserQuery : IQuery<PagedResponse<UserResponse>>
 {
-    public UserQuery(Guid? id, string? telegramId, string? fullname, DateTime? registrationDate, int? page)
+    public UserQuery(Guid? id, string? telegramId, string? fullname, DateOnly? registrationDate, int? page)
     {
         Id = id;
         TelegramId = telegramId;
@@ -18,7 +18,7 @@ public class UserQuery : IQuery<PagedResponse<UserResponse>>
     public Guid? Id { get; set; }
     public string? TelegramId { get; set; }
     public string? Fullname { get; set; }
-    public DateTime? RegistrationDate { get; set; }
+    public DateOnly? RegistrationDate { get; set; }
     public int? Page { get; set; }
 
     public sealed class QueryBuilder
@@ -26,7 +26,7 @@ public class UserQuery : IQuery<PagedResponse<UserResponse>>
         private Guid? _id; 
         private string? _telegramId;
         private string? _fullname;
-        private DateTime? _registrationDate;
+        private DateOnly? _registrationDate;
         private int? _page;
         
         public QueryBuilder WithId(Guid id)
@@ -47,7 +47,7 @@ public class UserQuery : IQuery<PagedResponse<UserResponse>>
             return this;
         }
         
-        public QueryBuilder WithRegistrationDate(DateTime registrationDate)
+        public QueryBuilder WithRegistrationDate(DateOnly registrationDate)
         {
             _registrationDate = registrationDate;
             return this;

@@ -58,7 +58,7 @@ public class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<UserRespo
         
         if (request.RegistrationDate.HasValue)
         {
-            DateTime creationDateUtc = request.RegistrationDate.Value;
+            DateOnly creationDateUtc = request.RegistrationDate.Value;
             var creationDateSpec = new UserByRegistrationDateSpecification(creationDateUtc);
             IReadOnlyCollection<UserEntity> userResult = await _userRepository
                 .FindAllByAsync(creationDateSpec, cancellationToken);

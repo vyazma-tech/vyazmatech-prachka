@@ -5,7 +5,7 @@ namespace Application.Handlers.Order.Commands.CreateOrder;
 public readonly record struct CreateOrderModel(
     Guid UserId,
     Guid QueueId,
-    DateTime CreationDate);
+    DateOnly CreationDate);
 
 public sealed class CreateOrderCommand : ICommand<CreateOrderResponse>
 {

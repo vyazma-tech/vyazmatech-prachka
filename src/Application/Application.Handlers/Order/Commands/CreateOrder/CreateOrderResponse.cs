@@ -8,6 +8,6 @@ public readonly record struct CreateOrderResponseModel(
     bool Paid,
     bool Ready,
     DateTime? ModifiedOn,
-    DateTime CreationDate);
+    DateOnly CreationDate);
 
 public sealed record CreateOrderResponse(IReadOnlyCollection<CreateOrderResponseModel> OrderModel);

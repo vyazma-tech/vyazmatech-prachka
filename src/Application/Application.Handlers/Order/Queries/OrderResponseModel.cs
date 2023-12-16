@@ -5,6 +5,6 @@ public record struct OrderResponseModel(
     bool Paid,
     bool Ready,
     DateTime? ModifiedOn,
-    DateTime CreationDate);
+    DateOnly CreationDate);
 
 public sealed record OrderResponse(OrderResponseModel Queue);

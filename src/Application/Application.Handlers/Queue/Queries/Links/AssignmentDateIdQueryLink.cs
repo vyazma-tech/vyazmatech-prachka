@@ -23,7 +23,7 @@ public class AssignmentDateQueryLink : QueryLinkBase<QueueQuery.QueryBuilder, Qu
         try
         {
             return requestQueryBuilder.WithAssignmentDate(
-                DateTime.Parse(requestParameter.Pattern).ToUniversalTime());
+                DateOnly.Parse(requestParameter.Pattern));
         }
         catch (Exception e)
         {

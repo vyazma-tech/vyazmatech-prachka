@@ -10,7 +10,7 @@ public class OrderSubscriptionEntity : SubscriptionEntity
 {
     private readonly List<OrderEntity> _subscribedOrders;
 
-    public OrderSubscriptionEntity(UserEntity user, DateTime creationDateUtc)
+    public OrderSubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
         : base(user, creationDateUtc)
     {
         _subscribedOrders = new List<OrderEntity>();

@@ -5,6 +5,6 @@ public record struct UserResponseModel(
     string TelegramId,
     string Fullname,
     DateTime? ModifiedOn,
-    DateTime CreationDate);
+    DateOnly CreationDate);
 
 public sealed record UserResponse(UserResponseModel User);

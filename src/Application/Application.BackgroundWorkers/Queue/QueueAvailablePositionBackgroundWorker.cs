@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using Application.BackgroundWorkers.Configuration;
-using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

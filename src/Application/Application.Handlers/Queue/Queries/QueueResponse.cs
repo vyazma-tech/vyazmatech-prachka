@@ -4,7 +4,7 @@ public record struct QueueResponseModel(
     Guid Id,
     int Capacity,
     bool Expired,
-    DateTime AssignmentDate,
+    DateOnly AssignmentDate,
     DateTime? ModifiedOn,
     TimeOnly ActiveFrom,
     TimeOnly ActiveUntil);

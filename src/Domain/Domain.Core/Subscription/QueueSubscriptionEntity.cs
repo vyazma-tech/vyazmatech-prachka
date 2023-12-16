@@ -10,7 +10,7 @@ public class QueueSubscriptionEntity : SubscriptionEntity
 {
     private readonly List<QueueEntity> _subscribedQueues;
 
-    public QueueSubscriptionEntity(UserEntity user, DateTime creationDateUtc)
+    public QueueSubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
         : base(user, creationDateUtc)
     {
         _subscribedQueues = new List<QueueEntity>();
