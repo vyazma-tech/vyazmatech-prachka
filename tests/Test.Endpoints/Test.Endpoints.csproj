@@ -2,10 +2,17 @@
 
     <PropertyGroup>
         <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FastEndpoints" />
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" />
         <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="Moq" />
         <PackageReference Include="xunit"/>
         <PackageReference Include="xunit.runner.visualstudio">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,4 +24,23 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Application\Application.Handlers\Application.Handlers.csproj" />
+      <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.Tools\Infrastructure.Tools.csproj" />
+      <ProjectReference Include="..\..\src\Playground\TrusovNET.Playground\TrusovNET.Playground.csproj" />
+      <ProjectReference Include="..\..\src\Presentation\Presentation.Endpoints\Presentation.Endpoints.csproj" />
+      <ProjectReference Include="..\..\src\Presentation\Presentation.WebAPI\Presentation.WebAPI.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Remove="TestResults\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Remove="TestResults\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="TestResults\**"/>
+    </ItemGroup>
 </Project>

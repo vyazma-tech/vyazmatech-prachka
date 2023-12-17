@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.Common;
 
-namespace Test.Common.Fixtures.Database.Extensions;
+namespace Test.Handlers.Fixtures.Extensions;
 
 public static class DbConnectionExtensions
 {

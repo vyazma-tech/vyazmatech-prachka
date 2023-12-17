@@ -6,4 +6,12 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="FastEndpoints" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Presentation\Presentation.Endpoints\Presentation.Endpoints.csproj" />
+    </ItemGroup>
+
 </Project>

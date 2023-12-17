@@ -3,11 +3,11 @@ using System.Data.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Respawn;
-using Test.Common.Fixtures.Database.Extensions;
+using Test.Handlers.Fixtures.Extensions;
 using Testcontainers.PostgreSql;
 using Xunit;
 
-namespace Test.Common.Fixtures.Database;
+namespace Test.Handlers.Fixtures;
 
 public abstract class DatabaseFixture : IAsyncLifetime
 {
