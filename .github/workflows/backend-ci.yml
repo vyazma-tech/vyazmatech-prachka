@@ -13,6 +13,7 @@ on:
 
 jobs:
   build:
+    name: 🛠️ Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -33,12 +34,9 @@ jobs:
         run: dotnet build Trusov.NET.sln -c release --no-restore
   
   test:
+    name: 🧐 Test
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-      pull-requests: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -53,7 +51,7 @@ jobs:
         run: dotnet test Trusov.NET.sln -c release --no-build --no-restore -l trx --results-directory ./allure-results
   
   compile-allure:
-    name: compile-allure-pages
+    name: 🔃 Compile allure pages
     runs-on: ubuntu-latest
     permissions: write-all
     needs: test
@@ -88,7 +86,7 @@ jobs:
           path: "${{ github.workspace }}/allure-history"
 
   deploy-pages:
-    name: Deploy test summary on github pages
+    name: 🚀 Deploy test summary on github pages
     runs-on: ubuntu-latest
     permissions: write-all
     needs: compile-allure
