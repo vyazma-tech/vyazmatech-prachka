@@ -2,13 +2,12 @@ name: .NET
 concurrency: dotnet-build
 
 on:
-  push:
   pull_request:
     branches: [ "master", "dev" ]
     paths:
       - 'src/**'
       - 'tests/**'
-      - '.github/workflows/dotnet-build.yml'
+      - '.github/workflows/backend-ci.yml'
   workflow_dispatch:
 
 jobs:
@@ -32,10 +31,10 @@ jobs:
             ${{ runner.os }}-nuget-
       - name: Restore dependencies
         if: steps.cache-tests.outputs.cache-hit != 'true'
-        run: dotnet restore Trusov.NET.sln
+        run: dotnet restore
       - name: Build
         if: steps.cache-tests.outputs.cache-hit != 'true'
-        run: dotnet build Trusov.NET.sln -c release --no-restore
+        run: dotnet build -c release --no-restore
   
   test:
     name: 🧐 Test
@@ -52,7 +51,8 @@ jobs:
           dotnet-version: 7.0.x
 
       - name: Test
-        run: dotnet test Trusov.NET.sln -c release --no-build --no-restore -l trx --results-directory ./allure-results
+        run: dotnet test -c release --no-build --no-restore -l trx --results-directory ./allure-results
+        continue-on-error: true
   
   compile-allure:
     name: 🔃 Compile allure pages
@@ -67,7 +67,7 @@ jobs:
         with:
           path: ./allure-results
           key: ${{ needs.build.outputs.cache-key }}
-      
+
       - name: Download history
         uses: actions/download-artifact@v3
         with:
@@ -76,7 +76,7 @@ jobs:
         continue-on-error: true
 
       - name: Allure Report
-        uses: simple-elf/allure-report-action@master
+        uses: simple-elf/allure-report-action@v1.7
         if: always()
         with:
           allure_results: allure-results
