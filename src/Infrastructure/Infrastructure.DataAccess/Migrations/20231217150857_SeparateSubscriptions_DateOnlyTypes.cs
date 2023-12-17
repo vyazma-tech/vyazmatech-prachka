@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class SplitSubscriptions : Migration
+    public partial class SeparateSubscriptions_DateOnlyTypes : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,13 +26,37 @@ namespace Infrastructure.DataAccess.Migrations
                 name: "SubscriptionEntityId",
                 table: "Orders");
 
+            migrationBuilder.AlterColumn<DateOnly>(
+                name: "CreationDate",
+                table: "Users",
+                type: "date",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "timestamp with time zone");
+
+            migrationBuilder.AlterColumn<DateOnly>(
+                name: "CreationDate",
+                table: "Queues",
+                type: "date",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "timestamp with time zone");
+
+            migrationBuilder.AlterColumn<DateOnly>(
+                name: "CreationDate",
+                table: "Orders",
+                type: "date",
+                nullable: false,
+                oldClrType: typeof(DateTime),
+                oldType: "timestamp with time zone");
+
             migrationBuilder.CreateTable(
                 name: "OrderSubscriptions",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreationDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
@@ -52,7 +76,7 @@ namespace Infrastructure.DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreationDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
@@ -151,6 +175,30 @@ namespace Infrastructure.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "QueueSubscriptions");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreationDate",
+                table: "Users",
+                type: "timestamp with time zone",
+                nullable: false,
+                oldClrType: typeof(DateOnly),
+                oldType: "date");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreationDate",
+                table: "Queues",
+                type: "timestamp with time zone",
+                nullable: false,
+                oldClrType: typeof(DateOnly),
+                oldType: "date");
+
+            migrationBuilder.AlterColumn<DateTime>(
+                name: "CreationDate",
+                table: "Orders",
+                type: "timestamp with time zone",
+                nullable: false,
+                oldClrType: typeof(DateOnly),
+                oldType: "date");
 
             migrationBuilder.AddColumn<Guid>(
                 name: "SubscriptionEntityId",
