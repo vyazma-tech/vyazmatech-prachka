@@ -18,7 +18,7 @@ public class MarkAsPaidEndpoint : Endpoint<MarkOrderAsPaidCommand, Result<OrderR
 
     public override void Configure()
     {
-        Verbs(Http.POST);
+        Verbs(Http.PATCH);
         Routes("api/order/mark-as-paid");
         AllowAnonymous();
     }

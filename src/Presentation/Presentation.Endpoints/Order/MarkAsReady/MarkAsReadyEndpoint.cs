@@ -18,7 +18,7 @@ public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Result<Orde
 
     public override void Configure()
     {
-        Verbs(Http.POST);
+        Verbs(Http.PATCH);
         Routes("api/order/mark-as-ready");
         AllowAnonymous();
     }
