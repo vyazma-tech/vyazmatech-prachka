@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
     </PropertyGroup>
 
     <ItemGroup>
@@ -27,4 +28,15 @@
       <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.Tools\Infrastructure.Tools.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Remove="TestResults\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Remove="TestResults\**"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="TestResults\**"/>
+    </ItemGroup>
 </Project>

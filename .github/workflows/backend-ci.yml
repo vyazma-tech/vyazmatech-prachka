@@ -1,5 +1,4 @@
 name: .NET
-concurrency: dotnet-build
 
 on:
   pull_request:
@@ -8,19 +7,40 @@ on:
       - 'src/**'
       - 'tests/**'
       - '.github/workflows/backend-ci.yml'
+      - '*.sln'
+      - '*.props'
   workflow_dispatch:
 
 jobs:
   build:
-    name: 🛠️ Build
+    name: 🛠️ Build & 🧐 Test
     runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.create-cache-key.outputs.key }}
+    permissions:
+      packages: read
+    
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
+
+      - name: Create cache key
+        id: create-cache-key
+        run: |
+          echo key=${{ runner.os }}-${{ hashFiles('src/**', 'tests/**') }}-test-results >> "$GITHUB_OUTPUT"
+
+      - name: Cache testing results
+        id: cache-tests
+        uses: actions/cache@v3
+        with:
+          path: ./allure-results
+          key: ${{ steps.create-cache-key.outputs.key }}
+
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v1
         if: steps.cache-tests.outputs.cache-hit != 'true'
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 7.0.203
+
       - name: Cache nuget packages
         uses: actions/cache@v3
         if: steps.cache-tests.outputs.cache-hit != 'true'
@@ -29,36 +49,27 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('**/*.Packages.props', '**/*.csproj') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      - name: Restore dependencies
+
+      - name: Install dependencies
         if: steps.cache-tests.outputs.cache-hit != 'true'
-        run: dotnet restore
+        run: dotnet restore Trusov.NET.sln
+
       - name: Build
         if: steps.cache-tests.outputs.cache-hit != 'true'
-        run: dotnet build -c release --no-restore
-  
-  test:
-    name: 🧐 Test
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 7.0.x
+        run: dotnet build Trusov.NET.sln -c Release --no-restore
 
       - name: Test
-        run: dotnet test -c release --no-build --no-restore -l trx --results-directory ./allure-results
+        if: steps.cache-tests.outputs.cache-hit != 'true'
+        run: dotnet test Trusov.NET.sln -c Release --no-restore --no-build -l trx --results-directory ./allure-results
         continue-on-error: true
   
   compile-allure:
     name: 🔃 Compile allure pages
     runs-on: ubuntu-latest
     permissions: write-all
-    needs: test
+    concurrency: allure
+    if: always()
+    needs: build
     
     steps:
       - name: Cache testing results
@@ -75,8 +86,8 @@ jobs:
           path: "${{ github.workspace }}/allure-history"
         continue-on-error: true
 
-      - name: Allure Report
-        uses: simple-elf/allure-report-action@v1.7
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
         if: always()
         with:
           allure_results: allure-results
@@ -99,7 +110,11 @@ jobs:
   deploy-pages:
     name: 🚀 Deploy test summary on github pages
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      pages: write
+      deployments: write
+      pull-requests: write
+      id-token: write
     needs: compile-allure
     
     environment:
@@ -116,4 +131,4 @@ jobs:
         with:
           message: |
             Link to allure test run:  
-            https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.run_number }}
+            https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.event.number }}/${{ github.run_number }}
