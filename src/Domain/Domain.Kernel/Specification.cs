@@ -20,6 +20,11 @@ public abstract class Specification<TEntity>
 
     public abstract override string ToString();
 
+    public void AddInclude(Expression<Func<TEntity, object>> includeExpression)
+    {
+        Includes.Add(includeExpression);
+    }
+
     protected void AddOrderBy(Expression<Func<TEntity, bool>> orderByExpression)
     {
         OrderByExpression = orderByExpression;
@@ -28,10 +33,5 @@ public abstract class Specification<TEntity>
     protected void AddOrderByDescending(Expression<Func<TEntity, bool>> orderByDescendingExpression)
     {
         OrderByDescendingExpression = orderByDescendingExpression;
-    }
-    
-    protected void AddInclude(Expression<Func<TEntity, object>> includeExpression)
-    {
-        Includes.Add(includeExpression);
     }
 }

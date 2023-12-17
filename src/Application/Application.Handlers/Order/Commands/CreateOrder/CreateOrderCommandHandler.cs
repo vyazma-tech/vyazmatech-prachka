@@ -33,11 +33,13 @@ internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrdersCo
         var ordersToCreate = new List<OrderEntity>();
         foreach (CreateOrderModel order in request.Orders)
         {
-            var orderIdSpec = new UserByIdSpecification(order.UserId);
+            var userIdSpec = new UserByIdSpecification(order.UserId);
             Result<UserEntity> userByIdResult = await _userRepository
-                .FindByAsync(orderIdSpec, cancellationToken);
+                .FindByAsync(userIdSpec, cancellationToken);
         
             var queueIdSpec = new QueueByIdSpecification(order.QueueId);
+            queueIdSpec.AddInclude(queue => queue.Items);
+            
             Result<QueueEntity> queueByIdResult = await _queueRepository
                 .FindByAsync(queueIdSpec, cancellationToken);
             
