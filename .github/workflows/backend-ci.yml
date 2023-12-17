@@ -39,7 +39,7 @@ jobs:
     permissions:
       contents: write
       pages: write
-      id-token: write
+      id-token: writ
     steps:
       - uses: actions/checkout@v2
       - name: Get Allure history
