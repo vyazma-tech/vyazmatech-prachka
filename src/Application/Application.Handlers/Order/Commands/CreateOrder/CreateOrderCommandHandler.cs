@@ -13,18 +13,18 @@ namespace Application.Handlers.Order.Commands.CreateOrder;
 internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrdersCommand, CreateOrdersResponse>
 {
     private readonly IUserRepository _userRepository;
-    private readonly IQueueRepository _queueRepository;
+    private readonly IRepository<QueueEntity> _queueRepository;
     private readonly IRepository<OrderEntity> _orderRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateOrderCommandHandler(
         IUserRepository userRepository,
-        IQueueRepository queueRepository,
+        // IQueueRepository queueRepository,
         IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
         _userRepository = userRepository;
-        _queueRepository = queueRepository;
+        _queueRepository = _unitOfWork.GetRepository<QueueEntity>();
         _orderRepository = _unitOfWork.GetRepository<OrderEntity>();
     }
 
@@ -39,6 +39,7 @@ internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrdersCo
         
             var queueIdSpec = new QueueByIdSpecification(order.QueueId);
             queueIdSpec.AddInclude(queue => queue.Items);
+            queueIdSpec.AsNoTracking = true;
             
             Result<QueueEntity> queueByIdResult = await _queueRepository
                 .FindByAsync(queueIdSpec, cancellationToken);

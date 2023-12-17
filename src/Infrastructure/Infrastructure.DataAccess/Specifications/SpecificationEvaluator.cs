@@ -10,12 +10,14 @@ public static class SpecificationEvaluator
         Specification<TEntity> specification)
         where TEntity : Entity
     {
-        IQueryable<TEntity> queryable = inputQueryable;
+        IQueryable<TEntity> queryable =
+            specification.AsNoTracking ? inputQueryable.AsNoTracking() : inputQueryable;
 
         queryable = specification.Includes
             .Aggregate(
                 queryable,
-                (current, include) => current.Include(include));
+                (current, include) => specification.AsNoTracking
+                    ? current.Include(include).AsNoTracking() : current.Include(include));
 
         queryable = queryable.Where(specification.Criteria);
 

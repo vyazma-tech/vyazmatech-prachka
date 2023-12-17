@@ -12,6 +12,8 @@ public abstract class Specification<TEntity>
 
     public Expression<Func<TEntity, bool>> Criteria { get; }
     
+    public bool AsNoTracking { get; set; }
+    
     public List<Expression<Func<TEntity, object>>> Includes { get; } = new ();
 
     public Expression<Func<TEntity, bool>>? OrderByExpression { get; private set; }
