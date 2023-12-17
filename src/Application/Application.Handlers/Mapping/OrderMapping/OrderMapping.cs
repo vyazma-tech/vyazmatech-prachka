@@ -18,9 +18,9 @@ public static class OrderMapping
         };
     }
 
-    public static CreateOrderResponseModel ToCreationDto(this OrderEntity orderEntity)
+    public static CreateOrdersResponseModel ToCreationDto(this OrderEntity orderEntity)
     {
-        return new CreateOrderResponseModel
+        return new CreateOrdersResponseModel
         {
             Id = orderEntity.Id,
             Paid = orderEntity.Paid,

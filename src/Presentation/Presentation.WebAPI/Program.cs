@@ -1,6 +1,5 @@
 using Application.BackgroundWorkers.Extensions;
 using Application.BackgroundWorkers.Queue;
-using Application.Handlers;
 using Application.Core.Configuration;
 using Application.Handlers.Extensions;
 using FastEndpoints.Swagger;

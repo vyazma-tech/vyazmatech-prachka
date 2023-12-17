@@ -7,9 +7,9 @@ public readonly record struct CreateOrderModel(
     Guid QueueId,
     DateOnly CreationDate);
 
-public sealed class CreateOrderCommand : ICommand<CreateOrderResponse>
+public sealed class CreateOrdersCommand : ICommand<CreateOrdersResponse>
 {
-    public CreateOrderCommand(IReadOnlyCollection<CreateOrderModel> orders)
+    public CreateOrdersCommand(IReadOnlyCollection<CreateOrderModel> orders)
     {
         Orders = orders;
     }

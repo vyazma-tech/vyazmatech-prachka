@@ -26,7 +26,10 @@ public class QueueActivityBackgroundWorker : BackgroundService
     {
         _logger = logger;
         _scopeFactory = scopeFactory;
-        _delayBetweenChecks = workerConfiguration.Value.SharedDelay;
+
+        // TODO
+        // _delayBetweenChecks = workerConfiguration.Value.SharedDelay;
+        _delayBetweenChecks = new TimeSpan(2, 1, 0);
 
         _stopwatch = new Stopwatch();
     }

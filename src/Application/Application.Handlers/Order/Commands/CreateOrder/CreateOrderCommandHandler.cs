@@ -10,26 +10,25 @@ using Infrastructure.DataAccess.Specifications.User;
 
 namespace Application.Handlers.Order.Commands.CreateOrder;
 
-internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrderCommand, CreateOrderResponse>
+internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrdersCommand, CreateOrdersResponse>
 {
     private readonly IUserRepository _userRepository;
     private readonly IQueueRepository _queueRepository;
-    private readonly IOrderRepository _orderRepository;
+    private readonly IRepository<OrderEntity> _orderRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateOrderCommandHandler(
         IUserRepository userRepository,
         IQueueRepository queueRepository,
-        IOrderRepository orderRepository,
         IUnitOfWork unitOfWork)
     {
+        _unitOfWork = unitOfWork;
         _userRepository = userRepository;
         _queueRepository = queueRepository;
-        _orderRepository = orderRepository;
-        _unitOfWork = unitOfWork;
+        _orderRepository = _unitOfWork.GetRepository<OrderEntity>();
     }
 
-    public async ValueTask<CreateOrderResponse> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    public async ValueTask<CreateOrdersResponse> Handle(CreateOrdersCommand request, CancellationToken cancellationToken)
     {
         var ordersToCreate = new List<OrderEntity>();
         foreach (CreateOrderModel order in request.Orders)
@@ -54,7 +53,7 @@ internal sealed class CreateOrderCommandHandler : ICommandHandler<CreateOrderCom
         await _orderRepository.InsertRangeAsync(ordersToCreate, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         
-        var response = new CreateOrderResponse(ordersToCreate
+        var response = new CreateOrdersResponse(ordersToCreate
             .Select(x => x.ToCreationDto()).ToList());
 
         return response;
