@@ -55,7 +55,7 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets time range for a queue activity.
     /// </summary>
-    public virtual QueueActivityBoundaries ActivityBoundaries { get; }
+    public virtual QueueActivityBoundaries ActivityBoundaries { get; private set; }
 
     /// <summary>
     /// Gets orders, that currently in the queue.
@@ -147,6 +147,28 @@ public class QueueEntity : Entity, IAuditableEntity
         }
 
         Capacity = newCapacity;
+        ModifiedOn = modifiedOnUtc;
+
+        return this;
+    }
+
+    /// <summary>
+    /// Change queue activity boundaries.
+    /// </summary>
+    /// <param name="activityBoundaries">new activity boundaries value.</param>
+    /// <param name="modifiedOnUtc">modification utc date.</param>
+    /// <returns>same queue instance.</returns>
+    /// <remarks>returns failure result, when new activity boundaries is invalid.</remarks>
+    public Result<QueueEntity> ChangeActivityBoundaries(
+        QueueActivityBoundaries activityBoundaries, DateTime modifiedOnUtc)
+    {
+        if (activityBoundaries == ActivityBoundaries)
+        {
+            var exception = new DomainException(DomainErrors.Queue.InvalidNewActivityBoundaries);
+            return new Result<QueueEntity>(exception);
+        }
+
+        ActivityBoundaries = activityBoundaries;
         ModifiedOn = modifiedOnUtc;
 
         return this;

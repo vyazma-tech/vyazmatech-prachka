@@ -33,6 +33,6 @@ internal class FindUsersEndpoint : Endpoint<QueryConfiguration<UserQueryParamete
         UserQuery userQuery = queryBuilder.Build();
 
         PagedResponse<UserResponse> response = await _mediator.Send(userQuery, ct);
-        await SendOkAsync(response);
+        await SendOkAsync(response, ct);
     }
 }
