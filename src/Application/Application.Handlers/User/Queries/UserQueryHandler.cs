@@ -12,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Handlers.User.Queries;
 
-public class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<UserResponse>>
+internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<UserResponse>>
 {
     private readonly IUserRepository _userRepository;
     private readonly PaginationConfiguration _paginationConfiguration;

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 
-public class IncreaseQueueCapacityCommandHandler : ICommandHandler<IncreaseQueueCapacityCommand, Result<QueueResponse>>
+internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<IncreaseQueueCapacityCommand, Result<QueueResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<QueueEntity> _queueRepository;

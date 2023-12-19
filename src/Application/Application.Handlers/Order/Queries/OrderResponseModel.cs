@@ -7,4 +7,4 @@ public record struct OrderResponseModel(
     DateTime? ModifiedOn,
     DateOnly CreationDate);
 
-public sealed record OrderResponse(OrderResponseModel Queue);
+public sealed record OrderResponse(OrderResponseModel Order);

@@ -11,7 +11,7 @@ using Infrastructure.DataAccess.Specifications.Queue;
 
 namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 
-public class ChangeQueueActivityBoundariesHandler
+internal sealed class ChangeQueueActivityBoundariesHandler
     : ICommandHandler<ChangeQueueActivityBoundariesCommand, Result<QueueResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
