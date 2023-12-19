@@ -1,8 +1,5 @@
-﻿using Application.Handlers.User.CreateUser;
-using Application.Handlers.User.Queries;
-using Domain.Common.Errors;
+﻿using Application.Handlers.User.Queries;
 using Domain.Core.User;
-using Domain.Core.ValueObjects;
 
 namespace Application.Handlers.Mapping.UserMapping;
 
@@ -17,18 +14,6 @@ public static class UserMapping
             Fullname = userEntity.Fullname.Value,
             ModifiedOn = userEntity.ModifiedOn,
             CreationDate = userEntity.CreationDate,
-        };
-    }
-    
-    public static CreateUserResponseModel ToCreationDto(this UserEntity userEntity)
-    {
-        return new CreateUserResponseModel
-        {
-            Id = userEntity.Id,
-            TelegramId = userEntity.TelegramId.Value,
-            Fullname = userEntity.Fullname.Value,
-            ModifiedOn = userEntity.ModifiedOn,
-            RegistrationDate = userEntity.CreationDate,
         };
     }
 }
