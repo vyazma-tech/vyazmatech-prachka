@@ -9,6 +9,7 @@ using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Test.Core.Domain.Entities.ClassData;
 using Test.Handlers.Fixtures;
 using Xunit;
 
@@ -34,5 +35,25 @@ public class MakeReadyTest : TestBase
         Result<OrderResponse> response = await _handler.Handle(command, CancellationToken.None);
 
         response.Should().NotBeNull();
+    }
+
+    [Theory]
+    [ClassData(typeof(OrderClassData))]
+    public async Task MarkAsReadyOrder_WhenOrderExistAndNotReadyBefore(OrderEntity order)
+    {
+        Database.Context.Orders.Add(order);
+
+        await Database.Context.SaveChangesAsync();
+
+        OrderEntity createdOrder = Database.Context.Orders.First();
+        
+        var command = new MarkOrderAsReadyCommand(createdOrder.Id);
+
+        Result<OrderResponse> response = await _handler.Handle(command, CancellationToken.None);
+
+        response.Should().NotBeNull();
+        response.IsSuccess.Should().BeTrue();
+        response.Value.Should().NotBeNull();
+        response.Value.Order.Ready.Should().BeTrue();
     }
 }

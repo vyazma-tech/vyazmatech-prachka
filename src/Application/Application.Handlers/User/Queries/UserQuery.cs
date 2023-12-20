@@ -1,5 +1,6 @@
 ﻿using Application.Core.Common;
 using Application.Core.Contracts;
+using Infrastructure.DataAccess.Quering.Abstractions;
 
 namespace Application.Handlers.User.Queries;
 
@@ -12,6 +13,8 @@ public class UserQuery : IQuery<PagedResponse<UserResponse>>
         Fullname = fullname;
         RegistrationDate = registrationDate;
         Page = page;
+        Configuration = new QueryConfiguration<UserQueryParameter>
+            (new List<QueryParameter<UserQueryParameter>>());
     }
 
     public static QueryBuilder Builder => new QueryBuilder(); 
@@ -20,6 +23,8 @@ public class UserQuery : IQuery<PagedResponse<UserResponse>>
     public string? Fullname { get; set; }
     public DateOnly? RegistrationDate { get; set; }
     public int? Page { get; set; }
+    
+    public QueryConfiguration<UserQueryParameter> Configuration { get; set; }
 
     public sealed class QueryBuilder
     {

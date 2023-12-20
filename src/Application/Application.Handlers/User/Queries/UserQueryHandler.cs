@@ -6,6 +6,7 @@ using Application.Handlers.Mapping.UserMapping;
 using Domain.Common.Result;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Quering.Abstractions;
 using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.Extensions.Options;
@@ -39,22 +40,6 @@ internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<
             IReadOnlyCollection<UserEntity> userResult = await _userRepository.FindAllByAsync(idSpec, cancellationToken);
             users.AddRange(userResult);
         }
-
-        if (request.TelegramId != null)
-        {
-            Result<TelegramId> telegramId = TelegramId.Create(request.TelegramId);
-            var idSpec = new UserByTelegramIdSpecification(telegramId.Value);
-            IReadOnlyCollection<UserEntity> userResult = await _userRepository.FindAllByAsync(idSpec, cancellationToken);
-            users.AddRange(users.Any() ? userResult.Where(o => users.Contains(o)) : userResult);
-        }
-        
-        if (request.Fullname != null)
-        {
-            Result<Fullname> fullname = Fullname.Create(request.Fullname);
-            var idSpec = new UserByFullnameSpecification(fullname.Value);
-            IReadOnlyCollection<UserEntity> userResult = await _userRepository.FindAllByAsync(idSpec, cancellationToken);
-            users.AddRange(users.Any() ? userResult.Where(o => users.Contains(o)) : userResult);
-        }
         
         if (request.RegistrationDate.HasValue)
         {
@@ -64,6 +49,8 @@ internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<
                 .FindAllByAsync(creationDateSpec, cancellationToken);
             users.AddRange(users.Any() ? userResult.Where(o => users.Contains(o)) : userResult);
         }
+
+        users = _filter.Apply(users, request.Configuration).ToList();
 
         var readonlyUsers = new ReadOnlyCollection<UserResponse>(users
             .Select(user => new UserResponse(user.ToDto())).ToList());
