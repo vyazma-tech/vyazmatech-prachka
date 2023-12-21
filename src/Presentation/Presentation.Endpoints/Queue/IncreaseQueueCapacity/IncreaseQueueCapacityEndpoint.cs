@@ -1,13 +1,13 @@
-﻿using Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
+﻿using Application.Core.Common;
+using Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 using Application.Handlers.Queue.Queries;
-using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
 using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Endpoints.Queue.IncreaseQueueCapacity;
 
-public class IncreaseQueueCapacityEndpoint : Endpoint<IncreaseQueueCapacityCommand, Result<QueueResponse>>
+public class IncreaseQueueCapacityEndpoint : Endpoint<IncreaseQueueCapacityCommand, ResultResponse<QueueResponse>>
 {
     private readonly IMediator _mediator;
 
@@ -25,7 +25,7 @@ public class IncreaseQueueCapacityEndpoint : Endpoint<IncreaseQueueCapacityComma
 
     public override async Task HandleAsync(IncreaseQueueCapacityCommand req, CancellationToken ct)
     {
-        Result<QueueResponse> response = await _mediator.Send(req, ct);
+        ResultResponse<QueueResponse> response = await _mediator.Send(req, ct);
 
         if (response.IsSuccess)
         {

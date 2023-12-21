@@ -31,4 +31,8 @@
       <ProjectReference Include="..\..\src\Presentation\Presentation.WebAPI\Presentation.WebAPI.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Queue\Commands\" />
+    </ItemGroup>
+
 </Project>

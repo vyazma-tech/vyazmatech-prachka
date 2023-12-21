@@ -19,7 +19,7 @@ public sealed class QueueClassData : IEnumerable<object[]>
             QueueDate.Create(DateOnly.FromDateTime(DateTime.Today), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(1))).Value);
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddHours(5))).Value);
 
         Result<OrderEntity> order = OrderEntity.Create(
             user,

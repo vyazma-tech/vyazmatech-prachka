@@ -1,10 +1,10 @@
-﻿using Application.Core.Contracts;
+﻿using Application.Core.Common;
+using Application.Core.Contracts;
 using Application.Handlers.Queue.Queries;
-using Domain.Common.Result;
 
 namespace Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 
-public sealed class IncreaseQueueCapacityCommand : ICommand<Result<QueueResponse>>
+public sealed class IncreaseQueueCapacityCommand : ICommand<ResultResponse<QueueResponse>>
 {
     public IncreaseQueueCapacityCommand(Guid queueId, int capacity)
     {
