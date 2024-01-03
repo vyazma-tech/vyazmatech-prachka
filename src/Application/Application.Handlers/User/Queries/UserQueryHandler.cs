@@ -17,7 +17,6 @@ internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<
 {
     private readonly IUserRepository _userRepository;
     private readonly PaginationConfiguration _paginationConfiguration;
-    
     private readonly IModelFilter<UserEntity, UserQueryParameter> _filter;
 
     public UserQueryHandler(
@@ -37,10 +36,11 @@ internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<
         if (request.Id.HasValue)
         {
             var idSpec = new UserByIdSpecification(request.Id.Value);
-            IReadOnlyCollection<UserEntity> userResult = await _userRepository.FindAllByAsync(idSpec, cancellationToken);
+            IReadOnlyCollection<UserEntity>
+                userResult = await _userRepository.FindAllByAsync(idSpec, cancellationToken);
             users.AddRange(userResult);
         }
-        
+
         if (request.RegistrationDate.HasValue)
         {
             DateOnly creationDateUtc = request.RegistrationDate.Value;
@@ -54,7 +54,7 @@ internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<
 
         var readonlyUsers = new ReadOnlyCollection<UserResponse>(users
             .Select(user => new UserResponse(user.ToDto())).ToList());
-       
+
         return new PagedResponse<UserResponse>
         {
             Bunch = readonlyUsers,

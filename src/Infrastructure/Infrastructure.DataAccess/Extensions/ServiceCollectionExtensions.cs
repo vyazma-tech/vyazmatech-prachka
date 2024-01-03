@@ -1,4 +1,5 @@
 ﻿using Application.Core.Configuration;
+using Application.DataAccess.Contracts;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.Subscription;
@@ -22,6 +23,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContext<DatabaseContext>(options);
         services.AddScoped<IUnitOfWork, DatabaseContext>();
+        services.AddScoped<IPersistenceContext, PersistenceContext>();
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IQueueRepository, QueueRepository>();

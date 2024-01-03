@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts;
+using Application.DataAccess.Contracts;
 using Application.Handlers.Mapping.OrderMapping;
 using Application.Handlers.Order.Queries;
 using Domain.Common.Result;
@@ -11,16 +12,17 @@ namespace Application.Handlers.Order.Commands.MarkOrderAsReady;
 
 internal sealed class MarkOrderAsReadyCommandHandler : ICommandHandler<MarkOrderAsReadyCommand, Result<OrderResponse>>
 {
-    private readonly IRepository<OrderEntity> _orderRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public MarkOrderAsReadyCommandHandler(
         IDateTimeProvider dateTimeProvider,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IPersistenceContext persistenceContext)
     {
         _unitOfWork = unitOfWork;
-        _orderRepository = _unitOfWork.GetRepository<OrderEntity>();
+        _orderRepository = persistenceContext.Orders;
         _dateTimeProvider = dateTimeProvider;
     }
 

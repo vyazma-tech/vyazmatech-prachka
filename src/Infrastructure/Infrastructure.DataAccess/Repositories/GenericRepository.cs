@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Infrastructure.DataAccess.Repositories;
 
-internal class GenericRepository<TEntity> : IRepository<TEntity>
+internal class GenericRepository<TEntity>
     where TEntity : Entity
 {
     private readonly DatabaseContext _context;

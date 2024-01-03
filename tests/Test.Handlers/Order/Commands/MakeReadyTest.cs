@@ -5,6 +5,7 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
 using FluentAssertions;
+using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;
 using Microsoft.Extensions.Logging;
@@ -18,14 +19,25 @@ namespace Test.Handlers.Order.Commands;
 public class MakeReadyTest : TestBase
 {
     private readonly MarkOrderAsReadyCommandHandler _handler;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    
+
     public MakeReadyTest(CoreDatabaseFixture database) : base(database)
     {
-        _dateTimeProvider = new DateTimeProvider();
-        _handler = new MarkOrderAsReadyCommandHandler(_dateTimeProvider, database.Context);
+        var dateTimeProvider = new DateTimeProvider();
+        var queues = new QueueRepository(database.Context);
+        var users = new UserRepository(database.Context);
+        var orders = new OrderRepository(database.Context);
+        var subscriptions = new SubscriptionRepository(database.Context);
+
+        _handler = new MarkOrderAsReadyCommandHandler(
+            dateTimeProvider,
+            database.Context,
+            new PersistenceContext(
+                queues,
+                orders,
+                users,
+                subscriptions));
     }
-    
+
     [Fact]
     public async Task MarkAsReadyOrder_WhenOrderNotFoundById()
     {
@@ -46,7 +58,7 @@ public class MakeReadyTest : TestBase
         await Database.Context.SaveChangesAsync();
 
         OrderEntity createdOrder = Database.Context.Orders.First();
-        
+
         var command = new MarkOrderAsReadyCommand(createdOrder.Id);
 
         Result<OrderResponse> response = await _handler.Handle(command, CancellationToken.None);

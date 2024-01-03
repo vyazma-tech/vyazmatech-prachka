@@ -14,12 +14,9 @@ namespace Infrastructure.DataAccess.Contexts;
 
 public sealed class DatabaseContext : DbContext, IUnitOfWork
 {
-    private Dictionary<Type, object> _repositories;
-
     public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
     {
-        _repositories = new Dictionary<Type, object>();
     }
 
     public DbSet<OrderEntity> Orders { get; private init; } = null!;
@@ -33,22 +30,7 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
     public DbSet<QueueSubscriptionEntity> QueueSubscriptions { get; private init; } = null!;
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
-    {
-        return Database.BeginTransactionAsync(cancellationToken);
-    }
-
-    public IRepository<TEntity> GetRepository<TEntity>()
-        where TEntity : Entity
-    {
-        if (_repositories.ContainsKey(typeof(TEntity)))
-        {
-            return (IRepository<TEntity>)_repositories[typeof(TEntity)];
-        }
-
-        var repository = new GenericRepository<TEntity>(this);
-        _repositories.Add(typeof(TEntity), repository);
-        return repository;
-    }
+        => Database.BeginTransactionAsync(cancellationToken);
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,5 +1,6 @@
 ﻿using Application.Core.Common;
 using Application.Core.Contracts;
+using Application.DataAccess.Contracts;
 using Application.Handlers.Mapping.QueueMapping;
 using Application.Handlers.Queue.Queries;
 using Domain.Common.Result;
@@ -12,18 +13,20 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 
-internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<IncreaseQueueCapacityCommand, ResultResponse<QueueResponse>>
+internal sealed class
+    IncreaseQueueCapacityCommandHandler : ICommandHandler<IncreaseQueueCapacityCommand, ResultResponse<QueueResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IRepository<QueueEntity> _queueRepository;
+    private readonly IQueueRepository _queueRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public IncreaseQueueCapacityCommandHandler(
         IUnitOfWork unitOfWork,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        IPersistenceContext persistenceContext)
     {
         _unitOfWork = unitOfWork;
-        _queueRepository = unitOfWork.GetRepository<QueueEntity>();
+        _queueRepository = persistenceContext.Queues;
         _dateTimeProvider = dateTimeProvider;
     }
 
@@ -34,14 +37,14 @@ internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Incr
             .FindByAsync(queueByIdSpecification, cancellationToken);
 
         Result<Capacity> newCapacityResult = Capacity.Create(request.Capacity);
-        
+
         Result<QueueEntity> increasedQueueCapacityResult = queueEntityResult
             .Value
             .IncreaseCapacity(newCapacityResult.Value, _dateTimeProvider.UtcNow);
 
         if (increasedQueueCapacityResult.IsFaulted)
             return new ResultResponse<QueueResponse>(increasedQueueCapacityResult.Error);
-        
+
         _queueRepository.Update(increasedQueueCapacityResult.Value);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

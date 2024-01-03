@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts;
+using Application.DataAccess.Contracts;
 using Application.Handlers.Mapping.OrderMapping;
 using Application.Handlers.Order.Queries;
 using Domain.Common.Result;
@@ -12,16 +13,17 @@ namespace Application.Handlers.Order.Commands.MarkOrderAsPaid;
 
 internal sealed class MarkOrderAsPaidCommandHandler : ICommandHandler<MarkOrderAsPaidCommand, Result<OrderResponse>>
 {
-    private readonly IRepository<OrderEntity> _orderRepository;
+    private readonly IOrderRepository _orderRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public MarkOrderAsPaidCommandHandler(
         IUnitOfWork unitOfWork,
-        IDateTimeProvider dateTimeProvider)
+        IDateTimeProvider dateTimeProvider,
+        IPersistenceContext persistenceContext)
     {
         _unitOfWork = unitOfWork;
-        _orderRepository = _unitOfWork.GetRepository<OrderEntity>();
+        _orderRepository = persistenceContext.Orders;
         _dateTimeProvider = dateTimeProvider;
     }
 
