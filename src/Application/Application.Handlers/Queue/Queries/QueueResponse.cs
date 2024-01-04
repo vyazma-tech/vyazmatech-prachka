@@ -9,4 +9,4 @@ public record struct QueueResponseModel(
     TimeOnly ActiveFrom,
     TimeOnly ActiveUntil);
 
-public sealed record QueueResponse(QueueResponseModel Queue);
+public sealed record QueueResponse(QueueResponseModel[] Queue);

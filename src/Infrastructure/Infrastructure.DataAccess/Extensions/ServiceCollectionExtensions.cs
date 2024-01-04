@@ -6,7 +6,6 @@ using Domain.Core.Subscription;
 using Domain.Core.User;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Contexts;
-using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;
 using Microsoft.EntityFrameworkCore;

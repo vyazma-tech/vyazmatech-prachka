@@ -16,14 +16,14 @@ PostgresConfiguration? postgresConfiguration = builder.Configuration
     .GetSection(nameof(PostgresConfiguration))
     .Get<PostgresConfiguration>() ?? throw new StartupException(nameof(PostgresConfiguration));
 
-builder.Services.AddWorkersConfiguration(builder.Configuration);
-builder.Services
-    .AddHostedService<QueueActivityBackgroundWorker>()
-    .AddHostedService<QueueAvailablePositionBackgroundWorker>();
+// builder.Services.AddWorkersConfiguration(builder.Configuration);
+// builder.Services
+//     .AddHostedService<QueueActivityBackgroundWorker>()
+//     .AddHostedService<QueueAvailablePositionBackgroundWorker>();
 builder.Services.AddSingleton(postgresConfiguration);
 builder.Services.AddDatabase(o =>
 {
-    o.UseNpgsql(postgresConfiguration.ToConnectionString("trusov_net"))
+    o.UseNpgsql(postgresConfiguration.ToConnectionString("test"))
         .UseLazyLoadingProxies();
 });
 
@@ -42,7 +42,7 @@ WebApplication app = builder.Build();
 
 await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
 {
-    await scope.UseDatabase();
+    // await scope.UseDatabase();
 }
 
 app.UseCustomExceptionHandler();

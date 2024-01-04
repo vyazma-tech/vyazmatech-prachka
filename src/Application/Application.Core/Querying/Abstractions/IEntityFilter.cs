@@ -1,6 +1,6 @@
-﻿namespace Infrastructure.DataAccess.Quering.Abstractions;
+﻿namespace Application.Core.Querying.Abstractions;
 
-public interface IModelFilter<TModel, TParameter>
+public interface IEntityFilter<TModel, TParameter>
 {
     IEnumerable<TModel> Apply(
         IEnumerable<TModel> data,

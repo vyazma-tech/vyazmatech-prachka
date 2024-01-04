@@ -12,7 +12,7 @@ public class OrderQuery : IQuery<PagedResponse<OrderResponse>>
         CreationDate = creationDate;
         Page = page;
     }
-    
+
     public static QueryBuilder Builder => new QueryBuilder();
     public Guid? OrderId { get; set; }
     public Guid? UserId { get; set; }

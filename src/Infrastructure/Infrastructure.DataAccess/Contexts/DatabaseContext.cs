@@ -1,10 +1,10 @@
-﻿using Domain.Core.Order;
+﻿using Application.DataAccess.Contracts;
+using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.Subscription;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.DataAccess.ValueConverters;
 using Microsoft.EntityFrameworkCore;

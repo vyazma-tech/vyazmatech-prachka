@@ -2,12 +2,12 @@
 using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
+using Application.Core.Querying.Abstractions;
 using Application.Handlers.Mapping;
 using Application.Handlers.Mapping.OrderMapping;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.User;
-using Infrastructure.DataAccess.Quering.Abstractions;
 using Infrastructure.DataAccess.Specifications.Order;
 using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.Extensions.Options;
@@ -19,14 +19,13 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
     private readonly IOrderRepository _orderRepository;
     private readonly IUserRepository _userRepository;
     private readonly PaginationConfiguration _paginationConfiguration;
-    
-    private readonly IModelFilter<OrderEntity, OrderQueryParameter> _filter;
+    private readonly IEntityFilter<OrderEntity, OrderQueryParameter> _filter;
 
     public OrderQueryHandler(
         IOrderRepository orderRepository,
         IUserRepository userRepository,
         IOptionsMonitor<PaginationConfiguration> paginationConfiguration,
-        IModelFilter<OrderEntity, OrderQueryParameter> filter)
+        IEntityFilter<OrderEntity, OrderQueryParameter> filter)
     {
         _orderRepository = orderRepository;
         _userRepository = userRepository;
@@ -37,7 +36,7 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
     public async ValueTask<PagedResponse<OrderResponse>> Handle(OrderQuery request, CancellationToken cancellationToken)
     {
         long totalRecords = await _orderRepository.CountAsync(cancellationToken);
-        
+
         var orders = new List<OrderEntity>();
         if (request.CreationDate.HasValue)
         {
@@ -47,7 +46,7 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
                 .FindAllByAsync(creationDateSpec, cancellationToken);
             orders.AddRange(ordersByDate);
         }
-        
+
         if (request.OrderId.HasValue)
         {
             var idSpec = new OrderByIdSpecification(request.OrderId.Value);
@@ -55,12 +54,11 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
                 .FindAllByAsync(idSpec, cancellationToken);
             orders.AddRange(orders.Any() ? ordersById.Where(o => orders.Contains(o)) : ordersById);
         }
-        
-        
+
         if (request.UserId.HasValue)
         {
             var userIdSpec = new UserByIdSpecification(request.UserId.Value);
-            
+
             Result<UserEntity> userResult = await _userRepository
                 .FindByAsync(userIdSpec, cancellationToken);
 
@@ -73,7 +71,7 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
             }
         }
 
-        var readonlyOrders = new ReadOnlyCollection<OrderResponse>(orders.Select(o => 
+        var readonlyOrders = new ReadOnlyCollection<OrderResponse>(orders.Select(o =>
             new OrderResponse(o.ToDto())).ToList());
 
         return new PagedResponse<OrderResponse>

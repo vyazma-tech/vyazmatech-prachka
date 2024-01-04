@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.DataAccess.Quering.Abstractions;
+﻿namespace Application.Core.Querying.Abstractions;
 
 public class QueryParameter<T>
 {

@@ -1,36 +1,29 @@
-﻿using Application.Handlers.Queue.Queries;
+﻿using Application.Core.Querying.Abstractions;
+using Application.Handlers.Queue.Queries;
 using FastEndpoints;
-using Infrastructure.DataAccess.Quering.Abstractions;
 using Mediator;
 
 namespace Presentation.Endpoints.Queue.FindQueue;
 
-public class FindQueueEndpoint : Endpoint<QueryConfiguration<QueueQueryParameter>, QueueResponse>
+public class FindQueueEndpoint : Endpoint<QueueQuery, QueueResponse>
 {
     private readonly IMediator _mediator;
-    private readonly IModelQuery<QueueQuery.QueryBuilder, QueueQueryParameter> _query;
 
-    public FindQueueEndpoint(IMediator mediator, IModelQuery<QueueQuery.QueryBuilder, QueueQueryParameter> query)
+    public FindQueueEndpoint(IMediator mediator)
     {
         _mediator = mediator;
-        _query = query;
     }
 
     public override void Configure()
     {
-        Verbs(Http.POST);
-        Routes("api/queue/query");
+        Verbs(Http.GET);
+        Routes("api/queue");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(QueryConfiguration<QueueQueryParameter> req, CancellationToken ct)
+    public override async Task HandleAsync(QueueQuery req, CancellationToken ct)
     {
-        QueueQuery.QueryBuilder queryBuilder = QueueQuery.Builder;
-        queryBuilder = _query.Apply(queryBuilder, req);
-
-        QueueQuery queueQuery = queryBuilder.Build();
-
-        QueueResponse response = await _mediator.Send(queueQuery, ct);
+        QueueResponse response = await _mediator.Send(req, ct);
         await SendOkAsync(response, ct);
     }
 }

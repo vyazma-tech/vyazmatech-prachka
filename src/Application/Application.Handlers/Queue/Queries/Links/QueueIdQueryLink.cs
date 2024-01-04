@@ -1,10 +1,11 @@
-﻿using Application.Handlers.Queue.Queries;
-using Infrastructure.DataAccess.Quering.Abstractions;
+﻿using Application.Core.Querying.Abstractions;
+using Application.Handlers.Queue.Queries;
+using Domain.Core.Queue;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Handlers.Queue.Queries.Links;
 
-public class QueueIdQueryLink : QueryLinkBase<QueueQuery.QueryBuilder, QueueQueryParameter>
+public class QueueIdQueryLink : QueryLinkBase<IQueryable<QueueEntity>, QueueQuery>
 {
     private readonly ILogger<QueueIdQueryLink> _logger;
 
@@ -13,21 +14,16 @@ public class QueueIdQueryLink : QueryLinkBase<QueueQuery.QueryBuilder, QueueQuer
         _logger = logger;
     }
 
-    protected override QueueQuery.QueryBuilder? TryApply(
-        QueueQuery.QueryBuilder requestQueryBuilder,
-        QueryParameter<QueueQueryParameter> requestParameter)
+    protected override IQueryable<QueueEntity> TryApply(
+        IQueryable<QueueEntity> requestQueryable,
+        QueueQuery requestParameter)
     {
-        if (requestParameter.Type is not QueueQueryParameter.QueueId)
-            return null;
+        if (requestParameter.QueueId.Equals(Guid.Empty))
+            return requestQueryable;
 
-        try
-        {
-            return requestQueryBuilder.WithQueueId(Guid.Parse(requestParameter.Pattern));
-        }
-        catch (Exception e)
-        {
-            _logger.LogError("Unable to convert {Pattern} to guid", requestParameter.Pattern);
-            throw new Exception($"Unable to convert {requestParameter.Pattern} to guid", e);
-        }
+        requestQueryable = requestQueryable
+            .Where(x => x.Id.Equals(requestParameter.QueueId));
+
+        return requestQueryable;
     }
 }

@@ -7,7 +7,6 @@ using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
 using Microsoft.Extensions.Logging;
 
@@ -30,7 +29,9 @@ internal sealed class
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async ValueTask<ResultResponse<QueueResponse>> Handle(IncreaseQueueCapacityCommand request, CancellationToken cancellationToken)
+    public async ValueTask<ResultResponse<QueueResponse>> Handle(
+        IncreaseQueueCapacityCommand request,
+        CancellationToken cancellationToken)
     {
         var queueByIdSpecification = new QueueByIdSpecification(request.QueueId);
         Result<QueueEntity> queueEntityResult = await _queueRepository
@@ -48,6 +49,6 @@ internal sealed class
         _queueRepository.Update(increasedQueueCapacityResult.Value);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new QueueResponse(increasedQueueCapacityResult.Value.ToDto());
+        return new QueueResponse(new[] { increasedQueueCapacityResult.Value.ToDto() });
     }
 }

@@ -1,7 +1,6 @@
-﻿using Application.DataAccess.Contracts;
-using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Infrastructure.DataAccess.Contracts;
+namespace Application.DataAccess.Contracts;
 
 public interface IUnitOfWork
 {

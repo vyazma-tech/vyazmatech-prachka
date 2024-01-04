@@ -7,7 +7,6 @@ using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
 
 namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
@@ -33,6 +32,7 @@ internal sealed class ChangeQueueActivityBoundariesHandler
         ChangeQueueActivityBoundariesCommand request,
         CancellationToken cancellationToken)
     {
+        // TODO: FIX
         var queueByIdSpecification = new QueueByIdSpecification(request.QueueId);
         Result<QueueEntity> queueEntityResult = await _queueRepository
             .FindByAsync(queueByIdSpecification, cancellationToken);
@@ -47,7 +47,6 @@ internal sealed class ChangeQueueActivityBoundariesHandler
 
         _queueRepository.Update(queueEntityResult.Value);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-
-        return new QueueResponse(queueEntityResult.Value.ToDto());
+        return new QueueResponse(new[] { queueEntityResult.Value.ToDto() });
     }
 }

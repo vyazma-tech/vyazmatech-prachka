@@ -35,7 +35,8 @@ public class MakeReadyTest : TestBase
                 queues,
                 orders,
                 users,
-                subscriptions));
+                subscriptions,
+                database.Context));
     }
 
     [Fact]

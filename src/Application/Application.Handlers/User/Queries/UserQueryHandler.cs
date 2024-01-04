@@ -2,12 +2,11 @@
 using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
+using Application.Core.Querying.Abstractions;
 using Application.Handlers.Mapping.UserMapping;
 using Domain.Common.Result;
 using Domain.Core.User;
 using Domain.Core.ValueObjects;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Quering.Abstractions;
 using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.Extensions.Options;
 
@@ -17,10 +16,10 @@ internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<
 {
     private readonly IUserRepository _userRepository;
     private readonly PaginationConfiguration _paginationConfiguration;
-    private readonly IModelFilter<UserEntity, UserQueryParameter> _filter;
+    private readonly IEntityFilter<UserEntity, UserQueryParameter> _filter;
 
     public UserQueryHandler(
-        IModelFilter<UserEntity, UserQueryParameter> filter,
+        IEntityFilter<UserEntity, UserQueryParameter> filter,
         IOptionsMonitor<PaginationConfiguration> paginationConfiguration,
         IUserRepository userRepository)
     {
