@@ -1,53 +1,68 @@
 ﻿using Application.Core.Contracts;
 using Application.DataAccess.Contracts;
-using Application.Handlers.Queue.Queries;
-using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Specifications.Queue;
+using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.ChangeQueueActivityBoundaries;
 
 namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 
-// TODO: FIX IT
-// internal sealed class ChangeQueueActivityBoundariesHandler
-//     : ICommandHandler<ChangeQueueActivityBoundariesCommand, Result<QueueResponse>>
-// {
-//     private readonly IUnitOfWork _unitOfWork;
-//     private readonly IQueueRepository _queueRepository;
-//     private readonly IDateTimeProvider _dateTimeProvider;
-//
-//     public ChangeQueueActivityBoundariesHandler(
-//         IUnitOfWork unitOfWork,
-//         IDateTimeProvider dateTimeProvider,
-//         IPersistenceContext persistenceContext)
-//     {
-//         _unitOfWork = unitOfWork;
-//         _queueRepository = persistenceContext.Queues;
-//         _dateTimeProvider = dateTimeProvider;
-//     }
-//
-//     public async ValueTask<Result<QueueResponse>> Handle(
-//         ChangeQueueActivityBoundariesCommand request,
-//         CancellationToken cancellationToken)
-//     {
-//         // TODO: refactor this
-//         var queueByIdSpecification = new QueueByIdSpecification(request.QueueId);
-//         Result<QueueEntity> queueEntityResult = await _queueRepository
-//             .FindByAsync(queueByIdSpecification, cancellationToken);
-//
-//         Result<QueueActivityBoundaries> newActivityBoundaries =
-//             QueueActivityBoundaries.Create(request.ActiveFrom, request.ActiveUntil);
-//         Result<QueueEntity> changedActiveTimeQueueResult =
-//             queueEntityResult.Value.ChangeActivityBoundaries(newActivityBoundaries.Value, _dateTimeProvider.UtcNow);
-//
-//         if (changedActiveTimeQueueResult.IsFaulted)
-//             return new Result<QueueResponse>(changedActiveTimeQueueResult.Error);
-//
-//         _queueRepository.Update(queueEntityResult.Value);
-//         await _unitOfWork.SaveChangesAsync(cancellationToken);
-//
-//         return queueEntityResult.Value.ToDto();
-//     }
-// }
+internal sealed class ChangeQueueActivityBoundariesHandler
+    : ICommandHandler<Command, Response>
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPersistenceContext _persistenceContext;
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public ChangeQueueActivityBoundariesHandler(
+        IUnitOfWork unitOfWork,
+        IDateTimeProvider dateTimeProvider,
+        IPersistenceContext persistenceContext)
+    {
+        _unitOfWork = unitOfWork;
+        _dateTimeProvider = dateTimeProvider;
+        _persistenceContext = persistenceContext;
+    }
+
+    public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
+    {
+        Result<QueueEntity> queueSearchResult = await _persistenceContext.Queues
+            .FindByAsync(
+                new QueueByIdSpecification(request.QueueId),
+                cancellationToken);
+
+        if (queueSearchResult.IsFaulted)
+            throw queueSearchResult.Error;
+
+        QueueEntity queue = queueSearchResult.Value;
+
+        QueueActivityBoundaries newActivityBoundaries = ValidateBoundaries(
+            request.ActiveFrom,
+            request.ActiveUntil);
+
+        Result<QueueEntity> changeResult = queue.ChangeActivityBoundaries(
+            newActivityBoundaries,
+            _dateTimeProvider.UtcNow);
+
+        if (changeResult.IsFaulted)
+            throw changeResult.Error;
+
+        queue = changeResult.Value;
+        _persistenceContext.Queues.Update(queue);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return queue.ToDto();
+    }
+
+    private static QueueActivityBoundaries ValidateBoundaries(TimeOnly from, TimeOnly until)
+    {
+        Result<QueueActivityBoundaries> result = QueueActivityBoundaries.Create(from, until);
+
+        if (result.IsFaulted)
+            throw result.Error;
+
+        return result.Value;
+    }
+}

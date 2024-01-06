@@ -9,3 +9,13 @@ http://localhost:5290/api/queues?page=1
 
 ### mixed querying
 http://localhost:5290/api/queues?page=0&assignmentDate=2023-12-22
+
+### change boundaries
+POST http://localhost:5290/api/queues
+Content-Type: application/json
+
+{
+  "queueId": "fc70b2d3-0d42-4563-abb0-53294a201705",
+  "activeFrom": "11:01:00",
+  "activeUntil": "13:02:00"
+}

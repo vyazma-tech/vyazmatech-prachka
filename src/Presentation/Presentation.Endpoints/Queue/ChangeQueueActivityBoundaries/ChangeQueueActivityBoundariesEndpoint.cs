@@ -1,40 +1,28 @@
-﻿using System.Net;
-using Application.Handlers.Queue.Queries;
-using Domain.Common.Result;
-using FastEndpoints;
+﻿using FastEndpoints;
 using Mediator;
-using Microsoft.AspNetCore.Http;
+using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.ChangeQueueActivityBoundaries;
 
 namespace Presentation.Endpoints.Queue.ChangeQueueActivityBoundaries;
 
-// TODO: FIX IT
-// public class ChangeQueueActivityBoundariesEndpoint : Endpoint<ChangeQueueActivityBoundariesCommand, Result<QueueResponse>>
-// {
-//     private readonly IMediator _mediator;
-//
-//     public ChangeQueueActivityBoundariesEndpoint(IMediator mediator)
-//     {
-//         _mediator = mediator;
-//     }
-//
-//     public override void Configure()
-//     {
-//         Verbs(Http.PATCH);
-//         Routes("api/queue/change-activity-boundaries");
-//         AllowAnonymous();
-//     }
-//
-//     public override async Task HandleAsync(ChangeQueueActivityBoundariesCommand req, CancellationToken ct)
-//     {
-//         Result<QueueResponse> response = await _mediator.Send(req, ct);
-//
-//         if (response.IsSuccess)
-//         {
-//             await SendOkAsync(response, ct);
-//         }
-//         else
-//         {
-//             await SendAsync(response, StatusCodes.Status400BadRequest, ct);
-//         }
-//     }
-// }
+public class ChangeQueueActivityBoundariesEndpoint : Endpoint<Command, Response>
+{
+    private readonly IMediator _mediator;
+
+    public ChangeQueueActivityBoundariesEndpoint(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    public override void Configure()
+    {
+        Post("/api/queues");
+        AllowAnonymous();
+    }
+
+    public override async Task HandleAsync(Command req, CancellationToken ct)
+    {
+        Response response = await _mediator.Send(req, ct);
+
+        await SendOkAsync(response, ct);
+    }
+}
