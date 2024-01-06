@@ -4,6 +4,7 @@ using Application.Core.Configuration;
 using Application.Handlers.Extensions;
 using FastEndpoints.Swagger;
 using Infrastructure.DataAccess.Extensions;
+using Infrastructure.DataAccess.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Presentation.Endpoints.Extensions;
 using Presentation.WebAPI.Configuration;
@@ -21,10 +22,11 @@ PostgresConfiguration? postgresConfiguration = builder.Configuration
 //     .AddHostedService<QueueActivityBackgroundWorker>()
 //     .AddHostedService<QueueAvailablePositionBackgroundWorker>();
 builder.Services.AddSingleton(postgresConfiguration);
-builder.Services.AddDatabase(o =>
+builder.Services.AddDatabase((sp, o) =>
 {
     o.UseNpgsql(postgresConfiguration.ToConnectionString("test"))
-        .UseLazyLoadingProxies();
+        .UseLazyLoadingProxies()
+        .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>());
 });
 
 builder.Services.Configure<PaginationConfiguration>(
