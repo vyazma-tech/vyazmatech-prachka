@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
         Action<DbContextOptionsBuilder> options)
     {
         services.AddDbContext<DatabaseContext>(options);
+        services.AddInfrastructure();
         return services;
     }
 
@@ -30,6 +31,7 @@ public static class ServiceCollectionExtensions
         Action<IServiceProvider, DbContextOptionsBuilder> options)
     {
         services.AddDbContext<DatabaseContext>(options);
+        services.AddInfrastructure();
         return services;
     }
 
