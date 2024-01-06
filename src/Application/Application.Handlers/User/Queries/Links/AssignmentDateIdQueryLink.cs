@@ -1,7 +1,4 @@
-﻿using Application.Core.Querying.Abstractions;
-using Microsoft.Extensions.Logging;
-
-namespace Application.Handlers.User.Queries.Links;
+﻿namespace Application.Handlers.User.Queries.Links;
 
 // public class RegistrationDateQueryLink : QueryLinkBase<UserQuery.QueryBuilder, UserQueryParameter>
 // {

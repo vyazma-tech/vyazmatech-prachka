@@ -1,8 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using Application.Core.Querying.Abstractions;
-using Domain.Core.User;
-
-namespace Application.Handlers.User.Queries.Links;
+﻿namespace Application.Handlers.User.Queries.Links;
 
 // TODO: FIX IT
 // public class UserFullnameFilterLink : FilterLinkBase<UserEntity, UserQueryParameter>

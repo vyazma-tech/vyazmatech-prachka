@@ -1,7 +1,4 @@
-﻿using Application.Core.Querying.Abstractions;
-using Microsoft.Extensions.Logging;
-
-namespace Application.Handlers.Order.Queries.Links;
+﻿namespace Application.Handlers.Order.Queries.Links;
 
 // TODO: FIX IT
 // public class UserIdQueryLink : QueryLinkBase<OrderQuery.QueryBuilder, OrderQueryParameter>

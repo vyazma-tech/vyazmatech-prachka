@@ -2,8 +2,6 @@
 using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
-using Application.Core.Querying.Abstractions;
-using Application.Handlers.Mapping;
 using Application.Handlers.Mapping.OrderMapping;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -19,17 +17,14 @@ internal sealed class OrderQueryHandler : IQueryHandler<OrderQuery, PagedRespons
     private readonly IOrderRepository _orderRepository;
     private readonly IUserRepository _userRepository;
     private readonly PaginationConfiguration _paginationConfiguration;
-    private readonly IEntityFilter<OrderEntity, OrderQueryParameter> _filter;
 
     public OrderQueryHandler(
         IOrderRepository orderRepository,
         IUserRepository userRepository,
-        IOptionsMonitor<PaginationConfiguration> paginationConfiguration,
-        IEntityFilter<OrderEntity, OrderQueryParameter> filter)
+        IOptionsMonitor<PaginationConfiguration> paginationConfiguration)
     {
         _orderRepository = orderRepository;
         _userRepository = userRepository;
-        _filter = filter;
         _paginationConfiguration = paginationConfiguration.CurrentValue;
     }
 

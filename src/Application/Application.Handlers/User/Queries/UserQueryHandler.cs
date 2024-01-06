@@ -2,11 +2,8 @@
 using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
-using Application.Core.Querying.Abstractions;
 using Application.Handlers.Mapping.UserMapping;
-using Domain.Common.Result;
 using Domain.Core.User;
-using Domain.Core.ValueObjects;
 using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.Extensions.Options;
 
@@ -16,14 +13,11 @@ internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<
 {
     private readonly IUserRepository _userRepository;
     private readonly PaginationConfiguration _paginationConfiguration;
-    private readonly IEntityFilter<UserEntity, UserQueryParameter> _filter;
 
     public UserQueryHandler(
-        IEntityFilter<UserEntity, UserQueryParameter> filter,
         IOptionsMonitor<PaginationConfiguration> paginationConfiguration,
         IUserRepository userRepository)
     {
-        _filter = filter;
         _userRepository = userRepository;
         _paginationConfiguration = paginationConfiguration.CurrentValue;
     }
@@ -48,8 +42,6 @@ internal sealed class UserQueryHandler : IQueryHandler<UserQuery, PagedResponse<
                 .FindAllByAsync(creationDateSpec, cancellationToken);
             users.AddRange(users.Any() ? userResult.Where(o => users.Contains(o)) : userResult);
         }
-
-        users = _filter.Apply(users, request.Configuration).ToList();
 
         var readonlyUsers = new ReadOnlyCollection<UserResponse>(users
             .Select(user => new UserResponse(user.ToDto())).ToList());

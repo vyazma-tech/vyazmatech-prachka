@@ -2,7 +2,7 @@
 using Domain.Core.Queue;
 using Domain.Kernel;
 
-namespace Infrastructure.DataAccess.Specifications.Queue;
+namespace Infrastructure.DataAccess.Specifications.Order;
 
 public sealed class QueueByOrderSpecification : Specification<QueueEntity>
 {

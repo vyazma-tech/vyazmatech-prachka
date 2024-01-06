@@ -1,8 +1,4 @@
-﻿using Application.Core.Querying.Abstractions;
-using Application.Handlers.User.Queries;
-using Microsoft.Extensions.Logging;
-
-namespace Application.Handlers.User.Queries.Links;
+﻿namespace Application.Handlers.User.Queries.Links;
 
 // public class IdQueryLink : QueryLinkBase<UserQuery.QueryBuilder, UserQueryParameter>
 // {

@@ -9,12 +9,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Domain.Common\Domain.Common.csproj" />
+    <ProjectReference Include="..\..\Domain\Domain.Core\Domain.Core.csproj" />
     <ProjectReference Include="..\..\Domain\Domain.Kernel\Domain.Kernel.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Domain.Kernel\Domain.Kernel.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Querying\" />
   </ItemGroup>
 </Project>

@@ -33,8 +33,6 @@ builder.Services.Configure<PaginationConfiguration>(
     builder.Configuration.GetSection(PaginationConfiguration.SectionKey));
 
 builder.Services
-    .AddFilterChains()
-    .AddQueryChains()
     .AddApplication()
     .AddCustomExceptionHandler()
     .AddEndpoints()

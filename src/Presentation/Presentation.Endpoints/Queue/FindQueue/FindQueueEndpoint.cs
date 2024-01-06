@@ -1,11 +1,12 @@
-﻿using Application.Core.Querying.Abstractions;
-using Application.Handlers.Queue.Queries;
+﻿using Application.Core.Common;
 using FastEndpoints;
 using Mediator;
+using Presentation.Endpoints.Extensions;
+using static Application.Handlers.Queue.Queries.QueueByQuery.QueueQuery;
 
 namespace Presentation.Endpoints.Queue.FindQueue;
 
-public class FindQueueEndpoint : Endpoint<QueueQuery, QueueResponse>
+public class FindQueueEndpoint : Endpoint<Query, PagedResponse<Response>>
 {
     private readonly IMediator _mediator;
 
@@ -16,14 +17,17 @@ public class FindQueueEndpoint : Endpoint<QueueQuery, QueueResponse>
 
     public override void Configure()
     {
-        Verbs(Http.GET);
-        Routes("api/queue");
+        Get("api/queues");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(QueueQuery req, CancellationToken ct)
+    public override async Task HandleAsync(Query req, CancellationToken ct)
     {
-        QueueResponse response = await _mediator.Send(req, ct);
-        await SendOkAsync(response, ct);
+        PagedResponse<Response> response = await _mediator.Send(req, ct);
+
+        if (response.Bunch.Any())
+            await this.SendPartialContentAsync(response, ct);
+        else
+            await SendNoContentAsync(ct);
     }
 }
