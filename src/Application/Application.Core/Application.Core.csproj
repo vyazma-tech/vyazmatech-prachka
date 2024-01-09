@@ -6,7 +6,11 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Domain\Domain.Common\Domain.Common.csproj" />
+    <ProjectReference Include="..\..\Domain\Domain.Core\Domain.Core.csproj" />
     <ProjectReference Include="..\..\Domain\Domain.Kernel\Domain.Kernel.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.DataAccess\Infrastructure.DataAccess.csproj" />
+    <ProjectReference Include="..\Application.DataAccess.Contracts\Application.DataAccess.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Domain.Kernel\Domain.Kernel.csproj" />

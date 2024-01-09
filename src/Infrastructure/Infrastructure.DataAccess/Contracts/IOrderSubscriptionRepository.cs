@@ -1,12 +1,13 @@
 ﻿using Domain.Common.Result;
-using Domain.Kernel;
+using Domain.Core.Subscription;
+using Infrastructure.DataAccess.Models;
 
-namespace Domain.Core.Subscription;
+namespace Infrastructure.DataAccess.Contracts;
 
-public interface ISubscriptionRepository
+public interface IOrderSubscriptionRepository
 {
     Task<Result<SubscriptionEntity>> FindByAsync(
-        Specification<SubscriptionEntity> specification,
+        Specification<OrderSubscriptionModel> specification,
         CancellationToken cancellationToken);
 
     void Insert(SubscriptionEntity subscription);

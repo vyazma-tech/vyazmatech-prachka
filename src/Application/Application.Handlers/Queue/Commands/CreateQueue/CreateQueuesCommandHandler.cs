@@ -4,6 +4,7 @@ using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Handlers.Queue.Commands.CreateQueue;
