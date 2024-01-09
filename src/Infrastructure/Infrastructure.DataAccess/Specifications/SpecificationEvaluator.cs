@@ -1,23 +1,16 @@
-﻿using Domain.Kernel;
-using Microsoft.EntityFrameworkCore;
+using Application.DataAccess.Contracts;
+using Infrastructure.DataAccess.Contracts;
 
 namespace Infrastructure.DataAccess.Specifications;
 
 public static class SpecificationEvaluator
 {
-    public static IQueryable<TEntity> GetQuery<TEntity>(
-        IQueryable<TEntity> inputQueryable,
-        Specification<TEntity> specification)
-        where TEntity : Entity
+    public static IQueryable<TModel> GetQuery<TModel>(
+        IQueryable<TModel> inputQueryable,
+        Specification<TModel> specification)
+        where TModel : class
     {
-        IQueryable<TEntity> queryable =
-            specification.AsNoTracking ? inputQueryable.AsNoTracking() : inputQueryable;
-
-        queryable = specification.Includes
-            .Aggregate(
-                queryable,
-                (current, include) => specification.AsNoTracking
-                    ? current.Include(include).AsNoTracking() : current.Include(include));
+        IQueryable<TModel> queryable = inputQueryable;
 
         queryable = queryable.Where(specification.Criteria);
 

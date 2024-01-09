@@ -4,6 +4,7 @@ using Application.Core.Contracts;
 using Application.Core.Extensions;
 using Application.DataAccess.Contracts;
 using Domain.Core.Queue;
+using Infrastructure.DataAccess.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using static Application.Handlers.Queue.Queries.QueueByQuery.QueueQuery;

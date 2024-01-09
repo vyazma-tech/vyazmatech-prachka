@@ -5,6 +5,7 @@ using Application.Handlers.Order.Queries;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Order;
 using Microsoft.Extensions.Logging;
 

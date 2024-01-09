@@ -4,6 +4,7 @@ using Application.Core.Configuration;
 using Application.Core.Contracts;
 using Application.Handlers.Mapping.UserMapping;
 using Domain.Core.User;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.Extensions.Options;
 

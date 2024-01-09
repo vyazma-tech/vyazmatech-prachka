@@ -1,22 +1,42 @@
 ﻿using Domain.Core.User;
 using Infrastructure.DataAccess.Contexts;
+using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
 
-internal sealed class UserRepository : GenericRepository<UserEntity>, IUserRepository
+internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IUserRepository
 {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="UserRepository" /> class.
-    /// </summary>
-    /// <param name="context">The database context.</param>
+    /// <inheritdoc cref="RepositoryBase{TEntity,TModel}"/>
     public UserRepository(DatabaseContext context)
         : base(context)
     {
     }
 
-    public async Task<long> CountAsync(CancellationToken cancellationToken)
+    public Task<long> CountAsync(Specification<UserModel> specification, CancellationToken cancellationToken)
     {
-        return await DbSet.CountAsync(cancellationToken);
+        IQueryable<UserModel> queryable = ApplySpecification(specification);
+        return queryable.LongCountAsync(cancellationToken);
+    }
+
+    protected override UserModel MapFrom(UserEntity entity)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override UserEntity MapTo(UserModel model)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override bool Equal(UserEntity entity, UserModel model)
+    {
+        return entity.Id.Equals(model.Id);
+    }
+
+    protected override void UpdateModel(UserModel model, UserEntity entity)
+    {
+        throw new NotImplementedException();
     }
 }

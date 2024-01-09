@@ -1,6 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <ItemGroup>
-        <ProjectReference Include="..\..\Application\Application.Core\Application.Core.csproj" />
         <ProjectReference Include="..\..\Application\Application.DataAccess.Contracts\Application.DataAccess.Contracts.csproj"/>
         <ProjectReference Include="..\..\Domain\Domain.Core\Domain.Core.csproj"/>
         <ProjectReference Include="..\..\Domain\Domain.Kernel\Domain.Kernel.csproj" />
@@ -13,6 +12,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="System.Linq.Async" />
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Migrations\"/>
