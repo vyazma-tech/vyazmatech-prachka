@@ -6,4 +6,11 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\Domain\Domain.Common\Domain.Common.csproj" />
+      <ProjectReference Include="..\..\Domain\Domain.Core\Domain.Core.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Repositories\" />
+    </ItemGroup>
 </Project>

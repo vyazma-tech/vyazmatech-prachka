@@ -1,5 +1,7 @@
-﻿using Domain.Core.User;
+﻿using Application.DataAccess.Contracts;
+using Domain.Core.User;
 using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
 
 namespace Infrastructure.DataAccess.Specifications.User;
 

@@ -1,9 +1,12 @@
-﻿using Domain.Core.Queue;
+﻿using Application.DataAccess.Contracts;
+using Domain.Core.Queue;
 using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Specifications.Queue;
 
-public sealed class QueueByIdSpecification : Specification<QueueEntity>
+public sealed class QueueByIdSpecification : Specification<QueueModel>
 {
     private readonly Guid _id;
 
@@ -14,5 +17,5 @@ public sealed class QueueByIdSpecification : Specification<QueueEntity>
     }
 
     public override string ToString()
-        => $"{typeof(QueueEntity)}: {_id}";
+        => $"{typeof(QueueModel)}: {_id}";
 }

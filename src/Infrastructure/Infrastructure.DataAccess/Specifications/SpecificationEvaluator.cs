@@ -1,15 +1,16 @@
-﻿using Domain.Kernel;
+﻿using Application.DataAccess.Contracts;
+using Infrastructure.DataAccess.Contracts;
 
 namespace Infrastructure.DataAccess.Specifications;
 
 public static class SpecificationEvaluator
 {
-    public static IQueryable<TEntity> GetQuery<TEntity>(
-        IQueryable<TEntity> inputQueryable,
-        Specification<TEntity> specification)
-        where TEntity : Entity
+    public static IQueryable<TModel> GetQuery<TModel>(
+        IQueryable<TModel> inputQueryable,
+        Specification<TModel> specification)
+        where TModel : class
     {
-        IQueryable<TEntity> queryable = inputQueryable;
+        IQueryable<TModel> queryable = inputQueryable;
 
         queryable = queryable.Where(specification.Criteria);
 
