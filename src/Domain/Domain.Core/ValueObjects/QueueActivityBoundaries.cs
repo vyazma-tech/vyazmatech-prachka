@@ -9,11 +9,8 @@ namespace Domain.Core.ValueObjects;
 /// Describes queue activity boundaries.
 /// i.e: 1pm - 5pm.
 /// </summary>
-public class QueueActivityBoundaries : ValueObject
+public sealed class QueueActivityBoundaries : ValueObject
 {
-#pragma warning disable CS8618
-    protected QueueActivityBoundaries() { }
-#pragma warning restore CS8618
     private QueueActivityBoundaries(TimeOnly activeFrom, TimeOnly activeUntil)
     {
         ActiveFrom = activeFrom;

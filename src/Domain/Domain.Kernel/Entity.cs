@@ -12,10 +12,6 @@ public abstract class Entity : IEquatable<Entity>
         Id = id;
     }
 
-#pragma warning disable CS8618
-    protected Entity() { }
-#pragma warning restore CS8618
-
     /// <summary>
     /// Gets unique identifier of an entity.
     /// </summary>
@@ -24,7 +20,7 @@ public abstract class Entity : IEquatable<Entity>
     /// <summary>
     /// Gets domain event list for a current entity.
     /// </summary>
-    public virtual IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     public bool Equals(Entity? other)
     {

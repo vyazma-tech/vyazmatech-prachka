@@ -11,9 +11,6 @@ namespace Domain.Core.ValueObjects;
 /// </summary>
 public sealed class QueueDate : ValueObject
 {
-#pragma warning disable CS8618
-    private QueueDate() { }
-#pragma warning restore CS8618
     public const int Week = 7;
 
     private QueueDate(DateOnly value)

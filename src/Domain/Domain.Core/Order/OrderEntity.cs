@@ -13,12 +13,8 @@ namespace Domain.Core.Order;
 /// <summary>
 /// Describes order entity.
 /// </summary>
-public class OrderEntity : Entity, IAuditableEntity
+public sealed class OrderEntity : Entity, IAuditableEntity
 {
-#pragma warning disable CS8618
-    protected OrderEntity() { }
-#pragma warning restore CS8618
-
     private OrderEntity(
         Guid id,
         UserEntity user,
@@ -38,10 +34,10 @@ public class OrderEntity : Entity, IAuditableEntity
     }
 
     /// <inheritdoc cref="UserEntity" />
-    public virtual UserEntity User { get; }
+    public UserEntity User { get; }
 
     /// <inheritdoc cref="QueueEntity" />
-    public virtual QueueEntity Queue { get; private set; }
+    public QueueEntity Queue { get; private set; }
 
     /// <summary>
     /// Gets a value indicating whether order paid or not.

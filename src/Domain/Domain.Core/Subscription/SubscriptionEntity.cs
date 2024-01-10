@@ -37,16 +37,10 @@ public abstract class SubscriptionEntity : Entity, IAuditableEntity
         ModifiedOn = modifiedOn;
     }
 
-#pragma warning disable CS8618
-    protected SubscriptionEntity()
-#pragma warning restore CS8618
-    {
-    }
-
     /// <summary>
     /// Gets user, who subscription is assigned to.
     /// </summary>
-    public virtual UserEntity User { get; private set; }
+    public UserEntity User { get; private set; }
 
     /// <summary>
     /// Gets subscription creation date.

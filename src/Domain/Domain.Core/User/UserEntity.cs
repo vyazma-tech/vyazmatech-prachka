@@ -9,7 +9,7 @@ namespace Domain.Core.User;
 /// <summary>
 /// Describes user entity.
 /// </summary>
-public class UserEntity : Entity, IAuditableEntity
+public sealed class UserEntity : Entity, IAuditableEntity
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserEntity" /> class.
@@ -38,10 +38,6 @@ public class UserEntity : Entity, IAuditableEntity
 
         Raise(new UserRegisteredDomainEvent(this));
     }
-
-#pragma warning disable CS8618
-    protected UserEntity() { }
-#pragma warning restore CS8618
 
     /// <summary>
     /// Gets telegram id.

@@ -13,7 +13,7 @@ namespace Domain.Core.Queue;
 /// <summary>
 /// Describes queue entity.
 /// </summary>
-public class QueueEntity : Entity, IAuditableEntity
+public sealed class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
     private bool _maxCapacityReachedOnce;
@@ -46,26 +46,20 @@ public class QueueEntity : Entity, IAuditableEntity
         _orders = new HashSet<OrderEntity>();
     }
 
-#pragma warning disable CS8618
-    protected QueueEntity()
-#pragma warning restore CS8618
-    {
-    }
-
     /// <summary>
     /// Gets current capacity.
     /// </summary>
-    public virtual Capacity Capacity { get; private set; }
+    public Capacity Capacity { get; private set; }
 
     /// <summary>
     /// Gets time range for a queue activity.
     /// </summary>
-    public virtual QueueActivityBoundaries ActivityBoundaries { get; private set; }
+    public QueueActivityBoundaries ActivityBoundaries { get; private set; }
 
     /// <summary>
     /// Gets orders, that currently in the queue.
     /// </summary>
-    public virtual IReadOnlySet<OrderEntity> Items => _orders;
+    public IReadOnlySet<OrderEntity> Items => _orders;
 
     /// <summary>
     /// Gets a value indicating whether queue expired or not.

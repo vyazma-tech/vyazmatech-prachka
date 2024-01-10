@@ -6,7 +6,7 @@ using Domain.Core.User;
 
 namespace Domain.Core.Subscription;
 
-public class OrderSubscriptionEntity : SubscriptionEntity
+public sealed class OrderSubscriptionEntity : SubscriptionEntity
 {
     private readonly List<OrderEntity> _subscribedOrders;
 
@@ -20,11 +20,7 @@ public class OrderSubscriptionEntity : SubscriptionEntity
         _subscribedOrders = new List<OrderEntity>();
     }
 
-#pragma warning disable CS8618
-    protected OrderSubscriptionEntity() { }
-#pragma warning restore CS8618
-
-    public virtual IReadOnlyCollection<OrderEntity> SubscribedOrders => _subscribedOrders;
+    public IReadOnlyCollection<OrderEntity> SubscribedOrders => _subscribedOrders;
 
     /// <summary>
     /// Subscribes order to the newsletter.

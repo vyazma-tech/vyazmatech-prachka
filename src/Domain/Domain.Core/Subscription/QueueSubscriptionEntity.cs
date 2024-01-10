@@ -6,7 +6,7 @@ using Domain.Core.User;
 
 namespace Domain.Core.Subscription;
 
-public class QueueSubscriptionEntity : SubscriptionEntity
+public sealed class QueueSubscriptionEntity : SubscriptionEntity
 {
     private readonly List<QueueEntity> _subscribedQueues;
 
@@ -20,11 +20,7 @@ public class QueueSubscriptionEntity : SubscriptionEntity
         _subscribedQueues = new List<QueueEntity>();
     }
 
-#pragma warning disable CS8618
-    protected QueueSubscriptionEntity() { }
-#pragma warning restore CS8618
-
-    public virtual IReadOnlyCollection<QueueEntity> SubscribedQueues => _subscribedQueues;
+    public IReadOnlyCollection<QueueEntity> SubscribedQueues => _subscribedQueues;
 
     /// <summary>
     /// Subscribes queue to the newsletter.
