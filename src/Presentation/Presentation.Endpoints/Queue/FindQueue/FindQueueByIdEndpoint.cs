@@ -1,7 +1,7 @@
 ﻿using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
-using static Application.Handlers.Queue.Queries.QueueById.QueueById;
+using static Application.Handlers.Queue.Queries.QueueById.QueueByIdQuery;
 
 namespace Presentation.Endpoints.Queue.FindQueue;
 

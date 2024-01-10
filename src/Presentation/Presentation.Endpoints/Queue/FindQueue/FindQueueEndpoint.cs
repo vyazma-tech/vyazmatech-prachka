@@ -2,7 +2,7 @@
 using FastEndpoints;
 using Mediator;
 using Presentation.Endpoints.Extensions;
-using static Application.Handlers.Queue.Queries.QueueByQuery.QueueQuery;
+using static Application.Handlers.Queue.Queries.QueueByQuery.QueueByQueryQuery;
 
 namespace Presentation.Endpoints.Queue.FindQueue;
 
