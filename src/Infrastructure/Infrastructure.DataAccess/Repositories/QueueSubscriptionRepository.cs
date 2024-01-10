@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Subscription;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Mapping;
 using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Repositories;
@@ -15,12 +16,12 @@ internal class QueueSubscriptionRepository : RepositoryBase<QueueSubscriptionEnt
 
     protected override QueueSubscriptionModel MapFrom(QueueSubscriptionEntity entity)
     {
-        throw new NotImplementedException();
+        return QueueSubscriptionMapping.MapFrom(entity);
     }
 
     protected override QueueSubscriptionEntity MapTo(QueueSubscriptionModel model)
     {
-        throw new NotImplementedException();
+        return QueueSubscriptionMapping.MapTo(model);
     }
 
     protected override bool Equal(QueueSubscriptionEntity entity, QueueSubscriptionModel model)
@@ -30,6 +31,6 @@ internal class QueueSubscriptionRepository : RepositoryBase<QueueSubscriptionEnt
 
     protected override void UpdateModel(QueueSubscriptionModel model, QueueSubscriptionEntity entity)
     {
-        throw new NotImplementedException();
+        model.ModifiedOn = entity.ModifiedOn;
     }
 }

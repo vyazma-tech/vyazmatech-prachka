@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Order;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Mapping;
 using Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,12 +23,12 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
 
     protected override OrderModel MapFrom(OrderEntity entity)
     {
-        throw new NotImplementedException();
+        return OrderMapping.MapFrom(entity);
     }
 
     protected override OrderEntity MapTo(OrderModel model)
     {
-        throw new NotImplementedException();
+        return OrderMapping.MapTo(model);
     }
 
     protected override bool Equal(OrderEntity entity, OrderModel model)
@@ -37,6 +38,8 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
 
     protected override void UpdateModel(OrderModel model, OrderEntity entity)
     {
-        throw new NotImplementedException();
+        model.Paid = entity.Paid;
+        model.Ready = entity.Ready;
+        model.ModifiedOn = entity.ModifiedOn;
     }
 }

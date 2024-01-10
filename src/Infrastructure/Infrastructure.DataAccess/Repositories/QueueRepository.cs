@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Queue;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Mapping;
 using Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,12 +23,12 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
 
     protected override QueueModel MapFrom(QueueEntity entity)
     {
-        throw new NotImplementedException();
+        return QueueMapping.MapFrom(entity);
     }
 
     protected override QueueEntity MapTo(QueueModel model)
     {
-        throw new NotImplementedException();
+        return QueueMapping.MapTo(model);
     }
 
     protected override bool Equal(QueueEntity entity, QueueModel model)
@@ -37,6 +38,8 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
 
     protected override void UpdateModel(QueueModel model, QueueEntity entity)
     {
-        throw new NotImplementedException();
+        model.ActiveFrom = entity.ActivityBoundaries.ActiveFrom;
+        model.ActiveUntil = entity.ActivityBoundaries.ActiveUntil;
+        model.ModifiedOn = entity.ModifiedOn;
     }
 }

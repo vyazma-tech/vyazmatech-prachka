@@ -6,13 +6,13 @@ namespace Infrastructure.DataAccess.Models;
 
 public record OrderModel
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public Guid QueueId { get; set; }
+    public Guid QueueId { get; init; }
 
     public virtual QueueModel Queue { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid UserId { get; init; }
 
     public virtual UserModel User { get; set; }
 

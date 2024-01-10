@@ -1,6 +1,7 @@
 ﻿using Domain.Core.Subscription;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Mapping;
 using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Repositories;
@@ -15,12 +16,12 @@ internal class OrderSubscriptionRepository : RepositoryBase<OrderSubscriptionEnt
 
     protected override OrderSubscriptionModel MapFrom(OrderSubscriptionEntity entity)
     {
-        throw new NotImplementedException();
+        return OrderSubscriptionMapping.MapFrom(entity);
     }
 
     protected override OrderSubscriptionEntity MapTo(OrderSubscriptionModel model)
     {
-        throw new NotImplementedException();
+        return OrderSubscriptionMapping.MapTo(model);
     }
 
     protected override bool Equal(OrderSubscriptionEntity entity, OrderSubscriptionModel model)
@@ -30,6 +31,6 @@ internal class OrderSubscriptionRepository : RepositoryBase<OrderSubscriptionEnt
 
     protected override void UpdateModel(OrderSubscriptionModel model, OrderSubscriptionEntity entity)
     {
-        throw new NotImplementedException();
+        model.ModifiedOn = entity.ModifiedOn;
     }
 }

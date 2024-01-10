@@ -1,6 +1,7 @@
 ﻿using Domain.Core.User;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Mapping;
 using Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,12 +23,12 @@ internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IU
 
     protected override UserModel MapFrom(UserEntity entity)
     {
-        throw new NotImplementedException();
+        return UserMapping.MapFrom(entity);
     }
 
     protected override UserEntity MapTo(UserModel model)
     {
-        throw new NotImplementedException();
+        return UserMapping.MapTo(model);
     }
 
     protected override bool Equal(UserEntity entity, UserModel model)
@@ -37,6 +38,7 @@ internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IU
 
     protected override void UpdateModel(UserModel model, UserEntity entity)
     {
-        throw new NotImplementedException();
+        model.Fullname = entity.Fullname.Value;
+        model.ModifiedOn = entity.ModifiedOn;
     }
 }
