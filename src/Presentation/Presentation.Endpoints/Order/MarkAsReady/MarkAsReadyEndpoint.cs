@@ -1,13 +1,12 @@
-﻿using Application.Handlers.Order.Commands.MarkOrderAsReady;
-using Application.Handlers.Order.Queries;
-using Domain.Common.Result;
+﻿using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
 using Microsoft.AspNetCore.Http;
+using static Application.Handlers.Order.Commands.MarkOrderAsReady.MarkOrderAsReady;
 
 namespace Presentation.Endpoints.Order.MarkAsReady;
 
-public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Result<OrderResponse>>
+public class MarkAsReadyEndpoint : Endpoint<Command, Result<Response>>
 {
     private readonly IMediator _mediator;
 
@@ -23,9 +22,9 @@ public class MarkAsReadyEndpoint : Endpoint<MarkOrderAsReadyCommand, Result<Orde
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(MarkOrderAsReadyCommand req, CancellationToken ct)
+    public override async Task HandleAsync(Command req, CancellationToken ct)
     {
-        Result<OrderResponse> response = await _mediator.Send(req, ct);
+        Result<Response> response = await _mediator.Send(req, ct);
 
         if (response.IsSuccess)
         {
