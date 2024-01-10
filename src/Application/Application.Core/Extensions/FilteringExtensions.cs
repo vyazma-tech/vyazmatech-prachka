@@ -1,4 +1,5 @@
-﻿using Domain.Core.Queue;
+﻿using Domain.Core.Order;
+using Domain.Core.Queue;
 using Domain.Core.User;
 
 namespace Application.Core.Extensions;
@@ -31,6 +32,29 @@ public static class FilteringExtensions
         result = registrationDate is null
             ? result
             : result.Where(x => x.CreationDate == registrationDate);
+
+        return result;
+    }
+
+    public static IEnumerable<OrderEntity> FilterBy(
+        this IEnumerable<OrderEntity> orders,
+        Guid? userId,
+        Guid? queueId,
+        DateOnly? creationDate)
+    {
+        IEnumerable<OrderEntity> result = orders as OrderEntity[] ?? orders.ToArray();
+
+        result = userId is null
+            ? result
+            : result.Where(x => x.User.Id == userId);
+
+        result = queueId is null
+            ? result
+            : result.Where(x => x.Queue.Id == queueId);
+
+        result = creationDate is null
+            ? result
+            : result.Where(x => x.CreationDate == creationDate);
 
         return result;
     }
