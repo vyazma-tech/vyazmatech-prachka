@@ -5,18 +5,19 @@ using Application.Core.Extensions;
 using Application.DataAccess.Contracts;
 using Domain.Core.Queue;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Specifications.Queue;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using static Application.Handlers.Queue.Queries.QueueByQuery.QueueQuery;
+using static Application.Handlers.Queue.Queries.QueueByQuery.QueueByQueryQuery;
 
 namespace Application.Handlers.Queue.Queries.QueueByQuery;
 
-internal sealed class QueueQueryHandler : IQueryHandler<Query, PagedResponse<Response>>
+internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, PagedResponse<Response>>
 {
     private readonly IPersistenceContext _persistenceContext;
     private readonly int _recordsPerPage;
 
-    public QueueQueryHandler(
+    public QueueByQueryQueryHandler(
         IPersistenceContext persistenceContext,
         IOptions<PaginationConfiguration> paginationConfiguration)
     {
@@ -26,24 +27,24 @@ internal sealed class QueueQueryHandler : IQueryHandler<Query, PagedResponse<Res
 
     public async ValueTask<PagedResponse<Response>> Handle(Query request, CancellationToken cancellationToken)
     {
-        IQueryable<QueueEntity> query = _persistenceContext.Entities<QueueEntity>()
-            .Skip(request.Page * _recordsPerPage)
-            .Take(_recordsPerPage);
+        var spec = new QueuePageSpecification(request.Page, _recordsPerPage);
+        long totalCount = await _persistenceContext.Queues.CountAsync(spec, cancellationToken);
 
-        List<QueueEntity> queues = await query.ToListAsync(cancellationToken);
+        List<QueueEntity> queues = await _persistenceContext.Queues
+            .QueryAsync(spec, cancellationToken)
+            .ToListAsync(cancellationToken);
 
         Response[] result = queues
             .FilterBy(request.AssignmentDate)
             .Select(x => x.ToDto())
             .ToArray();
 
-        long totalPages = await _persistenceContext.Queues.CountAsync(cancellationToken);
         return new PagedResponse<Response>
         {
             Bunch = result,
             CurrentPage = request.Page + 1,
             RecordPerPage = _recordsPerPage,
-            TotalPages = (totalPages / _recordsPerPage) + 1
+            TotalPages = (totalCount / _recordsPerPage) + 1
         };
     }
 }

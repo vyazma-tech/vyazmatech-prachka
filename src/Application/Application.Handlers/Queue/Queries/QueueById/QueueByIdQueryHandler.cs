@@ -4,7 +4,7 @@ using Domain.Common.Result;
 using Domain.Core.Queue;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
-using static Application.Handlers.Queue.Queries.QueueById.QueueById;
+using static Application.Handlers.Queue.Queries.QueueById.QueueByIdQuery;
 
 namespace Application.Handlers.Queue.Queries.QueueById;
 

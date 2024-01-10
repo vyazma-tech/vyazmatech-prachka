@@ -1,12 +1,12 @@
-﻿using Application.Core.Contracts;
-using Domain.Common.Result;
+﻿using Application.Core.Common;
+using Application.Core.Contracts;
 using Domain.Core.Queue;
 
-namespace Application.Handlers.Queue.Queries.QueueById;
+namespace Application.Handlers.Queue.Queries.QueueByQuery;
 
-public static class QueueById
+public static class QueueByQueryQuery
 {
-    public record Query(Guid Id) : IQuery<Result<Response>>;
+    public record struct Query(DateOnly? AssignmentDate, int Page) : IQuery<PagedResponse<Response>>;
 
     public record struct Response(
         Guid Id,
