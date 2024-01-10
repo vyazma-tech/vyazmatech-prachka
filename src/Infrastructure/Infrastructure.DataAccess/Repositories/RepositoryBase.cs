@@ -45,7 +45,7 @@ internal abstract class RepositoryBase<TEntity, TModel>
         return MapTo(model);
     }
 
-    public IAsyncEnumerable<TEntity> FindAllByAsync(
+    public IAsyncEnumerable<TEntity> QueryAsync(
         Specification<TModel> specification,
         CancellationToken cancellationToken)
     {
