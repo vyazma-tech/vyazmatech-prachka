@@ -7,7 +7,7 @@ using static Application.Handlers.Order.Commands.MarkOrderAsPaid.MarkOrderAsPaid
 
 namespace Presentation.Endpoints.Order.MarkAsPaid;
 
-public class MarkAsPaidEndpoint : Endpoint<Command, Result<Response>>
+public class MarkAsPaidEndpoint : Endpoint<Command, Response>
 {
     private readonly IMediator _mediator;
 

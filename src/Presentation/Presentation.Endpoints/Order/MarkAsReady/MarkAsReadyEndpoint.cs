@@ -7,7 +7,7 @@ using static Application.Handlers.Order.Commands.MarkOrderAsReady.MarkOrderAsRea
 
 namespace Presentation.Endpoints.Order.MarkAsReady;
 
-public class MarkAsReadyEndpoint : Endpoint<Command, Result<Response>>
+public class MarkAsReadyEndpoint : Endpoint<Command, Response>
 {
     private readonly IMediator _mediator;
 
