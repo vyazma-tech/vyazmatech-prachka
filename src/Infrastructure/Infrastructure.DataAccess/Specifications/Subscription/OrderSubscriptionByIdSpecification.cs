@@ -2,14 +2,15 @@
 using Domain.Core.Subscription;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Specifications.Subscription;
 
-public sealed class SubscriptionByIdSpecification : Specification<SubscriptionEntity>
+public sealed class QueueSubscriptionByIdSpecification : Specification<QueueSubscriptionModel>
 {
     private readonly Guid _id;
 
-    public SubscriptionByIdSpecification(Guid id)
+    public QueueSubscriptionByIdSpecification(Guid id)
         : base(subscription => subscription.Id == id)
     {
         _id = id;
