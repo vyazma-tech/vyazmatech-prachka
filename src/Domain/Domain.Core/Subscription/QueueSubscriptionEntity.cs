@@ -10,8 +10,12 @@ public class QueueSubscriptionEntity : SubscriptionEntity
 {
     private readonly List<QueueEntity> _subscribedQueues;
 
-    public QueueSubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
-        : base(user, creationDateUtc)
+    public QueueSubscriptionEntity(
+        Guid id,
+        UserEntity user,
+        DateOnly creationDateUtc,
+        DateTime? modifiedOn = null)
+        : base(id, user, creationDateUtc, modifiedOn)
     {
         _subscribedQueues = new List<QueueEntity>();
     }

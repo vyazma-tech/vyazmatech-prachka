@@ -22,14 +22,18 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Initializes a new instance of the <see cref="QueueEntity" /> class.
     /// </summary>
+    /// <param name="id">queue id.</param>
     /// <param name="capacity">queue capacity.</param>
     /// <param name="queueDate">queue date, what queue assigned to.</param>
     /// <param name="activityBoundaries">queue activity time. i.e: 1pm - 5pm.</param>
+    /// <param name="modifiedOn">queue modification date.</param>
     public QueueEntity(
+        Guid id,
         Capacity capacity,
         QueueDate queueDate,
-        QueueActivityBoundaries activityBoundaries)
-        : base(Guid.NewGuid())
+        QueueActivityBoundaries activityBoundaries,
+        DateTime? modifiedOn = null)
+        : base(id)
     {
         Guard.Against.Null(capacity, nameof(capacity), "Capacity should not be null");
         Guard.Against.Null(queueDate, nameof(queueDate), "Creation date should not be null");
@@ -38,6 +42,7 @@ public class QueueEntity : Entity, IAuditableEntity
         Capacity = capacity;
         ActivityBoundaries = activityBoundaries;
         CreationDate = queueDate.Value;
+        ModifiedOn = modifiedOn;
         _orders = new HashSet<OrderEntity>();
     }
 

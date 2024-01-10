@@ -18,16 +18,23 @@ public abstract class SubscriptionEntity : Entity, IAuditableEntity
     /// <summary>
     /// Initializes a new instance of the <see cref="SubscriptionEntity"/> class.
     /// </summary>
+    /// <param name="id">subscription id.</param>
     /// <param name="user">subscribed user.</param>
     /// <param name="creationDateUtc">subscription creation utc date.</param>
-    public SubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
-        : base(Guid.NewGuid())
+    /// <param name="modifiedOn">subscription modification date.</param>
+    public SubscriptionEntity(
+        Guid id,
+        UserEntity user,
+        DateOnly creationDateUtc,
+        DateTime? modifiedOn = null)
+        : base(id)
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in subscription.");
         Guard.Against.Null(creationDateUtc, nameof(creationDateUtc), "Creation date should not be null in subscription.");
 
         User = user;
         CreationDate = creationDateUtc;
+        ModifiedOn = modifiedOn;
     }
 
 #pragma warning disable CS8618

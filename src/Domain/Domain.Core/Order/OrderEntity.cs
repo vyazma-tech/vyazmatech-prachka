@@ -19,8 +19,13 @@ public class OrderEntity : Entity, IAuditableEntity
     protected OrderEntity() { }
 #pragma warning restore CS8618
 
-    private OrderEntity(UserEntity user, QueueEntity queue, DateOnly creationDateUtc)
-        : base(Guid.NewGuid())
+    private OrderEntity(
+        Guid id,
+        UserEntity user,
+        QueueEntity queue,
+        DateOnly creationDateUtc,
+        DateTime? modifiedOn = null)
+        : base(id)
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in order.");
         Guard.Against.Null(queue, nameof(queue), "Queue should not be null in order.");
@@ -29,6 +34,7 @@ public class OrderEntity : Entity, IAuditableEntity
         User = user;
         Queue = queue;
         CreationDate = creationDateUtc;
+        ModifiedOn = modifiedOn;
     }
 
     /// <inheritdoc cref="UserEntity" />
@@ -60,15 +66,22 @@ public class OrderEntity : Entity, IAuditableEntity
     /// <summary>
     /// Validates provided data for order and constructs order instance, when data is valid.
     /// </summary>
+    /// <param name="id">order id.</param>
     /// <param name="user">order issuer.</param>
     /// <param name="queue">queue of the order.</param>
     /// <param name="creationDateUtc">order creation date.</param>
+    /// <param name="modifiedOn">order modification date.</param>
     /// <returns>order instance.</returns>
     /// <remarks>returns failure result, when order is being enqueued into full queue.</remarks>
     /// <remarks>returns failure result, when order is already in the queue.</remarks>
-    public static Result<OrderEntity> Create(UserEntity user, QueueEntity queue, DateOnly creationDateUtc)
+    public static Result<OrderEntity> Create(
+        Guid id,
+        UserEntity user,
+        QueueEntity queue,
+        DateOnly creationDateUtc,
+        DateTime? modifiedOn = null)
     {
-        var order = new OrderEntity(user, queue, creationDateUtc);
+        var order = new OrderEntity(id, user, queue, creationDateUtc);
         Result<OrderEntity> entranceResult = queue.Add(order);
 
         if (entranceResult.IsFaulted)

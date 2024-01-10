@@ -10,8 +10,12 @@ public class OrderSubscriptionEntity : SubscriptionEntity
 {
     private readonly List<OrderEntity> _subscribedOrders;
 
-    public OrderSubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
-        : base(user, creationDateUtc)
+    public OrderSubscriptionEntity(
+        Guid id,
+        UserEntity user,
+        DateOnly creationDateUtc,
+        DateTime? modifiedOn = null)
+        : base(id, user, creationDateUtc, modifiedOn)
     {
         _subscribedOrders = new List<OrderEntity>();
     }
