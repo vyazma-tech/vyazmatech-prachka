@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
@@ -25,14 +24,12 @@ public class OrderService
     {
         if (order.Queue.Id.Equals(queue.Id))
         {
-            var exception = new DomainException(DomainErrors.Order.UnableToTransferIntoSameQueue);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Order.UnableToTransferIntoSameQueue);
         }
 
         if (queue.Capacity.Value.Equals(queue.Items.Count))
         {
-            var exception = new DomainException(DomainErrors.Order.UnableToTransferIntoFullQueue);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Order.UnableToTransferIntoFullQueue);
         }
 
         Result<OrderEntity> removalResult = order.Queue.Remove(order);

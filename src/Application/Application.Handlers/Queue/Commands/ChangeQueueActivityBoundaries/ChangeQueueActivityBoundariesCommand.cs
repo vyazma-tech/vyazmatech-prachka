@@ -7,7 +7,7 @@ namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 
 public static class ChangeQueueActivityBoundaries
 {
-    public record struct Command(Guid QueueId, TimeOnly ActiveFrom, TimeOnly ActiveUntil) : ICommand<Response>;
+    public record struct Command(Guid QueueId, TimeOnly ActiveFrom, TimeOnly ActiveUntil) : ICommand<Result<Response>>;
 
     public record struct Response(
         Guid Id,

@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue.Events;
@@ -88,20 +87,17 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order))
         {
-            var exception = new DomainException(DomainErrors.Queue.ContainsOrderWithId(order.Id));
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Queue.ContainsOrderWithId(order.Id));
         }
 
         if (_orders.Count.Equals(Capacity.Value))
         {
-            var exception = new DomainException(DomainErrors.Queue.Overfull);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Queue.Overfull);
         }
 
         if (Expired)
         {
-            var exception = new DomainException(DomainErrors.Queue.Expired);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Queue.Expired);
         }
 
         _orders.Add(order);
@@ -121,8 +117,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order) is false)
         {
-            var exception = new DomainException(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
         }
 
         _orders.Remove(order);
@@ -141,8 +136,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     {
         if (newCapacity.Value <= Capacity.Value)
         {
-            var exception = new DomainException(DomainErrors.Queue.InvalidNewCapacity);
-            return new Result<QueueEntity>(exception);
+            return new Result<QueueEntity>(DomainErrors.Queue.InvalidNewCapacity);
         }
 
         Capacity = newCapacity;
@@ -163,8 +157,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     {
         if (activityBoundaries == ActivityBoundaries)
         {
-            var exception = new DomainException(DomainErrors.Queue.InvalidNewActivityBoundaries);
-            return new Result<QueueEntity>(exception);
+            return new Result<QueueEntity>(DomainErrors.Queue.InvalidNewActivityBoundaries);
         }
 
         ActivityBoundaries = activityBoundaries;

@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using FluentValidation;
 
 namespace Presentation.WebAPI.Middlewares;
@@ -51,10 +50,19 @@ internal class ExceptionHandlerMiddleware : IMiddleware
         return exception switch
         {
             ValidationException validationException => (HttpStatusCode.BadRequest, validationException.Errors.Select(
-                x =>
-                    new Error(x.ErrorCode, $"{x.PropertyName} - {x.ErrorMessage}")).ToList().AsReadOnly()),
-            DomainException domainException => (HttpStatusCode.BadRequest, new[] { domainException.Error }),
-            _ => (HttpStatusCode.InternalServerError, new[] { new Error("InternalServerError", exception.Message) })
+                    x => Error.Validation(
+                        x.ErrorCode,
+                        $"{x.PropertyName} - {x.ErrorMessage}",
+                        ErrorArea.Application))
+                .ToList()),
+
+            _ => (HttpStatusCode.InternalServerError, new[]
+            {
+                Error.Failure(
+                    "InternalServerError",
+                    exception.Message,
+                    ErrorArea.Application)
+            })
         };
     }
 }

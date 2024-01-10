@@ -1,5 +1,7 @@
-﻿using FastEndpoints;
+﻿using Domain.Common.Result;
+using FastEndpoints;
 using Mediator;
+using Presentation.Endpoints.Extensions;
 using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.ChangeQueueActivityBoundaries;
 
 namespace Presentation.Endpoints.Queue.ChangeQueueActivityBoundaries;
@@ -21,8 +23,10 @@ public class ChangeQueueActivityBoundariesEndpoint : Endpoint<Command, Response>
 
     public override async Task HandleAsync(Command req, CancellationToken ct)
     {
-        Response response = await _mediator.Send(req, ct);
+        Result<Response> response = await _mediator.Send(req, ct);
 
-        await SendOkAsync(response, ct);
+        await response.Match(
+            success => SendOkAsync(success, ct),
+            _ => this.SendProblemsAsync(response.ToProblemDetails()));
     }
 }

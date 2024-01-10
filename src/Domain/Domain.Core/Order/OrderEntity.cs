@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order.Events;
 using Domain.Core.Queue;
@@ -98,8 +97,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     {
         if (Paid)
         {
-            var exception = new DomainException(DomainErrors.Order.AlreadyPaid);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Order.AlreadyPaid);
         }
 
         Paid = true;
@@ -119,8 +117,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     {
         if (Ready)
         {
-            var exception = new DomainException(DomainErrors.Order.IsReady);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Order.IsReady);
         }
 
         Ready = true;

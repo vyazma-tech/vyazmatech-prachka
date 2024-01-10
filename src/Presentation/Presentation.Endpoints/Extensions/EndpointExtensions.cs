@@ -15,4 +15,11 @@ public static class EndpointExtensions
             StatusCodes.Status206PartialContent,
             cancellation: cancellationToken);
     }
+
+    public static Task SendProblemsAsync(
+        this IEndpoint endpoint,
+        IResult result)
+    {
+        return endpoint.HttpContext.Response.SendResultAsync(result);
+    }
 }

@@ -1,6 +1,5 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Kernel;
 
@@ -34,14 +33,12 @@ public sealed class QueueDate : ValueObject
     {
         if (assignmentDate < dateTimeProvider.DateNow)
         {
-            var exception = new DomainException(DomainErrors.QueueDate.InThePast);
-            return new Result<QueueDate>(exception);
+            return new Result<QueueDate>(DomainErrors.QueueDate.InThePast);
         }
 
         if (assignmentDate > dateTimeProvider.DateNow.AddDays(Week))
         {
-            var exception = new DomainException(DomainErrors.QueueDate.NotNextWeek);
-            return new Result<QueueDate>(exception);
+            return new Result<QueueDate>(DomainErrors.QueueDate.NotNextWeek);
         }
 
         return new QueueDate(assignmentDate);

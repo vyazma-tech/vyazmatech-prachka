@@ -1,10 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common.Abstractions;
-using Domain.Common.Errors;
-using Domain.Common.Exceptions;
-using Domain.Common.Result;
-using Domain.Core.Order;
-using Domain.Core.Queue;
 using Domain.Core.User;
 using Domain.Kernel;
 

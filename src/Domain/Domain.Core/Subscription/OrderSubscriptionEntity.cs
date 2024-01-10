@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.User;
@@ -32,8 +31,7 @@ public sealed class OrderSubscriptionEntity : SubscriptionEntity
     {
         if (_subscribedOrders.Contains(order))
         {
-            var exception = new DomainException(DomainErrors.Subscription.ContainsOrderWithId(order.Id));
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Subscription.ContainsOrderWithId(order.Id));
         }
 
         _subscribedOrders.Add(order);
@@ -51,8 +49,7 @@ public sealed class OrderSubscriptionEntity : SubscriptionEntity
     {
         if (_subscribedOrders.Contains(order) is false)
         {
-            var exception = new DomainException(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
         }
 
         _subscribedOrders.Remove(order);

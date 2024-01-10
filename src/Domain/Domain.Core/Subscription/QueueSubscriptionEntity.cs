@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.User;
@@ -32,8 +31,7 @@ public sealed class QueueSubscriptionEntity : SubscriptionEntity
     {
         if (_subscribedQueues.Contains(queue))
         {
-            var exception = new DomainException(DomainErrors.Subscription.ContainsQueueWithId(queue.Id));
-            return new Result<QueueEntity>(exception);
+            return new Result<QueueEntity>(DomainErrors.Subscription.ContainsQueueWithId(queue.Id));
         }
 
         _subscribedQueues.Add(queue);
@@ -51,8 +49,7 @@ public sealed class QueueSubscriptionEntity : SubscriptionEntity
     {
         if (_subscribedQueues.Contains(queue) is false)
         {
-            var exception = new DomainException(DomainErrors.Subscription.QueueIsNotInSubscription(queue.Id));
-            return new Result<QueueEntity>(exception);
+            return new Result<QueueEntity>(DomainErrors.Subscription.QueueIsNotInSubscription(queue.Id));
         }
 
         _subscribedQueues.Remove(queue);

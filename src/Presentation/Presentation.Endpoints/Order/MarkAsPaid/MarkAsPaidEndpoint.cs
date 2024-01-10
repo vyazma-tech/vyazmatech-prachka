@@ -2,6 +2,7 @@
 using FastEndpoints;
 using Mediator;
 using Microsoft.AspNetCore.Http;
+using Presentation.Endpoints.Extensions;
 using static Application.Handlers.Order.Commands.MarkOrderAsPaid.MarkOrderAsPaid;
 
 namespace Presentation.Endpoints.Order.MarkAsPaid;
@@ -26,13 +27,8 @@ public class MarkAsPaidEndpoint : Endpoint<Command, Result<Response>>
     {
         Result<Response> response = await _mediator.Send(req, ct);
 
-        if (response.IsSuccess)
-        {
-            await SendOkAsync(response, ct);
-        }
-        else
-        {
-            await SendAsync(response, StatusCodes.Status404NotFound, ct);
-        }
+        await response.Match(
+            success => SendOkAsync(success, ct),
+            _ => this.SendProblemsAsync(response.ToProblemDetails()));
     }
 }

@@ -11,7 +11,7 @@ using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.C
 namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 
 internal sealed class ChangeQueueActivityBoundariesHandler
-    : ICommandHandler<Command, Response>
+    : ICommandHandler<Command, Result<Response>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPersistenceContext _persistenceContext;
@@ -27,7 +27,7 @@ internal sealed class ChangeQueueActivityBoundariesHandler
         _persistenceContext = persistenceContext;
     }
 
-    public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
+    public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         Result<QueueEntity> queueSearchResult = await _persistenceContext.Queues
             .FindByAsync(
@@ -35,35 +35,34 @@ internal sealed class ChangeQueueActivityBoundariesHandler
                 cancellationToken);
 
         if (queueSearchResult.IsFaulted)
-            throw queueSearchResult.Error;
+        {
+            return new Result<Response>(queueSearchResult.Error);
+        }
 
         QueueEntity queue = queueSearchResult.Value;
-
-        QueueActivityBoundaries newActivityBoundaries = ValidateBoundaries(
+        Result<QueueActivityBoundaries> activityBoundariesCreationResult = QueueActivityBoundaries.Create(
             request.ActiveFrom,
             request.ActiveUntil);
 
+        if (activityBoundariesCreationResult.IsFaulted)
+        {
+            return new Result<Response>(activityBoundariesCreationResult.Error);
+        }
+
+        QueueActivityBoundaries newActivityBoundaries = activityBoundariesCreationResult.Value;
         Result<QueueEntity> changeResult = queue.ChangeActivityBoundaries(
             newActivityBoundaries,
             _dateTimeProvider.UtcNow);
 
         if (changeResult.IsFaulted)
-            throw changeResult.Error;
+        {
+            return new Result<Response>(changeResult.Error);
+        }
 
         queue = changeResult.Value;
         _persistenceContext.Queues.Update(queue);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         return queue.ToDto();
-    }
-
-    private static QueueActivityBoundaries ValidateBoundaries(TimeOnly from, TimeOnly until)
-    {
-        Result<QueueActivityBoundaries> result = QueueActivityBoundaries.Create(from, until);
-
-        if (result.IsFaulted)
-            throw result.Error;
-
-        return result.Value;
     }
 }

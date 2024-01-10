@@ -1,6 +1,7 @@
 ﻿using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
+using Presentation.Endpoints.Extensions;
 using static Application.Handlers.Queue.Queries.QueueById.QueueByIdQuery;
 
 namespace Presentation.Endpoints.Queue.FindQueue;
@@ -26,6 +27,6 @@ public class FindQueueByIdEndpoint : Endpoint<Query, Response>
 
         await response.Match(
             _ => SendOkAsync(response.Value, ct),
-            _ => SendNotFoundAsync(ct));
+            _ => this.SendProblemsAsync(response.ToProblemDetails()));
     }
 }
