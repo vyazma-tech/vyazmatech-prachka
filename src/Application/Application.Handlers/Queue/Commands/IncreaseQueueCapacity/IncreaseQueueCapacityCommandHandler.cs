@@ -1,14 +1,11 @@
-﻿using Application.Core.Common;
-using Application.Core.Contracts;
+﻿using Application.Core.Contracts;
 using Application.DataAccess.Contracts;
-using Application.Handlers.Queue.Queries;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
-using Microsoft.Extensions.Logging;
 using static Application.Handlers.Queue.Commands.IncreaseQueueCapacity.IncreaseQueueCapacity;
 
 namespace Application.Handlers.Queue.Commands.IncreaseQueueCapacity;

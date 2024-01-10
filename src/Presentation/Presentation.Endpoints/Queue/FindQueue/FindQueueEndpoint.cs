@@ -8,11 +8,11 @@ namespace Presentation.Endpoints.Queue.FindQueue;
 
 public class FindQueueEndpoint : Endpoint<Query, PagedResponse<Response>>
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public FindQueueEndpoint(IMediator mediator)
+    public FindQueueEndpoint(ISender sender)
     {
-        _mediator = mediator;
+        _sender = sender;
     }
 
     public override void Configure()
@@ -23,7 +23,7 @@ public class FindQueueEndpoint : Endpoint<Query, PagedResponse<Response>>
 
     public override async Task HandleAsync(Query req, CancellationToken ct)
     {
-        PagedResponse<Response> response = await _mediator.Send(req, ct);
+        PagedResponse<Response> response = await _sender.Send(req, ct);
 
         if (response.Bunch.Any())
             await this.SendPartialContentAsync(response, ct);

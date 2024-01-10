@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240109093251_SplitModelsFromEntities")]
+    [Migration("20240111072826_SplitModelsFromEntities")]
     partial class SplitModelsFromEntities
     {
         /// <inheritdoc />
@@ -21,11 +21,14 @@ namespace Infrastructure.DataAccess.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.14")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.Order", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.OrderModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +61,7 @@ namespace Infrastructure.DataAccess.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.OrderSubscription", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.OrderSubscriptionModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -81,7 +84,7 @@ namespace Infrastructure.DataAccess.Migrations
                     b.ToTable("OrderSubscriptions");
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.Queue", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.QueueModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,7 +110,7 @@ namespace Infrastructure.DataAccess.Migrations
                     b.ToTable("Queues");
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.QueueSubscription", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.QueueSubscriptionModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -130,7 +133,7 @@ namespace Infrastructure.DataAccess.Migrations
                     b.ToTable("QueueSubscriptions");
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.User", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.UserModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -161,45 +164,45 @@ namespace Infrastructure.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("OrderOrderSubscription", b =>
+            modelBuilder.Entity("OrderModelOrderSubscriptionModel", b =>
                 {
-                    b.Property<Guid>("OrderSubscriptionId")
+                    b.Property<Guid>("OrderSubscriptionModelId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("OrdersId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("OrderSubscriptionId", "OrdersId");
+                    b.HasKey("OrderSubscriptionModelId", "OrdersId");
 
                     b.HasIndex("OrdersId");
 
                     b.ToTable("UserOrdersAndTheirSubscriptions", (string)null);
                 });
 
-            modelBuilder.Entity("QueueQueueSubscription", b =>
+            modelBuilder.Entity("QueueModelQueueSubscriptionModel", b =>
                 {
-                    b.Property<Guid>("QueueSubscriptionId")
+                    b.Property<Guid>("QueueSubscriptionModelId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("QueuesId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("QueueSubscriptionId", "QueuesId");
+                    b.HasKey("QueueSubscriptionModelId", "QueuesId");
 
                     b.HasIndex("QueuesId");
 
                     b.ToTable("UserQueuesAndTheirSubscriptions", (string)null);
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.Order", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.OrderModel", b =>
                 {
-                    b.HasOne("Infrastructure.DataAccess.Models.Queue", "Queue")
+                    b.HasOne("Infrastructure.DataAccess.Models.QueueModel", "Queue")
                         .WithMany("Orders")
                         .HasForeignKey("QueueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.DataAccess.Models.User", "User")
+                    b.HasOne("Infrastructure.DataAccess.Models.UserModel", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -210,64 +213,64 @@ namespace Infrastructure.DataAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.OrderSubscription", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.OrderSubscriptionModel", b =>
                 {
-                    b.HasOne("Infrastructure.DataAccess.Models.User", "User")
+                    b.HasOne("Infrastructure.DataAccess.Models.UserModel", "User")
                         .WithOne("OrderSubscription")
-                        .HasForeignKey("Infrastructure.DataAccess.Models.OrderSubscription", "UserId")
+                        .HasForeignKey("Infrastructure.DataAccess.Models.OrderSubscriptionModel", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.QueueSubscription", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.QueueSubscriptionModel", b =>
                 {
-                    b.HasOne("Infrastructure.DataAccess.Models.User", "User")
+                    b.HasOne("Infrastructure.DataAccess.Models.UserModel", "User")
                         .WithOne("QueueSubscription")
-                        .HasForeignKey("Infrastructure.DataAccess.Models.QueueSubscription", "UserId")
+                        .HasForeignKey("Infrastructure.DataAccess.Models.QueueSubscriptionModel", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("OrderOrderSubscription", b =>
+            modelBuilder.Entity("OrderModelOrderSubscriptionModel", b =>
                 {
-                    b.HasOne("Infrastructure.DataAccess.Models.OrderSubscription", null)
+                    b.HasOne("Infrastructure.DataAccess.Models.OrderSubscriptionModel", null)
                         .WithMany()
-                        .HasForeignKey("OrderSubscriptionId")
+                        .HasForeignKey("OrderSubscriptionModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.DataAccess.Models.Order", null)
+                    b.HasOne("Infrastructure.DataAccess.Models.OrderModel", null)
                         .WithMany()
                         .HasForeignKey("OrdersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("QueueQueueSubscription", b =>
+            modelBuilder.Entity("QueueModelQueueSubscriptionModel", b =>
                 {
-                    b.HasOne("Infrastructure.DataAccess.Models.QueueSubscription", null)
+                    b.HasOne("Infrastructure.DataAccess.Models.QueueSubscriptionModel", null)
                         .WithMany()
-                        .HasForeignKey("QueueSubscriptionId")
+                        .HasForeignKey("QueueSubscriptionModelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Infrastructure.DataAccess.Models.Queue", null)
+                    b.HasOne("Infrastructure.DataAccess.Models.QueueModel", null)
                         .WithMany()
                         .HasForeignKey("QueuesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.Queue", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.QueueModel", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("Infrastructure.DataAccess.Models.User", b =>
+            modelBuilder.Entity("Infrastructure.DataAccess.Models.UserModel", b =>
                 {
                     b.Navigation("OrderSubscription")
                         .IsRequired();

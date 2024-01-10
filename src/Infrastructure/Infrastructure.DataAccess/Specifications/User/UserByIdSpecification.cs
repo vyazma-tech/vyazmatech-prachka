@@ -1,7 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.User;
-using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
+﻿using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Specifications.User;
@@ -17,5 +14,5 @@ public sealed class UserByIdSpecification : Specification<UserModel>
     }
 
     public override string ToString()
-        => $"{typeof(Guid)}: {_id}";
+        => $"UserId = {_id}";
 }

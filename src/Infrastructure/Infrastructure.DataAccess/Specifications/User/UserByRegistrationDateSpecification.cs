@@ -1,6 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.User;
-using Domain.Kernel;
+﻿using Domain.Core.User;
 using Infrastructure.DataAccess.Contracts;
 
 namespace Infrastructure.DataAccess.Specifications.User;
@@ -16,5 +14,5 @@ public sealed class UserByRegistrationDateSpecification : Specification<UserEnti
     }
 
     public override string ToString()
-        => $"{typeof(UserEntity)}: {_registrationDate}";
+        => $"UserRegistrationDate = {_registrationDate}";
 }

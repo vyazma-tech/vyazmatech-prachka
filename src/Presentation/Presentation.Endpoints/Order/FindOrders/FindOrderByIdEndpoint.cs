@@ -2,26 +2,26 @@
 using FastEndpoints;
 using Mediator;
 using Presentation.Endpoints.Extensions;
-using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.ChangeQueueActivityBoundaries;
+using static Application.Handlers.Order.Queries.OrderById.OrderByIdQuery;
 
-namespace Presentation.Endpoints.Queue.ChangeQueueActivityBoundaries;
+namespace Presentation.Endpoints.Order.FindOrders;
 
-internal class ChangeQueueActivityBoundariesEndpoint : Endpoint<Command, Response>
+internal class FindOrderByIdEndpoint : Endpoint<Query, Response>
 {
     private readonly ISender _sender;
 
-    public ChangeQueueActivityBoundariesEndpoint(ISender sender)
+    public FindOrderByIdEndpoint(ISender sender)
     {
         _sender = sender;
     }
 
     public override void Configure()
     {
-        Patch("/api/queues/{queueId}/activity");
+        Get("api/orders/{id}");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(Command req, CancellationToken ct)
+    public override async Task HandleAsync(Query req, CancellationToken ct)
     {
         Result<Response> response = await _sender.Send(req, ct);
 

@@ -1,9 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.Order;
-using Domain.Core.Queue;
-using Domain.Core.Subscription;
-using Domain.Core.User;
-using Infrastructure.DataAccess.Contracts;
+﻿using Infrastructure.DataAccess.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Contexts;
@@ -38,6 +33,6 @@ internal sealed class PersistenceContext : IPersistenceContext
 
     public IQueueSubscriptionRepository QueueSubscriptions { get; }
 
-    public DbSet<TEntity> Entities<TEntity>()
-        where TEntity : class => _context.Set<TEntity>();
+    public DbSet<TModel> Entities<TModel>()
+        where TModel : class => _context.Set<TModel>();
 }

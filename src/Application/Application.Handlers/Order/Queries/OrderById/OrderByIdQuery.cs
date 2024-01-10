@@ -6,7 +6,7 @@ namespace Application.Handlers.Order.Queries.OrderById;
 
 public static class OrderByIdQuery
 {
-    public record struct Query(Guid Id) : IQuery<Result<Response>>;
+    public record Query(Guid Id) : IQuery<Result<Response>>;
 
     public record struct Response(
         Guid Id,

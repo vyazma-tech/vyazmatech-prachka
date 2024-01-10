@@ -14,5 +14,5 @@ public sealed class OrderSubscriptionByIdSpecification : Specification<OrderSubs
     }
 
     public override string ToString()
-        => $"{typeof(Guid)}: {_id}";
+        => $"OrderSubscriptionId = {_id}";
 }

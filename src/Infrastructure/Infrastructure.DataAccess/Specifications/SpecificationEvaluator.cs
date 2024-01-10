@@ -1,4 +1,3 @@
-using Application.DataAccess.Contracts;
 using Infrastructure.DataAccess.Contracts;
 
 namespace Infrastructure.DataAccess.Specifications;

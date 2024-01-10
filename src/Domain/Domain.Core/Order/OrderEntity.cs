@@ -76,7 +76,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         DateOnly creationDateUtc,
         DateTime? modifiedOn = null)
     {
-        var order = new OrderEntity(id, user, queue, creationDateUtc);
+        var order = new OrderEntity(id, user, queue, creationDateUtc, modifiedOn);
         Result<OrderEntity> entranceResult = queue.Add(order);
 
         if (entranceResult.IsFaulted)

@@ -14,6 +14,6 @@ public interface IPersistenceContext
 
     IQueueSubscriptionRepository QueueSubscriptions { get; }
 
-    DbSet<TEntity> Entities<TEntity>()
-        where TEntity : class;
+    DbSet<TModel> Entities<TModel>()
+        where TModel : class;
 }

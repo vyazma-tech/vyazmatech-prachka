@@ -1,5 +1,4 @@
 ﻿using Application.Core.Contracts;
-using Application.Handlers.Order.Queries;
 using Domain.Common.Result;
 using Domain.Core.Order;
 

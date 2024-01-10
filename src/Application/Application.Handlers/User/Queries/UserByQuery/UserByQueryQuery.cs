@@ -6,7 +6,7 @@ namespace Application.Handlers.User.Queries.UserByQuery;
 
 public static class UserByQueryQuery
 {
-    public record struct Query(
+    public record Query(
         string? TelegramId,
         string? Fullname,
         DateOnly? RegistrationDate,

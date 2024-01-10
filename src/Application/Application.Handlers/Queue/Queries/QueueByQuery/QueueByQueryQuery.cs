@@ -6,7 +6,7 @@ namespace Application.Handlers.Queue.Queries.QueueByQuery;
 
 public static class QueueByQueryQuery
 {
-    public record struct Query(DateOnly? AssignmentDate, int Page) : IQuery<PagedResponse<Response>>;
+    public record Query(DateOnly? AssignmentDate, int Page) : IQuery<PagedResponse<Response>>;
 
     public record struct Response(
         Guid Id,

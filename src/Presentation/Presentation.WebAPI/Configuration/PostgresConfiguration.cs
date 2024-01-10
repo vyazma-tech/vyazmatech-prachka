@@ -2,6 +2,7 @@
 
 public class PostgresConfiguration
 {
+    public const string SectionKey = nameof(PostgresConfiguration);
     public string Host { get; set; } = default!;
     public string Username { get; set; } = default!;
     public string Password { get; set; } = default!;

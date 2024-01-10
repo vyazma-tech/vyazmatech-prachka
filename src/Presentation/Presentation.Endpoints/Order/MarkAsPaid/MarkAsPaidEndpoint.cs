@@ -1,31 +1,29 @@
 ﻿using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
-using Microsoft.AspNetCore.Http;
 using Presentation.Endpoints.Extensions;
 using static Application.Handlers.Order.Commands.MarkOrderAsPaid.MarkOrderAsPaid;
 
 namespace Presentation.Endpoints.Order.MarkAsPaid;
 
-public class MarkAsPaidEndpoint : Endpoint<Command, Response>
+internal class MarkAsPaidEndpoint : Endpoint<Command, Response>
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public MarkAsPaidEndpoint(IMediator mediator)
+    public MarkAsPaidEndpoint(ISender sender)
     {
-        _mediator = mediator;
+        _sender = sender;
     }
 
     public override void Configure()
     {
-        Verbs(Http.PATCH);
-        Routes("api/order/mark-as-paid");
+        Patch("api/orders/{id}/paid");
         AllowAnonymous();
     }
 
     public override async Task HandleAsync(Command req, CancellationToken ct)
     {
-        Result<Response> response = await _mediator.Send(req, ct);
+        Result<Response> response = await _sender.Send(req, ct);
 
         await response.Match(
             success => SendOkAsync(success, ct),

@@ -10,14 +10,13 @@ using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.C
 
 namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 
-internal sealed class ChangeQueueActivityBoundariesHandler
-    : ICommandHandler<Command, Result<Response>>
+internal sealed class ChangeQueueActivityBoundariesCommandHandler : ICommandHandler<Command, Result<Response>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPersistenceContext _persistenceContext;
     private readonly IDateTimeProvider _dateTimeProvider;
 
-    public ChangeQueueActivityBoundariesHandler(
+    public ChangeQueueActivityBoundariesCommandHandler(
         IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider,
         IPersistenceContext persistenceContext)

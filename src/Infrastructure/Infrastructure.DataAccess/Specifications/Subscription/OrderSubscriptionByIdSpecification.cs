@@ -1,7 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.Subscription;
-using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
+﻿using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Specifications.Subscription;
@@ -17,5 +14,5 @@ public sealed class QueueSubscriptionByIdSpecification : Specification<QueueSubs
     }
 
     public override string ToString()
-        => $"{typeof(Guid)}: {_id}";
+        => $"QueueSubscriptionId = {_id}";
 }

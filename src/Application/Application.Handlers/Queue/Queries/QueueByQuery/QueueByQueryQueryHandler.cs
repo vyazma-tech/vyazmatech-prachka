@@ -2,11 +2,9 @@
 using Application.Core.Configuration;
 using Application.Core.Contracts;
 using Application.Core.Extensions;
-using Application.DataAccess.Contracts;
 using Domain.Core.Queue;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using static Application.Handlers.Queue.Queries.QueueByQuery.QueueByQueryQuery;
 

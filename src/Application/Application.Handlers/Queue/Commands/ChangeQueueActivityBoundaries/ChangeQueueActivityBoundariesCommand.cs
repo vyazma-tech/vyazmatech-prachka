@@ -1,5 +1,4 @@
 ﻿using Application.Core.Contracts;
-using Application.Handlers.Queue.Queries;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 
@@ -7,7 +6,7 @@ namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 
 public static class ChangeQueueActivityBoundaries
 {
-    public record struct Command(Guid QueueId, TimeOnly ActiveFrom, TimeOnly ActiveUntil) : ICommand<Result<Response>>;
+    public record Command(Guid QueueId, TimeOnly ActiveFrom, TimeOnly ActiveUntil) : ICommand<Result<Response>>;
 
     public record struct Response(
         Guid Id,

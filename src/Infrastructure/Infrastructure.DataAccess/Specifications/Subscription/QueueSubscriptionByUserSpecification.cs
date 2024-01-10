@@ -1,7 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.Subscription;
-using Domain.Core.User;
-using Domain.Kernel;
+﻿using Domain.Core.User;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
 
@@ -18,5 +15,5 @@ public sealed class QueueSubscriptionByUserSpecification : Specification<QueueSu
     }
 
     public override string ToString()
-        => $"{typeof(UserEntity)}: {_userId}";
+        => $"UserId = {_userId}";
 }

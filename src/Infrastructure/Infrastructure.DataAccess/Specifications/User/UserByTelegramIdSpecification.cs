@@ -1,7 +1,5 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.User;
+﻿using Domain.Core.User;
 using Domain.Core.ValueObjects;
-using Domain.Kernel;
 using Infrastructure.DataAccess.Contracts;
 
 namespace Infrastructure.DataAccess.Specifications.User;
@@ -17,5 +15,5 @@ public sealed class UserByTelegramIdSpecification : Specification<UserEntity>
     }
 
     public override string ToString()
-        => $"{typeof(TelegramId)}: {_telegramId.Value}";
+        => $"UserTelegramId = {_telegramId.Value}";
 }

@@ -4,6 +4,7 @@ using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -46,8 +47,12 @@ public class QueueActivityBackgroundWorker : BackgroundService
 
             if (queueFindResult.IsFaulted)
             {
-                _logger.LogInformation("Queue is not assigned on {Date}", timeProvider.DateNow);
-                break;
+                _logger.LogInformation(
+                    "Queue is not assigned on DateNow = {DateNow}. Attempt DateTime = {UtcNow}",
+                    timeProvider.DateNow,
+                    timeProvider.UtcNow);
+
+                continue;
             }
 
             IUnitOfWork eventPublisher = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
@@ -62,7 +67,7 @@ public class QueueActivityBackgroundWorker : BackgroundService
             try
             {
                 _logger.LogInformation(
-                    "Queue assigned to {Date} has expired. Going to remove not paid orders and reset subscriptions",
+                    "Queue assigned to AssignmentDate = {AssignmentDate} has expired. Going to remove not paid orders and reset subscriptions",
                     queue.CreationDate);
 
                 await eventPublisher.SaveChangesAsync(stoppingToken);

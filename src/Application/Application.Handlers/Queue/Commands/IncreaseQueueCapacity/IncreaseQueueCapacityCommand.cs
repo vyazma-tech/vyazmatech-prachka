@@ -6,7 +6,7 @@ namespace Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 
 public static class IncreaseQueueCapacity
 {
-    public record struct Command(Guid QueueId, int Capacity) : ICommand<Result<Response>>;
+    public record Command(Guid QueueId, int Capacity) : ICommand<Result<Response>>;
 
     public record struct Response(
         Guid Id,

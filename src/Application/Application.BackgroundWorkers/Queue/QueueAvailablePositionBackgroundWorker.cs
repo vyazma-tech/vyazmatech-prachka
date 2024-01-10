@@ -4,6 +4,7 @@ using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Specifications.Queue;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -46,8 +47,12 @@ public class QueueAvailablePositionBackgroundWorker : BackgroundService
 
             if (queueFindResult.IsFaulted)
             {
-                _logger.LogInformation("Queue is not assigned on {Date}", timeProvider.DateNow);
-                break;
+                _logger.LogInformation(
+                    "Queue is not assigned on DateNow = {DateNow}. Attempt DateTime = {DateTime}",
+                    timeProvider.DateNow,
+                    timeProvider.UtcNow);
+
+                continue;
             }
 
             IUnitOfWork eventPublisher = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
@@ -61,8 +66,8 @@ public class QueueAvailablePositionBackgroundWorker : BackgroundService
             try
             {
                 _logger.LogInformation(
-                    "Queue assigned to date {Date} expired and not full. Going to notify about available positions",
-                    timeProvider.DateNow);
+                    "Queue assigned to AssignmentDate = {AssignmentDate} expired and not full. Going to notify about available positions",
+                    queue.CreationDate);
 
                 await eventPublisher.SaveChangesAsync(stoppingToken);
 

@@ -6,7 +6,7 @@ namespace Application.Handlers.User.Queries.UserById;
 
 public static class UserByIdQuery
 {
-    public record struct Query(Guid Id) : IQuery<Result<Response>>;
+    public record Query(Guid Id) : IQuery<Result<Response>>;
 
     public record struct Response(
         Guid Id,

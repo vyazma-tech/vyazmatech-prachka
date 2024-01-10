@@ -1,6 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-
-#pragma warning disable CS8618
+﻿#pragma warning disable CS8618
 
 namespace Infrastructure.DataAccess.Models;
 
