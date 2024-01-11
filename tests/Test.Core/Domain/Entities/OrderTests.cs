@@ -25,13 +25,14 @@ public class OrderTests
 
         DateTime queueDate = DateTime.UtcNow.AddDays(1);
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
             QueueDate.Create(DateOnly.FromDateTime(queueDate), _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(queueDate),
                 TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
 
-        Result<OrderEntity> orderCreationResult = OrderEntity.Create(user, queue, _dateTimeProvider.Object.DateNow);
+        Result<OrderEntity> orderCreationResult = OrderEntity.Create(Guid.NewGuid(), user, queue, _dateTimeProvider.Object.DateNow);
 
         orderCreationResult.IsSuccess.Should().BeTrue();
         orderCreationResult.Value.Should().NotBeNull();

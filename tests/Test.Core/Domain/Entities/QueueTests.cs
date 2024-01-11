@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using Domain.Common.Abstractions;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -89,6 +88,7 @@ public class QueueTests
 
         DateTime creationDate = DateTime.UtcNow;
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
             QueueDate.Create(DateOnly.FromDateTime(creationDate), _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
@@ -134,6 +134,7 @@ public class QueueTests
     public void IncreaseQueueCapacity_ShouldReturnSuccessResult_WhenNewCapacityIsGreaterThenCurrent()
     {
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
             QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
@@ -153,6 +154,7 @@ public class QueueTests
     {
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
             QueueDate.Create(_dateTimeProvider.Object.DateNow, _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
@@ -174,6 +176,7 @@ public class QueueTests
         OrderEntity order)
     {
         Result<OrderEntity> incomingOrderResult = OrderEntity.Create(
+            Guid.NewGuid(),
             user,
             queue,
             DateOnly.FromDateTime(DateTime.UtcNow));

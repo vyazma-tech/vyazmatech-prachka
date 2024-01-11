@@ -1,6 +1,5 @@
-﻿using Application.Core.Common;
-using Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
-using Application.Handlers.Queue.Queries;
+﻿using Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
+using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.User;
@@ -24,7 +23,8 @@ public class IncreaseCapacityTest : TestBase
         var queues = new QueueRepository(database.Context);
         var users = new UserRepository(database.Context);
         var orders = new OrderRepository(database.Context);
-        var subscriptions = new SubscriptionRepository(database.Context);
+        var orderSubscriptions = new OrderSubscriptionRepository(database.Context);
+        var queueSubscriptions = new QueueSubscriptionRepository(database.Context);
 
         _handler = new IncreaseQueueCapacityCommandHandler(
             database.Context,
@@ -33,7 +33,8 @@ public class IncreaseCapacityTest : TestBase
                 queues,
                 orders,
                 users,
-                subscriptions,
+                orderSubscriptions,
+                queueSubscriptions,
                 database.Context));
     }
 
@@ -52,13 +53,13 @@ public class IncreaseCapacityTest : TestBase
         Guid queueId = Database.Context.Queues.First()
             .Id;
 
-        var incCommand = new IncreaseQueueCapacityCommand(queueId, newCapacity);
-        ResultResponse<QueueResponse> response = await _handler.Handle(incCommand, CancellationToken.None);
+        var incCommand = new IncreaseQueueCapacity.Command(queueId, newCapacity);
+        Result<IncreaseQueueCapacity.Response> response = await _handler.Handle(incCommand, CancellationToken.None);
 
         response.Should().NotBeNull();
         response.IsSuccess.Should().BeTrue();
         response.Value.Should().NotBeNull();
-        response.Value.Queue.Should().NotBeNull();
-        // response.Value.Queue.Capacity.Should().Be(newCapacity);
+        response.Value.Should().NotBeNull();
+        response.Value.Capacity.Should().Be(newCapacity);
     }
 }
