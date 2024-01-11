@@ -1,14 +1,12 @@
 ﻿using Application.Handlers.Order.Commands.MarkOrderAsReady;
-using Application.Handlers.Order.Queries;
-using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
-using Domain.Kernel;
 using FluentAssertions;
+using Infrastructure.DataAccess.Contexts;
+using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Models;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;
-using Microsoft.Extensions.Logging;
-using Moq;
 using Test.Core.Domain.Entities.ClassData;
 using Test.Handlers.Fixtures;
 using Xunit;
@@ -18,21 +16,38 @@ namespace Test.Handlers.Order.Commands;
 public class MakeReadyTest : TestBase
 {
     private readonly MarkOrderAsReadyCommandHandler _handler;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    
+    private readonly IOrderRepository _repository;
+
     public MakeReadyTest(CoreDatabaseFixture database) : base(database)
     {
-        _dateTimeProvider = new DateTimeProvider();
-        _handler = new MarkOrderAsReadyCommandHandler(_dateTimeProvider, database.Context);
+        var dateTimeProvider = new DateTimeProvider();
+        var queues = new QueueRepository(database.Context);
+        var users = new UserRepository(database.Context);
+        var orders = new OrderRepository(database.Context);
+        var orderSubscriptions = new OrderSubscriptionRepository(database.Context);
+        var queueSubscriptions = new QueueSubscriptionRepository(database.Context);
+
+        _handler = new MarkOrderAsReadyCommandHandler(
+            dateTimeProvider,
+            database.Context,
+            new PersistenceContext(
+                queues,
+                orders,
+                users,
+                orderSubscriptions,
+                queueSubscriptions,
+                database.Context));
+
+        _repository = orders;
     }
-    
+
     [Fact]
     public async Task MarkAsReadyOrder_WhenOrderNotFoundById()
     {
         var orderId = Guid.NewGuid();
-        var command = new MarkOrderAsReadyCommand(orderId);
+        var command = new MarkOrderAsReady.Command(orderId);
 
-        Result<OrderResponse> response = await _handler.Handle(command, CancellationToken.None);
+        Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
 
         response.Should().NotBeNull();
     }
@@ -41,19 +56,19 @@ public class MakeReadyTest : TestBase
     [ClassData(typeof(OrderClassData))]
     public async Task MarkAsReadyOrder_WhenOrderExistAndNotReadyBefore(OrderEntity order)
     {
-        Database.Context.Orders.Add(order);
+        _repository.InsertRange(new[] { order });
 
         await Database.Context.SaveChangesAsync();
 
-        OrderEntity createdOrder = Database.Context.Orders.First();
-        
-        var command = new MarkOrderAsReadyCommand(createdOrder.Id);
+        OrderModel createdOrder = Database.Context.Orders.First();
 
-        Result<OrderResponse> response = await _handler.Handle(command, CancellationToken.None);
+        var command = new MarkOrderAsReady.Command(createdOrder.Id);
+
+        Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
 
         response.Should().NotBeNull();
         response.IsSuccess.Should().BeTrue();
         response.Value.Should().NotBeNull();
-        response.Value.Order.Ready.Should().BeTrue();
+        response.Value.Ready.Should().BeTrue();
     }
 }

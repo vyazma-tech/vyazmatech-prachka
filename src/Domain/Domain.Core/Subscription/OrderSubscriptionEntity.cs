@@ -1,26 +1,25 @@
 ﻿using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.User;
 
 namespace Domain.Core.Subscription;
 
-public class OrderSubscriptionEntity : SubscriptionEntity
+public sealed class OrderSubscriptionEntity : SubscriptionEntity
 {
     private readonly List<OrderEntity> _subscribedOrders;
 
-    public OrderSubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
-        : base(user, creationDateUtc)
+    public OrderSubscriptionEntity(
+        Guid id,
+        UserEntity user,
+        DateOnly creationDateUtc,
+        DateTime? modifiedOn = null)
+        : base(id, user, creationDateUtc, modifiedOn)
     {
         _subscribedOrders = new List<OrderEntity>();
     }
 
-#pragma warning disable CS8618
-    protected OrderSubscriptionEntity() { }
-#pragma warning restore CS8618
-
-    public virtual IReadOnlyCollection<OrderEntity> SubscribedOrders => _subscribedOrders;
+    public IReadOnlyCollection<OrderEntity> SubscribedOrders => _subscribedOrders;
 
     /// <summary>
     /// Subscribes order to the newsletter.
@@ -32,8 +31,7 @@ public class OrderSubscriptionEntity : SubscriptionEntity
     {
         if (_subscribedOrders.Contains(order))
         {
-            var exception = new DomainException(DomainErrors.Subscription.ContainsOrderWithId(order.Id));
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Subscription.ContainsOrderWithId(order.Id));
         }
 
         _subscribedOrders.Add(order);
@@ -51,8 +49,7 @@ public class OrderSubscriptionEntity : SubscriptionEntity
     {
         if (_subscribedOrders.Contains(order) is false)
         {
-            var exception = new DomainException(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
         }
 
         _subscribedOrders.Remove(order);

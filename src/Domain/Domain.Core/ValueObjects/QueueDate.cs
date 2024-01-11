@@ -1,6 +1,5 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Kernel;
 
@@ -11,9 +10,6 @@ namespace Domain.Core.ValueObjects;
 /// </summary>
 public sealed class QueueDate : ValueObject
 {
-#pragma warning disable CS8618
-    private QueueDate() { }
-#pragma warning restore CS8618
     public const int Week = 7;
 
     private QueueDate(DateOnly value)
@@ -37,14 +33,12 @@ public sealed class QueueDate : ValueObject
     {
         if (assignmentDate < dateTimeProvider.DateNow)
         {
-            var exception = new DomainException(DomainErrors.QueueDate.InThePast);
-            return new Result<QueueDate>(exception);
+            return new Result<QueueDate>(DomainErrors.QueueDate.InThePast);
         }
 
         if (assignmentDate > dateTimeProvider.DateNow.AddDays(Week))
         {
-            var exception = new DomainException(DomainErrors.QueueDate.NotNextWeek);
-            return new Result<QueueDate>(exception);
+            return new Result<QueueDate>(DomainErrors.QueueDate.NotNextWeek);
         }
 
         return new QueueDate(assignmentDate);

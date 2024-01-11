@@ -1,26 +1,25 @@
 ﻿using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.User;
 
 namespace Domain.Core.Subscription;
 
-public class QueueSubscriptionEntity : SubscriptionEntity
+public sealed class QueueSubscriptionEntity : SubscriptionEntity
 {
     private readonly List<QueueEntity> _subscribedQueues;
 
-    public QueueSubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
-        : base(user, creationDateUtc)
+    public QueueSubscriptionEntity(
+        Guid id,
+        UserEntity user,
+        DateOnly creationDateUtc,
+        DateTime? modifiedOn = null)
+        : base(id, user, creationDateUtc, modifiedOn)
     {
         _subscribedQueues = new List<QueueEntity>();
     }
 
-#pragma warning disable CS8618
-    protected QueueSubscriptionEntity() { }
-#pragma warning restore CS8618
-
-    public virtual IReadOnlyCollection<QueueEntity> SubscribedQueues => _subscribedQueues;
+    public IReadOnlyCollection<QueueEntity> SubscribedQueues => _subscribedQueues;
 
     /// <summary>
     /// Subscribes queue to the newsletter.
@@ -32,8 +31,7 @@ public class QueueSubscriptionEntity : SubscriptionEntity
     {
         if (_subscribedQueues.Contains(queue))
         {
-            var exception = new DomainException(DomainErrors.Subscription.ContainsQueueWithId(queue.Id));
-            return new Result<QueueEntity>(exception);
+            return new Result<QueueEntity>(DomainErrors.Subscription.ContainsQueueWithId(queue.Id));
         }
 
         _subscribedQueues.Add(queue);
@@ -51,8 +49,7 @@ public class QueueSubscriptionEntity : SubscriptionEntity
     {
         if (_subscribedQueues.Contains(queue) is false)
         {
-            var exception = new DomainException(DomainErrors.Subscription.QueueIsNotInSubscription(queue.Id));
-            return new Result<QueueEntity>(exception);
+            return new Result<QueueEntity>(DomainErrors.Subscription.QueueIsNotInSubscription(queue.Id));
         }
 
         _subscribedQueues.Remove(queue);

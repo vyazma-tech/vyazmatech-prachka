@@ -1,6 +1,5 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 
 namespace Domain.Core.ValueObjects;
@@ -10,9 +9,6 @@ namespace Domain.Core.ValueObjects;
 /// </summary>
 public sealed class Capacity : ValueObject
 {
-#pragma warning disable CS8618
-    private Capacity() { }
-#pragma warning restore CS8618
     private Capacity(int value)
     {
         Value = value;
@@ -33,8 +29,7 @@ public sealed class Capacity : ValueObject
     {
         if (capacity < 0)
         {
-            var exception = new DomainException(DomainErrors.Capacity.Negative);
-            return new Result<Capacity>(exception);
+            return new Result<Capacity>(DomainErrors.Capacity.Negative);
         }
 
         return new Capacity(capacity);

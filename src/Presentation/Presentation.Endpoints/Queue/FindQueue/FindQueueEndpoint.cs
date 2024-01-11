@@ -1,36 +1,33 @@
-﻿using Application.Handlers.Queue.Queries;
+﻿using Application.Core.Common;
 using FastEndpoints;
-using Infrastructure.DataAccess.Quering.Abstractions;
 using Mediator;
+using Presentation.Endpoints.Extensions;
+using static Application.Handlers.Queue.Queries.QueueByQuery.QueueByQueryQuery;
 
 namespace Presentation.Endpoints.Queue.FindQueue;
 
-public class FindQueueEndpoint : Endpoint<QueryConfiguration<QueueQueryParameter>, QueueResponse>
+public class FindQueueEndpoint : Endpoint<Query, PagedResponse<Response>>
 {
-    private readonly IMediator _mediator;
-    private readonly IModelQuery<QueueQuery.QueryBuilder, QueueQueryParameter> _query;
+    private readonly ISender _sender;
 
-    public FindQueueEndpoint(IMediator mediator, IModelQuery<QueueQuery.QueryBuilder, QueueQueryParameter> query)
+    public FindQueueEndpoint(ISender sender)
     {
-        _mediator = mediator;
-        _query = query;
+        _sender = sender;
     }
 
     public override void Configure()
     {
-        Verbs(Http.POST);
-        Routes("api/queue/query");
+        Get("api/queues");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(QueryConfiguration<QueueQueryParameter> req, CancellationToken ct)
+    public override async Task HandleAsync(Query req, CancellationToken ct)
     {
-        QueueQuery.QueryBuilder queryBuilder = QueueQuery.Builder;
-        queryBuilder = _query.Apply(queryBuilder, req);
+        PagedResponse<Response> response = await _sender.Send(req, ct);
 
-        QueueQuery queueQuery = queryBuilder.Build();
-
-        QueueResponse response = await _mediator.Send(queueQuery, ct);
-        await SendOkAsync(response, ct);
+        if (response.Bunch.Any())
+            await this.SendPartialContentAsync(response, ct);
+        else
+            await SendNoContentAsync(ct);
     }
 }

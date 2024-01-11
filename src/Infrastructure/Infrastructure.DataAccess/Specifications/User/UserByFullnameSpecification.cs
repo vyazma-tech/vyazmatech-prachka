@@ -1,6 +1,6 @@
 ﻿using Domain.Core.User;
 using Domain.Core.ValueObjects;
-using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
 
 namespace Infrastructure.DataAccess.Specifications.User;
 
@@ -15,5 +15,5 @@ public sealed class UserByFullnameSpecification : Specification<UserEntity>
     }
 
     public override string ToString()
-        => $"{typeof(UserEntity)}: {_fullname}";
+        => $"UserFullname = {_fullname}";
 }

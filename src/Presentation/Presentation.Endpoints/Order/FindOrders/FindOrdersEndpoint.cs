@@ -1,37 +1,32 @@
 ﻿using Application.Core.Common;
-using Application.Handlers.Order.Queries;
 using FastEndpoints;
-using Infrastructure.DataAccess.Quering.Abstractions;
 using Mediator;
+using Presentation.Endpoints.Extensions;
+using static Application.Handlers.Order.Queries.OrderByQuery.OrderByQuery;
 
 namespace Presentation.Endpoints.Order.FindOrders;
 
-internal class FindOrdersEndpoint : Endpoint<QueryConfiguration<OrderQueryParameter>, PagedResponse<OrderResponse>>
+internal class FindOrdersEndpoint : Endpoint<Query, PagedResponse<Response>>
 {
-    private readonly IMediator _mediator;
-    private readonly IModelQuery<OrderQuery.QueryBuilder, OrderQueryParameter> _query;
+    private readonly ISender _sender;
 
-    public FindOrdersEndpoint(IMediator mediator, IModelQuery<OrderQuery.QueryBuilder, OrderQueryParameter> query)
+    public FindOrdersEndpoint(ISender sender)
     {
-        _mediator = mediator;
-        _query = query;
+        _sender = sender;
     }
 
     public override void Configure()
     {
-        Verbs(Http.POST);
-        Routes("api/orders/query");
+        Get("api/orders");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(QueryConfiguration<OrderQueryParameter> configuration, CancellationToken ct)
+    public override async Task HandleAsync(Query req, CancellationToken ct)
     {
-        OrderQuery.QueryBuilder queryBuilder = OrderQuery.Builder;
-        queryBuilder = _query.Apply(queryBuilder, configuration);
+        PagedResponse<Response> response = await _sender.Send(req, ct);
 
-        OrderQuery orderQuery = queryBuilder.Build();
-
-        PagedResponse<OrderResponse> response = await _mediator.Send(orderQuery, ct);
-        await SendOkAsync(response);
+        if (response.Bunch.Any())
+            await this.SendPartialContentAsync(response, ct);
+        else await SendNoContentAsync(ct);
     }
 }

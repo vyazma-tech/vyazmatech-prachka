@@ -4,6 +4,7 @@ using Mediator;
 
 namespace Application.Core.Behaviours;
 
+// TODO: IValidatableRequest
 public sealed class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : class, IRequest<TResponse>
     where TResponse : class

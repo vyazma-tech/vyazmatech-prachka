@@ -1,10 +1,12 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Application.Core.Services;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using FluentAssertions;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.Tools;
 using Moq;
 using Test.Core.Domain.UseCases.ClassData;
@@ -44,6 +46,7 @@ public class OrderServiceTests
         var service = new OrderService(_orderRepository.Object, _queueRepository.Object);
 
         var newQueue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(0).Value,
             QueueDate.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
@@ -68,6 +71,7 @@ public class OrderServiceTests
         var service = new OrderService(_orderRepository.Object, _queueRepository.Object);
 
         var newQueue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
             QueueDate.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(

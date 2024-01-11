@@ -39,10 +39,11 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 
         entities.ForEach(entity => entity.ClearDomainEvents());
 
-        IEnumerable<ValueTask> tasks = domainEvents.Select(e => _publisher.Publish(e, cancellationToken));
+        var tasks = domainEvents
+            .Select(e => _publisher.Publish(e, cancellationToken))
+            .Select(t => t.AsTask())
+            .ToList();
 
-        foreach (ValueTask task in tasks) await task;
-
-        await Task.CompletedTask;
+        await Task.WhenAll(tasks);
     }
 }

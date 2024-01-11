@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue.Events;
@@ -13,7 +12,7 @@ namespace Domain.Core.Queue;
 /// <summary>
 /// Describes queue entity.
 /// </summary>
-public class QueueEntity : Entity, IAuditableEntity
+public sealed class QueueEntity : Entity, IAuditableEntity
 {
     private readonly HashSet<OrderEntity> _orders;
     private bool _maxCapacityReachedOnce;
@@ -22,14 +21,18 @@ public class QueueEntity : Entity, IAuditableEntity
     /// <summary>
     /// Initializes a new instance of the <see cref="QueueEntity" /> class.
     /// </summary>
+    /// <param name="id">queue id.</param>
     /// <param name="capacity">queue capacity.</param>
     /// <param name="queueDate">queue date, what queue assigned to.</param>
     /// <param name="activityBoundaries">queue activity time. i.e: 1pm - 5pm.</param>
+    /// <param name="modifiedOn">queue modification date.</param>
     public QueueEntity(
+        Guid id,
         Capacity capacity,
         QueueDate queueDate,
-        QueueActivityBoundaries activityBoundaries)
-        : base(Guid.NewGuid())
+        QueueActivityBoundaries activityBoundaries,
+        DateTime? modifiedOn = null)
+        : base(id)
     {
         Guard.Against.Null(capacity, nameof(capacity), "Capacity should not be null");
         Guard.Against.Null(queueDate, nameof(queueDate), "Creation date should not be null");
@@ -38,29 +41,24 @@ public class QueueEntity : Entity, IAuditableEntity
         Capacity = capacity;
         ActivityBoundaries = activityBoundaries;
         CreationDate = queueDate.Value;
+        ModifiedOn = modifiedOn;
         _orders = new HashSet<OrderEntity>();
-    }
-
-#pragma warning disable CS8618
-    protected QueueEntity()
-#pragma warning restore CS8618
-    {
     }
 
     /// <summary>
     /// Gets current capacity.
     /// </summary>
-    public virtual Capacity Capacity { get; private set; }
+    public Capacity Capacity { get; private set; }
 
     /// <summary>
     /// Gets time range for a queue activity.
     /// </summary>
-    public virtual QueueActivityBoundaries ActivityBoundaries { get; private set; }
+    public QueueActivityBoundaries ActivityBoundaries { get; private set; }
 
     /// <summary>
     /// Gets orders, that currently in the queue.
     /// </summary>
-    public virtual IReadOnlySet<OrderEntity> Items => _orders;
+    public IReadOnlySet<OrderEntity> Items => _orders;
 
     /// <summary>
     /// Gets a value indicating whether queue expired or not.
@@ -89,20 +87,17 @@ public class QueueEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order))
         {
-            var exception = new DomainException(DomainErrors.Queue.ContainsOrderWithId(order.Id));
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Queue.ContainsOrderWithId(order.Id));
         }
 
         if (_orders.Count.Equals(Capacity.Value))
         {
-            var exception = new DomainException(DomainErrors.Queue.Overfull);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Queue.Overfull);
         }
 
         if (Expired)
         {
-            var exception = new DomainException(DomainErrors.Queue.Expired);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Queue.Expired);
         }
 
         _orders.Add(order);
@@ -122,8 +117,7 @@ public class QueueEntity : Entity, IAuditableEntity
     {
         if (_orders.Contains(order) is false)
         {
-            var exception = new DomainException(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
         }
 
         _orders.Remove(order);
@@ -142,8 +136,7 @@ public class QueueEntity : Entity, IAuditableEntity
     {
         if (newCapacity.Value <= Capacity.Value)
         {
-            var exception = new DomainException(DomainErrors.Queue.InvalidNewCapacity);
-            return new Result<QueueEntity>(exception);
+            return new Result<QueueEntity>(DomainErrors.Queue.InvalidNewCapacity);
         }
 
         Capacity = newCapacity;
@@ -164,8 +157,7 @@ public class QueueEntity : Entity, IAuditableEntity
     {
         if (activityBoundaries == ActivityBoundaries)
         {
-            var exception = new DomainException(DomainErrors.Queue.InvalidNewActivityBoundaries);
-            return new Result<QueueEntity>(exception);
+            return new Result<QueueEntity>(DomainErrors.Queue.InvalidNewActivityBoundaries);
         }
 
         ActivityBoundaries = activityBoundaries;

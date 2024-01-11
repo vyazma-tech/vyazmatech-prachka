@@ -1,8 +1,10 @@
-﻿namespace Domain.Common.Result;
+﻿using Domain.Common.Errors;
+
+namespace Domain.Common.Result;
 
 public readonly struct Result<TValue>
 {
-    private readonly Exception _exception;
+    private readonly Error _error;
     private readonly TValue _value;
     private readonly ResultState _state;
 
@@ -10,13 +12,13 @@ public readonly struct Result<TValue>
     {
         _state = ResultState.Success;
         _value = value;
-        _exception = default!;
+        _error = default!;
     }
 
-    public Result(Exception exception)
+    public Result(Error error)
     {
         _state = ResultState.Faulted;
-        _exception = exception;
+        _error = error;
         _value = default!;
     }
 
@@ -27,11 +29,11 @@ public readonly struct Result<TValue>
 
     public bool IsFaulted => _state == ResultState.Faulted;
     public bool IsSuccess => _state == ResultState.Success;
-    public TValue Value => IsSuccess ? _value : throw new InvalidOperationException(_exception.Message);
-    public Exception Error => IsFaulted ? _exception : throw new InvalidOperationException();
+    public TValue Value => IsSuccess ? _value : throw new InvalidOperationException(_error.Message);
+    public Error Error => IsFaulted ? _error : throw new InvalidOperationException();
 
-    public TResult Match<TResult>(Func<TValue, TResult> successAction, Func<Exception, TResult> failAction)
+    public TResult Match<TResult>(Func<TValue, TResult> successAction, Func<Error, TResult> failAction)
     {
-        return IsSuccess ? successAction(_value) : failAction(_exception);
+        return IsSuccess ? successAction(_value) : failAction(_error);
     }
 }

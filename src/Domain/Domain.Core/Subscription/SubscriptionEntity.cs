@@ -1,10 +1,5 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common.Abstractions;
-using Domain.Common.Errors;
-using Domain.Common.Exceptions;
-using Domain.Common.Result;
-using Domain.Core.Order;
-using Domain.Core.Queue;
 using Domain.Core.User;
 using Domain.Kernel;
 
@@ -18,28 +13,29 @@ public abstract class SubscriptionEntity : Entity, IAuditableEntity
     /// <summary>
     /// Initializes a new instance of the <see cref="SubscriptionEntity"/> class.
     /// </summary>
+    /// <param name="id">subscription id.</param>
     /// <param name="user">subscribed user.</param>
     /// <param name="creationDateUtc">subscription creation utc date.</param>
-    public SubscriptionEntity(UserEntity user, DateOnly creationDateUtc)
-        : base(Guid.NewGuid())
+    /// <param name="modifiedOn">subscription modification date.</param>
+    public SubscriptionEntity(
+        Guid id,
+        UserEntity user,
+        DateOnly creationDateUtc,
+        DateTime? modifiedOn = null)
+        : base(id)
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in subscription.");
         Guard.Against.Null(creationDateUtc, nameof(creationDateUtc), "Creation date should not be null in subscription.");
 
         User = user;
         CreationDate = creationDateUtc;
-    }
-
-#pragma warning disable CS8618
-    protected SubscriptionEntity()
-#pragma warning restore CS8618
-    {
+        ModifiedOn = modifiedOn;
     }
 
     /// <summary>
     /// Gets user, who subscription is assigned to.
     /// </summary>
-    public virtual UserEntity User { get; private set; }
+    public UserEntity User { get; private set; }
 
     /// <summary>
     /// Gets subscription creation date.

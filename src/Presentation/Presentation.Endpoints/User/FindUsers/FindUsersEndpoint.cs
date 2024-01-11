@@ -1,39 +1,33 @@
 ﻿using Application.Core.Common;
-using Application.Handlers.Order.Queries;
-using Application.Handlers.User.Queries;
 using FastEndpoints;
-using Infrastructure.DataAccess.Quering.Abstractions;
 using Mediator;
+using Presentation.Endpoints.Extensions;
+using static Application.Handlers.User.Queries.UserByQuery.UserByQueryQuery;
 
 namespace Presentation.Endpoints.User.FindUsers;
 
-internal class FindUsersEndpoint : Endpoint<QueryConfiguration<UserQueryParameter>, PagedResponse<UserResponse>>
+internal class FindUsersEndpoint : Endpoint<Query, PagedResponse<Response>>
 {
-    private readonly IMediator _mediator;
-    private readonly IModelQuery<UserQuery.QueryBuilder, UserQueryParameter> _query;
+    private readonly ISender _sender;
 
-    public FindUsersEndpoint(IMediator mediator, IModelQuery<UserQuery.QueryBuilder, UserQueryParameter> query)
+    public FindUsersEndpoint(ISender sender)
     {
-        _mediator = mediator;
-        _query = query;
+        _sender = sender;
     }
 
     public override void Configure()
     {
-        Verbs(Http.POST);
-        Routes("api/users/query");
+        Get("api/users");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(QueryConfiguration<UserQueryParameter> configuration, CancellationToken ct)
+    public override async Task HandleAsync(Query req, CancellationToken ct)
     {
-        UserQuery.QueryBuilder queryBuilder = UserQuery.Builder;
-        queryBuilder = _query.Apply(queryBuilder, configuration);
+        PagedResponse<Response> response = await _sender.Send(req, ct);
 
-        UserQuery userQuery = queryBuilder.Build();
-        userQuery.Configuration = configuration;
-
-        PagedResponse<UserResponse> response = await _mediator.Send(userQuery, ct);
-        await SendOkAsync(response, ct);
+        if (response.Bunch.Any())
+            await this.SendPartialContentAsync(response, ct);
+        else
+            await SendNoContentAsync(ct);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 
 namespace Domain.Core.ValueObjects;
@@ -9,11 +8,8 @@ namespace Domain.Core.ValueObjects;
 /// Describes queue activity boundaries.
 /// i.e: 1pm - 5pm.
 /// </summary>
-public class QueueActivityBoundaries : ValueObject
+public sealed class QueueActivityBoundaries : ValueObject
 {
-#pragma warning disable CS8618
-    protected QueueActivityBoundaries() { }
-#pragma warning restore CS8618
     private QueueActivityBoundaries(TimeOnly activeFrom, TimeOnly activeUntil)
     {
         ActiveFrom = activeFrom;
@@ -41,8 +37,7 @@ public class QueueActivityBoundaries : ValueObject
     {
         if (activeFrom >= activeUntil)
         {
-            var exception = new DomainException(DomainErrors.QueueActivityBoundaries.EmptyRange);
-            return new Result<QueueActivityBoundaries>(exception);
+            return new Result<QueueActivityBoundaries>(DomainErrors.QueueActivityBoundaries.EmptyRange);
         }
 
         return new QueueActivityBoundaries(activeFrom, activeUntil);

@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
         return services.AddFastEndpoints();
     }
 
-    public static IApplicationBuilder UseEndpoints(this WebApplication app)
+    public static IApplicationBuilder UseEndpoints(this IApplicationBuilder app)
     {
         return app.UseFastEndpoints();
     }

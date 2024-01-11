@@ -9,16 +9,23 @@ namespace Domain.Core.User;
 /// <summary>
 /// Describes user entity.
 /// </summary>
-public class UserEntity : Entity, IAuditableEntity
+public sealed class UserEntity : Entity, IAuditableEntity
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="UserEntity" /> class.
     /// </summary>
+    /// <param name="id">user id.</param>
     /// <param name="telegramId">user telegram id.</param>
     /// <param name="fullname">user full name.</param>
     /// <param name="registrationDateUtc">user registration date.</param>
-    public UserEntity(TelegramId telegramId, Fullname fullname, DateOnly registrationDateUtc)
-        : base(Guid.NewGuid())
+    /// <param name="modifiedOn">user modification date.</param>
+    public UserEntity(
+        Guid id,
+        TelegramId telegramId,
+        Fullname fullname,
+        DateOnly registrationDateUtc,
+        DateTime? modifiedOn = null)
+        : base(id)
     {
         Guard.Against.Null(telegramId, nameof(telegramId), "Telegram ID should not be null.");
         Guard.Against.Null(registrationDateUtc, nameof(registrationDateUtc), "Creation date should not be null.");
@@ -27,14 +34,10 @@ public class UserEntity : Entity, IAuditableEntity
         TelegramId = telegramId;
         Fullname = fullname;
         CreationDate = registrationDateUtc;
-        ModifiedOn = null;
+        ModifiedOn = modifiedOn;
 
         Raise(new UserRegisteredDomainEvent(this));
     }
-
-#pragma warning disable CS8618
-    protected UserEntity() { }
-#pragma warning restore CS8618
 
     /// <summary>
     /// Gets telegram id.

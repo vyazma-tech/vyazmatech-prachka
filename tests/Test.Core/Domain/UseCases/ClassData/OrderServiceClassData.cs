@@ -14,6 +14,7 @@ public sealed class OrderServiceClassData : IEnumerable<object[]>
     public IEnumerator<object[]> GetEnumerator()
     {
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(1).Value,
             QueueDate.Create(DateOnly.FromDateTime(DateTime.Now), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
@@ -23,6 +24,7 @@ public sealed class OrderServiceClassData : IEnumerable<object[]>
         UserEntity user = UserClassData.Create();
 
         Result<OrderEntity> orderCreationResult = OrderEntity.Create(
+            Guid.NewGuid(),
             user,
             queue,
             DateOnly.FromDateTime(DateTime.Now));

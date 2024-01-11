@@ -1,41 +1,32 @@
-﻿using System.Net;
-using Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
-using Application.Handlers.Queue.Queries;
-using Domain.Common.Result;
+﻿using Domain.Common.Result;
 using FastEndpoints;
 using Mediator;
-using Microsoft.AspNetCore.Http;
+using Presentation.Endpoints.Extensions;
+using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.ChangeQueueActivityBoundaries;
 
 namespace Presentation.Endpoints.Queue.ChangeQueueActivityBoundaries;
 
-public class ChangeQueueActivityBoundariesEndpoint : Endpoint<ChangeQueueActivityBoundariesCommand>
+internal class ChangeQueueActivityBoundariesEndpoint : Endpoint<Command, Response>
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
 
-    public ChangeQueueActivityBoundariesEndpoint(IMediator mediator)
+    public ChangeQueueActivityBoundariesEndpoint(ISender sender)
     {
-        _mediator = mediator;
+        _sender = sender;
     }
 
     public override void Configure()
     {
-        Verbs(Http.PATCH);
-        Routes("api/queue/change-activity-boundaries");
+        Patch("/api/queues/{queueId}/activity");
         AllowAnonymous();
     }
 
-    public override async Task HandleAsync(ChangeQueueActivityBoundariesCommand req, CancellationToken ct)
+    public override async Task HandleAsync(Command req, CancellationToken ct)
     {
-        Result<QueueResponse> response = await _mediator.Send(req, ct);
+        Result<Response> response = await _sender.Send(req, ct);
 
-        if (response.IsSuccess)
-        {
-            await SendOkAsync(response.Value, ct);
-        }
-        else
-        {
-            // AddError(response.Error.Message);
-            await SendAsync(response.Error, StatusCodes.Status400BadRequest, cancellation: ct);
-        }
+        await response.Match(
+            success => SendOkAsync(success, ct),
+            _ => this.SendProblemsAsync(response.ToProblemDetails()));
     }
 }

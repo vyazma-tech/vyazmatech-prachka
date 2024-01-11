@@ -3,7 +3,6 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Subscription;
 using Domain.Core.User;
-using Domain.Core.ValueObjects;
 using FluentAssertions;
 using Test.Core.Domain.Entities.ClassData;
 using Xunit;
@@ -19,6 +18,7 @@ public class SubscriptionTests
         UserEntity user = UserClassData.Create();
 
         var subscription = new OrderSubscriptionEntity(
+            Guid.NewGuid(),
             user,
             creationDate);
 
