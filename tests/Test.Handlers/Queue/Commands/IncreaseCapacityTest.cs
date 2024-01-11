@@ -4,6 +4,7 @@ using Application.Handlers.Queue.Queries;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.User;
+using Domain.Core.ValueObjects;
 using FluentAssertions;
 using Infrastructure.Tools;
 using Test.Core.Domain.Entities.ClassData;
@@ -22,16 +23,20 @@ public class IncreaseCapacityTest : TestBase
         _handler = new IncreaseQueueCapacityCommandHandler(database.Context, dateTimeProvider);
     }
 
-    [Theory]
-    [ClassData(typeof(QueueClassData))]
-    public async Task IncreaseCapacityExistingQueue(QueueEntity queue, UserEntity user, OrderEntity order)
+    [Fact]
+    public async Task IncreaseCapacityExistingQueue()
     {
-        int newCapacity = 2;
+        var queue = new QueueEntity(
+            Capacity.Create(10).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new DateTimeProvider()).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
+        
+        int newCapacity = 12;
         
         await Database.ResetAsync();
         Database.Context.Add(queue);
-        Database.Context.Add(user);
-        Database.Context.Add(order);
         await Database.Context.SaveChangesAsync();
 
         Guid queueId = Database.Context.Queues.First()
@@ -45,5 +50,32 @@ public class IncreaseCapacityTest : TestBase
         response.Value.Should().NotBeNull();
         response.Value.Queue.Should().NotBeNull();
         response.Value.Queue.Capacity.Should().Be(newCapacity);
+    }
+    
+    [Fact]
+    public async Task IncreaseCapacity_ShouldReturnFailure_WhenNewCapacityLessThanPrevious()
+    {
+        var queue = new QueueEntity(
+            Capacity.Create(10).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new DateTimeProvider()).Value,
+            QueueActivityBoundaries.Create(
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
+        
+        int newCapacity = 2;
+        
+        await Database.ResetAsync();
+        Database.Context.Add(queue);
+        await Database.Context.SaveChangesAsync();
+
+        Guid queueId = Database.Context.Queues.First()
+            .Id;
+
+        var incCommand = new IncreaseQueueCapacityCommand(queueId, newCapacity);
+        ResultResponse<QueueResponse> response = await _handler.Handle(incCommand, CancellationToken.None);
+
+        response.Should().NotBeNull();
+        response.IsFaulted.Should().BeTrue();
+        response.Value.Should().Be(default!);
     }
 }
