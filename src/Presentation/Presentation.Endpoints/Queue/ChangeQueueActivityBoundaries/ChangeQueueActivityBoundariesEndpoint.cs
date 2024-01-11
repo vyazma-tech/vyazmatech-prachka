@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Endpoints.Queue.ChangeQueueActivityBoundaries;
 
-public class ChangeQueueActivityBoundariesEndpoint : Endpoint<ChangeQueueActivityBoundariesCommand, Result<QueueResponse>>
+public class ChangeQueueActivityBoundariesEndpoint : Endpoint<ChangeQueueActivityBoundariesCommand>
 {
     private readonly IMediator _mediator;
 
@@ -30,11 +30,12 @@ public class ChangeQueueActivityBoundariesEndpoint : Endpoint<ChangeQueueActivit
 
         if (response.IsSuccess)
         {
-            await SendOkAsync(response, ct);
+            await SendOkAsync(response.Value, ct);
         }
         else
         {
-            await SendAsync(response, StatusCodes.Status400BadRequest, ct);
+            // AddError(response.Error.Message);
+            await SendAsync(response.Error, StatusCodes.Status400BadRequest, cancellation: ct);
         }
     }
 }

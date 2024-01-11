@@ -11,14 +11,14 @@ using Infrastructure.DataAccess.Specifications.Queue;
 
 namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 
-internal sealed class ChangeQueueActivityBoundariesHandler
+internal sealed class ChangeQueueActivityBoundariesCommandHandler
     : ICommandHandler<ChangeQueueActivityBoundariesCommand, Result<QueueResponse>>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IRepository<QueueEntity> _queueRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
-    public ChangeQueueActivityBoundariesHandler(
+    public ChangeQueueActivityBoundariesCommandHandler(
         IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider)
     {
@@ -42,7 +42,7 @@ internal sealed class ChangeQueueActivityBoundariesHandler
 
         if (changedActiveTimeQueueResult.IsFaulted)
             return new Result<QueueResponse>(changedActiveTimeQueueResult.Error);
-        
+
         _queueRepository.Update(queueEntityResult.Value);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
