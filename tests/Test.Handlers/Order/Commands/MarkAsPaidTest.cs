@@ -1,4 +1,5 @@
-﻿using Application.Handlers.Order.Commands.MarkOrderAsReady;
+﻿using Application.Handlers.Order.Commands.MarkOrderAsPaid;
+using Application.Handlers.Order.Commands.MarkOrderAsReady;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
@@ -15,12 +16,12 @@ using Xunit;
 
 namespace Test.Handlers.Order.Commands;
 
-public class MakeReadyTest : TestBase
+public class MarkOrderAsPaidTest : TestBase
 {
-    private readonly MarkOrderAsReadyCommandHandler _handler;
+    private readonly MarkOrderAsPaidCommandHandler _handler;
     private readonly PersistenceContext _repository;
 
-    public MakeReadyTest(CoreDatabaseFixture database) : base(database)
+    public MarkOrderAsPaidTest(CoreDatabaseFixture database) : base(database)
     {
         var dateTimeProvider = new DateTimeProvider();
         var queues = new QueueRepository(database.Context);
@@ -36,10 +37,10 @@ public class MakeReadyTest : TestBase
             orderSubscriptions,
             queueSubscriptions,
             database.Context);
-        
-        _handler = new MarkOrderAsReadyCommandHandler(
-            dateTimeProvider,
+
+        _handler = new MarkOrderAsPaidCommandHandler(
             database.Context,
+            dateTimeProvider,
             _repository
             );
     }
@@ -48,9 +49,9 @@ public class MakeReadyTest : TestBase
     public async Task MarkAsReadyOrder_WhenOrderNotFoundById()
     {
         var orderId = Guid.NewGuid();
-        var command = new MarkOrderAsReady.Command(orderId);
+        var command = new MarkOrderAsPaid.Command(orderId);
 
-        Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
+        Result<MarkOrderAsPaid.Response> response = await _handler.Handle(command, CancellationToken.None);
 
         response.Should().NotBeNull();
         response.Error.Should().NotBeNull();
@@ -74,13 +75,13 @@ public class MakeReadyTest : TestBase
 
         OrderModel createdOrder = Database.Context.Orders.First();
 
-        var command = new MarkOrderAsReady.Command(createdOrder.Id);
+        var command = new MarkOrderAsPaid.Command(createdOrder.Id);
 
-        Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
+        Result<MarkOrderAsPaid.Response> response = await _handler.Handle(command, CancellationToken.None);
 
         response.Should().NotBeNull();
         response.IsSuccess.Should().BeTrue();
         response.Value.Should().NotBeNull();
-        response.Value.Ready.Should().BeTrue();
+        response.Value.Paid.Should().BeTrue();
     }
 }
