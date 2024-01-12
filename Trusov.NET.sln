@@ -42,7 +42,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.WebAPI", "src\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{48C48F42-04B1-4B9E-93EB-C8F6A397B351}"
 	ProjectSection(SolutionItems) = preProject
-		docker-compose.yml = docker-compose.yml
+		docker\docker-compose.yml = docker\docker-compose.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.BackgroundWorkers", "src\Application\Application.BackgroundWorkers\Application.BackgroundWorkers.csproj", "{5DD10590-2621-4E5B-9759-57F6D732FE3C}"
