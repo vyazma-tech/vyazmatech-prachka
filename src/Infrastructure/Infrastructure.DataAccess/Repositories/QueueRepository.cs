@@ -40,6 +40,7 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
     {
         model.ActiveFrom = entity.ActivityBoundaries.ActiveFrom;
         model.ActiveUntil = entity.ActivityBoundaries.ActiveUntil;
+        model.Capacity = entity.Capacity.Value;
         model.ModifiedOn = entity.ModifiedOn;
     }
 }

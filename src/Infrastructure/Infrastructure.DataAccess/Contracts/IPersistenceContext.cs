@@ -14,6 +14,8 @@ public interface IPersistenceContext
 
     IQueueSubscriptionRepository QueueSubscriptions { get; }
 
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
     DbSet<TModel> Entities<TModel>()
         where TModel : class;
 }

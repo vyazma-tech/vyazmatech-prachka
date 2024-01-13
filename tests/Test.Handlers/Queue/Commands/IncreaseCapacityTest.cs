@@ -1,5 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
+﻿using Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Queue;
@@ -26,11 +25,9 @@ public class IncreaseCapacityTest
         IOrderRepository orders = Mock.Of<IOrderRepository>();
         IOrderSubscriptionRepository orderSubscriptions = Mock.Of<IOrderSubscriptionRepository>();
         IQueueSubscriptionRepository queueSubscriptions = Mock.Of<IQueueSubscriptionRepository>();
-        IUnitOfWork unitOfWork = Mock.Of<IUnitOfWork>();
 
         _queueRepository = queues;
         _handler = new IncreaseQueueCapacityCommandHandler(
-            unitOfWork,
             dateTimeProvider.Object,
             new PersistenceContext(
                 queues.Object,
@@ -48,11 +45,13 @@ public class IncreaseCapacityTest
         var queueId = Guid.NewGuid();
         var command = new IncreaseQueueCapacity.Command(queueId, 2);
 
-        _queueRepository.Setup(x => x.FindByAsync(
+        _queueRepository.Setup(x =>
+                x.FindByAsync(
                 It.IsAny<Specification<QueueModel>>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(
-                new Result<QueueEntity>(DomainErrors.Entity.NotFoundFor<QueueEntity>($"QueueId = {queueId}")));
+                new Result<QueueEntity>(
+                    DomainErrors.Entity.NotFoundFor<QueueEntity>($"QueueId = {queueId}")));
 
         Result<IncreaseQueueCapacity.Response> response = await _handler.Handle(command, CancellationToken.None);
 

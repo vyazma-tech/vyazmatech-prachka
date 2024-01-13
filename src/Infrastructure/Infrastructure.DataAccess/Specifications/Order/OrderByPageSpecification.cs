@@ -9,6 +9,8 @@ public sealed class OrderByPageSpecification : Specification<OrderModel>
         : base(null)
     {
         AddPaging(page, recordsPerPage);
+        AddInclude(x => x.User);
+        AddInclude(x => x.Queue);
         AsNoTracking();
     }
 

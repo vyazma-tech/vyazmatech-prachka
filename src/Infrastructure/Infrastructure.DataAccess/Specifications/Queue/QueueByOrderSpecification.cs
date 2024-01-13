@@ -1,7 +1,7 @@
 ﻿using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
 
-namespace Infrastructure.DataAccess.Specifications.Order;
+namespace Infrastructure.DataAccess.Specifications.Queue;
 
 public sealed class QueueByOrderSpecification : Specification<QueueModel>
 {

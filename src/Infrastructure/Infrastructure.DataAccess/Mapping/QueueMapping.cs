@@ -19,7 +19,12 @@ public static class QueueMapping
             model.ActiveFrom,
             model.ActiveUntil).Value;
 
-        return new QueueEntity(model.Id, capacity, assignmentDate, boundaries, model.ModifiedOn);
+        return new QueueEntity(
+            model.Id,
+            capacity,
+            assignmentDate,
+            boundaries,
+            model.ModifiedOn);
     }
 
     public static QueueModel MapFrom(QueueEntity entity)

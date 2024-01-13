@@ -28,11 +28,11 @@ internal sealed class OrderByQueryQueryHandler : IQueryHandler<Query, PagedRespo
         var spec = new OrderByPageSpecification(request.Page, _recordsPerPage);
         long totalCount = await _persistenceContext.Orders.CountAsync(spec, cancellationToken);
 
-        List<OrderEntity> queues = await _persistenceContext.Orders
+        List<OrderEntity> orders = await _persistenceContext.Orders
             .QueryAsync(spec, cancellationToken)
             .ToListAsync(cancellationToken);
 
-        Response[] result = queues
+        Response[] result = orders
             .FilterBy(
                 request.UserId,
                 request.QueueId,

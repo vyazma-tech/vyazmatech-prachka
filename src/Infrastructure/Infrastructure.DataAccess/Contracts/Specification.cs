@@ -16,6 +16,8 @@ public abstract class Specification<TModel>
 
     public Expression<Func<TModel, bool>>? OrderByDescendingExpression { get; private set; }
 
+    public IReadOnlyList<Expression<Func<TModel, object?>>>? Includes { get; private set; }
+
     public int? Page { get; private set; }
 
     public int? RecordsPerPage { get; private set; }
@@ -43,5 +45,11 @@ public abstract class Specification<TModel>
     protected void AsNoTracking()
     {
         AsNoTrackingQuery = true;
+    }
+
+    protected void AddInclude(Expression<Func<TModel, object?>> include)
+    {
+        Includes = Includes?.Append(include).ToList()
+                   ?? new () { include };
     }
 }

@@ -11,6 +11,7 @@ public static class QueueByQueryQuery
     public record struct Response(
         Guid Id,
         int Capacity,
+        long CurrentCapacity,
         DateOnly AssignmentDate,
         DateTime? ModifiedOn,
         TimeOnly ActiveFrom,

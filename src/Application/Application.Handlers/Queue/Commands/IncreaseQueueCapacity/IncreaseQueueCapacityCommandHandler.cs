@@ -1,5 +1,4 @@
 ﻿using Application.Core.Contracts;
-using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
@@ -12,16 +11,13 @@ namespace Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 
 internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Command, Result<Response>>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IPersistenceContext _persistenceContext;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public IncreaseQueueCapacityCommandHandler(
-        IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider,
         IPersistenceContext persistenceContext)
     {
-        _unitOfWork = unitOfWork;
         _persistenceContext = persistenceContext;
         _dateTimeProvider = dateTimeProvider;
     }
@@ -60,7 +56,7 @@ internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Comm
         queue = increaseResult.Value;
 
         _persistenceContext.Queues.Update(queue);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await _persistenceContext.SaveChangesAsync(cancellationToken);
 
         return queue.ToDto();
     }

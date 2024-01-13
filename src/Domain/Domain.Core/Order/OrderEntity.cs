@@ -71,6 +71,8 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <param name="queue">queue of the order.</param>
     /// <param name="creationDateUtc">order creation date.</param>
     /// <param name="modifiedOn">order modification date.</param>
+    /// <param name="ready">is order ready.</param>
+    /// <param name="paid">is order paid.</param>
     /// <returns>order instance.</returns>
     /// <remarks>returns failure result, when order is being enqueued into full queue.</remarks>
     /// <remarks>returns failure result, when order is already in the queue.</remarks>
@@ -79,7 +81,9 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         UserEntity user,
         QueueEntity queue,
         DateTime creationDateUtc,
-        DateTime? modifiedOn = null)
+        DateTime? modifiedOn = null,
+        bool ready = false,
+        bool paid = false)
     {
         var order = new OrderEntity(id, user, queue, creationDateUtc, modifiedOn);
 
@@ -89,6 +93,9 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         {
             return entranceResult;
         }
+
+        order.Paid = paid;
+        order.Ready = ready;
 
         return order;
     }

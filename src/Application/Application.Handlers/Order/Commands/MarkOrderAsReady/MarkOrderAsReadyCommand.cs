@@ -6,7 +6,7 @@ namespace Application.Handlers.Order.Commands.MarkOrderAsReady;
 
 public static class MarkOrderAsReady
 {
-    public record struct Command(Guid Id) : ICommand<Result<Response>>;
+    public record Command(Guid Id) : ICommand<Result<Response>>;
 
     public record struct Response(
         Guid Id,

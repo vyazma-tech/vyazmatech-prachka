@@ -2,6 +2,7 @@
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Specifications.Order;
 using Infrastructure.DataAccess.Specifications.Queue;
 using static Application.Handlers.Queue.Queries.QueueById.QueueByIdQuery;
 
@@ -28,6 +29,10 @@ internal sealed class QueueByIdQueryHandler : IQueryHandler<Query, Result<Respon
 
         QueueEntity queue = result.Value;
 
-        return queue.ToDto();
+        long currentCapacity = await _context.Orders.CountAsync(
+            new OrderByQueueIdSpecification(queue.Id),
+            cancellationToken);
+
+        return queue.ToDto(currentCapacity);
     }
 }

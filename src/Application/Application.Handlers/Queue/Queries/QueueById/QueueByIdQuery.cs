@@ -11,17 +11,19 @@ public static class QueueByIdQuery
     public record struct Response(
         Guid Id,
         int Capacity,
+        long CurrentCapacity,
         DateOnly AssignmentDate,
         DateTime? ModifiedOn,
         TimeOnly ActiveFrom,
         TimeOnly ActiveUntil);
 
-    public static Response ToDto(this QueueEntity queue)
+    public static Response ToDto(this QueueEntity queue, long currentCapacity)
     {
         return new Response
         {
             Id = queue.Id,
             Capacity = queue.Capacity.Value,
+            CurrentCapacity = currentCapacity,
             ModifiedOn = queue.ModifiedOn,
             AssignmentDate = queue.CreationDate,
             ActiveFrom = queue.ActivityBoundaries.ActiveFrom,

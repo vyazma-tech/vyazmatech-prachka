@@ -1,9 +1,11 @@
-﻿using Application.Core.Common;
+﻿using System.Runtime.CompilerServices;
+using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
 using Application.Core.Extensions;
 using Domain.Core.Queue;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Specifications.Order;
 using Infrastructure.DataAccess.Specifications.Queue;
 using Microsoft.Extensions.Options;
 using static Application.Handlers.Queue.Queries.QueueByQuery.QueueByQueryQuery;
@@ -32,10 +34,24 @@ internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, PagedRespo
             .QueryAsync(spec, cancellationToken)
             .ToListAsync(cancellationToken);
 
+        IEnumerable<Task<long>> tasks = GetCurrentCapacities(queues, cancellationToken);
+
         Response[] result = queues
             .FilterBy(request.AssignmentDate)
             .Select(x => x.ToDto())
             .ToArray();
+
+        long[] currentCapacities = await Task.WhenAll(tasks);
+
+        int i = 0;
+        foreach (long currentCapacity in currentCapacities)
+        {
+            result[i] = result[i] with
+            {
+                CurrentCapacity = currentCapacity
+            };
+            i++;
+        }
 
         return new PagedResponse<Response>
         {
@@ -44,5 +60,15 @@ internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, PagedRespo
             RecordPerPage = _recordsPerPage,
             TotalPages = (totalCount / _recordsPerPage) + 1
         };
+    }
+
+    private IEnumerable<Task<long>> GetCurrentCapacities(List<QueueEntity> queues, CancellationToken cancellationToken)
+    {
+        foreach (QueueEntity queue in queues)
+        {
+            yield return _persistenceContext.Orders.CountAsync(
+                new OrderByQueueIdSpecification(queue.Id),
+                cancellationToken);
+        }
     }
 }

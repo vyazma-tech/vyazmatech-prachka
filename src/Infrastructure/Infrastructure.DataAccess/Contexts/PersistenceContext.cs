@@ -18,9 +18,9 @@ internal sealed class PersistenceContext : IPersistenceContext
         Queues = queues;
         Orders = orders;
         Users = users;
-        _context = context;
         OrderSubscriptions = orderSubscriptions;
         QueueSubscriptions = queueSubscriptions;
+        _context = context;
     }
 
     public IQueueRepository Queues { get; }
@@ -32,6 +32,9 @@ internal sealed class PersistenceContext : IPersistenceContext
     public IOrderSubscriptionRepository OrderSubscriptions { get; }
 
     public IQueueSubscriptionRepository QueueSubscriptions { get; }
+
+    public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        => _context.SaveChangesAsync(cancellationToken);
 
     public DbSet<TModel> Entities<TModel>()
         where TModel : class => _context.Set<TModel>();

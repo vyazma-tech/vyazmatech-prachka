@@ -11,6 +11,7 @@ public sealed class QueueByIdSpecification : Specification<QueueModel>
         : base(queue => queue.Id == id)
     {
         _id = id;
+        AddInclude(x => x.Orders);
     }
 
     public override string ToString()

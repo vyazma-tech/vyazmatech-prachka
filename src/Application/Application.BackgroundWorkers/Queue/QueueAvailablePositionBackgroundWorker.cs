@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Application.BackgroundWorkers.Configuration;
-using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Kernel;
@@ -35,15 +34,16 @@ public class QueueAvailablePositionBackgroundWorker : BackgroundService
     {
         using var timer = new PeriodicTimer(_delayBetweenChecks);
         using IServiceScope scope = _scopeFactory.CreateScope();
-        IQueueRepository queueRepository = scope.ServiceProvider.GetRequiredService<IQueueRepository>();
         IDateTimeProvider timeProvider = scope.ServiceProvider.GetRequiredService<IDateTimeProvider>();
-
-        Result<QueueEntity> queueFindResult = await queueRepository
-            .FindByAsync(new QueueByAssignmentDateSpecification(timeProvider.DateNow), stoppingToken);
 
         while (!stoppingToken.IsCancellationRequested && await timer.WaitForNextTickAsync(stoppingToken))
         {
             _stopwatch.Restart();
+
+            IPersistenceContext context = scope.ServiceProvider.GetRequiredService<IPersistenceContext>();
+
+            Result<QueueEntity> queueFindResult = await context.Queues
+                .FindByAsync(new QueueByAssignmentDateSpecification(timeProvider.DateNow), stoppingToken);
 
             if (queueFindResult.IsFaulted)
             {
@@ -54,8 +54,6 @@ public class QueueAvailablePositionBackgroundWorker : BackgroundService
 
                 continue;
             }
-
-            IUnitOfWork eventPublisher = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
             QueueEntity queue = queueFindResult.Value;
 
@@ -69,7 +67,7 @@ public class QueueAvailablePositionBackgroundWorker : BackgroundService
                     "Queue assigned to AssignmentDate = {AssignmentDate} expired and not full. Going to notify about available positions",
                     queue.CreationDate);
 
-                await eventPublisher.SaveChangesAsync(stoppingToken);
+                await context.SaveChangesAsync(stoppingToken);
 
                 _logger.LogInformation(
                     "{Worker} finished within {Time} ms",

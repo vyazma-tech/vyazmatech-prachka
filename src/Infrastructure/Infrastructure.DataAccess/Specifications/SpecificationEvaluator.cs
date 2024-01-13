@@ -1,4 +1,5 @@
 using Infrastructure.DataAccess.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Specifications;
 
@@ -31,6 +32,14 @@ public static class SpecificationEvaluator
         if (specification.OrderByDescendingExpression is not null)
         {
             queryable = queryable.OrderByDescending(specification.OrderByDescendingExpression);
+        }
+
+        if (specification.Includes is not null)
+        {
+            foreach (var include in specification.Includes)
+            {
+                queryable = queryable.Include(include);
+            }
         }
 
         return queryable;

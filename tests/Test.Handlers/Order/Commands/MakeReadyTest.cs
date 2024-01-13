@@ -1,5 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Application.Handlers.Order.Commands.MarkOrderAsReady;
+﻿using Application.Handlers.Order.Commands.MarkOrderAsReady;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -27,12 +26,10 @@ public class MakeReadyTest
         IUserRepository users = Mock.Of<IUserRepository>();
         IOrderSubscriptionRepository orderSubscriptions = Mock.Of<IOrderSubscriptionRepository>();
         IQueueSubscriptionRepository queueSubscriptions = Mock.Of<IQueueSubscriptionRepository>();
-        IUnitOfWork context = Mock.Of<IUnitOfWork>();
 
         _orderRepository = orders;
         _handler = new MarkOrderAsReadyCommandHandler(
             dateTimeProvider.Object,
-            context,
             new PersistenceContext(
                 queues,
                 orders.Object,
@@ -47,10 +44,13 @@ public class MakeReadyTest
     {
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsReady.Command(orderId);
-        _orderRepository.Setup(x => x.FindByAsync(
+        _orderRepository.Setup(x =>
+                x.FindByAsync(
                 It.IsAny<Specification<OrderModel>>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new Result<OrderEntity>(DomainErrors.Entity.NotFoundFor<OrderEntity>($"OrderId = {orderId}")));
+            .ReturnsAsync(
+                new Result<OrderEntity>(
+                    DomainErrors.Entity.NotFoundFor<OrderEntity>($"OrderId = {orderId}")));
 
         Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
 

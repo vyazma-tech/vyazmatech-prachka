@@ -1,5 +1,4 @@
 ﻿using Application.Core.Contracts;
-using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
@@ -11,23 +10,20 @@ namespace Application.Handlers.Order.Commands.MarkOrderAsPaid;
 
 internal sealed class MarkOrderAsPaidCommandHandler : ICommandHandler<Command, Result<Response>>
 {
-    private readonly IOrderRepository _orderRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IPersistenceContext _persistenceContext;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public MarkOrderAsPaidCommandHandler(
-        IUnitOfWork unitOfWork,
         IDateTimeProvider dateTimeProvider,
         IPersistenceContext persistenceContext)
     {
-        _unitOfWork = unitOfWork;
-        _orderRepository = persistenceContext.Orders;
+        _persistenceContext = persistenceContext;
         _dateTimeProvider = dateTimeProvider;
     }
 
     public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
-        Result<OrderEntity> searchResult = await _orderRepository
+        Result<OrderEntity> searchResult = await _persistenceContext.Orders
             .FindByAsync(
                 new OrderByIdSpecification(request.Id),
                 cancellationToken);
@@ -44,8 +40,8 @@ internal sealed class MarkOrderAsPaidCommandHandler : ICommandHandler<Command, R
 
         order = makePaidResult.Value;
 
-        _orderRepository.Update(order);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        _persistenceContext.Orders.Update(order);
+        await _persistenceContext.SaveChangesAsync(cancellationToken);
 
         return order.ToDto();
     }

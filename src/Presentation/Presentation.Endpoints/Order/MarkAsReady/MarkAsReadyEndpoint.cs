@@ -17,7 +17,7 @@ internal class MarkAsReadyEndpoint : Endpoint<Command, Response>
 
     public override void Configure()
     {
-        Patch("api/order/ready");
+        Patch("/api/orders/{id}/ready");
         AllowAnonymous();
     }
 
