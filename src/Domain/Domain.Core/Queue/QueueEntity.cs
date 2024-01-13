@@ -61,11 +61,6 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     public IReadOnlySet<OrderEntity> Items => _orders;
 
     /// <summary>
-    /// Gets a value indicating whether queue expired or not.
-    /// </summary>
-    public bool Expired => TimeOnly.FromDateTime(DateTime.UtcNow) >= ActivityBoundaries.ActiveUntil;
-
-    /// <summary>
     /// Gets date, what queue is assigned to.
     /// </summary>
     public DateOnly CreationDate { get; }
@@ -80,10 +75,11 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     /// because it does not update order queue reference.
     /// </summary>
     /// <param name="order">order to be added.</param>
+    /// <param name="currentTimeUtc">current date time in utc format.</param>
     /// <returns>added order instance.</returns>
     /// <remarks>returns failure result, when order is already in a queue.</remarks>
     /// <remarks>returns failure result, when order is being enqueued into full queue.</remarks>
-    public Result<OrderEntity> Add(OrderEntity order)
+    public Result<OrderEntity> Add(OrderEntity order, DateTime currentTimeUtc)
     {
         if (_orders.Contains(order))
         {
@@ -95,7 +91,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
             return new Result<OrderEntity>(DomainErrors.Queue.Overfull);
         }
 
-        if (Expired)
+        if (Expired(currentTimeUtc))
         {
             return new Result<OrderEntity>(DomainErrors.Queue.Expired);
         }
@@ -170,10 +166,11 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     /// Makes an attempt to expire queue and raises <see cref="QueueExpiredDomainEvent" />.
     /// Should be called in some kind of background worker.
     /// </summary>
+    /// <param name="currentTimeUtc">current date time in utc format.</param>
     /// <returns>true, if event is raised, false otherwise.</returns>
-    public bool TryExpire()
+    public bool TryExpire(DateTime currentTimeUtc)
     {
-        if (Expired && _queueExpiredOnce is false)
+        if (Expired(currentTimeUtc) && _queueExpiredOnce is false)
         {
             Raise(new QueueExpiredDomainEvent(this));
             _queueExpiredOnce = true;
@@ -198,5 +195,18 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether queue expired or not.
+    /// </summary>
+    private bool Expired(DateTime currentTimeUtc)
+    {
+        var dateNow = DateOnly.FromDateTime(currentTimeUtc);
+
+        return
+            (TimeOnly.FromDateTime(currentTimeUtc) >= ActivityBoundaries.ActiveUntil
+             && dateNow == CreationDate)
+            || dateNow > CreationDate;
     }
 }

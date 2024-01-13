@@ -59,7 +59,7 @@ public class QueueActivityBackgroundWorker : BackgroundService
 
             QueueEntity queue = queueFindResult.Value;
 
-            bool expiredFirstTime = queue.TryExpire();
+            bool expiredFirstTime = queue.TryExpire(timeProvider.UtcNow);
 
             if (expiredFirstTime is false)
                 continue;

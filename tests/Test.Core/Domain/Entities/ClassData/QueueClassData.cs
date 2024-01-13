@@ -26,7 +26,7 @@ public sealed class QueueClassData : IEnumerable<object[]>
             Guid.NewGuid(),
             user,
             queue,
-            DateOnly.FromDateTime(DateTime.UtcNow));
+            DateTime.UtcNow);
 
         yield return new object[] { queue, user, order.Value };
     }

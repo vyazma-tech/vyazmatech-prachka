@@ -8,7 +8,7 @@ public sealed class OrderByDateSpecification : Specification<OrderModel>
     private readonly DateOnly _creationDate;
 
     public OrderByDateSpecification(DateOnly creationDate)
-        : base(order => order.CreationDate == creationDate)
+        : base(order => DateOnly.FromDateTime(order.CreationDate) == creationDate)
     {
         _creationDate = creationDate;
     }

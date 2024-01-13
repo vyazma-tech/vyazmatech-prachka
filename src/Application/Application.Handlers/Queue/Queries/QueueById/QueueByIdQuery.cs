@@ -11,7 +11,6 @@ public static class QueueByIdQuery
     public record struct Response(
         Guid Id,
         int Capacity,
-        bool Expired,
         DateOnly AssignmentDate,
         DateTime? ModifiedOn,
         TimeOnly ActiveFrom,
@@ -23,7 +22,6 @@ public static class QueueByIdQuery
         {
             Id = queue.Id,
             Capacity = queue.Capacity.Value,
-            Expired = queue.Expired,
             ModifiedOn = queue.ModifiedOn,
             AssignmentDate = queue.CreationDate,
             ActiveFrom = queue.ActivityBoundaries.ActiveFrom,

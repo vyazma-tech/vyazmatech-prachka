@@ -18,17 +18,17 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         Guid id,
         UserEntity user,
         QueueEntity queue,
-        DateOnly creationDateUtc,
+        DateTime creationDateTimeUtc,
         DateTime? modifiedOn = null)
         : base(id)
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in order.");
         Guard.Against.Null(queue, nameof(queue), "Queue should not be null in order.");
-        Guard.Against.Null(creationDateUtc, nameof(creationDateUtc), "Creation date should not be null in order.");
+        Guard.Against.Null(creationDateTimeUtc, nameof(creationDateTimeUtc), "Creation date should not be null in order.");
 
         User = user;
         Queue = queue;
-        CreationDate = creationDateUtc;
+        CreationDateTime = creationDateTimeUtc;
         ModifiedOn = modifiedOn;
     }
 
@@ -51,7 +51,12 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets order creation date.
     /// </summary>
-    public DateOnly CreationDate { get; }
+    public DateOnly CreationDate => DateOnly.FromDateTime(CreationDateTime);
+
+    /// <summary>
+    /// Gets order creation date time utc.
+    /// </summary>
+    public DateTime CreationDateTime { get; }
 
     /// <summary>
     /// Gets modification date.
@@ -73,11 +78,12 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         Guid id,
         UserEntity user,
         QueueEntity queue,
-        DateOnly creationDateUtc,
+        DateTime creationDateUtc,
         DateTime? modifiedOn = null)
     {
         var order = new OrderEntity(id, user, queue, creationDateUtc, modifiedOn);
-        Result<OrderEntity> entranceResult = queue.Add(order);
+
+        Result<OrderEntity> entranceResult = queue.Add(order, creationDateUtc);
 
         if (entranceResult.IsFaulted)
         {

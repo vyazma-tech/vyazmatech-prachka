@@ -22,7 +22,7 @@ public static class OrderMapping
             Id = entity.Id,
             QueueId = entity.Queue.Id,
             UserId = entity.User.Id,
-            CreationDate = entity.CreationDate,
+            CreationDate = entity.CreationDateTime,
             ModifiedOn = entity.ModifiedOn,
         };
     }

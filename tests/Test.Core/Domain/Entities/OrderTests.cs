@@ -20,6 +20,7 @@ public class OrderTests
     public void CreateOrder_Should_ReturnNotNullOrder()
     {
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
         UserEntity user = UserClassData.Create();
 
@@ -32,7 +33,7 @@ public class OrderTests
                 TimeOnly.FromDateTime(queueDate),
                 TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
 
-        Result<OrderEntity> orderCreationResult = OrderEntity.Create(Guid.NewGuid(), user, queue, _dateTimeProvider.Object.DateNow);
+        Result<OrderEntity> orderCreationResult = OrderEntity.Create(Guid.NewGuid(), user, queue, _dateTimeProvider.Object.UtcNow);
 
         orderCreationResult.IsSuccess.Should().BeTrue();
         orderCreationResult.Value.Should().NotBeNull();
@@ -50,21 +51,21 @@ public class OrderTests
     {
         DateTime modificationDate = DateTime.UtcNow;
         Result<OrderEntity> actionResult = order.MakeReady(modificationDate);
-
+    
         actionResult.IsSuccess.Should().BeTrue();
         actionResult.Value.ModifiedOn.Should().Be(modificationDate);
         actionResult.Value.Ready.Should().BeTrue();
         actionResult.Value.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<OrderReadyDomainEvent>();
     }
-
+    
     [Theory]
     [ClassData(typeof(OrderClassData))]
     public void MakeOrderPayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid(OrderEntity order)
     {
         DateTime modificationDate = DateTime.UtcNow;
         Result<OrderEntity> actionResult = order.MakePayment(modificationDate);
-
+    
         actionResult.IsSuccess.Should().BeTrue();
         actionResult.Value.ModifiedOn.Should().Be(modificationDate);
         actionResult.Value.Paid.Should().BeTrue();

@@ -18,7 +18,7 @@ public record OrderModel
 
     public bool Ready { get; set; }
 
-    public DateOnly CreationDate { get; set; }
+    public DateTime CreationDate { get; set; }
 
     public DateTime? ModifiedOn { get; set; }
 }

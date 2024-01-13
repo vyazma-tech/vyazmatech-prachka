@@ -109,7 +109,9 @@ public class QueueTests
         UserEntity user,
         OrderEntity order)
     {
-        Result<OrderEntity> entranceResult = queue.Add(order);
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.Now.AddMinutes(1));
+
+        Result<OrderEntity> entranceResult = queue.Add(order, _dateTimeProvider.Object.UtcNow);
 
         entranceResult.IsFaulted.Should().BeTrue();
         entranceResult.Error.Message.Should().Be(DomainErrors.Queue.ContainsOrderWithId(order.Id).Message);
@@ -162,7 +164,7 @@ public class QueueTests
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value);
 
         await Task.Delay(1_000);
-        queue.TryExpire();
+        queue.TryExpire(_dateTimeProvider.Object.UtcNow);
 
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<QueueExpiredDomainEvent>();
@@ -179,7 +181,7 @@ public class QueueTests
             Guid.NewGuid(),
             user,
             queue,
-            DateOnly.FromDateTime(DateTime.UtcNow));
+            DateTime.UtcNow);
 
         incomingOrderResult.IsFaulted.Should().BeTrue();
         incomingOrderResult.Error.Message.Should().Be(DomainErrors.Queue.Overfull.Message);
@@ -194,7 +196,7 @@ public class QueueTests
     {
         queue.Remove(order);
         await Task.Delay(1_000);
-        queue.TryExpire();
+        queue.TryExpire(_dateTimeProvider.Object.UtcNow);
         queue.ClearDomainEvents();
         queue.TryNotifyAboutAvailablePosition();
 

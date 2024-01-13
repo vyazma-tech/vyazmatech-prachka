@@ -27,7 +27,7 @@ public sealed class OrderServiceClassData : IEnumerable<object[]>
             Guid.NewGuid(),
             user,
             queue,
-            DateOnly.FromDateTime(DateTime.Now));
+            DateTime.Now);
 
         yield return new object[] { queue, orderCreationResult.Value };
     }

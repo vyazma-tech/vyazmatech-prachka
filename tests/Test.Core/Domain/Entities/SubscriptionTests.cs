@@ -16,12 +16,12 @@ public class SubscriptionTests
     {
         var creationDate = DateOnly.FromDateTime(DateTime.UtcNow);
         UserEntity user = UserClassData.Create();
-
+    
         var subscription = new OrderSubscriptionEntity(
             Guid.NewGuid(),
             user,
             creationDate);
-
+    
         subscription.Should().NotBeNull();
         subscription.SubscribedOrders.Should().BeEmpty();
         subscription.CreationDate.Should().Be(creationDate);
@@ -47,7 +47,7 @@ public class SubscriptionTests
         OrderEntity order)
     {
         Result<OrderEntity> quitResult = subscription.Unsubscribe(order);
-
+    
         quitResult.IsFaulted.Should().BeTrue();
         quitResult.Error.Message.Should().Be(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id).Message);
     }
