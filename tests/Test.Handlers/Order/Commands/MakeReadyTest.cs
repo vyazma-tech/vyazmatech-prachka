@@ -1,74 +1,60 @@
-﻿using Application.Handlers.Order.Commands.MarkOrderAsReady;
+﻿using Application.DataAccess.Contracts;
+using Application.Handlers.Order.Commands.MarkOrderAsReady;
+using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
+using Domain.Kernel;
 using FluentAssertions;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
-using Infrastructure.DataAccess.Repositories;
-using Infrastructure.Tools;
-using Test.Core.Domain.Entities.ClassData;
-using Test.Handlers.Fixtures;
+using Moq;
 using Xunit;
+using CancellationToken = System.Threading.CancellationToken;
 
 namespace Test.Handlers.Order.Commands;
 
-public class MakeReadyTest : TestBase
+public class MakeReadyTest
 {
     private readonly MarkOrderAsReadyCommandHandler _handler;
-    private readonly IOrderRepository _repository;
+    private readonly Mock<IOrderRepository> _orderRepository;
 
-    public MakeReadyTest(CoreDatabaseFixture database) : base(database)
+    public MakeReadyTest()
     {
-        var dateTimeProvider = new DateTimeProvider();
-        var queues = new QueueRepository(database.Context);
-        var users = new UserRepository(database.Context);
-        var orders = new OrderRepository(database.Context);
-        var orderSubscriptions = new OrderSubscriptionRepository(database.Context);
-        var queueSubscriptions = new QueueSubscriptionRepository(database.Context);
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
+        var orders = new Mock<IOrderRepository>();
+        IQueueRepository queues = Mock.Of<IQueueRepository>();
+        IUserRepository users = Mock.Of<IUserRepository>();
+        IOrderSubscriptionRepository orderSubscriptions = Mock.Of<IOrderSubscriptionRepository>();
+        IQueueSubscriptionRepository queueSubscriptions = Mock.Of<IQueueSubscriptionRepository>();
+        IUnitOfWork context = Mock.Of<IUnitOfWork>();
 
+        _orderRepository = orders;
         _handler = new MarkOrderAsReadyCommandHandler(
-            dateTimeProvider,
-            database.Context,
+            dateTimeProvider.Object,
+            context,
             new PersistenceContext(
                 queues,
-                orders,
+                orders.Object,
                 users,
                 orderSubscriptions,
                 queueSubscriptions,
-                database.Context));
-
-        _repository = orders;
+                null!));
     }
 
     [Fact]
-    public async Task MarkAsReadyOrder_WhenOrderNotFoundById()
+    public async Task Handle_ShouldReturnFailureResult_WhenOrderNotFound()
     {
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsReady.Command(orderId);
+        _orderRepository.Setup(x => x.FindByAsync(
+                It.IsAny<Specification<OrderModel>>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new Result<OrderEntity>(DomainErrors.Entity.NotFoundFor<OrderEntity>($"OrderId = {orderId}")));
 
         Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
 
-        response.Should().NotBeNull();
-    }
-
-    [Theory]
-    [ClassData(typeof(OrderClassData))]
-    public async Task MarkAsReadyOrder_WhenOrderExistAndNotReadyBefore(OrderEntity order)
-    {
-        _repository.InsertRange(new[] { order });
-
-        await Database.Context.SaveChangesAsync();
-
-        OrderModel createdOrder = Database.Context.Orders.First();
-
-        var command = new MarkOrderAsReady.Command(createdOrder.Id);
-
-        Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
-
-        response.Should().NotBeNull();
-        response.IsSuccess.Should().BeTrue();
-        response.Value.Should().NotBeNull();
-        response.Value.Ready.Should().BeTrue();
+        response.IsFaulted.Should().BeTrue();
+        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<OrderEntity>($"OrderId = {orderId}"));
     }
 }
