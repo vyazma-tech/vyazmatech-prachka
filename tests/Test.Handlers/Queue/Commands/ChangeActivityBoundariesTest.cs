@@ -1,75 +1,69 @@
 ﻿using Application.Core.Common;
 using Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
+using Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 using Application.Handlers.Queue.Queries;
+using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
+using Domain.Kernel;
 using FluentAssertions;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Models;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;
+using Moq;
 using Test.Handlers.Fixtures;
 using Xunit;
 
 namespace Test.Handlers.Queue.Commands;
 
-public class ChangeActivityBoundariesTest : TestBase
+public class ChangeActivityBoundariesTest
 {
     private readonly ChangeQueueActivityBoundariesCommandHandler _handler;
-    private readonly PersistenceContext _persistenceContext;
-    
-    public ChangeActivityBoundariesTest(CoreDatabaseFixture database) : base(database)
+    private readonly Mock<IQueueRepository> _queueRepository;
+
+    public ChangeActivityBoundariesTest()
     {
-        var dateTimeProvider = new DateTimeProvider();
-        IUserRepository users = new UserRepository(database.Context);
-        IOrderRepository orders = new OrderRepository(database.Context);
-        IQueueRepository queues = new QueueRepository(database.Context);
-        IQueueSubscriptionRepository queueSubscriptions = new QueueSubscriptionRepository(database.Context);
-        IOrderSubscriptionRepository orderSubscriptions = new OrderSubscriptionRepository(database.Context);
+        var dateTimeProvider = new Mock<IDateTimeProvider>();
+        var queues = new Mock<IQueueRepository>();
+        IUserRepository users = Mock.Of<IUserRepository>();
+        IOrderRepository orders = Mock.Of<IOrderRepository>();
+        IOrderSubscriptionRepository orderSubscriptions = Mock.Of<IOrderSubscriptionRepository>();
+        IQueueSubscriptionRepository queueSubscriptions = Mock.Of<IQueueSubscriptionRepository>();
 
-        _persistenceContext = new PersistenceContext(
-            queues,
-            orders,
-            users,
-            orderSubscriptions,
-            queueSubscriptions,
-            database.Context);
-
+        _queueRepository = queues;
         _handler = new ChangeQueueActivityBoundariesCommandHandler(
-            database.Context,
-            dateTimeProvider,
-            _persistenceContext
-            );
+            dateTimeProvider.Object,
+            new PersistenceContext(
+                queues.Object,
+                orders,
+                users,
+                orderSubscriptions,
+                queueSubscriptions,
+                null!));
     }
 
+
     [Fact]
-    public async Task ChangeBoundaries_ShouldReturnSuccess_WhenPreviousNotTheSame()
+    public async Task Handle_ShouldReturnFailureResult_WhenQueueIsNotFound()
     {
         var queueId = Guid.NewGuid();
-        var queue = new QueueEntity(
-            queueId,
-            Capacity.Create(10).Value,
-            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new DateTimeProvider()).Value,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
+        var command = new ChangeQueueActivityBoundaries.Command(queueId, TimeOnly.MinValue, TimeOnly.MaxValue);
 
-        var activeFrom = TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(2));
-        var activeUntil = TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(3));
+        _queueRepository.Setup(x =>
+                x.FindByAsync(
+                    It.IsAny<Specification<QueueModel>>(),
+                    It.IsAny<CancellationToken>()))
+            .ReturnsAsync(
+                new Result<QueueEntity>(
+                    DomainErrors.Entity.NotFoundFor<QueueEntity>($"QueueId = {queueId}")));
 
-        await Database.ResetAsync();
-        _persistenceContext.Queues.InsertRange(new List<QueueEntity>{queue});
-        await Database.Context.SaveChangesAsync();
+        Result<ChangeQueueActivityBoundaries.Response> response = await _handler.Handle(command, CancellationToken.None);
 
-        var cmd = new ChangeQueueActivityBoundaries.Command(queueId, activeFrom, activeUntil);
 
-        Result<ChangeQueueActivityBoundaries.Response> response = await _handler.Handle(cmd, CancellationToken.None);
-
-        response.Should().NotBeNull();
-        response.IsSuccess.Should().BeTrue();
-        response.Value.Should().NotBeNull();
-        response.Value.ActiveFrom.Should().Be(activeFrom);
-        response.Value.ActiveUntil.Should().Be(activeUntil);
+        response.IsFaulted.Should().BeTrue();
+        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<QueueEntity>($"QueueId = {queueId}"));
     }
 }
