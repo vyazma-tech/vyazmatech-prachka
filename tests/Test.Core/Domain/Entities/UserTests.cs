@@ -1,4 +1,5 @@
-﻿using Domain.Common.Result;
+﻿using Domain.Common.Errors;
+using Domain.Common.Result;
 using Domain.Core.User;
 using Domain.Core.User.Events;
 using Domain.Core.ValueObjects;
@@ -16,12 +17,12 @@ public class UserTests
 
     [Theory]
     [ClassData(typeof(TelegramIdClassData))]
-    public void CreateUserTelegramId_ShouldReturnFailureResult_WhenTelegramIdIsInvalid(string id, string errorMessage)
+    public void CreateUserTelegramId_ShouldReturnFailureResult_WhenTelegramIdIsInvalid(string id, Error error)
     {
         Result<TelegramId> creationResult = TelegramId.Create(id);
 
         creationResult.IsFaulted.Should().BeTrue();
-        creationResult.Error.Message.Should().Be(errorMessage);
+        creationResult.Error.Should().Be(error);
     }
 
     [Fact]

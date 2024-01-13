@@ -25,6 +25,9 @@ public class OrderServiceTests
 
     public OrderServiceTests()
     {
+        _timeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        _timeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+
         _service = new OrderService(_orderRepository.Object, _queueRepository.Object, _timeProvider.Object);
     }
 
@@ -37,7 +40,7 @@ public class OrderServiceTests
         Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, queue);
 
         prolongationResult.IsFaulted.Should().BeTrue();
-        prolongationResult.Error.Message.Should().Be(DomainErrors.Order.UnableToTransferIntoSameQueue.Message);
+        prolongationResult.Error.Should().Be(DomainErrors.Order.UnableToTransferIntoSameQueue);
     }
 
     [Theory]
@@ -57,27 +60,30 @@ public class OrderServiceTests
         Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, newQueue);
 
         prolongationResult.IsFaulted.Should().BeTrue();
-        prolongationResult.Error.Message.Should().Be(DomainErrors.Order.UnableToTransferIntoFullQueue.Message);
+        prolongationResult.Error.Should().Be(DomainErrors.Order.UnableToTransferIntoFullQueue);
     }
 
     [Theory]
     [ClassData(typeof(OrderServiceClassData))]
-    public async Task ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoExpiredQueue(
+    public void ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoExpiredQueue(
         QueueEntity queue,
         OrderEntity order)
     {
+        var timeProvider = new Mock<IDateTimeProvider>();
+        timeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.Now));
+        timeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
+            
         var newQueue = new QueueEntity(
             Guid.NewGuid(),
             Capacity.Create(10).Value,
-            QueueDate.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new DateTimeProvider()).Value,
+            QueueDate.Create(timeProvider.Object.DateNow, timeProvider.Object).Value,
             QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(DateTime.UtcNow),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(1))).Value);
+                TimeOnly.FromDateTime(timeProvider.Object.UtcNow),
+                TimeOnly.FromDateTime(timeProvider.Object.UtcNow.AddSeconds(1))).Value);
 
-        await Task.Delay(1000);
         Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, newQueue);
 
         prolongationResult.IsFaulted.Should().BeTrue();
-        prolongationResult.Error.Message.Should().Be(DomainErrors.Queue.Expired.Message);
+        prolongationResult.Error.Should().Be(DomainErrors.Queue.Expired);
     }
 }

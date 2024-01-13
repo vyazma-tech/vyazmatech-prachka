@@ -26,7 +26,7 @@ public class QueueTests
         Result<Capacity> creationResult = Capacity.Create(-1);
 
         creationResult.IsFaulted.Should().BeTrue();
-        creationResult.Error.Message.Should().Be(DomainErrors.Capacity.Negative.Message);
+        creationResult.Error.Should().Be(DomainErrors.Capacity.Negative);
     }
 
     [Fact]
@@ -52,7 +52,7 @@ public class QueueTests
             QueueDate.Create(DateOnly.FromDateTime(registrationDate), _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
-        creationResult.Error.Message.Should().Be(DomainErrors.QueueDate.InThePast.Message);
+        creationResult.Error.Should().Be(DomainErrors.QueueDate.InThePast);
     }
 
     [Fact]
@@ -78,7 +78,7 @@ public class QueueTests
             QueueDate.Create(DateOnly.FromDateTime(registrationDate), _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
-        creationResult.Error.Message.Should().Be(DomainErrors.QueueDate.NotNextWeek.Message);
+        creationResult.Error.Should().Be(DomainErrors.QueueDate.NotNextWeek);
     }
 
     [Fact]
@@ -104,7 +104,7 @@ public class QueueTests
 
     [Theory]
     [ClassData(typeof(QueueClassData))]
-    public void EnterQueue_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(
+    public void Add_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(
         QueueEntity queue,
         UserEntity user,
         OrderEntity order)
@@ -114,12 +114,12 @@ public class QueueTests
         Result<OrderEntity> entranceResult = queue.Add(order, _dateTimeProvider.Object.UtcNow);
 
         entranceResult.IsFaulted.Should().BeTrue();
-        entranceResult.Error.Message.Should().Be(DomainErrors.Queue.ContainsOrderWithId(order.Id).Message);
+        entranceResult.Error.Should().Be(DomainErrors.Queue.ContainsOrderWithId(order.Id));
     }
 
     [Theory]
     [ClassData(typeof(QueueClassData))]
-    public void QuitQueue_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(
+    public void Remove_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(
         QueueEntity queue,
         UserEntity user,
         OrderEntity order)
@@ -129,11 +129,11 @@ public class QueueTests
         Result<OrderEntity> quitResult = queue.Remove(order);
 
         quitResult.IsFaulted.Should().BeTrue();
-        quitResult.Error.Message.Should().Be(DomainErrors.Queue.OrderIsNotInQueue(order.Id).Message);
+        quitResult.Error.Should().Be(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
     }
 
     [Fact]
-    public void IncreaseQueueCapacity_ShouldReturnSuccessResult_WhenNewCapacityIsGreaterThenCurrent()
+    public void IncreaseCapacity_ShouldReturnSuccessResult_WhenNewCapacityIsGreaterThenCurrent()
     {
         var queue = new QueueEntity(
             Guid.NewGuid(),
@@ -152,9 +152,10 @@ public class QueueTests
     }
 
     [Fact]
-    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpired()
+    public void TryExpire_ShouldRaiseDomainEvent_WhenQueueExpired()
     {
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
         var queue = new QueueEntity(
             Guid.NewGuid(),
             Capacity.Create(10).Value,
@@ -163,8 +164,7 @@ public class QueueTests
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value);
 
-        await Task.Delay(1_000);
-        queue.TryExpire(_dateTimeProvider.Object.UtcNow);
+        queue.TryExpire(_dateTimeProvider.Object.UtcNow.AddMinutes(1));
 
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<QueueExpiredDomainEvent>();
@@ -172,7 +172,7 @@ public class QueueTests
 
     [Theory]
     [ClassData(typeof(QueueClassData))]
-    public void EnterQueue_ShouldReturnFailureResult_WhenQueueIsFull(
+    public void Add_ShouldReturnFailureResult_WhenQueueIsFull(
         QueueEntity queue,
         UserEntity user,
         OrderEntity order)
@@ -184,19 +184,20 @@ public class QueueTests
             DateTime.UtcNow);
 
         incomingOrderResult.IsFaulted.Should().BeTrue();
-        incomingOrderResult.Error.Message.Should().Be(DomainErrors.Queue.Overfull.Message);
+        incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Overfull);
     }
 
     [Theory]
     [ClassData(typeof(QueueClassData))]
-    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(
+    public void TryNotifyAboutAvailablePosition_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(
         QueueEntity queue,
         UserEntity user,
         OrderEntity order)
     {
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        
         queue.Remove(order);
-        await Task.Delay(1_000);
-        queue.TryExpire(_dateTimeProvider.Object.UtcNow);
+        queue.TryExpire(_dateTimeProvider.Object.UtcNow.AddHours(5));
         queue.ClearDomainEvents();
         queue.TryNotifyAboutAvailablePosition();
 

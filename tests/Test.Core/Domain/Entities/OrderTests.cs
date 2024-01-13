@@ -47,7 +47,7 @@ public class OrderTests
 
     [Theory]
     [ClassData(typeof(OrderClassData))]
-    public void MakeOrderReady_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyReady(OrderEntity order)
+    public void MakeReady_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyReady(OrderEntity order)
     {
         DateTime modificationDate = DateTime.UtcNow;
         Result<OrderEntity> actionResult = order.MakeReady(modificationDate);
@@ -61,7 +61,7 @@ public class OrderTests
     
     [Theory]
     [ClassData(typeof(OrderClassData))]
-    public void MakeOrderPayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid(OrderEntity order)
+    public void MakePayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid(OrderEntity order)
     {
         DateTime modificationDate = DateTime.UtcNow;
         Result<OrderEntity> actionResult = order.MakePayment(modificationDate);

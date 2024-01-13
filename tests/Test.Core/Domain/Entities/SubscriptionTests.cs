@@ -30,7 +30,7 @@ public class SubscriptionTests
 
     [Theory]
     [ClassData(typeof(SubscriptionClassData))]
-    public void SubscribeOrder_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription(
+    public void Subscribe_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription(
         OrderSubscriptionEntity subscription,
         OrderEntity order)
     {
@@ -42,13 +42,13 @@ public class SubscriptionTests
 
     [Theory]
     [ClassData(typeof(SubscriptionClassData))]
-    public void UnsubscribeOrder_ShouldReturnFailureResult_WhenUserOrderIsNotInSubscription(
+    public void Unsubscribe_ShouldReturnFailureResult_WhenUserOrderIsNotInSubscription(
         OrderSubscriptionEntity subscription,
         OrderEntity order)
     {
         Result<OrderEntity> quitResult = subscription.Unsubscribe(order);
     
         quitResult.IsFaulted.Should().BeTrue();
-        quitResult.Error.Message.Should().Be(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id).Message);
+        quitResult.Error.Should().Be(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
     }
 }
