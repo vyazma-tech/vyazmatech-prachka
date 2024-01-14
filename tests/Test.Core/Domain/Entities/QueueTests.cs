@@ -197,7 +197,7 @@ public class QueueTests
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
         
         queue.Remove(order);
-        queue.TryExpire(_dateTimeProvider.Object.UtcNow.AddHours(5));
+        queue.TryExpire(_dateTimeProvider.Object.UtcNow.AddHours(7));
         queue.ClearDomainEvents();
         queue.TryNotifyAboutAvailablePosition();
 
