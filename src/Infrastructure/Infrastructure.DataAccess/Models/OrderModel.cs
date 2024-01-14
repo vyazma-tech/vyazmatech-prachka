@@ -14,7 +14,6 @@ public record OrderModel
 
     public virtual UserModel User { get; set; }
 
-    // TODO: в одно поле стейта
     public string Status { get; set; }
 
     public DateTime CreationDate { get; set; }
