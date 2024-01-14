@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using Application.Core.Common;
+﻿using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
 using Application.Core.Extensions;

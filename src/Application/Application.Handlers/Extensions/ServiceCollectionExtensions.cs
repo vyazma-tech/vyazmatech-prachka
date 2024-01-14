@@ -1,4 +1,4 @@
-﻿using Application.Core.Behaviours;
+﻿using Application.Core.PreProcessors;
 using FluentValidation;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +18,6 @@ public static class ServiceCollectionExtensions
         services.AddValidatorsFromAssembly(IApplicationHandlersMarker.Assembly);
 
         return services
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPreProcessor<,>));
     }
 }
