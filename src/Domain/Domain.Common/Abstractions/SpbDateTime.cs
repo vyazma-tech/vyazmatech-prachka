@@ -14,7 +14,7 @@ public readonly record struct SpbDateTime(DateTime Value)
 
     public TimeOnly AsTimeOnly()
     {
-        return new TimeOnly(Value.Hour, Value.Minute);
+        return new TimeOnly(Value.Hour, Value.Minute, Value.Second, Value.Millisecond, Value.Microsecond);
     }
 
     public override string ToString()
