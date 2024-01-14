@@ -1,20 +1,13 @@
-﻿using Application.Core.Common;
-using Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
-using Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
-using Application.Handlers.Queue.Queries;
+﻿using Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Queue;
-using Domain.Core.ValueObjects;
 using Domain.Kernel;
 using FluentAssertions;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
-using Infrastructure.DataAccess.Repositories;
-using Infrastructure.Tools;
 using Moq;
-using Test.Handlers.Fixtures;
 using Xunit;
 
 namespace Test.Handlers.Queue.Commands;

@@ -6,7 +6,7 @@ namespace Application.Handlers.Order.Commands.MarkOrderAsPaid;
 
 public static class MarkOrderAsPaid
 {
-    public record Command(Guid Id) : ICommand<Result<Response>>;
+    public record Command(Guid Id) : IValidatableRequest<Result<Response>>;
 
     public record struct Response(
         Guid Id,

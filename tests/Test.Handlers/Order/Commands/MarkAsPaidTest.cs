@@ -1,20 +1,13 @@
 ﻿using Application.Handlers.Order.Commands.MarkOrderAsPaid;
-using Application.Handlers.Order.Commands.MarkOrderAsReady;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
-using Domain.Core.Queue;
-using Domain.Core.User;
 using Domain.Kernel;
 using FluentAssertions;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
-using Infrastructure.DataAccess.Repositories;
-using Infrastructure.Tools;
 using Moq;
-using Test.Core.Domain.Entities.ClassData;
-using Test.Handlers.Fixtures;
 using Xunit;
 
 namespace Test.Handlers.Order.Commands;
