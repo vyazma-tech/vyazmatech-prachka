@@ -57,6 +57,7 @@ public class QueueActivityBackgroundWorker : BackgroundService
 
             QueueEntity queue = queueFindResult.Value;
 
+            // TODO: хранить видимо стейт
             bool expiredFirstTime = queue.TryExpire(timeProvider.UtcNow);
 
             if (expiredFirstTime is false)

@@ -38,8 +38,7 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
 
     protected override void UpdateModel(OrderModel model, OrderEntity entity)
     {
-        model.Paid = entity.Paid;
-        model.Ready = entity.Ready;
+        model.Status = entity.Status.ToString();
         model.ModifiedOn = entity.ModifiedOn;
     }
 }

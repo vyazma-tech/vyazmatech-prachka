@@ -12,8 +12,7 @@ public static class OrderByIdQuery
         Guid Id,
         Guid UserId,
         Guid QueueId,
-        bool Paid,
-        bool Ready,
+        string Status,
         DateTime? ModifiedOn,
         DateOnly CreationDate);
 
@@ -23,8 +22,7 @@ public static class OrderByIdQuery
             order.Id,
             order.User.Id,
             order.Queue.Id,
-            order.Paid,
-            order.Ready,
+            order.Status.ToString(),
             order.ModifiedOn,
             order.CreationDate);
     }

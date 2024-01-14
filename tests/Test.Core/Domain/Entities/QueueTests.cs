@@ -181,6 +181,7 @@ public class QueueTests
             Guid.NewGuid(),
             user,
             queue,
+            OrderStatus.New,
             DateTime.UtcNow);
 
         incomingOrderResult.IsFaulted.Should().BeTrue();

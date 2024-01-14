@@ -11,10 +11,9 @@ public static class OrderMapping
             model.Id,
             UserMapping.MapTo(model.User),
             QueueMapping.MapTo(model.Queue),
+            Enum.Parse<OrderStatus>(model.Status),
             model.CreationDate,
-            model.ModifiedOn,
-            model.Ready,
-            model.Paid).Value;
+            model.ModifiedOn).Value;
     }
 
     public static OrderModel MapFrom(OrderEntity entity)
@@ -26,8 +25,7 @@ public static class OrderMapping
             UserId = entity.User.Id,
             CreationDate = entity.CreationDateTime,
             ModifiedOn = entity.ModifiedOn,
-            Paid = entity.Paid,
-            Ready = entity.Ready
+            Status = entity.Status.ToString()
         };
     }
 }

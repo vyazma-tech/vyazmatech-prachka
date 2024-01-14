@@ -18,6 +18,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         Guid id,
         UserEntity user,
         QueueEntity queue,
+        OrderStatus status,
         DateTime creationDateTimeUtc,
         DateTime? modifiedOn = null)
         : base(id)
@@ -29,6 +30,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         User = user;
         Queue = queue;
         CreationDateTime = creationDateTimeUtc;
+        Status = status;
         ModifiedOn = modifiedOn;
     }
 
@@ -39,14 +41,9 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     public QueueEntity Queue { get; private set; }
 
     /// <summary>
-    /// Gets a value indicating whether order paid or not.
+    /// Gets a value indicating order status.
     /// </summary>
-    public bool Paid { get; private set; }
-
-    /// <summary>
-    /// Gets a value indicating whether order ready or not.
-    /// </summary>
-    public bool Ready { get; private set; }
+    public OrderStatus Status { get; private set; }
 
     /// <summary>
     /// Gets order creation date.
@@ -69,10 +66,9 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <param name="id">order id.</param>
     /// <param name="user">order issuer.</param>
     /// <param name="queue">queue of the order.</param>
+    /// <param name="status">current order status.</param>
     /// <param name="creationDateUtc">order creation date.</param>
     /// <param name="modifiedOn">order modification date.</param>
-    /// <param name="ready">is order ready.</param>
-    /// <param name="paid">is order paid.</param>
     /// <returns>order instance.</returns>
     /// <remarks>returns failure result, when order is being enqueued into full queue.</remarks>
     /// <remarks>returns failure result, when order is already in the queue.</remarks>
@@ -80,12 +76,11 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         Guid id,
         UserEntity user,
         QueueEntity queue,
+        OrderStatus status,
         DateTime creationDateUtc,
-        DateTime? modifiedOn = null,
-        bool ready = false,
-        bool paid = false)
+        DateTime? modifiedOn = null)
     {
-        var order = new OrderEntity(id, user, queue, creationDateUtc, modifiedOn);
+        var order = new OrderEntity(id, user, queue, status, creationDateUtc, modifiedOn);
 
         Result<OrderEntity> entranceResult = queue.Add(order, creationDateUtc);
 
@@ -93,9 +88,6 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         {
             return entranceResult;
         }
-
-        order.Paid = paid;
-        order.Ready = ready;
 
         return order;
     }
@@ -108,12 +100,12 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <remarks>returns failure result, when order is already is paid.</remarks>
     public Result<OrderEntity> MakePayment(DateTime dateTimeUtc)
     {
-        if (Paid)
+        if (Status == OrderStatus.Paid)
         {
             return new Result<OrderEntity>(DomainErrors.Order.AlreadyPaid);
         }
 
-        Paid = true;
+        Status = OrderStatus.Paid;
         ModifiedOn = dateTimeUtc;
         Raise(new OrderPaidDomainEvent(this));
 
@@ -128,12 +120,12 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <remarks>returns failure result, when order is already marked as ready.</remarks>
     public Result<OrderEntity> MakeReady(DateTime dateTimeUtc)
     {
-        if (Ready)
+        if (Status == OrderStatus.Ready)
         {
             return new Result<OrderEntity>(DomainErrors.Order.IsReady);
         }
 
-        Ready = true;
+        Status = OrderStatus.Ready;
         ModifiedOn = dateTimeUtc;
         Raise(new OrderReadyDomainEvent(this));
 
@@ -150,6 +142,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     {
         ModifiedOn = dateTimeUtc;
         Queue = queue;
+        Status = OrderStatus.Prolonged;
 
         return this;
     }

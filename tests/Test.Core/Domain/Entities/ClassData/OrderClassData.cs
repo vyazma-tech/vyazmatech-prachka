@@ -28,6 +28,7 @@ public sealed class OrderClassData : IEnumerable<object[]>
             Guid.NewGuid(),
             user,
             queue,
+            OrderStatus.New,
             DateTime.UtcNow);
         
         order.Value.ClearDomainEvents();

@@ -28,6 +28,7 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
             Guid.NewGuid(),
             user,
             queue,
+            OrderStatus.New,
             dateTimeProvider.UtcNow);
 
         var subscription = new OrderSubscriptionEntity(

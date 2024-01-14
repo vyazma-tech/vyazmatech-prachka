@@ -11,8 +11,7 @@ public static class MarkOrderAsPaid
     public record struct Response(
         Guid Id,
         Guid QueueId,
-        bool Paid,
-        bool Ready,
+        string Status,
         DateOnly CreationDate,
         DateTime? ModifiedOn);
 
@@ -21,8 +20,7 @@ public static class MarkOrderAsPaid
         return new Response(
             order.Id,
             order.Queue.Id,
-            order.Paid,
-            order.Ready,
+            order.Status.ToString(),
             order.CreationDate,
             order.ModifiedOn);
     }

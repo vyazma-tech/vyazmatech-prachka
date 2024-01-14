@@ -33,14 +33,18 @@ public class OrderTests
                 TimeOnly.FromDateTime(queueDate),
                 TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
 
-        Result<OrderEntity> orderCreationResult = OrderEntity.Create(Guid.NewGuid(), user, queue, _dateTimeProvider.Object.UtcNow);
+        Result<OrderEntity> orderCreationResult = OrderEntity.Create(
+            Guid.NewGuid(),
+            user,
+            queue,
+            OrderStatus.New,
+            _dateTimeProvider.Object.UtcNow);
 
         orderCreationResult.IsSuccess.Should().BeTrue();
         orderCreationResult.Value.Should().NotBeNull();
         orderCreationResult.Value.Queue.Should().Be(queue);
         orderCreationResult.Value.User.Should().Be(user);
-        orderCreationResult.Value.Paid.Should().BeFalse();
-        orderCreationResult.Value.Ready.Should().BeFalse();
+        orderCreationResult.Value.Status.Should().Be(OrderStatus.New);
         orderCreationResult.Value.CreationDate.Should().Be(_dateTimeProvider.Object.DateNow);
         orderCreationResult.Value.ModifiedOn.Should().BeNull();
     }
@@ -51,24 +55,24 @@ public class OrderTests
     {
         DateTime modificationDate = DateTime.UtcNow;
         Result<OrderEntity> actionResult = order.MakeReady(modificationDate);
-    
+
         actionResult.IsSuccess.Should().BeTrue();
         actionResult.Value.ModifiedOn.Should().Be(modificationDate);
-        actionResult.Value.Ready.Should().BeTrue();
+        actionResult.Value.Status.Should().Be(OrderStatus.Ready);
         actionResult.Value.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<OrderReadyDomainEvent>();
     }
-    
+
     [Theory]
     [ClassData(typeof(OrderClassData))]
     public void MakePayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid(OrderEntity order)
     {
         DateTime modificationDate = DateTime.UtcNow;
         Result<OrderEntity> actionResult = order.MakePayment(modificationDate);
-    
+
         actionResult.IsSuccess.Should().BeTrue();
         actionResult.Value.ModifiedOn.Should().Be(modificationDate);
-        actionResult.Value.Paid.Should().BeTrue();
+        actionResult.Value.Status.Should().Be(OrderStatus.Paid);
         actionResult.Value.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<OrderPaidDomainEvent>();
     }
