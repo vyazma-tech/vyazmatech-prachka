@@ -24,6 +24,8 @@ public static class QueueMapping
             capacity,
             assignmentDate,
             boundaries,
+            Enum.Parse<QueueState>(model.State),
+            model.MaxCapacityReached,
             model.ModifiedOn);
     }
 

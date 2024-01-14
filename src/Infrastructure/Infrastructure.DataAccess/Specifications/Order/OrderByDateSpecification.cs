@@ -1,14 +1,16 @@
-﻿using Infrastructure.DataAccess.Contracts;
+﻿using Domain.Common.Abstractions;
+using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
+using Infrastructure.Tools;
 
 namespace Infrastructure.DataAccess.Specifications.Order;
 
 public sealed class OrderByDateSpecification : Specification<OrderModel>
 {
-    private readonly DateOnly _creationDate;
+    private readonly SpbDateTime _creationDate;
 
-    public OrderByDateSpecification(DateOnly creationDate)
-        : base(order => DateOnly.FromDateTime(order.CreationDate) == creationDate)
+    public OrderByDateSpecification(SpbDateTime creationDate)
+        : base(order => order.CreationDate == creationDate)
     {
         _creationDate = creationDate;
     }

@@ -22,7 +22,7 @@ public static class ChangeQueueActivityBoundaries
         {
             Id = queue.Id,
             Capacity = queue.Capacity.Value,
-            ModifiedOn = queue.ModifiedOn,
+            ModifiedOn = queue.ModifiedOn?.Value,
             AssignmentDate = queue.CreationDate,
             ActiveFrom = queue.ActivityBoundaries.ActiveFrom,
             ActiveUntil = queue.ActivityBoundaries.ActiveUntil,

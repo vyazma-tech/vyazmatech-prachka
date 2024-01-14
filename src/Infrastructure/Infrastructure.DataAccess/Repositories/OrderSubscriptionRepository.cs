@@ -3,10 +3,12 @@ using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Mapping;
 using Infrastructure.DataAccess.Models;
+using Infrastructure.Tools;
 
 namespace Infrastructure.DataAccess.Repositories;
 
-internal class OrderSubscriptionRepository : RepositoryBase<OrderSubscriptionEntity, OrderSubscriptionModel>, IOrderSubscriptionRepository
+internal class OrderSubscriptionRepository : RepositoryBase<OrderSubscriptionEntity, OrderSubscriptionModel>,
+    IOrderSubscriptionRepository
 {
     /// <inheritdoc cref="RepositoryBase{TEntity,TModel}"/>
     public OrderSubscriptionRepository(DatabaseContext context)

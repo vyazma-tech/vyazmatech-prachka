@@ -24,7 +24,7 @@ public sealed class UserEntity : Entity, IAuditableEntity
         TelegramId telegramId,
         Fullname fullname,
         DateOnly registrationDateUtc,
-        DateTime? modifiedOn = null)
+        SpbDateTime? modifiedOn = null)
         : base(id)
     {
         Guard.Against.Null(telegramId, nameof(telegramId), "Telegram ID should not be null.");
@@ -57,5 +57,5 @@ public sealed class UserEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets modification date.
     /// </summary>
-    public DateTime? ModifiedOn { get; }
+    public SpbDateTime? ModifiedOn { get; }
 }

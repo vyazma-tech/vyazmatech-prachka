@@ -3,6 +3,7 @@ using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Mapping;
 using Infrastructure.DataAccess.Models;
+using Infrastructure.Tools;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Repositories;
@@ -40,6 +41,8 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
     {
         model.ActiveFrom = entity.ActivityBoundaries.ActiveFrom;
         model.ActiveUntil = entity.ActivityBoundaries.ActiveUntil;
+        model.MaxCapacityReached = entity.MaxCapacityReachedOnce;
+        model.State = entity.State.ToString();
         model.Capacity = entity.Capacity.Value;
         model.ModifiedOn = entity.ModifiedOn;
     }

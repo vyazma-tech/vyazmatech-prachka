@@ -23,7 +23,7 @@ public static class OrderByIdQuery
             order.User.Id,
             order.Queue.Id,
             order.Status.ToString(),
-            order.ModifiedOn,
+            order.ModifiedOn?.Value,
             order.CreationDate);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts;
+using Domain.Common.Abstractions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
@@ -33,7 +34,7 @@ internal sealed class MarkOrderAsReadyCommandHandler : ICommandHandler<Command, 
 
         OrderEntity order = searchResult.Value;
 
-        Result<OrderEntity> makeReadyResult = order.MakeReady(_dateTimeProvider.UtcNow);
+        Result<OrderEntity> makeReadyResult = order.MakeReady(new SpbDateTime(_dateTimeProvider.UtcNow));
 
         if (makeReadyResult.IsFaulted)
             return new Result<Response>(makeReadyResult.Error);

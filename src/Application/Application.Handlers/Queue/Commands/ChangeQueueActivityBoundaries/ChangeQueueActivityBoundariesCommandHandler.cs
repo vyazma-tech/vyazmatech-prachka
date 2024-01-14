@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts;
+using Domain.Common.Abstractions;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
@@ -47,7 +48,7 @@ internal sealed class ChangeQueueActivityBoundariesCommandHandler : ICommandHand
         QueueActivityBoundaries newActivityBoundaries = activityBoundariesCreationResult.Value;
         Result<QueueEntity> changeResult = queue.ChangeActivityBoundaries(
             newActivityBoundaries,
-            _dateTimeProvider.UtcNow);
+            new SpbDateTime(_dateTimeProvider.UtcNow));
 
         if (changeResult.IsFaulted)
         {

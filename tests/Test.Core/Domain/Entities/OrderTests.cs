@@ -1,4 +1,5 @@
-﻿using Domain.Common.Result;
+﻿using Domain.Common.Abstractions;
+using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Order.Events;
 using Domain.Core.Queue;
@@ -31,14 +32,15 @@ public class OrderTests
             QueueDate.Create(DateOnly.FromDateTime(queueDate), _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(queueDate),
-                TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
+                TimeOnly.FromDateTime(queueDate).AddHours(5)).Value,
+            QueueState.Active);
 
         Result<OrderEntity> orderCreationResult = OrderEntity.Create(
             Guid.NewGuid(),
             user,
             queue,
             OrderStatus.New,
-            _dateTimeProvider.Object.UtcNow);
+            new SpbDateTime(_dateTimeProvider.Object.UtcNow));
 
         orderCreationResult.IsSuccess.Should().BeTrue();
         orderCreationResult.Value.Should().NotBeNull();
@@ -53,7 +55,7 @@ public class OrderTests
     [ClassData(typeof(OrderClassData))]
     public void MakeReady_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyReady(OrderEntity order)
     {
-        DateTime modificationDate = DateTime.UtcNow;
+        var modificationDate = new SpbDateTime(DateTime.UtcNow);
         Result<OrderEntity> actionResult = order.MakeReady(modificationDate);
 
         actionResult.IsSuccess.Should().BeTrue();
@@ -67,7 +69,7 @@ public class OrderTests
     [ClassData(typeof(OrderClassData))]
     public void MakePayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid(OrderEntity order)
     {
-        DateTime modificationDate = DateTime.UtcNow;
+        var modificationDate = new SpbDateTime(DateTime.UtcNow);
         Result<OrderEntity> actionResult = order.MakePayment(modificationDate);
 
         actionResult.IsSuccess.Should().BeTrue();

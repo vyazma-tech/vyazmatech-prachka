@@ -21,7 +21,7 @@ public abstract class SubscriptionEntity : Entity, IAuditableEntity
         Guid id,
         UserEntity user,
         DateOnly creationDateUtc,
-        DateTime? modifiedOn = null)
+        SpbDateTime? modifiedOn = null)
         : base(id)
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in subscription.");
@@ -45,5 +45,5 @@ public abstract class SubscriptionEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets modification date.
     /// </summary>
-    public DateTime? ModifiedOn { get; }
+    public SpbDateTime? ModifiedOn { get; }
 }

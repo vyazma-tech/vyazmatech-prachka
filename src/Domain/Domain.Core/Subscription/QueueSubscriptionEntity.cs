@@ -1,4 +1,5 @@
-﻿using Domain.Common.Errors;
+﻿using Domain.Common.Abstractions;
+using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.User;
@@ -13,7 +14,7 @@ public sealed class QueueSubscriptionEntity : SubscriptionEntity
         Guid id,
         UserEntity user,
         DateOnly creationDateUtc,
-        DateTime? modifiedOn = null)
+        SpbDateTime? modifiedOn = null)
         : base(id, user, creationDateUtc, modifiedOn)
     {
         _subscribedQueues = new List<QueueEntity>();

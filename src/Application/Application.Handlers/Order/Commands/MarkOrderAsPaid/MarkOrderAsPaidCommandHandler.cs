@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts;
+using Domain.Common.Abstractions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
@@ -33,7 +34,7 @@ internal sealed class MarkOrderAsPaidCommandHandler : ICommandHandler<Command, R
 
         OrderEntity order = searchResult.Value;
 
-        Result<OrderEntity> makePaidResult = order.MakePayment(_dateTimeProvider.UtcNow);
+        Result<OrderEntity> makePaidResult = order.MakePayment(new SpbDateTime(_dateTimeProvider.UtcNow));
 
         if (makePaidResult.IsFaulted)
             return new Result<Response>(makePaidResult.Error);

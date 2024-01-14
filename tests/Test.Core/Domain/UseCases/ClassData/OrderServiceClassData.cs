@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Domain.Common.Abstractions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
@@ -19,7 +20,8 @@ public sealed class OrderServiceClassData : IEnumerable<object[]>
             QueueDate.Create(DateOnly.FromDateTime(DateTime.Now), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(1),
-                TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value);
+                TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value,
+            QueueState.Active);
 
         UserEntity user = UserClassData.Create();
 
@@ -28,7 +30,7 @@ public sealed class OrderServiceClassData : IEnumerable<object[]>
             user,
             queue,
             OrderStatus.New,
-            DateTime.Now);
+            new SpbDateTime(DateTime.Now));
 
         yield return new object[] { queue, orderCreationResult.Value };
     }

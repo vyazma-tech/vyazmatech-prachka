@@ -12,6 +12,7 @@ public static class QueueByQueryQuery
         Guid Id,
         int Capacity,
         long CurrentCapacity,
+        string State,
         DateOnly AssignmentDate,
         DateTime? ModifiedOn,
         TimeOnly ActiveFrom,
@@ -23,7 +24,8 @@ public static class QueueByQueryQuery
         {
             Id = queue.Id,
             Capacity = queue.Capacity.Value,
-            ModifiedOn = queue.ModifiedOn,
+            ModifiedOn = queue.ModifiedOn?.Value,
+            State = queue.State.ToString(),
             AssignmentDate = queue.CreationDate,
             ActiveFrom = queue.ActivityBoundaries.ActiveFrom,
             ActiveUntil = queue.ActivityBoundaries.ActiveUntil,

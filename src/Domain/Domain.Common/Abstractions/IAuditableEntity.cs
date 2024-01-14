@@ -4,5 +4,5 @@ public interface IAuditableEntity
 {
     DateOnly CreationDate { get; }
 
-    DateTime? ModifiedOn { get; }
+    SpbDateTime? ModifiedOn { get; }
 }

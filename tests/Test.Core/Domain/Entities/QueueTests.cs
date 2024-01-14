@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Domain.Common.Abstractions;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -93,7 +94,8 @@ public class QueueTests
             QueueDate.Create(DateOnly.FromDateTime(creationDate), _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(creationDate),
-                TimeOnly.FromDateTime(creationDate).AddHours(5)).Value);
+                TimeOnly.FromDateTime(creationDate).AddHours(5)).Value,
+            QueueState.Active);
 
         queue.Should().NotBeNull();
         queue.Capacity.Value.Should().Be(10);
@@ -111,7 +113,7 @@ public class QueueTests
     {
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.Now.AddMinutes(1));
 
-        Result<OrderEntity> entranceResult = queue.Add(order, _dateTimeProvider.Object.UtcNow);
+        Result<OrderEntity> entranceResult = queue.Add(order, new SpbDateTime(_dateTimeProvider.Object.UtcNow));
 
         entranceResult.IsFaulted.Should().BeTrue();
         entranceResult.Error.Should().Be(DomainErrors.Queue.ContainsOrderWithId(order.Id));
@@ -141,9 +143,10 @@ public class QueueTests
             QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value,
+            QueueState.Active);
 
-        DateTime modificationDate = DateTime.UtcNow;
+        var modificationDate = new SpbDateTime(DateTime.UtcNow);
         Result<QueueEntity> increasingResult = queue.IncreaseCapacity(Capacity.Create(11).Value, modificationDate);
 
         increasingResult.IsSuccess.Should().BeTrue();
@@ -162,9 +165,10 @@ public class QueueTests
             QueueDate.Create(_dateTimeProvider.Object.DateNow, _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
-                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value);
+                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value,
+            QueueState.Active);
 
-        queue.TryExpire(_dateTimeProvider.Object.UtcNow.AddMinutes(1));
+        queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddMinutes(1)));
 
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<QueueExpiredDomainEvent>();
@@ -182,7 +186,7 @@ public class QueueTests
             user,
             queue,
             OrderStatus.New,
-            DateTime.UtcNow);
+            new SpbDateTime(DateTime.UtcNow));
 
         incomingOrderResult.IsFaulted.Should().BeTrue();
         incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Overfull);
@@ -198,9 +202,9 @@ public class QueueTests
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
         
         queue.Remove(order);
-        queue.TryExpire(_dateTimeProvider.Object.UtcNow.AddHours(7));
+        queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddHours(7)));
         queue.ClearDomainEvents();
-        queue.TryNotifyAboutAvailablePosition();
+        queue.TryNotifyAboutAvailablePosition(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddHours(7)));
 
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<PositionAvailableDomainEvent>();

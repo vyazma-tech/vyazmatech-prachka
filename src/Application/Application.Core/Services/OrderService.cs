@@ -1,4 +1,5 @@
-﻿using Domain.Common.Errors;
+﻿using Domain.Common.Abstractions;
+using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
@@ -43,13 +44,13 @@ public class OrderService
             return removalResult;
         }
 
-        Result<OrderEntity> entranceResult = queue.Add(order, _timeProvider.UtcNow);
+        Result<OrderEntity> entranceResult = queue.Add(order, new SpbDateTime(_timeProvider.UtcNow));
         if (entranceResult.IsFaulted)
         {
             return entranceResult;
         }
 
-        order.Prolong(queue, _timeProvider.UtcNow);
+        order.Prolong(queue, new SpbDateTime(_timeProvider.UtcNow));
         _orderRepository.Update(order);
         _queueRepository.Update(queue);
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Domain.Common.Abstractions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
@@ -22,14 +23,15 @@ public sealed class OrderClassData : IEnumerable<object[]>
             QueueDate.Create(DateOnly.FromDateTime(queueDate), dateTimeProvider).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(queueDate),
-                TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
+                TimeOnly.FromDateTime(queueDate).AddHours(5)).Value,
+            QueueState.Active);
 
         Result<OrderEntity> order = OrderEntity.Create(
             Guid.NewGuid(),
             user,
             queue,
             OrderStatus.New,
-            DateTime.UtcNow);
+            new SpbDateTime(DateTime.UtcNow));
         
         order.Value.ClearDomainEvents();
 

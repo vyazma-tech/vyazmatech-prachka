@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Application.BackgroundWorkers.Configuration;
+using Application.Core.Services;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Kernel;
@@ -33,6 +34,7 @@ public class QueueAvailablePositionBackgroundWorker : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using var timer = new PeriodicTimer(_delayBetweenChecks);
+        using var updater = new QueueUpdatingService();
         using IServiceScope scope = _scopeFactory.CreateScope();
         IDateTimeProvider timeProvider = scope.ServiceProvider.GetRequiredService<IDateTimeProvider>();
 
@@ -57,24 +59,27 @@ public class QueueAvailablePositionBackgroundWorker : BackgroundService
 
             QueueEntity queue = queueFindResult.Value;
 
-            bool shouldBeNotified = queue.TryNotifyAboutAvailablePosition();
-            if (shouldBeNotified is false)
-                continue;
-
             try
             {
-                _logger.LogInformation(
-                    "Queue assigned to AssignmentDate = {AssignmentDate} expired and not full. Going to notify about available positions",
-                    queue.CreationDate);
+                UpdateResult updated = await updater.UpdateQueueAsync(
+                    queue,
+                    timeProvider,
+                    stoppingToken,
+                    context);
 
-                await context.SaveChangesAsync(stoppingToken);
+                if (updated is { Modified: true, PreviousState: QueueState.Expired })
+                {
+                    _logger.LogInformation(
+                        "Queue assigned to AssignmentDate = {AssignmentDate} expired and not full. Worker notified about available positions",
+                        queue.CreationDate);
 
-                _logger.LogInformation(
-                    "{Worker} finished within {Time} ms",
-                    nameof(QueueAvailablePositionBackgroundWorker),
-                    _stopwatch.Elapsed.TotalMilliseconds);
+                    _logger.LogInformation(
+                        "{Worker} finished within {Time} ms",
+                        nameof(QueueAvailablePositionBackgroundWorker),
+                        _stopwatch.Elapsed.TotalMilliseconds);
 
-                _stopwatch.Stop();
+                    _stopwatch.Stop();
+                }
             }
             catch (Exception e)
             {

@@ -1,7 +1,9 @@
 ﻿using Application.DataAccess.Contracts;
+using Domain.Common.Abstractions;
 using Domain.Core.ValueObjects;
 using Infrastructure.DataAccess.Models;
 using Infrastructure.DataAccess.ValueConverters;
+using Infrastructure.Tools;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -39,5 +41,6 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
         configurationBuilder.Properties<Capacity>().HaveConversion<CapacityValueConverter>();
         configurationBuilder.Properties<TelegramId>().HaveConversion<TelegramIdValueConverter>();
         configurationBuilder.Properties<Fullname>().HaveConversion<FullnameValueConverter>();
+        configurationBuilder.Properties<SpbDateTime>().HaveConversion<SpbDateTimeValueConverter>();
     }
 }

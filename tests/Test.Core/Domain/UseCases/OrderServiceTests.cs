@@ -55,7 +55,8 @@ public class OrderServiceTests
             QueueDate.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new DateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(1),
-                TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value);
+                TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value,
+            QueueState.Active);
 
         Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, newQueue);
 
@@ -79,7 +80,8 @@ public class OrderServiceTests
             QueueDate.Create(timeProvider.Object.DateNow, timeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(timeProvider.Object.UtcNow),
-                TimeOnly.FromDateTime(timeProvider.Object.UtcNow.AddSeconds(1))).Value);
+                TimeOnly.FromDateTime(timeProvider.Object.UtcNow.AddSeconds(1))).Value,
+            QueueState.Active);
 
         Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, newQueue);
 

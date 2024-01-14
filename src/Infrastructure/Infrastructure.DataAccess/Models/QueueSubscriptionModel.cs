@@ -1,4 +1,7 @@
-﻿#pragma warning disable CS8618
+﻿using Domain.Common.Abstractions;
+using Infrastructure.Tools;
+
+#pragma warning disable CS8618
 
 namespace Infrastructure.DataAccess.Models;
 
@@ -12,7 +15,7 @@ public record QueueSubscriptionModel
 
     public DateOnly CreationDate { get; set; }
 
-    public DateTime? ModifiedOn { get; set; }
+    public SpbDateTime? ModifiedOn { get; set; }
 
     public virtual ICollection<QueueModel> Queues { get; init; }
 }

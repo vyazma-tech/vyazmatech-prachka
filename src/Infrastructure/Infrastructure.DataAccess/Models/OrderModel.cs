@@ -1,4 +1,7 @@
-﻿#pragma warning disable CS8618
+﻿using Domain.Common.Abstractions;
+using Infrastructure.Tools;
+
+#pragma warning disable CS8618
 
 namespace Infrastructure.DataAccess.Models;
 
@@ -16,7 +19,7 @@ public record OrderModel
 
     public string Status { get; set; }
 
-    public DateTime CreationDate { get; set; }
+    public SpbDateTime CreationDate { get; set; }
 
-    public DateTime? ModifiedOn { get; set; }
+    public SpbDateTime? ModifiedOn { get; set; }
 }

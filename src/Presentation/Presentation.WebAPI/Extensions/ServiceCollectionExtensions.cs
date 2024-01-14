@@ -18,6 +18,7 @@ internal static class ServiceCollectionExtensions
         services.AddWorkersConfiguration(configuration);
 
         services
+            .AddHostedService<QueueActivatorBackgroundWorker>()
             .AddHostedService<QueueActivityBackgroundWorker>()
             .AddHostedService<QueueAvailablePositionBackgroundWorker>();
 

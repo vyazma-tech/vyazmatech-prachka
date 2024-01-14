@@ -22,6 +22,6 @@ public static class MarkOrderAsReady
             order.Queue.Id,
             order.Status.ToString(),
             order.CreationDate,
-            order.ModifiedOn);
+            order.ModifiedOn?.Value);
     }
 }

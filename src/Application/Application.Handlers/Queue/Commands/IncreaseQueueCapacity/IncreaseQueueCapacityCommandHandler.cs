@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts;
+using Domain.Common.Abstractions;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
@@ -46,7 +47,7 @@ internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Comm
         Result<QueueEntity> increaseResult = queue
             .IncreaseCapacity(
                 newCapacity,
-                _dateTimeProvider.UtcNow);
+                new SpbDateTime(_dateTimeProvider.UtcNow));
 
         if (increaseResult.IsFaulted)
         {

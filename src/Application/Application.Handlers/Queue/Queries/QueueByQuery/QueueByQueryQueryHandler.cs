@@ -33,12 +33,12 @@ internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, PagedRespo
             .QueryAsync(spec, cancellationToken)
             .ToListAsync(cancellationToken);
 
-        IEnumerable<Task<long>> tasks = GetCurrentCapacities(queues, cancellationToken);
-
         Response[] result = queues
             .FilterBy(request.AssignmentDate)
             .Select(x => x.ToDto())
             .ToArray();
+
+        IEnumerable<Task<long>> tasks = GetCurrentCapacities(result, cancellationToken);
 
         long[] currentCapacities = await Task.WhenAll(tasks);
 
@@ -61,9 +61,9 @@ internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, PagedRespo
         };
     }
 
-    private IEnumerable<Task<long>> GetCurrentCapacities(List<QueueEntity> queues, CancellationToken cancellationToken)
+    private IEnumerable<Task<long>> GetCurrentCapacities(Response[] queues, CancellationToken cancellationToken)
     {
-        foreach (QueueEntity queue in queues)
+        foreach (Response queue in queues)
         {
             yield return _persistenceContext.Orders.CountAsync(
                 new OrderByQueueIdSpecification(queue.Id),

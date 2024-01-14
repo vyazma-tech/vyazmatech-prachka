@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Domain.Common.Abstractions;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
@@ -22,14 +23,15 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
             QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), dateTimeProvider).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(10))).Value);
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddSeconds(10))).Value,
+            QueueState.Active);
 
         Result<OrderEntity> order = OrderEntity.Create(
             Guid.NewGuid(),
             user,
             queue,
             OrderStatus.New,
-            dateTimeProvider.UtcNow);
+            new SpbDateTime(dateTimeProvider.UtcNow));
 
         var subscription = new OrderSubscriptionEntity(
             Guid.NewGuid(),

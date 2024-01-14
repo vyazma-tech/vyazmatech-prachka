@@ -13,15 +13,15 @@ using Microsoft.Extensions.Options;
 
 namespace Application.BackgroundWorkers.Queue;
 
-public class QueueActivityBackgroundWorker : BackgroundService
+public class QueueActivatorBackgroundWorker : BackgroundService
 {
     private readonly TimeSpan _delayBetweenChecks;
-    private readonly ILogger<QueueActivityBackgroundWorker> _logger;
+    private readonly ILogger<QueueActivatorBackgroundWorker> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly Stopwatch _stopwatch;
 
-    public QueueActivityBackgroundWorker(
-        ILogger<QueueActivityBackgroundWorker> logger,
+    public QueueActivatorBackgroundWorker(
+        ILogger<QueueActivatorBackgroundWorker> logger,
         IServiceScopeFactory scopeFactory,
         IOptions<QueueWorkerConfiguration> workerConfiguration)
     {
@@ -68,15 +68,15 @@ public class QueueActivityBackgroundWorker : BackgroundService
                     stoppingToken,
                     context);
 
-                if (updated is { Modified: true, PreviousState: QueueState.Active })
+                if (updated is { Modified: true, PreviousState: QueueState.Prepared })
                 {
                     _logger.LogInformation(
-                        "Queue assigned to AssignmentDate = {AssignmentDate} has expired. Worker removed not paid orders and reset subscriptions",
+                        "Queue assigned to AssignmentDate = {AssignmentDate} has started. Worker changed its status",
                         queue.CreationDate);
 
                     _logger.LogInformation(
                         "{Worker} finished within {Time} ms",
-                        nameof(QueueActivityBackgroundWorker),
+                        nameof(QueueActivatorBackgroundWorker),
                         _stopwatch.Elapsed.TotalMilliseconds);
                 }
 
@@ -86,7 +86,7 @@ public class QueueActivityBackgroundWorker : BackgroundService
             {
                 _logger.LogError(
                     e,
-                    "Error occured while removing not paid orders and resetting subscriptions for QueueId = {QueueId}",
+                    "Error occured while activating queue with QueueId = {QueueId}",
                     queue.Id);
             }
         }

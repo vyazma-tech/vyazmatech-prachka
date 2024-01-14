@@ -21,7 +21,7 @@ public static class UserByIdQuery
             user.Id,
             user.TelegramId.Value,
             user.Fullname.Value,
-            user.ModifiedOn,
+            user.ModifiedOn?.Value,
             user.CreationDate);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.Core.Contracts;
+using Domain.Common.Abstractions;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 
@@ -22,7 +23,7 @@ public static class IncreaseQueueCapacity
         {
             Id = queue.Id,
             Capacity = queue.Capacity.Value,
-            ModifiedOn = queue.ModifiedOn,
+            ModifiedOn = queue.ModifiedOn?.Value,
             AssignmentDate = queue.CreationDate,
             ActiveFrom = queue.ActivityBoundaries.ActiveFrom,
             ActiveUntil = queue.ActivityBoundaries.ActiveUntil,

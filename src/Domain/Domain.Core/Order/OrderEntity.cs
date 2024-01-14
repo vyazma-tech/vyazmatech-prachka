@@ -19,8 +19,8 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         UserEntity user,
         QueueEntity queue,
         OrderStatus status,
-        DateTime creationDateTimeUtc,
-        DateTime? modifiedOn = null)
+        SpbDateTime creationDateTimeUtc,
+        SpbDateTime? modifiedOn = null)
         : base(id)
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in order.");
@@ -48,17 +48,17 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <summary>
     /// Gets order creation date.
     /// </summary>
-    public DateOnly CreationDate => DateOnly.FromDateTime(CreationDateTime);
+    public DateOnly CreationDate => CreationDateTime.AsDateOnly();
 
     /// <summary>
     /// Gets order creation date time utc.
     /// </summary>
-    public DateTime CreationDateTime { get; }
+    public SpbDateTime CreationDateTime { get; }
 
     /// <summary>
     /// Gets modification date.
     /// </summary>
-    public DateTime? ModifiedOn { get; private set; }
+    public SpbDateTime? ModifiedOn { get; private set; }
 
     /// <summary>
     /// Validates provided data for order and constructs order instance, when data is valid.
@@ -77,8 +77,8 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         UserEntity user,
         QueueEntity queue,
         OrderStatus status,
-        DateTime creationDateUtc,
-        DateTime? modifiedOn = null)
+        SpbDateTime creationDateUtc,
+        SpbDateTime? modifiedOn = null)
     {
         var order = new OrderEntity(id, user, queue, status, creationDateUtc, modifiedOn);
 
@@ -98,7 +98,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <param name="dateTimeUtc">payment utc date.</param>
     /// <returns>same order instance.</returns>
     /// <remarks>returns failure result, when order is already is paid.</remarks>
-    public Result<OrderEntity> MakePayment(DateTime dateTimeUtc)
+    public Result<OrderEntity> MakePayment(SpbDateTime dateTimeUtc)
     {
         if (Status == OrderStatus.Paid)
         {
@@ -118,7 +118,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <param name="dateTimeUtc">ready utc date.</param>
     /// <returns>same order instance.</returns>
     /// <remarks>returns failure result, when order is already marked as ready.</remarks>
-    public Result<OrderEntity> MakeReady(DateTime dateTimeUtc)
+    public Result<OrderEntity> MakeReady(SpbDateTime dateTimeUtc)
     {
         if (Status == OrderStatus.Ready)
         {
@@ -138,7 +138,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <param name="queue">queue, which order should be assigned to.</param>
     /// <param name="dateTimeUtc">modification date.</param>
     /// <returns>same order instance.</returns>
-    public OrderEntity Prolong(QueueEntity queue, DateTime dateTimeUtc)
+    public OrderEntity Prolong(QueueEntity queue, SpbDateTime dateTimeUtc)
     {
         ModifiedOn = dateTimeUtc;
         Queue = queue;
