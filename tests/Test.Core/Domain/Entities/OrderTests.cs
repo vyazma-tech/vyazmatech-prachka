@@ -7,6 +7,7 @@ using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
 using FluentAssertions;
+using Infrastructure.Tools;
 using Moq;
 using Test.Core.Domain.Entities.ClassData;
 using Xunit;
@@ -20,8 +21,8 @@ public class OrderTests
     [Fact]
     public void CreateOrder_Should_ReturnNotNullOrder()
     {
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+        _dateTimeProvider.Setup(x => x.SpbDateTimeNow).Returns(SpbDateTimeProvider.CurrentDateTime);
 
         UserEntity user = UserClassData.Create();
 
@@ -40,14 +41,14 @@ public class OrderTests
             user,
             queue,
             OrderStatus.New,
-            new SpbDateTime(_dateTimeProvider.Object.UtcNow));
+            _dateTimeProvider.Object.SpbDateTimeNow);
 
         orderCreationResult.IsSuccess.Should().BeTrue();
         orderCreationResult.Value.Should().NotBeNull();
         orderCreationResult.Value.Queue.Should().Be(queue);
         orderCreationResult.Value.User.Should().Be(user);
         orderCreationResult.Value.Status.Should().Be(OrderStatus.New);
-        orderCreationResult.Value.CreationDate.Should().Be(_dateTimeProvider.Object.DateNow);
+        orderCreationResult.Value.CreationDate.Should().Be(_dateTimeProvider.Object.SpbDateOnlyNow);
         orderCreationResult.Value.ModifiedOn.Should().BeNull();
     }
 
@@ -55,7 +56,7 @@ public class OrderTests
     [ClassData(typeof(OrderClassData))]
     public void MakeReady_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyReady(OrderEntity order)
     {
-        var modificationDate = new SpbDateTime(DateTime.UtcNow);
+        var modificationDate = SpbDateTimeProvider.CurrentDateTime;
         Result<OrderEntity> actionResult = order.MakeReady(modificationDate);
 
         actionResult.IsSuccess.Should().BeTrue();
@@ -69,7 +70,7 @@ public class OrderTests
     [ClassData(typeof(OrderClassData))]
     public void MakePayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid(OrderEntity order)
     {
-        var modificationDate = new SpbDateTime(DateTime.UtcNow);
+        var modificationDate = SpbDateTimeProvider.CurrentDateTime;
         Result<OrderEntity> actionResult = order.MakePayment(modificationDate);
 
         actionResult.IsSuccess.Should().BeTrue();

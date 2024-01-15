@@ -7,13 +7,13 @@ public static class OrderMapping
 {
     public static OrderEntity MapTo(OrderModel model)
     {
-        return OrderEntity.Create(
+        return new OrderEntity(
             model.Id,
             UserMapping.MapTo(model.User),
             QueueMapping.MapTo(model.Queue),
             Enum.Parse<OrderStatus>(model.Status),
             model.CreationDate,
-            model.ModifiedOn).Value;
+            model.ModifiedOn);
     }
 
     public static OrderModel MapFrom(OrderEntity entity)

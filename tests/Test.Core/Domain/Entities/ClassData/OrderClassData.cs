@@ -13,7 +13,7 @@ public sealed class OrderClassData : IEnumerable<object[]>
 {
     public IEnumerator<object[]> GetEnumerator()
     {
-        var dateTimeProvider = new DateTimeProvider();
+        var dateTimeProvider = new SpbDateTimeProvider();
         UserEntity user = UserClassData.Create();
         DateTime queueDate = DateTime.UtcNow.AddDays(1);
 
@@ -31,7 +31,7 @@ public sealed class OrderClassData : IEnumerable<object[]>
             user,
             queue,
             OrderStatus.New,
-            new SpbDateTime(DateTime.UtcNow));
+            dateTimeProvider.SpbDateTimeNow);
         
         order.Value.ClearDomainEvents();
 

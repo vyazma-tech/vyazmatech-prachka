@@ -14,7 +14,7 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
 {
     public IEnumerator<object[]> GetEnumerator()
     {
-        var dateTimeProvider = new DateTimeProvider();
+        var dateTimeProvider = new SpbDateTimeProvider();
         UserEntity user = UserClassData.Create();
 
         var queue = new QueueEntity(
@@ -31,7 +31,7 @@ public sealed class SubscriptionClassData : IEnumerable<object[]>
             user,
             queue,
             OrderStatus.New,
-            new SpbDateTime(dateTimeProvider.UtcNow));
+            dateTimeProvider.SpbDateTimeNow);
 
         var subscription = new OrderSubscriptionEntity(
             Guid.NewGuid(),

@@ -52,7 +52,7 @@ public class OrderServiceTests
         var newQueue = new QueueEntity(
             Guid.NewGuid(),
             Capacity.Create(0).Value,
-            QueueDate.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new DateTimeProvider()).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.Today.AddDays(1)), new SpbDateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(1),
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value,
@@ -73,6 +73,7 @@ public class OrderServiceTests
         var timeProvider = new Mock<IDateTimeProvider>();
         timeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.Now));
         timeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
+        timeProvider.Setup(x => x.SpbDateOnlyNow).Returns(DateOnly.FromDateTime(DateTime.Now));
             
         var newQueue = new QueueEntity(
             Guid.NewGuid(),

@@ -40,7 +40,7 @@ public class QueueTests
             1,
             30,
             0);
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(dateTime));
+        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(SpbDateTimeProvider.CurrentDate);
 
         var registrationDate = new DateTime(
             2023,
@@ -85,7 +85,7 @@ public class QueueTests
     [Fact]
     public void CreateQueue_Should_ReturnNotNullQueue()
     {
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(SpbDateTimeProvider.CurrentDate);
 
         DateTime creationDate = DateTime.UtcNow;
         var queue = new QueueEntity(
@@ -111,9 +111,9 @@ public class QueueTests
         UserEntity user,
         OrderEntity order)
     {
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.Now.AddMinutes(1));
+        _dateTimeProvider.Setup(x => x.SpbDateTimeNow).Returns(new SpbDateTime(DateTime.Now.AddMinutes(1)));
 
-        Result<OrderEntity> entranceResult = queue.Add(order, new SpbDateTime(_dateTimeProvider.Object.UtcNow));
+        Result<OrderEntity> entranceResult = queue.Add(order, _dateTimeProvider.Object.SpbDateTimeNow);
 
         entranceResult.IsFaulted.Should().BeTrue();
         entranceResult.Error.Should().Be(DomainErrors.Queue.ContainsOrderWithId(order.Id));
@@ -140,13 +140,13 @@ public class QueueTests
         var queue = new QueueEntity(
             Guid.NewGuid(),
             Capacity.Create(10).Value,
-            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new DateTimeProvider()).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new SpbDateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value,
             QueueState.Active);
 
-        var modificationDate = new SpbDateTime(DateTime.UtcNow);
+        var modificationDate = SpbDateTimeProvider.CurrentDateTime;
         Result<QueueEntity> increasingResult = queue.IncreaseCapacity(Capacity.Create(11).Value, modificationDate);
 
         increasingResult.IsSuccess.Should().BeTrue();
@@ -159,6 +159,7 @@ public class QueueTests
     {
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
+        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
         var queue = new QueueEntity(
             Guid.NewGuid(),
             Capacity.Create(10).Value,
@@ -186,7 +187,7 @@ public class QueueTests
             user,
             queue,
             OrderStatus.New,
-            new SpbDateTime(DateTime.UtcNow));
+            SpbDateTimeProvider.CurrentDateTime);
 
         incomingOrderResult.IsFaulted.Should().BeTrue();
         incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Overfull);

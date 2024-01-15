@@ -17,7 +17,7 @@ public sealed class OrderServiceClassData : IEnumerable<object[]>
         var queue = new QueueEntity(
             Guid.NewGuid(),
             Capacity.Create(1).Value,
-            QueueDate.Create(DateOnly.FromDateTime(DateTime.Now), new DateTimeProvider()).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.Now), new SpbDateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(1),
                 TimeOnly.FromDateTime(DateTime.Now).AddHours(2)).Value,

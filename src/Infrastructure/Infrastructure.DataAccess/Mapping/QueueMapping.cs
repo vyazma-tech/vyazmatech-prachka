@@ -13,7 +13,7 @@ public static class QueueMapping
 
         QueueDate assignmentDate = QueueDate.Create(
             model.AssignmentDate,
-            new DateTimeProvider()).Value;
+            new SpbDateTimeProvider()).Value;
 
         QueueActivityBoundaries boundaries = QueueActivityBoundaries.Create(
             model.ActiveFrom,

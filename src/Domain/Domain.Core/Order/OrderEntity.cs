@@ -14,7 +14,7 @@ namespace Domain.Core.Order;
 /// </summary>
 public sealed class OrderEntity : Entity, IAuditableEntity
 {
-    private OrderEntity(
+    public OrderEntity(
         Guid id,
         UserEntity user,
         QueueEntity queue,

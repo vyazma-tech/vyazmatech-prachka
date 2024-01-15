@@ -34,7 +34,7 @@ internal sealed class MarkOrderAsReadyCommandHandler : ICommandHandler<Command, 
 
         OrderEntity order = searchResult.Value;
 
-        Result<OrderEntity> makeReadyResult = order.MakeReady(new SpbDateTime(_dateTimeProvider.UtcNow));
+        Result<OrderEntity> makeReadyResult = order.MakeReady(_dateTimeProvider.SpbDateTimeNow);
 
         if (makeReadyResult.IsFaulted)
             return new Result<Response>(makeReadyResult.Error);

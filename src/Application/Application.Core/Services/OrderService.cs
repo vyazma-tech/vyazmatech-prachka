@@ -5,6 +5,7 @@ using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Contracts;
+using Infrastructure.Tools;
 
 namespace Application.Core.Services;
 
@@ -44,13 +45,13 @@ public class OrderService
             return removalResult;
         }
 
-        Result<OrderEntity> entranceResult = queue.Add(order, new SpbDateTime(_timeProvider.UtcNow));
+        Result<OrderEntity> entranceResult = queue.Add(order, SpbDateTimeProvider.CurrentDateTime);
         if (entranceResult.IsFaulted)
         {
             return entranceResult;
         }
 
-        order.Prolong(queue, new SpbDateTime(_timeProvider.UtcNow));
+        order.Prolong(queue, SpbDateTimeProvider.CurrentDateTime);
         _orderRepository.Update(order);
         _queueRepository.Update(queue);
 

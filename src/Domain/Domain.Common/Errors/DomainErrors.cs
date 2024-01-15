@@ -53,7 +53,7 @@ public static class DomainErrors
 
         public static Error NotNextWeek => Error.Unprocessable(
             $"{nameof(QueueDate)}.{nameof(NotNextWeek)}",
-            "The queue date be on this week",
+            "The queue date should be on this week",
             ErrorArea.Domain);
     }
 
