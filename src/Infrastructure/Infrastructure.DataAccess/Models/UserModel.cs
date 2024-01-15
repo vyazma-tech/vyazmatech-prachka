@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Abstractions;
-using Infrastructure.Tools;
 
 #pragma warning disable CS8618
 

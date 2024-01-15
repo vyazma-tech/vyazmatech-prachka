@@ -17,7 +17,7 @@ internal class MarkAsPaidEndpoint : Endpoint<Command, Response>
 
     public override void Configure()
     {
-        Patch("/api/orders/{id}/paid");
+        Patch("/api/orders/paid");
         AllowAnonymous();
     }
 

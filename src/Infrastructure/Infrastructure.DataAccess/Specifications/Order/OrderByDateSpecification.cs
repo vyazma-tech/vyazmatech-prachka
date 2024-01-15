@@ -1,7 +1,6 @@
 ﻿using Domain.Common.Abstractions;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
-using Infrastructure.Tools;
 
 namespace Infrastructure.DataAccess.Specifications.Order;
 

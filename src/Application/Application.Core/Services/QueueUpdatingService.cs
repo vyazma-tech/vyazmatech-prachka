@@ -1,7 +1,6 @@
 ﻿using Domain.Core.Queue;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Contracts;
-using Infrastructure.Tools;
 
 namespace Application.Core.Services;
 

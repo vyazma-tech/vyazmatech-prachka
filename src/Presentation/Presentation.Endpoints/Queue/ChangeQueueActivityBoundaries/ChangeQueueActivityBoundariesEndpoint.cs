@@ -17,7 +17,7 @@ internal class ChangeQueueActivityBoundariesEndpoint : Endpoint<Command, Respons
 
     public override void Configure()
     {
-        Patch("/api/queues/{queueId}/activity");
+        Patch("/api/queues/activity");
         AllowAnonymous();
     }
 

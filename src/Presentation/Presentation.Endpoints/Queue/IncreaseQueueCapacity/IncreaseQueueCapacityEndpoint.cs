@@ -17,7 +17,7 @@ internal class IncreaseQueueCapacityEndpoint : Endpoint<Command, Response>
 
     public override void Configure()
     {
-        Patch("api/queues/{queueId}/capacity/{capacity}");
+        Patch("api/queues/capacity/");
         AllowAnonymous();
     }
 
