@@ -1,9 +1,9 @@
-﻿using Domain.Core.Order;
-using Domain.Kernel;
+﻿using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Specifications.Order;
 
-public sealed class OrderByIdSpecification : Specification<OrderEntity>
+public sealed class OrderByIdSpecification : Specification<OrderModel>
 {
     private readonly Guid _orderId;
 
@@ -14,5 +14,5 @@ public sealed class OrderByIdSpecification : Specification<OrderEntity>
     }
 
     public override string ToString()
-        => $"{typeof(Guid)}: {_orderId}";
+        => $"OrderId = {_orderId}";
 }

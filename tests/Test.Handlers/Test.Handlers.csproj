@@ -26,6 +26,7 @@
       <ProjectReference Include="..\..\src\Application\Application.Handlers\Application.Handlers.csproj" />
       <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.DataAccess\Infrastructure.DataAccess.csproj" />
       <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.Tools\Infrastructure.Tools.csproj" />
+      <ProjectReference Include="..\Test.Core\Test.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>

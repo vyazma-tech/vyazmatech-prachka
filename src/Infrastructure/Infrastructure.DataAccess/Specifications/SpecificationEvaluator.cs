@@ -1,17 +1,28 @@
-﻿using Domain.Kernel;
+using Infrastructure.DataAccess.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Specifications;
 
 public static class SpecificationEvaluator
 {
-    public static IQueryable<TEntity> GetQuery<TEntity>(
-        IQueryable<TEntity> inputQueryable,
-        Specification<TEntity> specification)
-        where TEntity : Entity
+    public static IQueryable<TModel> GetQuery<TModel>(
+        IQueryable<TModel> inputQueryable,
+        Specification<TModel> specification)
+        where TModel : class
     {
-        IQueryable<TEntity> queryable = inputQueryable;
+        IQueryable<TModel> queryable = inputQueryable;
 
-        queryable = queryable.Where(specification.Criteria);
+        if (specification.Criteria is not null)
+        {
+            queryable = queryable.Where(specification.Criteria);
+        }
+
+        if (specification is { Page: { } page, RecordsPerPage: { } recordsPerPage })
+        {
+            queryable = queryable
+                .Skip(page * recordsPerPage)
+                .Take(recordsPerPage);
+        }
 
         if (specification.OrderByExpression is not null)
         {
@@ -21,6 +32,14 @@ public static class SpecificationEvaluator
         if (specification.OrderByDescendingExpression is not null)
         {
             queryable = queryable.OrderByDescending(specification.OrderByDescendingExpression);
+        }
+
+        if (specification.Includes is not null)
+        {
+            foreach (var include in specification.Includes)
+            {
+                queryable = queryable.Include(include);
+            }
         }
 
         return queryable;

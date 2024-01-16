@@ -1,15 +1,18 @@
-﻿using Domain.Core.Queue;
-using Domain.Kernel;
+﻿using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Specifications.Queue;
 
-public sealed class QueueByAssignmentDateSpecification : Specification<QueueEntity>
+public sealed class QueueByAssignmentDateSpecification : Specification<QueueModel>
 {
-    public QueueByAssignmentDateSpecification(DateTime assignmentDate)
-        : base(queue => queue.CreationDate == assignmentDate)
+    private readonly DateOnly _assignmentDate;
+
+    public QueueByAssignmentDateSpecification(DateOnly assignmentDate)
+        : base(queue => queue.AssignmentDate == assignmentDate)
     {
+        _assignmentDate = assignmentDate;
     }
 
     public override string ToString()
-        => string.Empty;
+        => $"QueueAssignmentDate = {_assignmentDate}";
 }

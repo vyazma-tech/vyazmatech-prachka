@@ -1,9 +1,7 @@
 ﻿using Application.DataAccess.Contracts;
-using Domain.Core.Order;
-using Domain.Core.Queue;
-using Domain.Core.Subscription;
-using Domain.Core.User;
+using Domain.Common.Abstractions;
 using Domain.Core.ValueObjects;
+using Infrastructure.DataAccess.Models;
 using Infrastructure.DataAccess.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -17,13 +15,15 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
     {
     }
 
-    public DbSet<OrderEntity> Orders { get; private init; } = null!;
+    public DbSet<OrderModel> Orders { get; private init; } = null!;
 
-    public DbSet<UserEntity> Users { get; private init; } = null!;
+    public DbSet<UserModel> Users { get; private init; } = null!;
 
-    public DbSet<QueueEntity> Queues { get; private init; } = null!;
+    public DbSet<QueueModel> Queues { get; private init; } = null!;
 
-    public DbSet<SubscriptionEntity> Subscriptions { get; private init; } = null!;
+    public DbSet<QueueSubscriptionModel> QueueSubscriptions { get; private init; } = null!;
+
+    public DbSet<OrderSubscriptionModel> OrderSubscriptions { get; private init; } = null!;
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
     {
@@ -40,5 +40,6 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
         configurationBuilder.Properties<Capacity>().HaveConversion<CapacityValueConverter>();
         configurationBuilder.Properties<TelegramId>().HaveConversion<TelegramIdValueConverter>();
         configurationBuilder.Properties<Fullname>().HaveConversion<FullnameValueConverter>();
+        configurationBuilder.Properties<SpbDateTime>().HaveConversion<SpbDateTimeValueConverter>();
     }
 }

@@ -1,18 +1,28 @@
 ﻿using Domain.Core.Order;
+using Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.DataAccess.EntityConfigurations;
 
-public sealed class OrderConfiguration : IEntityTypeConfiguration<OrderEntity>
+public sealed class OrderConfiguration : IEntityTypeConfiguration<OrderModel>
 {
-    public void Configure(EntityTypeBuilder<OrderEntity> builder)
+    public void Configure(EntityTypeBuilder<OrderModel> builder)
     {
-        builder.HasOne(order => order.User).WithMany();
-        builder.Property(order => order.Paid);
-        builder.Property(order => order.Ready);
-        builder.HasIndex(order => order.CreationDate)
-            .IsDescending();
-        builder.Property(order => order.ModifiedOn);
+        builder.HasKey(order => order.Id);
+
+        builder
+            .HasOne(order => order.Queue)
+            .WithMany(queue => queue.Orders)
+            .HasForeignKey(order => order.QueueId)
+            .HasPrincipalKey(queue => queue.Id);
+
+        builder
+            .HasOne(order => order.User)
+            .WithMany(user => user.Orders)
+            .HasForeignKey(order => order.UserId)
+            .HasPrincipalKey(user => user.Id);
+
+        builder.Property(order => order.Status).HasDefaultValue(OrderStatus.New.ToString());
     }
 }

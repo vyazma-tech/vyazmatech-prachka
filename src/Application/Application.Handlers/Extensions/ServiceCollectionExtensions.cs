@@ -1,15 +1,23 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Application.Core.PreProcessors;
+using FluentValidation;
+using Mediator;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Handlers.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddHandlers(this IServiceCollection services)
     {
-        return services.AddMediator(s =>
+        services.AddMediator(s =>
         {
             s.Namespace = "Application.Handlers";
             s.ServiceLifetime = ServiceLifetime.Transient;
         });
+
+        services.AddValidatorsFromAssembly(IApplicationHandlersMarker.Assembly);
+
+        return services
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPreProcessor<,>));
     }
 }

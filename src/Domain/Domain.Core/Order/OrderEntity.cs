@@ -1,7 +1,6 @@
 ﻿using Ardalis.GuardClauses;
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Domain.Core.Order.Events;
 using Domain.Core.Queue;
@@ -13,63 +12,77 @@ namespace Domain.Core.Order;
 /// <summary>
 /// Describes order entity.
 /// </summary>
-public class OrderEntity : Entity, IAuditableEntity
+public sealed class OrderEntity : Entity, IAuditableEntity
 {
-    private OrderEntity(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
-        : base(Guid.NewGuid())
+    public OrderEntity(
+        Guid id,
+        UserEntity user,
+        QueueEntity queue,
+        OrderStatus status,
+        SpbDateTime creationDateTimeUtc,
+        SpbDateTime? modifiedOn = null)
+        : base(id)
     {
         Guard.Against.Null(user, nameof(user), "User should not be null in order.");
         Guard.Against.Null(queue, nameof(queue), "Queue should not be null in order.");
-        Guard.Against.Null(creationDateUtc, nameof(creationDateUtc), "Creation date should not be null in order.");
+        Guard.Against.Null(creationDateTimeUtc, nameof(creationDateTimeUtc), "Creation date should not be null in order.");
 
         User = user;
         Queue = queue;
-        CreationDate = creationDateUtc;
+        CreationDateTime = creationDateTimeUtc;
+        Status = status;
+        ModifiedOn = modifiedOn;
     }
 
-#pragma warning disable CS8618
-    private OrderEntity() { }
-#pragma warning restore CS8618
-
     /// <inheritdoc cref="UserEntity" />
-    public virtual UserEntity User { get; }
+    public UserEntity User { get; }
 
     /// <inheritdoc cref="QueueEntity" />
-    public virtual QueueEntity Queue { get; private set; }
+    public QueueEntity Queue { get; private set; }
 
     /// <summary>
-    /// Gets a value indicating whether order paid or not.
+    /// Gets a value indicating order status.
     /// </summary>
-    public bool Paid { get; private set; }
-
-    /// <summary>
-    /// Gets a value indicating whether order ready or not.
-    /// </summary>
-    public bool Ready { get; private set; }
+    public OrderStatus Status { get; private set; }
 
     /// <summary>
     /// Gets order creation date.
     /// </summary>
-    public DateTime CreationDate { get; }
+    public DateOnly CreationDate => CreationDateTime.AsDateOnly();
+
+    /// <summary>
+    /// Gets order creation date time utc.
+    /// </summary>
+    public SpbDateTime CreationDateTime { get; }
 
     /// <summary>
     /// Gets modification date.
     /// </summary>
-    public DateTime? ModifiedOn { get; private set; }
+    public SpbDateTime? ModifiedOn { get; private set; }
 
     /// <summary>
     /// Validates provided data for order and constructs order instance, when data is valid.
     /// </summary>
+    /// <param name="id">order id.</param>
     /// <param name="user">order issuer.</param>
     /// <param name="queue">queue of the order.</param>
+    /// <param name="status">current order status.</param>
     /// <param name="creationDateUtc">order creation date.</param>
+    /// <param name="modifiedOn">order modification date.</param>
     /// <returns>order instance.</returns>
     /// <remarks>returns failure result, when order is being enqueued into full queue.</remarks>
     /// <remarks>returns failure result, when order is already in the queue.</remarks>
-    public static Result<OrderEntity> Create(UserEntity user, QueueEntity queue, DateTime creationDateUtc)
+    public static Result<OrderEntity> Create(
+        Guid id,
+        UserEntity user,
+        QueueEntity queue,
+        OrderStatus status,
+        SpbDateTime creationDateUtc,
+        SpbDateTime? modifiedOn = null)
     {
-        var order = new OrderEntity(user, queue, creationDateUtc);
-        Result<OrderEntity> entranceResult = queue.Add(order);
+        var order = new OrderEntity(id, user, queue, status, creationDateUtc, modifiedOn);
+
+        Result<OrderEntity> entranceResult = queue.Add(order, creationDateUtc);
 
         if (entranceResult.IsFaulted)
         {
@@ -85,15 +98,14 @@ public class OrderEntity : Entity, IAuditableEntity
     /// <param name="dateTimeUtc">payment utc date.</param>
     /// <returns>same order instance.</returns>
     /// <remarks>returns failure result, when order is already is paid.</remarks>
-    public Result<OrderEntity> MakePayment(DateTime dateTimeUtc)
+    public Result<OrderEntity> MakePayment(SpbDateTime dateTimeUtc)
     {
-        if (Paid)
+        if (Status == OrderStatus.Paid)
         {
-            var exception = new DomainException(DomainErrors.Order.AlreadyPaid);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Order.AlreadyPaid);
         }
 
-        Paid = true;
+        Status = OrderStatus.Paid;
         ModifiedOn = dateTimeUtc;
         Raise(new OrderPaidDomainEvent(this));
 
@@ -106,15 +118,14 @@ public class OrderEntity : Entity, IAuditableEntity
     /// <param name="dateTimeUtc">ready utc date.</param>
     /// <returns>same order instance.</returns>
     /// <remarks>returns failure result, when order is already marked as ready.</remarks>
-    public Result<OrderEntity> MakeReady(DateTime dateTimeUtc)
+    public Result<OrderEntity> MakeReady(SpbDateTime dateTimeUtc)
     {
-        if (Ready)
+        if (Status == OrderStatus.Ready)
         {
-            var exception = new DomainException(DomainErrors.Order.IsReady);
-            return new Result<OrderEntity>(exception);
+            return new Result<OrderEntity>(DomainErrors.Order.IsReady);
         }
 
-        Ready = true;
+        Status = OrderStatus.Ready;
         ModifiedOn = dateTimeUtc;
         Raise(new OrderReadyDomainEvent(this));
 
@@ -127,10 +138,11 @@ public class OrderEntity : Entity, IAuditableEntity
     /// <param name="queue">queue, which order should be assigned to.</param>
     /// <param name="dateTimeUtc">modification date.</param>
     /// <returns>same order instance.</returns>
-    public OrderEntity Prolong(QueueEntity queue, DateTime dateTimeUtc)
+    public OrderEntity Prolong(QueueEntity queue, SpbDateTime dateTimeUtc)
     {
         ModifiedOn = dateTimeUtc;
         Queue = queue;
+        Status = OrderStatus.Prolonged;
 
         return this;
     }

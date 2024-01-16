@@ -1,19 +1,18 @@
-﻿using Domain.Core.Order;
-using Domain.Core.Queue;
-using Domain.Kernel;
+﻿using Infrastructure.DataAccess.Contracts;
+using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Specifications.Queue;
 
-public sealed class QueueByOrderSpecification : Specification<QueueEntity>
+public sealed class QueueByOrderSpecification : Specification<QueueModel>
 {
     private readonly Guid _orderId;
 
-    public QueueByOrderSpecification(OrderEntity order)
-        : base(queue => queue.Items.Contains(order))
+    public QueueByOrderSpecification(OrderModel order)
+        : base(queue => queue.Orders.Contains(order))
     {
         _orderId = order.Id;
     }
 
     public override string ToString()
-        => $"{typeof(OrderEntity)}: {_orderId}";
+        => $"OrderId = {_orderId}";
 }

@@ -1,33 +1,25 @@
-using Application.Handlers;
-using Application.Handlers.Extensions;
+using FastEndpoints.Swagger;
 using Infrastructure.DataAccess.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Presentation.Endpoints;
 using Presentation.Endpoints.Extensions;
-using Presentation.WebAPI.Configuration;
-using Presentation.WebAPI.Exceptions;
+using Presentation.WebAPI.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-PostgresConfiguration? postgresConfiguration = builder.Configuration
-    .GetSection(nameof(PostgresConfiguration))
-    .Get<PostgresConfiguration>() ?? throw new StartupException(nameof(PostgresConfiguration));
+builder.Services
+    .AddWorkers(builder.Configuration)
+    .AddDatabase(builder.Configuration);
 
-builder.Services.AddSingleton(postgresConfiguration);
-builder.Services.AddDatabase(o =>
-{
-    o.UseNpgsql(postgresConfiguration.ToConnectionString("default"));
-});
+builder.Services
+    .AddApplication(builder.Configuration)
+    .AddGlobalExceptionHandler()
+    .AddEndpoints()
+    .SwaggerDocument();
 
-builder.Services.AddApplication();
-builder.Services.AddEndpoints();
+WebApplication app = builder.Build().ConfigureApp();
 
-WebApplication app = builder.Build();
-
-using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
+await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
 {
     await scope.UseDatabase();
 }
 
-app.UseEndpoints();
-app.Run();
+await app.RunAsync();

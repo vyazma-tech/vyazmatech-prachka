@@ -1,0 +1,467 @@
+﻿GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122319.206.json
+
+###
+
+GET http://localhost:5290/api/orders/3ef96de4-f19f-468c-b0af-666cb7e4836b
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122315.200.json
+
+###
+
+GET http://localhost:5290/api/orders/3ef96de4-f19f-468c-b0af-666cb7e4836b
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122314.200.json
+
+###
+
+GET http://localhost:5290/api/orders/3ef96de4-f19f-468c-b0af-666cb7e4836b
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122313-1.200.json
+
+###
+
+GET http://localhost:5290/api/orders/3ef96de4-f19f-468c-b0af-666cb7e4836b
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122313.200.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122310-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122310.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122309.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122308.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122307-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122307.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122306.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122305.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122301.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122300-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122300.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122259.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122258-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122258.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122257-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122257.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122256-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122256.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122255-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122255.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122254.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122253.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122252.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122251-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122251.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122250.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122249-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122249.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122248.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122247.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122246.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122245.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122244-1.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122244.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122243.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122242.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122241.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122239.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122238.206.json
+
+###
+
+GET http://localhost:5290/api/orders?creationDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122236.206.json
+
+###
+
+PATCH http://localhost:5290/api/queues/b79fc5d2-938e-48f5-9400-43c15ef1dbb7/capacity/11
+Content-Type: application/json
+Content-Length: 3
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+}
+
+<> 2024-01-15T122155.400.json
+
+###
+
+PATCH http://localhost:5290/api/queues/b79fc5d2-938e-48f5-9400-43c15ef1dbb7/activity
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "activeFrom": "13:07:00",
+  "activeUntil": "13:31:30"
+}
+
+<> 2024-01-15T122128.400.json
+
+###
+
+PATCH http://localhost:5290/api/queues/b79fc5d2-938e-48f5-9400-43c15ef1dbb7/activity
+Content-Type: application/json
+Content-Length: 59
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "activeFrom": "13:07:00",
+  "activeUntil": "13:31:30"
+}
+
+<> 2024-01-15T122123.400.json
+
+###
+
+GET http://localhost:5290/api/queues?page=0&assignmentDate=2024-01-15
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-01-15T122118.206.json
+
+###
+
+GET http://localhost:5290/api/queues?page=0&assignmentDate=2024-01-14
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.8)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+###
+
