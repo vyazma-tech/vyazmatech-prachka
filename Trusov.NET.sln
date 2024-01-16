@@ -43,11 +43,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{48C48F42-04B1-4B9E-93EB-C8F6A397B351}"
 	ProjectSection(SolutionItems) = preProject
 		docker\docker-compose.yml = docker\docker-compose.yml
-		docker\run_database.sh = docker\run_database.sh
-		docker\stop_database.sh = docker\stop_database.sh
+		docker\build.dockerfile = docker\build.dockerfile
+		docker\build.dockerfile.dockerignore = docker\build.dockerfile.dockerignore
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.BackgroundWorkers", "src\Application\Application.BackgroundWorkers\Application.BackgroundWorkers.csproj", "{5DD10590-2621-4E5B-9759-57F6D732FE3C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployment", "deployment", "{BDD8E4AF-E268-419B-A9EB-29640C57B17C}"
+	ProjectSection(SolutionItems) = preProject
+		deployment\run_container.sh = deployment\run_container.sh
+		deployment\run_database.sh = deployment\run_database.sh
+		deployment\run_prod.sh = deployment\run_prod.sh
+		deployment\run_test.sh = deployment\run_test.sh
+		deployment\stop_database.sh = deployment\stop_database.sh
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
