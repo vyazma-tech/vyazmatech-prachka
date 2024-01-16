@@ -1,5 +1,4 @@
 ﻿using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Contracts;
@@ -38,14 +37,13 @@ internal abstract class RepositoryBase<TEntity, TModel>
 
         if (model is null)
         {
-            var exception = new DomainException(DomainErrors.Entity.NotFoundFor<TEntity>(specification.ToString()));
-            return new Result<TEntity>(exception);
+            return new Result<TEntity>(DomainErrors.Entity.NotFoundFor<TEntity>(specification.ToString()));
         }
 
         return MapTo(model);
     }
 
-    public IAsyncEnumerable<TEntity> FindAllByAsync(
+    public IAsyncEnumerable<TEntity> QueryAsync(
         Specification<TModel> specification,
         CancellationToken cancellationToken)
     {

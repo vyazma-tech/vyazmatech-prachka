@@ -1,8 +1,5 @@
 ﻿using Application.DataAccess.Contracts;
-using Domain.Core.Order;
-using Domain.Core.Queue;
-using Domain.Core.Subscription;
-using Domain.Core.User;
+using Domain.Common.Abstractions;
 using Domain.Core.ValueObjects;
 using Infrastructure.DataAccess.Models;
 using Infrastructure.DataAccess.ValueConverters;
@@ -43,5 +40,6 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
         configurationBuilder.Properties<Capacity>().HaveConversion<CapacityValueConverter>();
         configurationBuilder.Properties<TelegramId>().HaveConversion<TelegramIdValueConverter>();
         configurationBuilder.Properties<Fullname>().HaveConversion<FullnameValueConverter>();
+        configurationBuilder.Properties<SpbDateTime>().HaveConversion<SpbDateTimeValueConverter>();
     }
 }

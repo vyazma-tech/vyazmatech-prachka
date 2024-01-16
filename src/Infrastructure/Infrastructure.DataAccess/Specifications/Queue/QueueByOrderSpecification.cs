@@ -1,8 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.Order;
-using Domain.Core.Queue;
-using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
+﻿using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
 
 namespace Infrastructure.DataAccess.Specifications.Queue;
@@ -18,5 +14,5 @@ public sealed class QueueByOrderSpecification : Specification<QueueModel>
     }
 
     public override string ToString()
-        => $"{typeof(OrderModel)}: {_orderId}";
+        => $"OrderId = {_orderId}";
 }

@@ -2,4 +2,7 @@
   <ItemGroup>
     <PackageReference Include="Mediator.Abstractions" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain.Common\Domain.Common.csproj" />
+  </ItemGroup>
 </Project>

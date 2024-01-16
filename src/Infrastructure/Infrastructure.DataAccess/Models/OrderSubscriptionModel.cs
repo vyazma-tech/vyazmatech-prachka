@@ -1,4 +1,4 @@
-﻿using Application.DataAccess.Contracts;
+﻿using Domain.Common.Abstractions;
 
 #pragma warning disable CS8618
 
@@ -14,7 +14,7 @@ public record OrderSubscriptionModel
 
     public DateOnly CreationDate { get; set; }
 
-    public DateTime? ModifiedOn { get; set; }
+    public SpbDateTime? ModifiedOn { get; set; }
 
     public virtual ICollection<OrderModel> Orders { get; init; }
 }

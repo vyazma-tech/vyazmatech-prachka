@@ -6,11 +6,11 @@ namespace Infrastructure.DataAccess.Contracts;
 
 public interface IOrderSubscriptionRepository
 {
-    Task<Result<SubscriptionEntity>> FindByAsync(
+    Task<Result<OrderSubscriptionEntity>> FindByAsync(
         Specification<OrderSubscriptionModel> specification,
         CancellationToken cancellationToken);
 
-    void Insert(SubscriptionEntity subscription);
+    void Insert(OrderSubscriptionEntity subscription);
 
-    void Update(SubscriptionEntity subscription);
+    void Update(OrderSubscriptionEntity subscription);
 }

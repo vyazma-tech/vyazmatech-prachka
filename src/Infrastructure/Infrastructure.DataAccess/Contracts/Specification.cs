@@ -5,16 +5,24 @@ namespace Infrastructure.DataAccess.Contracts;
 public abstract class Specification<TModel>
     where TModel : class
 {
-    protected Specification(Expression<Func<TModel, bool>> criteria)
+    protected Specification(Expression<Func<TModel, bool>>? criteria)
     {
         Criteria = criteria;
     }
 
-    public Expression<Func<TModel, bool>> Criteria { get; }
+    public Expression<Func<TModel, bool>>? Criteria { get; }
 
     public Expression<Func<TModel, bool>>? OrderByExpression { get; private set; }
 
     public Expression<Func<TModel, bool>>? OrderByDescendingExpression { get; private set; }
+
+    public IReadOnlyList<Expression<Func<TModel, object?>>>? Includes { get; private set; }
+
+    public int? Page { get; private set; }
+
+    public int? RecordsPerPage { get; private set; }
+
+    public bool AsNoTrackingQuery { get; private set; }
 
     public abstract override string ToString();
 
@@ -26,5 +34,22 @@ public abstract class Specification<TModel>
     protected void AddOrderByDescending(Expression<Func<TModel, bool>> orderByDescendingExpression)
     {
         OrderByDescendingExpression = orderByDescendingExpression;
+    }
+
+    protected void AddPaging(int page, int recordPerPage)
+    {
+        Page = page;
+        RecordsPerPage = recordPerPage;
+    }
+
+    protected void AsNoTracking()
+    {
+        AsNoTrackingQuery = true;
+    }
+
+    protected void AddInclude(Expression<Func<TModel, object?>> include)
+    {
+        Includes = Includes?.Append(include).ToList()
+                   ?? new () { include };
     }
 }

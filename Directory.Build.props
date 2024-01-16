@@ -5,6 +5,9 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <WarningLevel>5</WarningLevel>
         <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <NoWarn>SA1201; SA1009; SA1413; SA1601; CA1716</NoWarn>
+        <NoWarn>SA1201; SA1313; SA1009; SA1413; SA1601; CA1716</NoWarn>
     </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="$(AssemblyName).Tests"/>
+    </ItemGroup>
 </Project>

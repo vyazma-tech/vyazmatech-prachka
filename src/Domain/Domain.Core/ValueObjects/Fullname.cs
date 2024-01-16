@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 
 namespace Domain.Core.ValueObjects;
@@ -33,14 +32,12 @@ public sealed class Fullname : ValueObject
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            var exception = new DomainException(DomainErrors.Fullname.NameIsNullOrEmpty);
-            return new Result<Fullname>(exception);
+            return new Result<Fullname>(DomainErrors.Fullname.NameIsNullOrEmpty);
         }
 
         if (Regex.IsMatch(name, LetterWithUppercasePattern) is false)
         {
-            var exception = new DomainException(DomainErrors.Fullname.InvalidNameFormat);
-            return new Result<Fullname>(exception);
+            return new Result<Fullname>(DomainErrors.Fullname.InvalidNameFormat);
         }
 
         return new Fullname(name);

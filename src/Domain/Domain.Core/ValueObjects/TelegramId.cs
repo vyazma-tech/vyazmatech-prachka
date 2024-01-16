@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Domain.Common.Abstractions;
 using Domain.Common.Errors;
-using Domain.Common.Exceptions;
 using Domain.Common.Result;
 
 namespace Domain.Core.ValueObjects;
@@ -33,14 +32,12 @@ public sealed class TelegramId : ValueObject
     {
         if (string.IsNullOrWhiteSpace(telegramId))
         {
-            var exception = new DomainException(DomainErrors.TelegramId.NullOrEmpty);
-            return new Result<TelegramId>(exception);
+            return new Result<TelegramId>(DomainErrors.TelegramId.NullOrEmpty);
         }
 
         if (Regex.IsMatch(telegramId, DigitNumberPattern) is false)
         {
-            var exception = new DomainException(DomainErrors.TelegramId.InvalidFormat);
-            return new Result<TelegramId>(exception);
+            return new Result<TelegramId>(DomainErrors.TelegramId.InvalidFormat);
         }
 
         return new TelegramId(telegramId);

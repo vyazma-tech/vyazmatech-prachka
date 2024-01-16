@@ -1,6 +1,4 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.Order;
-using Domain.Kernel;
+﻿using Domain.Common.Abstractions;
 using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
 
@@ -8,11 +6,14 @@ namespace Infrastructure.DataAccess.Specifications.Order;
 
 public sealed class OrderByDateSpecification : Specification<OrderModel>
 {
-    public OrderByDateSpecification(DateOnly creationDate)
+    private readonly SpbDateTime _creationDate;
+
+    public OrderByDateSpecification(SpbDateTime creationDate)
         : base(order => order.CreationDate == creationDate)
     {
+        _creationDate = creationDate;
     }
 
     public override string ToString()
-        => string.Empty;
+        => $"OrderCreationDate = {_creationDate}";
 }

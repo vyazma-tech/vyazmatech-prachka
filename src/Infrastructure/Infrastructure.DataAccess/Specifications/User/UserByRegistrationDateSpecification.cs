@@ -1,20 +1,18 @@
-﻿using Application.DataAccess.Contracts;
-using Domain.Core.User;
-using Domain.Kernel;
+﻿using Domain.Core.User;
 using Infrastructure.DataAccess.Contracts;
 
 namespace Infrastructure.DataAccess.Specifications.User;
 
 public sealed class UserByRegistrationDateSpecification : Specification<UserEntity>
 {
-    private readonly DateTime _registrationDate;
+    private readonly DateOnly _registrationDate;
 
-    public UserByRegistrationDateSpecification(DateTime registrationDate)
+    public UserByRegistrationDateSpecification(DateOnly registrationDate)
         : base(user => user.CreationDate == registrationDate)
     {
         _registrationDate = registrationDate;
     }
 
     public override string ToString()
-        => $"{typeof(UserEntity)}: {_registrationDate}";
+        => $"UserRegistrationDate = {_registrationDate}";
 }

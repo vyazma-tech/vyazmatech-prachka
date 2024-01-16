@@ -1,5 +1,5 @@
-﻿using Application.DataAccess.Contracts;
 using Infrastructure.DataAccess.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Specifications;
 
@@ -12,7 +12,17 @@ public static class SpecificationEvaluator
     {
         IQueryable<TModel> queryable = inputQueryable;
 
-        queryable = queryable.Where(specification.Criteria);
+        if (specification.Criteria is not null)
+        {
+            queryable = queryable.Where(specification.Criteria);
+        }
+
+        if (specification is { Page: { } page, RecordsPerPage: { } recordsPerPage })
+        {
+            queryable = queryable
+                .Skip(page * recordsPerPage)
+                .Take(recordsPerPage);
+        }
 
         if (specification.OrderByExpression is not null)
         {
@@ -22,6 +32,14 @@ public static class SpecificationEvaluator
         if (specification.OrderByDescendingExpression is not null)
         {
             queryable = queryable.OrderByDescending(specification.OrderByDescendingExpression);
+        }
+
+        if (specification.Includes is not null)
+        {
+            foreach (var include in specification.Includes)
+            {
+                queryable = queryable.Include(include);
+            }
         }
 
         return queryable;

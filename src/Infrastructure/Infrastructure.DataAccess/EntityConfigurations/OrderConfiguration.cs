@@ -1,4 +1,5 @@
-﻿using Infrastructure.DataAccess.Models;
+﻿using Domain.Core.Order;
+using Infrastructure.DataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -21,5 +22,7 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<OrderModel>
             .WithMany(user => user.Orders)
             .HasForeignKey(order => order.UserId)
             .HasPrincipalKey(user => user.Id);
+
+        builder.Property(order => order.Status).HasDefaultValue(OrderStatus.New.ToString());
     }
 }

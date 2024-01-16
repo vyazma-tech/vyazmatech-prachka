@@ -6,6 +6,7 @@
         <ProjectReference Include="..\Infrastructure.Tools\Infrastructure.Tools.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design"/>
         <PackageReference Include="StyleCop.Analyzers">
             <PrivateAssets>all</PrivateAssets>

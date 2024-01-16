@@ -1,4 +1,4 @@
-﻿using Application.DataAccess.Contracts;
+﻿using Domain.Common.Abstractions;
 
 #pragma warning disable CS8618
 
@@ -6,21 +6,19 @@ namespace Infrastructure.DataAccess.Models;
 
 public record OrderModel
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public Guid QueueId { get; set; }
+    public Guid QueueId { get; init; }
 
     public virtual QueueModel Queue { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid UserId { get; init; }
 
     public virtual UserModel User { get; set; }
 
-    public bool Paid { get; set; }
+    public string Status { get; set; }
 
-    public bool Ready { get; set; }
+    public SpbDateTime CreationDate { get; set; }
 
-    public DateOnly CreationDate { get; set; }
-
-    public DateTime? ModifiedOn { get; set; }
+    public SpbDateTime? ModifiedOn { get; set; }
 }

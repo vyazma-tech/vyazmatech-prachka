@@ -10,7 +10,7 @@ public interface IUserRepository
         Specification<UserModel> specification,
         CancellationToken cancellationToken);
 
-    IAsyncEnumerable<UserEntity> FindAllByAsync(
+    IAsyncEnumerable<UserEntity> QueryAsync(
         Specification<UserModel> specification,
         CancellationToken cancellationToken);
 

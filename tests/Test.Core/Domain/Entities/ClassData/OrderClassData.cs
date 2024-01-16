@@ -12,18 +12,26 @@ public sealed class OrderClassData : IEnumerable<object[]>
 {
     public IEnumerator<object[]> GetEnumerator()
     {
-        var dateTimeProvider = new DateTimeProvider();
-        var user = UserClassData.Create();
-
+        var dateTimeProvider = new SpbDateTimeProvider();
+        UserEntity user = UserClassData.Create();
         DateTime queueDate = DateTime.UtcNow.AddDays(1);
+
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
-            QueueDate.Create(queueDate, dateTimeProvider).Value,
+            QueueDate.Create(DateOnly.FromDateTime(queueDate), dateTimeProvider).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(queueDate),
-                TimeOnly.FromDateTime(queueDate).AddHours(5)).Value);
+                TimeOnly.FromDateTime(queueDate).AddHours(5)).Value,
+            QueueState.Active);
 
-        Result<OrderEntity> order = OrderEntity.Create(user, queue, dateTimeProvider.UtcNow);
+        Result<OrderEntity> order = OrderEntity.Create(
+            Guid.NewGuid(),
+            user,
+            queue,
+            OrderStatus.New,
+            dateTimeProvider.SpbDateTimeNow);
+        
         order.Value.ClearDomainEvents();
 
         yield return new object[] { order.Value };

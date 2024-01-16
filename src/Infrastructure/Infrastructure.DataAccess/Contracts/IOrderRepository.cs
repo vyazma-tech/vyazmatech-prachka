@@ -10,7 +10,7 @@ public interface IOrderRepository
         Specification<OrderModel> specification,
         CancellationToken cancellationToken);
 
-    IAsyncEnumerable<OrderEntity> FindAllByAsync(
+    IAsyncEnumerable<OrderEntity> QueryAsync(
         Specification<OrderModel> specification,
         CancellationToken cancellationToken);
 

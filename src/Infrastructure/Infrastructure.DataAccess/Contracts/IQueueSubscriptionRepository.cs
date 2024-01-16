@@ -6,11 +6,11 @@ namespace Infrastructure.DataAccess.Contracts;
 
 public interface IQueueSubscriptionRepository
 {
-    Task<Result<SubscriptionEntity>> FindByAsync(
+    Task<Result<QueueSubscriptionEntity>> FindByAsync(
         Specification<QueueSubscriptionModel> specification,
         CancellationToken cancellationToken);
 
-    void Insert(SubscriptionEntity subscription);
+    void Insert(QueueSubscriptionEntity subscription);
 
-    void Update(SubscriptionEntity subscription);
+    void Update(QueueSubscriptionEntity subscription);
 }

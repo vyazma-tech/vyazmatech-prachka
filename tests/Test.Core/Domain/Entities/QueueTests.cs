@@ -27,7 +27,7 @@ public class QueueTests
         Result<Capacity> creationResult = Capacity.Create(-1);
 
         creationResult.IsFaulted.Should().BeTrue();
-        creationResult.Error.Message.Should().Be(DomainErrors.Capacity.Negative.Message);
+        creationResult.Error.Should().Be(DomainErrors.Capacity.Negative);
     }
 
     [Fact]
@@ -36,23 +36,24 @@ public class QueueTests
         var dateTime = new DateTime(
             2023,
             1,
-            1,
+            2,
             1,
             30,
             0);
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
+        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(SpbDateTimeProvider.CurrentDate);
 
         var registrationDate = new DateTime(
             2023,
             1,
             1,
             1,
-            29,
-            59);
-        Result<QueueDate> creationResult = QueueDate.Create(registrationDate, _dateTimeProvider.Object);
+            30,
+            30);
+        Result<QueueDate> creationResult =
+            QueueDate.Create(DateOnly.FromDateTime(registrationDate), _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
-        creationResult.Error.Message.Should().Be(DomainErrors.QueueDate.InThePast.Message);
+        creationResult.Error.Should().Be(DomainErrors.QueueDate.InThePast);
     }
 
     [Fact]
@@ -65,7 +66,7 @@ public class QueueTests
             1,
             30,
             0);
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(dateTime);
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(dateTime));
 
         var registrationDate = new DateTime(
             2023,
@@ -74,48 +75,53 @@ public class QueueTests
             1,
             30,
             0);
-        Result<QueueDate> creationResult = QueueDate.Create(registrationDate, _dateTimeProvider.Object);
+        Result<QueueDate> creationResult =
+            QueueDate.Create(DateOnly.FromDateTime(registrationDate), _dateTimeProvider.Object);
 
         creationResult.IsFaulted.Should().BeTrue();
-        creationResult.Error.Message.Should().Be(DomainErrors.QueueDate.NotNextWeek.Message);
+        creationResult.Error.Should().Be(DomainErrors.QueueDate.NotNextWeek);
     }
 
     [Fact]
     public void CreateQueue_Should_ReturnNotNullQueue()
     {
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(SpbDateTimeProvider.CurrentDate);
 
         DateTime creationDate = DateTime.UtcNow;
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
-            QueueDate.Create(creationDate, _dateTimeProvider.Object).Value,
+            QueueDate.Create(DateOnly.FromDateTime(creationDate), _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(creationDate),
-                TimeOnly.FromDateTime(creationDate).AddHours(5)).Value);
+                TimeOnly.FromDateTime(creationDate).AddHours(5)).Value,
+            QueueState.Active);
 
         queue.Should().NotBeNull();
         queue.Capacity.Value.Should().Be(10);
         queue.Items.Should().BeEmpty();
-        queue.CreationDate.Should().Be(creationDate);
+        queue.CreationDate.Should().Be(DateOnly.FromDateTime(creationDate));
         queue.ModifiedOn.Should().BeNull();
     }
 
     [Theory]
     [ClassData(typeof(QueueClassData))]
-    public void EnterQueue_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(
+    public void Add_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(
         QueueEntity queue,
         UserEntity user,
         OrderEntity order)
     {
-        Result<OrderEntity> entranceResult = queue.Add(order);
+        _dateTimeProvider.Setup(x => x.SpbDateTimeNow).Returns(new SpbDateTime(DateTime.Now.AddMinutes(1)));
+
+        Result<OrderEntity> entranceResult = queue.Add(order, _dateTimeProvider.Object.SpbDateTimeNow);
 
         entranceResult.IsFaulted.Should().BeTrue();
-        entranceResult.Error.Message.Should().Be(DomainErrors.Queue.ContainsOrderWithId(order.Id).Message);
+        entranceResult.Error.Should().Be(DomainErrors.Queue.ContainsOrderWithId(order.Id));
     }
 
     [Theory]
     [ClassData(typeof(QueueClassData))]
-    public void QuitQueue_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(
+    public void Remove_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(
         QueueEntity queue,
         UserEntity user,
         OrderEntity order)
@@ -125,20 +131,22 @@ public class QueueTests
         Result<OrderEntity> quitResult = queue.Remove(order);
 
         quitResult.IsFaulted.Should().BeTrue();
-        quitResult.Error.Message.Should().Be(DomainErrors.Queue.OrderIsNotInQueue(order.Id).Message);
+        quitResult.Error.Should().Be(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
     }
 
     [Fact]
-    public void IncreaseQueueCapacity_ShouldReturnSuccessResult_WhenNewCapacityIsGreaterThenCurrent()
+    public void IncreaseCapacity_ShouldReturnSuccessResult_WhenNewCapacityIsGreaterThenCurrent()
     {
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
-            QueueDate.Create(DateTime.UtcNow.AddDays(1), new DateTimeProvider()).Value,
+            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new SpbDateTimeProvider()).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value);
+                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value,
+            QueueState.Active);
 
-        DateTime modificationDate = DateTime.UtcNow;
+        var modificationDate = SpbDateTimeProvider.CurrentDateTime;
         Result<QueueEntity> increasingResult = queue.IncreaseCapacity(Capacity.Create(11).Value, modificationDate);
 
         increasingResult.IsSuccess.Should().BeTrue();
@@ -147,18 +155,21 @@ public class QueueTests
     }
 
     [Fact]
-    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpired()
+    public void TryExpire_ShouldRaiseDomainEvent_WhenQueueExpired()
     {
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
+        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
         var queue = new QueueEntity(
+            Guid.NewGuid(),
             Capacity.Create(10).Value,
-            QueueDate.Create(_dateTimeProvider.Object.UtcNow, _dateTimeProvider.Object).Value,
+            QueueDate.Create(_dateTimeProvider.Object.DateNow, _dateTimeProvider.Object).Value,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
-                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value);
+                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value,
+            QueueState.Active);
 
-        await Task.Delay(1_000);
-        queue.TryExpire();
+        queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddMinutes(1)));
 
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<QueueExpiredDomainEvent>();
@@ -166,32 +177,35 @@ public class QueueTests
 
     [Theory]
     [ClassData(typeof(QueueClassData))]
-    public void EnterQueue_ShouldReturnFailureResult_WhenQueueIsFull(
+    public void Add_ShouldReturnFailureResult_WhenQueueIsFull(
         QueueEntity queue,
         UserEntity user,
         OrderEntity order)
     {
         Result<OrderEntity> incomingOrderResult = OrderEntity.Create(
+            Guid.NewGuid(),
             user,
             queue,
-            DateTime.UtcNow);
+            OrderStatus.New,
+            SpbDateTimeProvider.CurrentDateTime);
 
         incomingOrderResult.IsFaulted.Should().BeTrue();
-        incomingOrderResult.Error.Message.Should().Be(DomainErrors.Queue.Overfull.Message);
+        incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Overfull);
     }
 
     [Theory]
     [ClassData(typeof(QueueClassData))]
-    public async Task Queue_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(
+    public void TryNotifyAboutAvailablePosition_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(
         QueueEntity queue,
         UserEntity user,
         OrderEntity order)
     {
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        
         queue.Remove(order);
-        await Task.Delay(1_000);
-        queue.TryExpire();
+        queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddHours(7)));
         queue.ClearDomainEvents();
-        queue.TryNotifyAboutAvailablePosition();
+        queue.TryNotifyAboutAvailablePosition(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddHours(7)));
 
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<PositionAvailableDomainEvent>();
