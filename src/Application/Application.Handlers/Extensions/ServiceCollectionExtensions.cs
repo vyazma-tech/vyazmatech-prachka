@@ -18,6 +18,7 @@ public static class ServiceCollectionExtensions
         services.AddValidatorsFromAssembly(IApplicationHandlersMarker.Assembly);
 
         return services
-            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPreProcessor<,>));
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPreProcessor<,>))
+            .AddScoped(typeof(IPipelineBehavior<,>), typeof(RequestLoggingPreprocessor<,>));
     }
 }

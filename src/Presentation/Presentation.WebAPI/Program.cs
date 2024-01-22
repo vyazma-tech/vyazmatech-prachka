@@ -5,6 +5,8 @@ using Presentation.WebAPI.Extensions;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.Host.AddSerilog();
+
 builder.Services
     .AddWorkers(builder.Configuration)
     .AddDatabase(builder.Configuration);
