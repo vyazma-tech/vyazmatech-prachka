@@ -2,23 +2,19 @@
 
 namespace Domain.Common.Result;
 
-public readonly struct Result<TValue>
+public class Result<TValue> : Result
 {
-    private readonly Error _error;
     private readonly TValue _value;
-    private readonly ResultState _state;
 
     public Result(TValue value)
+        : base(default!, ResultState.Success)
     {
-        _state = ResultState.Success;
         _value = value;
-        _error = default!;
     }
 
     public Result(Error error)
+        : base(error, ResultState.Faulted)
     {
-        _state = ResultState.Faulted;
-        _error = error;
         _value = default!;
     }
 
@@ -27,13 +23,27 @@ public readonly struct Result<TValue>
         return new Result<TValue>(value);
     }
 
-    public bool IsFaulted => _state == ResultState.Faulted;
-    public bool IsSuccess => _state == ResultState.Success;
-    public TValue Value => IsSuccess ? _value : throw new InvalidOperationException(_error.Message);
-    public Error Error => IsFaulted ? _error : throw new InvalidOperationException();
+    public TValue Value => IsSuccess ? _value : throw new InvalidOperationException(Error.Message);
 
     public TResult Match<TResult>(Func<TValue, TResult> successAction, Func<Error, TResult> failAction)
     {
-        return IsSuccess ? successAction(_value) : failAction(_error);
+        return IsSuccess ? successAction(_value) : failAction(Error);
     }
+}
+
+public abstract class Result
+{
+    private readonly Error _error;
+    private readonly ResultState _state;
+
+    protected Result(Error error, ResultState state)
+    {
+        _state = state;
+        _error = error;
+    }
+
+    public bool IsFaulted => _state == ResultState.Faulted;
+    public bool IsSuccess => _state == ResultState.Success;
+
+    public Error Error => IsFaulted ? _error : throw new InvalidOperationException();
 }
