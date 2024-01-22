@@ -8,9 +8,22 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
     ports:
       - "5433:5432"
     restart: unless-stopped
+    networks:
+      - tn
+  
+  tn.seq:
+    image: datalust/seq:latest
+    container_name: tn-seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5341:5341"
+      - "8081:80"
     networks:
       - tn
 
