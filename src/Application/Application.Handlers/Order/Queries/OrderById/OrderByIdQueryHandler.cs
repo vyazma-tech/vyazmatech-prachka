@@ -1,8 +1,8 @@
 ﻿using Application.Core.Contracts;
+using Application.Core.Specifications;
+using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Order;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications.Order;
 using static Application.Handlers.Order.Queries.OrderById.OrderByIdQuery;
 
 namespace Application.Handlers.Order.Queries.OrderById;
@@ -18,10 +18,7 @@ internal sealed class OrderByIdQueryHandler : IQueryHandler<Query, Result<Respon
 
     public async ValueTask<Result<Response>> Handle(Query request, CancellationToken cancellationToken)
     {
-        Result<OrderEntity> result = await _persistenceContext.Orders
-            .FindByAsync(
-                new OrderByIdSpecification(request.Id),
-                cancellationToken);
+        Result<OrderEntity> result = await _persistenceContext.Orders.FindByIdAsync(request.Id, cancellationToken);
 
         if (result.IsFaulted)
             return new Result<Response>(result.Error);

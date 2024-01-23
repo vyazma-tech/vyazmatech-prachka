@@ -18,18 +18,18 @@ public static class QueueByIdQuery
         TimeOnly ActiveFrom,
         TimeOnly ActiveUntil);
 
-    public static Response ToDto(this QueueEntity queue, long currentCapacity)
+    public static Response ToDto(this QueueEntity queue)
     {
         return new Response
         {
             Id = queue.Id,
-            Capacity = queue.Capacity.Value,
-            CurrentCapacity = currentCapacity,
+            Capacity = queue.Capacity,
+            CurrentCapacity = queue.Orders.Count,
             State = queue.State.ToString(),
             ModifiedOn = queue.ModifiedOn?.Value,
             AssignmentDate = queue.CreationDate,
-            ActiveFrom = queue.ActivityBoundaries.ActiveFrom,
-            ActiveUntil = queue.ActivityBoundaries.ActiveUntil,
+            ActiveFrom = queue.ActiveFrom,
+            ActiveUntil = queue.ActiveUntil,
         };
     }
 }

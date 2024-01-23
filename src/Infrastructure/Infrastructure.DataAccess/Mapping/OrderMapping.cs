@@ -9,8 +9,8 @@ public static class OrderMapping
     {
         return new OrderEntity(
             model.Id,
-            UserMapping.MapTo(model.User),
-            QueueMapping.MapTo(model.Queue),
+            model.QueueId,
+            model.UserId,
             Enum.Parse<OrderStatus>(model.Status),
             model.CreationDate,
             model.ModifiedOn);
@@ -21,8 +21,8 @@ public static class OrderMapping
         return new OrderModel
         {
             Id = entity.Id,
-            QueueId = entity.Queue.Id,
-            UserId = entity.User.Id,
+            QueueId = entity.Queue,
+            UserId = entity.User,
             CreationDate = entity.CreationDateTime,
             ModifiedOn = entity.ModifiedOn,
             Status = entity.Status.ToString()

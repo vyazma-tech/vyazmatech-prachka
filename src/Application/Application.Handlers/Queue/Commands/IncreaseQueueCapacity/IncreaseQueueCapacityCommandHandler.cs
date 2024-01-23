@@ -1,10 +1,10 @@
 ﻿using Application.Core.Contracts;
+using Application.Core.Specifications;
+using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications.Queue;
 using static Application.Handlers.Queue.Commands.IncreaseQueueCapacity.IncreaseQueueCapacity;
 
 namespace Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
@@ -25,9 +25,7 @@ internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Comm
     public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         Result<QueueEntity> searchResult = await _persistenceContext.Queues
-            .FindByAsync(
-                new QueueByIdSpecification(request.QueueId),
-                cancellationToken);
+            .FindByIdAsync(request.QueueId, cancellationToken);
 
         Result<Capacity> capacityValidationResult = Capacity.Create(request.Capacity);
 

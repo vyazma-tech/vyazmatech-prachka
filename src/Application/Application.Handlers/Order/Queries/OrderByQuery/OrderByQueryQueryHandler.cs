@@ -1,10 +1,8 @@
 ﻿using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
-using Application.Core.Extensions;
+using Application.DataAccess.Contracts;
 using Domain.Core.Order;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications.Order;
 using Microsoft.Extensions.Options;
 using static Application.Handlers.Order.Queries.OrderByQuery.OrderByQuery;
 

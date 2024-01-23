@@ -83,35 +83,25 @@ public class QueueTests
     }
 
     [Fact]
-    public void CreateQueue_Should_ReturnNotNullQueue()
+    public void Add_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue()
     {
-        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(SpbDateTimeProvider.CurrentDate);
+        var orderId = Guid.NewGuid();
 
-        DateTime creationDate = DateTime.UtcNow;
+        var order = new OrderEntity(
+            orderId,
+            queueId: Guid.Empty,
+            status: OrderStatus.New,
+            userId: Guid.Empty,
+            creationDateTimeUtc: SpbDateTimeProvider.CurrentDateTime);
+
         var queue = new QueueEntity(
-            Guid.NewGuid(),
-            Capacity.Create(10).Value,
-            QueueDate.Create(DateOnly.FromDateTime(creationDate), _dateTimeProvider.Object).Value,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(creationDate),
-                TimeOnly.FromDateTime(creationDate).AddHours(5)).Value,
-            QueueState.Active);
-
-        queue.Should().NotBeNull();
-        queue.Capacity.Value.Should().Be(10);
-        queue.Items.Should().BeEmpty();
-        queue.CreationDate.Should().Be(DateOnly.FromDateTime(creationDate));
-        queue.ModifiedOn.Should().BeNull();
-    }
-
-    [Theory]
-    [ClassData(typeof(QueueClassData))]
-    public void Add_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(
-        QueueEntity queue,
-        UserEntity user,
-        OrderEntity order)
-    {
-        _dateTimeProvider.Setup(x => x.SpbDateTimeNow).Returns(new SpbDateTime(DateTime.Now.AddMinutes(1)));
+            Guid.Empty,
+            capacity: 1,
+            assignmentDate: SpbDateTimeProvider.CurrentDate,
+            activeFrom: SpbDateTimeProvider.CurrentDateTime.AsTimeOnly(),
+            activeUntil: SpbDateTimeProvider.CurrentDateTime.AsTimeOnly(),
+            state: QueueState.Active,
+            new HashSet<Guid> { orderId });
 
         Result<OrderEntity> entranceResult = queue.Add(order, _dateTimeProvider.Object.SpbDateTimeNow);
 
@@ -201,7 +191,7 @@ public class QueueTests
         OrderEntity order)
     {
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
-        
+
         queue.Remove(order);
         queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddHours(7)));
         queue.ClearDomainEvents();

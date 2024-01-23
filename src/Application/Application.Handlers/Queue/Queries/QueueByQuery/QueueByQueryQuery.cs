@@ -23,12 +23,13 @@ public static class QueueByQueryQuery
         return new Response
         {
             Id = queue.Id,
-            Capacity = queue.Capacity.Value,
+            Capacity = queue.Capacity,
+            CurrentCapacity = queue.Orders.Count,
             ModifiedOn = queue.ModifiedOn?.Value,
             State = queue.State.ToString(),
             AssignmentDate = queue.CreationDate,
-            ActiveFrom = queue.ActivityBoundaries.ActiveFrom,
-            ActiveUntil = queue.ActivityBoundaries.ActiveUntil,
+            ActiveFrom = queue.ActiveFrom,
+            ActiveUntil = queue.ActiveUntil,
         };
     }
 }

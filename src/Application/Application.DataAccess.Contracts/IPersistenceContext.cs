@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Application.DataAccess.Contracts.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.DataAccess.Contracts;
+namespace Application.DataAccess.Contracts;
 
 public interface IPersistenceContext
 {

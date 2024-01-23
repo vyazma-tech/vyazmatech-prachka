@@ -1,13 +1,12 @@
-﻿using Domain.Common.Result;
+﻿using Application.DataAccess.Contracts.Querying.QueueSubscription;
 using Domain.Core.Subscription;
-using Infrastructure.DataAccess.Models;
 
-namespace Infrastructure.DataAccess.Contracts;
+namespace Application.DataAccess.Contracts.Repositories;
 
 public interface IQueueSubscriptionRepository
 {
-    Task<Result<QueueSubscriptionEntity>> FindByAsync(
-        Specification<QueueSubscriptionModel> specification,
+    IAsyncEnumerable<QueueSubscriptionEntity> QueryAsync(
+        QueueSubscriptionQuery specification,
         CancellationToken cancellationToken);
 
     void Insert(QueueSubscriptionEntity subscription);

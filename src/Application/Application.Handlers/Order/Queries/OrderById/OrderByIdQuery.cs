@@ -20,8 +20,8 @@ public static class OrderByIdQuery
     {
         return new Response(
             order.Id,
-            order.User.Id,
-            order.Queue.Id,
+            order.User,
+            order.Queue,
             order.Status.ToString(),
             order.ModifiedOn?.Value,
             order.CreationDate);

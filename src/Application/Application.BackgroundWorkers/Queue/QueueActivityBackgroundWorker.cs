@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 using Application.BackgroundWorkers.Configuration;
 using Application.Core.Services;
+using Application.Core.Specifications;
+using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications.Queue;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -46,7 +46,7 @@ public class QueueActivityBackgroundWorker : BackgroundService
             IPersistenceContext context = scope.ServiceProvider.GetRequiredService<IPersistenceContext>();
 
             Result<QueueEntity> queueFindResult = await context.Queues
-                .FindByAsync(new QueueByAssignmentDateSpecification(timeProvider.DateNow), stoppingToken);
+                .FindByAssignmentDateAsync(timeProvider.DateNow, stoppingToken);
 
             if (queueFindResult.IsFaulted)
             {

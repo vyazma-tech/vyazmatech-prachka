@@ -1,10 +1,8 @@
 ﻿using Application.Core.Common;
 using Application.Core.Configuration;
 using Application.Core.Contracts;
-using Application.Core.Extensions;
+using Application.DataAccess.Contracts;
 using Domain.Core.User;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications.User;
 using Microsoft.Extensions.Options;
 using static Application.Handlers.User.Queries.UserByQuery.UserByQueryQuery;
 

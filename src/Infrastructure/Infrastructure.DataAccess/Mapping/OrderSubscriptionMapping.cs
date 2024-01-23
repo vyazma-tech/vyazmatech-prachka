@@ -5,12 +5,13 @@ namespace Infrastructure.DataAccess.Mapping;
 
 public static class OrderSubscriptionMapping
 {
-    public static OrderSubscriptionEntity MapTo(OrderSubscriptionModel model)
+    public static OrderSubscriptionEntity MapTo(OrderSubscriptionModel model, HashSet<Guid> orderIds)
     {
         return new OrderSubscriptionEntity(
             model.Id,
-            UserMapping.MapTo(model.User),
+            model.UserId,
             model.CreationDate,
+            orderIds,
             model.ModifiedOn);
     }
 
@@ -19,10 +20,9 @@ public static class OrderSubscriptionMapping
         return new OrderSubscriptionModel
         {
             Id = entity.Id,
-            UserId = entity.User.Id,
+            UserId = entity.User,
             CreationDate = entity.CreationDate,
-            ModifiedOn = entity.ModifiedOn,
-            Orders = entity.SubscribedOrders.Select(OrderMapping.MapFrom).ToArray()
+            ModifiedOn = entity.ModifiedOn
         };
     }
 }

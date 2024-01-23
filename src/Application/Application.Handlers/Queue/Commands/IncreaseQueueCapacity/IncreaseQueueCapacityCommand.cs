@@ -21,11 +21,11 @@ public static class IncreaseQueueCapacity
         return new Response
         {
             Id = queue.Id,
-            Capacity = queue.Capacity.Value,
+            Capacity = queue.Capacity,
             ModifiedOn = queue.ModifiedOn?.Value,
             AssignmentDate = queue.CreationDate,
-            ActiveFrom = queue.ActivityBoundaries.ActiveFrom,
-            ActiveUntil = queue.ActivityBoundaries.ActiveUntil,
+            ActiveFrom = queue.ActiveFrom,
+            ActiveUntil = queue.ActiveUntil,
         };
     }
 }

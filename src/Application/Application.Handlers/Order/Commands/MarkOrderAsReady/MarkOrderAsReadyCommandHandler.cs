@@ -1,9 +1,9 @@
 ﻿using Application.Core.Contracts;
+using Application.Core.Specifications;
+using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications.Order;
 using static Application.Handlers.Order.Commands.MarkOrderAsReady.MarkOrderAsReady;
 
 namespace Application.Handlers.Order.Commands.MarkOrderAsReady;
@@ -24,9 +24,7 @@ internal sealed class MarkOrderAsReadyCommandHandler : ICommandHandler<Command, 
     public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         Result<OrderEntity> searchResult = await _persistenceContext.Orders
-            .FindByAsync(
-                new OrderByIdSpecification(request.Id),
-                cancellationToken);
+            .FindByIdAsync(request.Id, cancellationToken);
 
         if (searchResult.IsFaulted)
             return new Result<Response>(searchResult.Error);

@@ -1,7 +1,7 @@
 ﻿using Application.DataAccess.Contracts;
+using Application.DataAccess.Contracts.Repositories;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Contexts;
-using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Interceptors;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;

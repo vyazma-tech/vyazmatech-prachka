@@ -1,8 +1,8 @@
 ﻿using Application.Core.Contracts;
+using Application.Core.Specifications;
+using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.User;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications.User;
 using static Application.Handlers.User.Queries.UserById.UserByIdQuery;
 
 namespace Application.Handlers.User.Queries.UserById;
@@ -19,9 +19,7 @@ internal sealed class UserByIdQueryHandler : IQueryHandler<Query, Result<Respons
     public async ValueTask<Result<Response>> Handle(Query request, CancellationToken cancellationToken)
     {
         Result<UserEntity> result = await _persistenceContext.Users
-            .FindByAsync(
-                new UserByIdSpecification(request.Id),
-                cancellationToken);
+            .FindByIdAsync(request.Id, cancellationToken);
 
         if (result.IsFaulted)
             return new Result<Response>(result.Error);

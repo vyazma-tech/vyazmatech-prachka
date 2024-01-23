@@ -1,4 +1,5 @@
-﻿using Infrastructure.DataAccess.Contracts;
+﻿using Application.DataAccess.Contracts;
+using Application.DataAccess.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DataAccess.Contexts;

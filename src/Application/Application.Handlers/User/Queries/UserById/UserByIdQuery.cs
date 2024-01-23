@@ -19,8 +19,8 @@ public static class UserByIdQuery
     {
         return new Response(
             user.Id,
-            user.TelegramId.Value,
-            user.Fullname.Value,
+            user.TelegramId,
+            user.Fullname,
             user.ModifiedOn?.Value,
             user.CreationDate);
     }

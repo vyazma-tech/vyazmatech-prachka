@@ -19,7 +19,7 @@ public static class MarkOrderAsPaid
     {
         return new Response(
             order.Id,
-            order.Queue.Id,
+            order.Queue,
             order.Status.ToString(),
             order.CreationDate,
             order.ModifiedOn?.Value);

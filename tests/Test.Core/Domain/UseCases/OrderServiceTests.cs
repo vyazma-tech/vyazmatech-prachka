@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Application.Core.Services;
+using Application.DataAccess.Contracts.Repositories;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -7,7 +8,6 @@ using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
 using FluentAssertions;
-using Infrastructure.DataAccess.Contracts;
 using Infrastructure.Tools;
 using Moq;
 using Test.Core.Domain.UseCases.ClassData;

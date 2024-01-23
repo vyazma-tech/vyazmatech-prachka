@@ -1,13 +1,12 @@
-﻿using Domain.Common.Result;
+﻿using Application.DataAccess.Contracts.Querying.OrderSubscription;
 using Domain.Core.Subscription;
-using Infrastructure.DataAccess.Models;
 
-namespace Infrastructure.DataAccess.Contracts;
+namespace Application.DataAccess.Contracts.Repositories;
 
 public interface IOrderSubscriptionRepository
 {
-    Task<Result<OrderSubscriptionEntity>> FindByAsync(
-        Specification<OrderSubscriptionModel> specification,
+    IAsyncEnumerable<OrderSubscriptionEntity> QueryAsync(
+        OrderSubscriptionQuery specification,
         CancellationToken cancellationToken);
 
     void Insert(OrderSubscriptionEntity subscription);

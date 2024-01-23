@@ -1,11 +1,11 @@
-﻿using Application.Handlers.Order.Commands.MarkOrderAsPaid;
+﻿using Application.DataAccess.Contracts.Repositories;
+using Application.Handlers.Order.Commands.MarkOrderAsPaid;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
 using FluentAssertions;
 using Infrastructure.DataAccess.Contexts;
-using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Models;
 using Moq;
 using Xunit;

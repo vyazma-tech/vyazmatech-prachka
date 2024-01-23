@@ -5,12 +5,13 @@ namespace Infrastructure.DataAccess.Mapping;
 
 public static class QueueSubscriptionMapping
 {
-    public static QueueSubscriptionEntity MapTo(QueueSubscriptionModel model)
+    public static QueueSubscriptionEntity MapTo(QueueSubscriptionModel model, HashSet<Guid> queueIds)
     {
         return new QueueSubscriptionEntity(
             model.Id,
-            UserMapping.MapTo(model.User),
+            model.UserId,
             model.CreationDate,
+            queueIds,
             model.ModifiedOn);
     }
 
@@ -19,10 +20,9 @@ public static class QueueSubscriptionMapping
         return new QueueSubscriptionModel
         {
             Id = entity.Id,
-            UserId = entity.User.Id,
+            UserId = entity.User,
             CreationDate = entity.CreationDate,
-            ModifiedOn = entity.ModifiedOn,
-            Queues = entity.SubscribedQueues.Select(QueueMapping.MapFrom).ToArray()
+            ModifiedOn = entity.ModifiedOn
         };
     }
 }

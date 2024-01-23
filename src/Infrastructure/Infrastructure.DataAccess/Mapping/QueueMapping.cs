@@ -1,30 +1,20 @@
 ﻿using Domain.Core.Queue;
-using Domain.Core.ValueObjects;
 using Infrastructure.DataAccess.Models;
-using Infrastructure.Tools;
 
 namespace Infrastructure.DataAccess.Mapping;
 
 public static class QueueMapping
 {
-    public static QueueEntity MapTo(QueueModel model)
+    public static QueueEntity MapTo(QueueModel model, HashSet<Guid> orderIds)
     {
-        Capacity capacity = Capacity.Create(model.Capacity).Value;
-
-        QueueDate assignmentDate = QueueDate.Create(
-            model.AssignmentDate,
-            new SpbDateTimeProvider()).Value;
-
-        QueueActivityBoundaries boundaries = QueueActivityBoundaries.Create(
-            model.ActiveFrom,
-            model.ActiveUntil).Value;
-
         return new QueueEntity(
             model.Id,
-            capacity,
-            assignmentDate,
-            boundaries,
+            model.Capacity,
+            model.AssignmentDate,
+            model.ActiveFrom,
+            model.ActiveUntil,
             Enum.Parse<QueueState>(model.State),
+            orderIds,
             model.MaxCapacityReached,
             model.ModifiedOn);
     }
@@ -34,12 +24,11 @@ public static class QueueMapping
         return new QueueModel
         {
             Id = entity.Id,
-            Capacity = entity.Capacity.Value,
+            Capacity = entity.Capacity,
             AssignmentDate = entity.CreationDate,
-            ActiveFrom = entity.ActivityBoundaries.ActiveFrom,
-            ActiveUntil = entity.ActivityBoundaries.ActiveUntil,
+            ActiveFrom = entity.ActiveFrom,
+            ActiveUntil = entity.ActiveUntil,
             ModifiedOn = entity.ModifiedOn,
-            Orders = entity.Items.Select(OrderMapping.MapFrom).ToArray()
         };
     }
 }
