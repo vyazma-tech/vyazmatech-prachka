@@ -37,7 +37,7 @@ docker run \
 	-t \
 	--restart=unless-stopped \
 	--network tn \
-	-v "$HOME"/Logs/"$name":/app/Serilogs \
+	-v "$HOME"/Logs/"$name":/app/logs \
 	--name "$name" \
 	"$name" &&
 echo looks like container "$name" should start

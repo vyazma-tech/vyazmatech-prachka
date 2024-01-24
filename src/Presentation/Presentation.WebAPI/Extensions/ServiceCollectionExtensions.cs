@@ -62,6 +62,8 @@ internal static class ServiceCollectionExtensions
 
     public static IServiceCollection AddGlobalExceptionHandler(this IServiceCollection services)
     {
-        return services.AddTransient<GlobalExceptionHandlingMiddleware>();
+        return services
+            .AddTransient<GlobalExceptionHandlingMiddleware>()
+            .AddTransient<RequestLogContextMiddleware>();
     }
 }
