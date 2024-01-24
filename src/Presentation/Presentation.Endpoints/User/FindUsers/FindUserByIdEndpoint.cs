@@ -2,7 +2,7 @@
 using FastEndpoints;
 using Mediator;
 using Presentation.Endpoints.Extensions;
-using static Application.Handlers.User.Queries.UserById.UserByIdQuery;
+using static Application.Core.Contracts.Users.Queries.UserById;
 
 namespace Presentation.Endpoints.User.FindUsers;
 

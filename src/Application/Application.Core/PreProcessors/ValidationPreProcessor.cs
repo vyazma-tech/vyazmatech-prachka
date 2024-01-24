@@ -1,4 +1,4 @@
-﻿using Application.Core.Contracts;
+﻿using Application.Core.Contracts.Common;
 using FluentValidation;
 using FluentValidation.Results;
 using Mediator;

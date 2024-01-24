@@ -1,42 +1,28 @@
-﻿using Application.DataAccess.Contracts.Repositories;
+﻿using Application.Core.Contracts.Orders.Commands;
 using Application.Handlers.Order.Commands.MarkOrderAsReady;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
 using FluentAssertions;
-using Infrastructure.DataAccess.Contexts;
-using Infrastructure.DataAccess.Models;
 using Moq;
+using Test.Handlers.Fixtures;
 using Xunit;
 using CancellationToken = System.Threading.CancellationToken;
 
 namespace Test.Handlers.Order.Commands;
 
-public class MakeReadyTest
+public class MakeReadyTest : TestBase
 {
     private readonly MarkOrderAsReadyCommandHandler _handler;
-    private readonly Mock<IOrderRepository> _orderRepository;
 
-    public MakeReadyTest()
+    public MakeReadyTest(CoreDatabaseFixture fixture) : base(fixture)
     {
         var dateTimeProvider = new Mock<IDateTimeProvider>();
-        var orders = new Mock<IOrderRepository>();
-        IQueueRepository queues = Mock.Of<IQueueRepository>();
-        IUserRepository users = Mock.Of<IUserRepository>();
-        IOrderSubscriptionRepository orderSubscriptions = Mock.Of<IOrderSubscriptionRepository>();
-        IQueueSubscriptionRepository queueSubscriptions = Mock.Of<IQueueSubscriptionRepository>();
 
-        _orderRepository = orders;
         _handler = new MarkOrderAsReadyCommandHandler(
             dateTimeProvider.Object,
-            new PersistenceContext(
-                queues,
-                orders.Object,
-                users,
-                orderSubscriptions,
-                queueSubscriptions,
-                null!));
+            fixture.PersistenceContext);
     }
 
     [Fact]
@@ -44,17 +30,10 @@ public class MakeReadyTest
     {
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsReady.Command(orderId);
-        _orderRepository.Setup(x =>
-                x.FindByAsync(
-                It.IsAny<Specification<OrderModel>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(
-                new Result<OrderEntity>(
-                    DomainErrors.Entity.NotFoundFor<OrderEntity>($"OrderId = {orderId}")));
 
         Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
 
         response.IsFaulted.Should().BeTrue();
-        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<OrderEntity>($"OrderId = {orderId}"));
+        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<OrderEntity>(orderId.ToString()));
     }
 }

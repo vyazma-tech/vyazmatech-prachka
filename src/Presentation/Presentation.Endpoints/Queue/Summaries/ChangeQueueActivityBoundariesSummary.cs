@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Endpoints.Queue.ChangeQueueActivityBoundaries;
-using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.ChangeQueueActivityBoundaries;
+using static Application.Core.Contracts.Queues.Commands.ChangeQueueActivityBoundaries;
 
 namespace Presentation.Endpoints.Queue.Summaries;
 

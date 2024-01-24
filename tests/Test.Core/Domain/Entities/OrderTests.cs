@@ -1,9 +1,7 @@
-﻿using Domain.Common.Abstractions;
-using Domain.Common.Result;
+﻿using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Order.Events;
 using FluentAssertions;
-using Infrastructure.Tools;
 using Xunit;
 
 namespace Test.Core.Domain.Entities;
@@ -14,17 +12,15 @@ public class OrderTests
     public void MakeReady_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyReady()
     {
         var order = new OrderEntity(
-            Guid.Empty,
-            Guid.Empty,
-            Guid.Empty,
-            OrderStatus.Paid,
-            SpbDateTimeProvider.CurrentDateTime);
+            id: Guid.Empty,
+            queueId: Guid.Empty,
+            userId: Guid.Empty,
+            status: OrderStatus.Paid,
+            creationDateTimeUtc: default);
 
-        SpbDateTime modificationDate = SpbDateTimeProvider.CurrentDateTime;
-        Result<OrderEntity> actionResult = order.MakeReady(modificationDate);
+        Result<OrderEntity> actionResult = order.MakeReady(default);
 
         actionResult.IsSuccess.Should().BeTrue();
-        actionResult.Value.ModifiedOn.Should().Be(modificationDate);
         actionResult.Value.Status.Should().Be(OrderStatus.Ready);
         actionResult.Value.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<OrderReadyDomainEvent>();
@@ -34,17 +30,15 @@ public class OrderTests
     public void MakePayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid()
     {
         var order = new OrderEntity(
-            Guid.Empty,
-            Guid.Empty,
-            Guid.Empty,
-            OrderStatus.New,
-            SpbDateTimeProvider.CurrentDateTime);
-        
-        SpbDateTime modificationDate = SpbDateTimeProvider.CurrentDateTime;
-        Result<OrderEntity> actionResult = order.MakePayment(modificationDate);
+            id: Guid.Empty,
+            queueId: Guid.Empty,
+            userId: Guid.Empty,
+            status: OrderStatus.New,
+            creationDateTimeUtc: default);
+
+        Result<OrderEntity> actionResult = order.MakePayment(default);
 
         actionResult.IsSuccess.Should().BeTrue();
-        actionResult.Value.ModifiedOn.Should().Be(modificationDate);
         actionResult.Value.Status.Should().Be(OrderStatus.Paid);
         actionResult.Value.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<OrderPaidDomainEvent>();

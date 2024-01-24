@@ -2,7 +2,7 @@
 using FastEndpoints;
 using Mediator;
 using Presentation.Endpoints.Extensions;
-using static Application.Handlers.Order.Commands.MarkOrderAsReady.MarkOrderAsReady;
+using static Application.Core.Contracts.Orders.Commands.MarkOrderAsReady;
 
 namespace Presentation.Endpoints.Order.MarkAsReady;
 

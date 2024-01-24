@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Endpoints.Queue.FindQueue;
-using static Application.Handlers.Queue.Queries.QueueById.QueueByIdQuery;
+using static Application.Core.Contracts.Queues.Queries.QueueById;
 using ProblemDetails = FastEndpoints.ProblemDetails;
 
 namespace Presentation.Endpoints.Queue.Summaries;

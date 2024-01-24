@@ -73,9 +73,9 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
             queryable = queryable.Where(x => EF.Functions.ILike(x.Status, specification.Status));
         }
 
-        if (specification.CreationDateTime is not null)
+        if (specification.CreationDate is not null)
         {
-            queryable = queryable.Where(x => x.CreationDate == specification.CreationDateTime);
+            queryable = queryable.Where(x => x.CreationDate == specification.CreationDate);
         }
 
         if (specification.Limit is not null)

@@ -1,11 +1,11 @@
-﻿using Application.Core.Contracts;
+﻿using Application.Core.Contracts.Common;
 using Application.Core.Specifications;
 using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
-using static Application.Handlers.Queue.Commands.IncreaseQueueCapacity.IncreaseQueueCapacity;
+using static Application.Core.Contracts.Queues.Commands.IncreaseQueueCapacity;
 
 namespace Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 

@@ -23,14 +23,14 @@ public class OrderService
     public Result<OrderEntity> ProlongOrder(
         OrderEntity order,
         QueueEntity previousQueue,
-        QueueEntity queue)
+        QueueEntity targetQueue)
     {
-        if (order.Queue.Equals(queue.Id))
+        if (previousQueue.Id.Equals(targetQueue.Id))
         {
             return new Result<OrderEntity>(DomainErrors.Order.UnableToTransferIntoSameQueue);
         }
 
-        if (queue.Capacity.Equals(queue.Orders.Count))
+        if (targetQueue.Capacity.Equals(targetQueue.Order.Count))
         {
             return new Result<OrderEntity>(DomainErrors.Order.UnableToTransferIntoFullQueue);
         }
@@ -41,13 +41,13 @@ public class OrderService
             return removalResult;
         }
 
-        Result<OrderEntity> entranceResult = queue.Add(order, _timeProvider.SpbDateTimeNow);
+        Result<OrderEntity> entranceResult = targetQueue.Add(order, _timeProvider.SpbDateTimeNow);
         if (entranceResult.IsFaulted)
         {
             return entranceResult;
         }
 
-        order.Prolong(queue, _timeProvider.SpbDateTimeNow);
+        order.Prolong(targetQueue, _timeProvider.SpbDateTimeNow);
         _orderRepository.Update(order);
 
         return order;

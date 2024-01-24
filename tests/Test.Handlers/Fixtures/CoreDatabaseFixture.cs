@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using Application.DataAccess.Contracts;
 using Infrastructure.DataAccess.Contexts;
 using Infrastructure.DataAccess.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +11,13 @@ public class CoreDatabaseFixture : DatabaseFixture
 {
     public DatabaseContext Context { get; private set; } = null!;
     public AsyncServiceScope Scope { get; private set; }
+    public IPersistenceContext PersistenceContext { get; private set; } = null!;
 
     protected override void ConfigureServices(IServiceCollection services)
     {
         services.AddDatabase(x =>
-            x
-                // .UseLazyLoadingProxies()
-                .UseNpgsql(Container.GetConnectionString()));
+            x.UseNpgsql(Container.GetConnectionString()));
+        services.AddInfrastructure();
     }
 
     public override async Task ResetAsync()
@@ -42,5 +43,6 @@ public class CoreDatabaseFixture : DatabaseFixture
         await Scope.UseDatabase();
 
         Context = Scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+        PersistenceContext = Scope.ServiceProvider.GetRequiredService<IPersistenceContext>();
     }
 }

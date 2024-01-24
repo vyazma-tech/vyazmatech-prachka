@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
         await context.Database.MigrateAsync();
     }
 
-    private static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, DatabaseContext>();
         services.AddScoped<IPersistenceContext, PersistenceContext>();

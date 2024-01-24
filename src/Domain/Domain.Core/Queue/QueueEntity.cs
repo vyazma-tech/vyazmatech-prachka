@@ -10,7 +10,7 @@ namespace Domain.Core.Queue;
 
 public sealed class QueueEntity : Entity, IAuditableEntity
 {
-    private readonly HashSet<Guid> _ordersIds;
+    private readonly HashSet<Guid> _orderIds;
 
     public QueueEntity(
         Guid id,
@@ -19,7 +19,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         TimeOnly activeFrom,
         TimeOnly activeUntil,
         QueueState state,
-        HashSet<Guid> ordersIds,
+        HashSet<Guid> orderIds,
         bool maxCapacityReached = false,
         SpbDateTime? modifiedOn = null)
         : base(id)
@@ -31,7 +31,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         State = state;
         MaxCapacityReached = maxCapacityReached;
         ModifiedOn = modifiedOn;
-        _ordersIds = ordersIds;
+        _orderIds = orderIds;
     }
 
     public int Capacity { get; private set; }
@@ -48,7 +48,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public QueueInfo Info => new QueueInfo(Id, Capacity, AssignmentDate, ActiveFrom, ActiveUntil, State);
 
-    public IReadOnlyCollection<Guid> Orders => _ordersIds;
+    public IReadOnlyCollection<Guid> Order => _orderIds;
 
     public DateOnly CreationDate => AssignmentDate;
 
@@ -56,12 +56,12 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public Result<OrderEntity> Add(OrderEntity order, SpbDateTime currentTimeUtc)
     {
-        if (_ordersIds.Contains(order.Id))
+        if (_orderIds.Contains(order.Id))
         {
             return new Result<OrderEntity>(DomainErrors.Queue.ContainsOrderWithId(order.Id));
         }
 
-        if (_ordersIds.Count.Equals(Capacity))
+        if (_orderIds.Count.Equals(Capacity))
         {
             return new Result<OrderEntity>(DomainErrors.Queue.Overfull);
         }
@@ -71,8 +71,8 @@ public sealed class QueueEntity : Entity, IAuditableEntity
             return new Result<OrderEntity>(DomainErrors.Queue.Expired);
         }
 
-        _ordersIds.Add(order.Id);
-        if (_ordersIds.Count.Equals(Capacity) is true)
+        _orderIds.Add(order.Id);
+        if (_orderIds.Count.Equals(Capacity) is true)
             MaxCapacityReached = true;
 
         return order;
@@ -80,12 +80,12 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public Result<OrderEntity> Remove(OrderEntity order)
     {
-        if (_ordersIds.Contains(order.Id) is false)
+        if (_orderIds.Contains(order.Id) is false)
         {
             return new Result<OrderEntity>(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
         }
 
-        _ordersIds.Remove(order.Id);
+        _orderIds.Remove(order.Id);
 
         return order;
     }

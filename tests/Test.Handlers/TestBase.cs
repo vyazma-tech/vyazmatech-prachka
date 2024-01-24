@@ -1,4 +1,6 @@
-﻿using Test.Handlers.Fixtures;
+﻿using Application.DataAccess.Contracts;
+using Infrastructure.DataAccess.Contexts;
+using Test.Handlers.Fixtures;
 using Xunit;
 
 namespace Test.Handlers;
@@ -6,14 +8,17 @@ namespace Test.Handlers;
 [Collection(nameof(CoreDatabaseCollectionFixture))]
 public abstract class TestBase : IAsyncLifetime
 {
-    private readonly Func<Task> _reset; 
-    protected readonly CoreDatabaseFixture Database;
+    private readonly Func<Task> _reset;
+    protected readonly CoreDatabaseFixture Fixture;
 
-    protected TestBase(CoreDatabaseFixture database)
+    protected TestBase(CoreDatabaseFixture fixture)
     {
-        Database = database;
-        _reset = database.ResetAsync;
+        Fixture = fixture;
+        _reset = fixture.ResetAsync;
     }
+
+    protected IPersistenceContext PersistenceContext => Fixture.PersistenceContext;
+    protected DatabaseContext Context => Fixture.Context;
 
     public Task InitializeAsync()
     {

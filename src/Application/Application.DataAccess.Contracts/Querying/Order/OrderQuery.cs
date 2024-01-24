@@ -11,7 +11,7 @@ public sealed class OrderQuery
         string? status,
         int? page,
         int? limit,
-        SpbDateTime? creationDateTime)
+        SpbDateTime? creationDate)
     {
         Id = id;
         UserId = userId;
@@ -19,7 +19,7 @@ public sealed class OrderQuery
         Status = status;
         Page = page;
         Limit = limit;
-        CreationDateTime = creationDateTime;
+        CreationDate = creationDate;
     }
 
     public static OrderQuery Build(Action<IQueryBuilder> expression)
@@ -44,9 +44,9 @@ public sealed class OrderQuery
 
     public int? Limit { get; }
 
-    public SpbDateTime? CreationDateTime { get; }
+    public SpbDateTime? CreationDate { get; }
 
-    private class QueryBuilder : IQueryBuilder
+    internal class QueryBuilder : IQueryBuilder
     {
         private Guid? _id;
         private Guid? _userId;
@@ -107,7 +107,7 @@ public sealed class OrderQuery
                 status: _status,
                 page: _page,
                 limit: _limit,
-                creationDateTime: _creationDate);
+                creationDate: _creationDate);
         }
     }
 }

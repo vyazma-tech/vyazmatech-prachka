@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Endpoints.User.FindUsers;
-using static Application.Handlers.User.Queries.UserById.UserByIdQuery;
+using static Application.Core.Contracts.Users.Queries.UserById;
 using ProblemDetails = FastEndpoints.ProblemDetails;
 
 namespace Presentation.Endpoints.User.Summaries;

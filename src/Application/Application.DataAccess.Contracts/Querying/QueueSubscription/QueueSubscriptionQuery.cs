@@ -31,7 +31,7 @@ public sealed class QueueSubscriptionQuery
 
     public int? Limit { get; }
 
-    private class QueryBuilder : IQueryBuilder
+    internal class QueryBuilder : IQueryBuilder
     {
         private Guid? _id;
         private Guid? _userId;

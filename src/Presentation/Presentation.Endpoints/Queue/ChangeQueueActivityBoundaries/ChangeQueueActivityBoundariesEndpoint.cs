@@ -2,7 +2,7 @@
 using FastEndpoints;
 using Mediator;
 using Presentation.Endpoints.Extensions;
-using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.ChangeQueueActivityBoundaries;
+using static Application.Core.Contracts.Queues.Commands.ChangeQueueActivityBoundaries;
 
 namespace Presentation.Endpoints.Queue.ChangeQueueActivityBoundaries;
 

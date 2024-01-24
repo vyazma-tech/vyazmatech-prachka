@@ -1,10 +1,10 @@
-﻿using Application.Core.Contracts;
+﻿using Application.Core.Contracts.Common;
 using Application.Core.Specifications;
 using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Kernel;
-using static Application.Handlers.Order.Commands.MarkOrderAsReady.MarkOrderAsReady;
+using static Application.Core.Contracts.Orders.Commands.MarkOrderAsReady;
 
 namespace Application.Handlers.Order.Commands.MarkOrderAsReady;
 
