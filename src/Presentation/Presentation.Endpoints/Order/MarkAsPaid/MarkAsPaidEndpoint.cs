@@ -2,7 +2,7 @@
 using FastEndpoints;
 using Mediator;
 using Presentation.Endpoints.Extensions;
-using static Application.Handlers.Order.Commands.MarkOrderAsPaid.MarkOrderAsPaid;
+using static Application.Core.Contracts.Orders.Commands.MarkOrderAsPaid;
 
 namespace Presentation.Endpoints.Order.MarkAsPaid;
 

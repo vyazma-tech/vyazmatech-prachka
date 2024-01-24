@@ -1,6 +1,6 @@
-﻿using Domain.Core.Queue;
+﻿using Application.DataAccess.Contracts;
+using Domain.Core.Queue;
 using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
 
 namespace Application.Core.Services;
 

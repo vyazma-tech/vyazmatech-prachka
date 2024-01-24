@@ -1,5 +1,4 @@
-﻿using Ardalis.GuardClauses;
-using Domain.Common.Abstractions;
+﻿using Domain.Common.Abstractions;
 using Domain.Common.Errors;
 using Domain.Common.Result;
 using Domain.Core.Order;
@@ -9,98 +8,60 @@ using Domain.Kernel;
 
 namespace Domain.Core.Queue;
 
-/// <summary>
-/// Describes queue entity.
-/// </summary>
 public sealed class QueueEntity : Entity, IAuditableEntity
 {
-    private readonly HashSet<OrderEntity> _orders;
+    private readonly HashSet<Guid> _orderIds;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="QueueEntity" /> class.
-    /// </summary>
-    /// <param name="id">queue id.</param>
-    /// <param name="capacity">queue capacity.</param>
-    /// <param name="queueDate">queue date, what queue assigned to.</param>
-    /// <param name="activityBoundaries">queue activity time. i.e: 1pm - 5pm.</param>
-    /// <param name="state">current queue state.</param>
-    /// <param name="maxCapacityReachedOnce">max capacity reached.</param>
-    /// <param name="modifiedOn">queue modification date.</param>
     public QueueEntity(
         Guid id,
-        Capacity capacity,
-        QueueDate queueDate,
-        QueueActivityBoundaries activityBoundaries,
+        int capacity,
+        DateOnly assignmentDate,
+        TimeOnly activeFrom,
+        TimeOnly activeUntil,
         QueueState state,
-        bool maxCapacityReachedOnce = false,
+        HashSet<Guid> orderIds,
+        bool maxCapacityReached = false,
         SpbDateTime? modifiedOn = null)
         : base(id)
     {
-        Guard.Against.Null(capacity, nameof(capacity), "Capacity should not be null");
-        Guard.Against.Null(queueDate, nameof(queueDate), "Creation date should not be null");
-        Guard.Against.Null(activityBoundaries, nameof(activityBoundaries), "Activity boundaries should not be null");
-
         Capacity = capacity;
-        ActivityBoundaries = activityBoundaries;
+        AssignmentDate = assignmentDate;
+        ActiveFrom = activeFrom;
+        ActiveUntil = activeUntil;
         State = state;
-        MaxCapacityReachedOnce = maxCapacityReachedOnce;
-        CreationDate = queueDate.Value;
+        MaxCapacityReached = maxCapacityReached;
         ModifiedOn = modifiedOn;
-        _orders = new HashSet<OrderEntity>();
+        _orderIds = orderIds;
     }
 
-    /// <summary>
-    /// Gets current capacity.
-    /// </summary>
-    public Capacity Capacity { get; private set; }
+    public int Capacity { get; private set; }
 
-    /// <summary>
-    /// Gets time range for a queue activity.
-    /// </summary>
-    public QueueActivityBoundaries ActivityBoundaries { get; private set; }
+    public DateOnly AssignmentDate { get; }
 
-    /// <summary>
-    /// Gets a value indicating whether max capacity reached during activity time.
-    /// </summary>
-    public bool MaxCapacityReachedOnce { get; private set; }
+    public TimeOnly ActiveFrom { get; private set; }
 
-    /// <summary>
-    /// Gets queue current state.
-    /// </summary>
+    public TimeOnly ActiveUntil { get; private set; }
+
     public QueueState State { get; private set; }
 
-    /// <summary>
-    /// Gets orders, that currently in the queue.
-    /// </summary>
-    public IReadOnlySet<OrderEntity> Items => _orders;
+    public bool MaxCapacityReached { get; private set; }
 
-    /// <summary>
-    /// Gets date, what queue is assigned to.
-    /// </summary>
-    public DateOnly CreationDate { get; }
+    public QueueInfo Info => new QueueInfo(Id, Capacity, AssignmentDate, ActiveFrom, ActiveUntil, State);
 
-    /// <summary>
-    /// Gets modification date.
-    /// </summary>
+    public IReadOnlyCollection<Guid> Order => _orderIds;
+
+    public DateOnly CreationDate => AssignmentDate;
+
     public SpbDateTime? ModifiedOn { get; private set; }
 
-    /// <summary>
-    /// Add order into a queue. Should <b>never</b> be called from queue instance,
-    /// because it does not update order queue reference.
-    /// </summary>
-    /// <param name="order">order to be added.</param>
-    /// <param name="currentTimeUtc">current date time in utc format.</param>
-    /// <returns>added order instance.</returns>
-    /// <remarks>returns failure result, when order is already in a queue.</remarks>
-    /// <remarks>returns failure result, when order is being enqueued into full queue.</remarks>
     public Result<OrderEntity> Add(OrderEntity order, SpbDateTime currentTimeUtc)
     {
-        if (_orders.Contains(order))
+        if (_orderIds.Contains(order.Id))
         {
             return new Result<OrderEntity>(DomainErrors.Queue.ContainsOrderWithId(order.Id));
         }
 
-        if (_orders.Count.Equals(Capacity.Value))
+        if (_orderIds.Count.Equals(Capacity))
         {
             return new Result<OrderEntity>(DomainErrors.Queue.Overfull);
         }
@@ -110,78 +71,54 @@ public sealed class QueueEntity : Entity, IAuditableEntity
             return new Result<OrderEntity>(DomainErrors.Queue.Expired);
         }
 
-        _orders.Add(order);
-        if (_orders.Count.Equals(Capacity.Value) is true)
-            MaxCapacityReachedOnce = true;
+        _orderIds.Add(order.Id);
+        if (_orderIds.Count.Equals(Capacity) is true)
+            MaxCapacityReached = true;
 
         return order;
     }
 
-    /// <summary>
-    /// Removes order from a queue.
-    /// </summary>
-    /// <param name="order">order to be removed.</param>
-    /// <returns>removed order entity.</returns>
-    /// <remarks>return failure result, when order is not in queue.</remarks>
     public Result<OrderEntity> Remove(OrderEntity order)
     {
-        if (_orders.Contains(order) is false)
+        if (_orderIds.Contains(order.Id) is false)
         {
             return new Result<OrderEntity>(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
         }
 
-        _orders.Remove(order);
+        _orderIds.Remove(order.Id);
 
         return order;
     }
 
-    /// <summary>
-    /// Increases queue capacity.
-    /// </summary>
-    /// <param name="newCapacity">new capacity value.</param>
-    /// <param name="modifiedOnUtc">modification utc date.</param>
-    /// <returns>same queue instance.</returns>
-    /// <remarks>returns failure result, when new capacity is invalid.</remarks>
     public Result<QueueEntity> IncreaseCapacity(Capacity newCapacity, SpbDateTime modifiedOnUtc)
     {
-        if (newCapacity.Value <= Capacity.Value)
+        if (newCapacity.Value <= Capacity)
         {
             return new Result<QueueEntity>(DomainErrors.Queue.InvalidNewCapacity);
         }
 
-        Capacity = newCapacity;
+        Capacity = newCapacity.Value;
         ModifiedOn = modifiedOnUtc;
 
         return this;
     }
 
-    /// <summary>
-    /// Change queue activity boundaries.
-    /// </summary>
-    /// <param name="activityBoundaries">new activity boundaries value.</param>
-    /// <param name="modifiedOnUtc">modification utc date.</param>
-    /// <returns>same queue instance.</returns>
-    /// <remarks>returns failure result, when new activity boundaries is invalid.</remarks>
     public Result<QueueEntity> ChangeActivityBoundaries(
-        QueueActivityBoundaries activityBoundaries, SpbDateTime modifiedOnUtc)
+        QueueActivityBoundaries activityBoundaries,
+        SpbDateTime modifiedOnUtc)
     {
-        if (activityBoundaries == ActivityBoundaries)
+        if (activityBoundaries.ActiveFrom == ActiveFrom && activityBoundaries.ActiveUntil == ActiveUntil)
         {
             return new Result<QueueEntity>(DomainErrors.Queue.InvalidNewActivityBoundaries);
         }
 
-        ActivityBoundaries = activityBoundaries;
+        ActiveFrom = activityBoundaries.ActiveFrom;
+        ActiveUntil = activityBoundaries.ActiveUntil;
         ModifiedOn = modifiedOnUtc;
 
         return this;
     }
 
-    /// <summary>
-    /// Makes an attempt to expire queue and raises <see cref="QueueExpiredDomainEvent" />.
-    /// Should be called in some kind of background worker.
-    /// </summary>
-    /// <param name="currentTimeUtc">current date time in utc format.</param>
-    /// <returns>true, if event is raised, false otherwise.</returns>
     public bool TryExpire(SpbDateTime currentTimeUtc)
     {
         if (Expired(currentTimeUtc) && State == QueueState.Active)
@@ -195,34 +132,22 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         return false;
     }
 
-    /// <summary>
-    /// Raises <see cref="PositionAvailableDomainEvent" />, if queue is expired
-    /// and it's not full by that time.
-    /// </summary>
-    /// <param name="currentDateTimeUtc">current date time in utc format.</param>
-    /// <returns>true, if event is raised, false otherwise.</returns>
     public bool TryNotifyAboutAvailablePosition(SpbDateTime currentDateTimeUtc)
     {
-        if (State == QueueState.Expired && MaxCapacityReachedOnce)
+        if (State == QueueState.Expired && MaxCapacityReached)
         {
             Raise(new PositionAvailableDomainEvent(this));
             ModifiedOn = currentDateTimeUtc;
-            MaxCapacityReachedOnce = false;
+            MaxCapacityReached = false;
             return true;
         }
 
         return false;
     }
 
-    /// <summary>
-    /// Makes an attempt to activate queue.
-    /// </summary>
-    /// <param name="currentDateTimeUtc">current date time in utc format.</param>
-    /// <returns>true, if queue is activated, false otherwise.</returns>
     public bool TryActivate(SpbDateTime currentDateTimeUtc)
     {
-        if (currentDateTimeUtc.AsTimeOnly() >= ActivityBoundaries.ActiveFrom &&
-            State == QueueState.Prepared)
+        if (currentDateTimeUtc.AsTimeOnly() >= ActiveFrom && State == QueueState.Prepared)
         {
             State = QueueState.Active;
             ModifiedOn = currentDateTimeUtc;
@@ -232,15 +157,12 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         return false;
     }
 
-    /// <summary>
-    /// Gets a value indicating whether queue expired or not.
-    /// </summary>
     private bool Expired(SpbDateTime currentDateTimeUtc)
     {
-        var dateNow = currentDateTimeUtc.AsDateOnly();
+        DateOnly dateNow = currentDateTimeUtc.AsDateOnly();
 
         return
-            (currentDateTimeUtc.AsTimeOnly() >= ActivityBoundaries.ActiveUntil
+            (currentDateTimeUtc.AsTimeOnly() >= ActiveUntil
              && dateNow == CreationDate)
             || dateNow > CreationDate;
     }

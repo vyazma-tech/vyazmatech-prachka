@@ -2,7 +2,7 @@
 using FastEndpoints;
 using Microsoft.AspNetCore.Http;
 using Presentation.Endpoints.User.FindUsers;
-using static Application.Handlers.User.Queries.UserByQuery.UserByQueryQuery;
+using static Application.Core.Contracts.Users.Queries.UserByQuery;
 
 namespace Presentation.Endpoints.User.Summaries;
 

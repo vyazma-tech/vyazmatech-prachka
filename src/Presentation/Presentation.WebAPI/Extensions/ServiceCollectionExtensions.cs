@@ -1,6 +1,8 @@
 ﻿using Application.BackgroundWorkers.Extensions;
 using Application.BackgroundWorkers.Queue;
 using Application.Core.Configuration;
+using Application.Core.Extensions;
+using Application.DataAccess.Contracts.Extensions;
 using Application.Handlers.Extensions;
 using Infrastructure.DataAccess.Extensions;
 using Infrastructure.DataAccess.Interceptors;
@@ -53,6 +55,8 @@ internal static class ServiceCollectionExtensions
         services.Configure<PaginationConfiguration>(
             configuration.GetSection(PaginationConfiguration.SectionKey));
 
+        services.AddQueryBuilders();
+        services.AddQuerying();
         return services.AddHandlers();
     }
 

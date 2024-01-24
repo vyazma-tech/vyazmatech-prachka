@@ -1,7 +1,7 @@
 ﻿using Application.DataAccess.Contracts;
+using Application.DataAccess.Contracts.Repositories;
 using Domain.Kernel;
 using Infrastructure.DataAccess.Contexts;
-using Infrastructure.DataAccess.Contracts;
 using Infrastructure.DataAccess.Interceptors;
 using Infrastructure.DataAccess.Repositories;
 using Infrastructure.Tools;
@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
         await context.Database.MigrateAsync();
     }
 
-    private static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, DatabaseContext>();
         services.AddScoped<IPersistenceContext, PersistenceContext>();

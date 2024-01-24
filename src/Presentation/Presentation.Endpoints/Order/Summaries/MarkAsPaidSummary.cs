@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Endpoints.Order.MarkAsPaid;
-using static Application.Handlers.Order.Commands.MarkOrderAsPaid.MarkOrderAsPaid;
+using static Application.Core.Contracts.Orders.Commands.MarkOrderAsPaid;
 namespace Presentation.Endpoints.Order.Summaries;
 
 internal sealed class MarkAsPaidSummary : Summary<MarkAsPaidEndpoint>

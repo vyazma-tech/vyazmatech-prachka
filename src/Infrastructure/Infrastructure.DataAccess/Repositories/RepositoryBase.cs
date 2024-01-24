@@ -1,8 +1,4 @@
-﻿using Domain.Common.Errors;
-using Domain.Common.Result;
-using Infrastructure.DataAccess.Contexts;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications;
+﻿using Infrastructure.DataAccess.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -13,44 +9,12 @@ internal abstract class RepositoryBase<TEntity, TModel>
 {
     private readonly DatabaseContext _context;
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="RepositoryBase{TEntity,TModel}"/> class.
-    /// </summary>
-    /// <param name="context">database context.</param>
     protected RepositoryBase(DatabaseContext context)
     {
         _context = context;
     }
 
-    /// <summary>
-    /// Gets the database set.
-    /// </summary>
     protected virtual DbSet<TModel> DbSet => _context.Set<TModel>();
-
-    public async Task<Result<TEntity>> FindByAsync(
-        Specification<TModel> specification,
-        CancellationToken cancellationToken)
-    {
-        TModel? model = await
-            ApplySpecification(specification)
-                .FirstOrDefaultAsync(cancellationToken);
-
-        if (model is null)
-        {
-            return new Result<TEntity>(DomainErrors.Entity.NotFoundFor<TEntity>(specification.ToString()));
-        }
-
-        return MapTo(model);
-    }
-
-    public IAsyncEnumerable<TEntity> QueryAsync(
-        Specification<TModel> specification,
-        CancellationToken cancellationToken)
-    {
-        return ApplySpecification(specification)
-            .AsAsyncEnumerable()
-            .Select(MapTo);
-    }
 
     public void Insert(TEntity entity)
     {
@@ -80,14 +44,9 @@ internal abstract class RepositoryBase<TEntity, TModel>
 
     protected abstract TModel MapFrom(TEntity entity);
 
-    protected abstract TEntity MapTo(TModel model);
-
     protected abstract bool Equal(TEntity entity, TModel model);
 
     protected abstract void UpdateModel(TModel model, TEntity entity);
-
-    protected IQueryable<TModel> ApplySpecification(Specification<TModel> specification)
-        => SpecificationEvaluator.GetQuery(DbSet, specification);
 
     private EntityEntry<TModel> GetEntry(TEntity entity)
     {

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Endpoints.Order.FindOrders;
-using static Application.Handlers.Order.Queries.OrderById.OrderByIdQuery;
+using static Application.Core.Contracts.Orders.Queries.OrderById;
 using ProblemDetails = FastEndpoints.ProblemDetails;
 
 namespace Presentation.Endpoints.Order.Summaries;

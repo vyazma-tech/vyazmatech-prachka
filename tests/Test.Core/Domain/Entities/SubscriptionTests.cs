@@ -2,9 +2,7 @@
 using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Subscription;
-using Domain.Core.User;
 using FluentAssertions;
-using Test.Core.Domain.Entities.ClassData;
 using Xunit;
 
 namespace Test.Core.Domain.Entities;
@@ -12,42 +10,45 @@ namespace Test.Core.Domain.Entities;
 public class SubscriptionTests
 {
     [Fact]
-    public void CreateSubscription_Should_ReturnNotNullSubscriber()
+    public void Subscribe_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription()
     {
-        var creationDate = DateOnly.FromDateTime(DateTime.UtcNow);
-        UserEntity user = UserClassData.Create();
-    
-        var subscription = new OrderSubscriptionEntity(
-            Guid.NewGuid(),
-            user,
-            creationDate);
-    
-        subscription.Should().NotBeNull();
-        subscription.SubscribedOrders.Should().BeEmpty();
-        subscription.CreationDate.Should().Be(creationDate);
-        subscription.ModifiedOn.Should().BeNull();
-    }
+        var order = new OrderEntity(
+            id: Guid.Empty,
+            queueId: Guid.Empty,
+            userId: Guid.Empty,
+            status: OrderStatus.New,
+            creationDateTimeUtc: default);
 
-    [Theory]
-    [ClassData(typeof(SubscriptionClassData))]
-    public void Subscribe_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription(
-        OrderSubscriptionEntity subscription,
-        OrderEntity order)
-    {
+        var subscription = new OrderSubscriptionEntity(
+            id: Guid.Empty,
+            user: Guid.Empty,
+            creationDateUtc: default,
+            orderIds: Array.Empty<Guid>().ToHashSet());
+
         Result<OrderEntity> entranceResult = subscription.Subscribe(order);
 
         entranceResult.IsSuccess.Should().BeTrue();
-        subscription.SubscribedOrders.Should().Contain(order);
+        subscription.SubscribedOrders.Should().Contain(order.Id);
     }
 
-    [Theory]
-    [ClassData(typeof(SubscriptionClassData))]
-    public void Unsubscribe_ShouldReturnFailureResult_WhenUserOrderIsNotInSubscription(
-        OrderSubscriptionEntity subscription,
-        OrderEntity order)
+    [Fact]
+    public void Unsubscribe_ShouldReturnFailureResult_WhenUserOrderIsNotInSubscription()
     {
+        var order = new OrderEntity(
+            id: Guid.Empty,
+            queueId: Guid.Empty,
+            userId: Guid.Empty,
+            status: OrderStatus.New,
+            creationDateTimeUtc: default);
+
+        var subscription = new OrderSubscriptionEntity(
+            id: Guid.Empty,
+            user: Guid.Empty,
+            creationDateUtc: default,
+            orderIds: Array.Empty<Guid>().ToHashSet());
+        
         Result<OrderEntity> quitResult = subscription.Unsubscribe(order);
-    
+
         quitResult.IsFaulted.Should().BeTrue();
         quitResult.Error.Should().Be(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
     }

@@ -1,11 +1,11 @@
-﻿using Application.Core.Contracts;
+﻿using Application.Core.Contracts.Common;
+using Application.Core.Specifications;
+using Application.DataAccess.Contracts;
 using Domain.Common.Result;
 using Domain.Core.Queue;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
-using Infrastructure.DataAccess.Contracts;
-using Infrastructure.DataAccess.Specifications.Queue;
-using static Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries.ChangeQueueActivityBoundaries;
+using static Application.Core.Contracts.Queues.Commands.ChangeQueueActivityBoundaries;
 
 namespace Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 
@@ -25,9 +25,7 @@ internal sealed class ChangeQueueActivityBoundariesCommandHandler : ICommandHand
     public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         Result<QueueEntity> queueSearchResult = await _persistenceContext.Queues
-            .FindByAsync(
-                new QueueByIdSpecification(request.QueueId),
-                cancellationToken);
+            .FindByIdAsync(request.QueueId, cancellationToken);
 
         if (queueSearchResult.IsFaulted)
         {

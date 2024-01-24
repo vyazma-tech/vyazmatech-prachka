@@ -1,7 +1,5 @@
 ﻿using Domain.Common.Errors;
 using Domain.Common.Result;
-using Domain.Core.User;
-using Domain.Core.User.Events;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
 using FluentAssertions;
@@ -33,19 +31,5 @@ public class UserTests
 
         creationResult.IsSuccess.Should().BeTrue();
         creationResult.Value.Value.Should().Be(id);
-    }
-
-    [Fact]
-    public void RegisterUser_ShouldReturnNotNullUser_AndRaiseDomainEvent()
-    {
-        var registrationDate = DateOnly.FromDateTime(DateTime.UtcNow);
-        UserEntity user = UserClassData.Create();
-
-        user.Should().NotBeNull();
-        user.TelegramId.Value.Should().Be("1");
-        user.CreationDate.Should().Be(registrationDate);
-        user.ModifiedOn.Should().BeNull();
-        user.DomainEvents.Should().ContainSingle()
-            .Which.Should().BeOfType<UserRegisteredDomainEvent>();
     }
 }

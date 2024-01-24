@@ -1,7 +1,7 @@
 ﻿using Application.Core.Errors;
 using Application.Core.Extensions;
 using FluentValidation;
-using static Application.Handlers.Order.Commands.MarkOrderAsReady.MarkOrderAsReady;
+using static Application.Core.Contracts.Orders.Commands.MarkOrderAsReady;
 
 namespace Application.Handlers.Order.Commands.MarkOrderAsReady;
 

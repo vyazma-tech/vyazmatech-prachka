@@ -1,7 +1,7 @@
 ﻿using Application.Core.Errors;
 using Application.Core.Extensions;
 using FluentValidation;
-using static Application.Handlers.Order.Commands.MarkOrderAsPaid.MarkOrderAsPaid;
+using static Application.Core.Contracts.Orders.Commands.MarkOrderAsPaid;
 
 namespace Application.Handlers.Order.Commands.MarkOrderAsPaid;
 

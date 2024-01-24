@@ -2,7 +2,7 @@
 using FastEndpoints;
 using Mediator;
 using Presentation.Endpoints.Extensions;
-using static Application.Handlers.Order.Queries.OrderByQuery.OrderByQuery;
+using static Application.Core.Contracts.Orders.Queries.OrderByQuery;
 
 namespace Presentation.Endpoints.Order.FindOrders;
 

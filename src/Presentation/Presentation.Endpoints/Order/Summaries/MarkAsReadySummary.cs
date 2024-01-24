@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Endpoints.Order.MarkAsReady;
-using static Application.Handlers.Order.Commands.MarkOrderAsReady.MarkOrderAsReady;
+using static Application.Core.Contracts.Orders.Commands.MarkOrderAsReady;
 
 namespace Presentation.Endpoints.Order.Summaries;
 

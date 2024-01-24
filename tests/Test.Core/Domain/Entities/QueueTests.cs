@@ -5,13 +5,11 @@ using Domain.Common.Result;
 using Domain.Core.Order;
 using Domain.Core.Queue;
 using Domain.Core.Queue.Events;
-using Domain.Core.User;
 using Domain.Core.ValueObjects;
 using Domain.Kernel;
 using FluentAssertions;
 using Infrastructure.Tools;
 using Moq;
-using Test.Core.Domain.Entities.ClassData;
 using Xunit;
 
 namespace Test.Core.Domain.Entities;
@@ -83,50 +81,104 @@ public class QueueTests
     }
 
     [Fact]
-    public void CreateQueue_Should_ReturnNotNullQueue()
+    public void Add_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue()
     {
-        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(SpbDateTimeProvider.CurrentDate);
+        var orderId = Guid.NewGuid();
 
-        DateTime creationDate = DateTime.UtcNow;
+        var order = new OrderEntity(
+            orderId,
+            queueId: Guid.Empty,
+            status: OrderStatus.New,
+            userId: Guid.Empty,
+            creationDateTimeUtc: default);
+
         var queue = new QueueEntity(
-            Guid.NewGuid(),
-            Capacity.Create(10).Value,
-            QueueDate.Create(DateOnly.FromDateTime(creationDate), _dateTimeProvider.Object).Value,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(creationDate),
-                TimeOnly.FromDateTime(creationDate).AddHours(5)).Value,
-            QueueState.Active);
+            Guid.Empty,
+            capacity: 1,
+            assignmentDate: default,
+            activeFrom: default,
+            activeUntil: default,
+            state: QueueState.Active,
+            new HashSet<Guid> { orderId });
 
-        queue.Should().NotBeNull();
-        queue.Capacity.Value.Should().Be(10);
-        queue.Items.Should().BeEmpty();
-        queue.CreationDate.Should().Be(DateOnly.FromDateTime(creationDate));
-        queue.ModifiedOn.Should().BeNull();
-    }
-
-    [Theory]
-    [ClassData(typeof(QueueClassData))]
-    public void Add_ShouldReturnFailureResult_WhenUserOrderIsAlreadyInQueue(
-        QueueEntity queue,
-        UserEntity user,
-        OrderEntity order)
-    {
-        _dateTimeProvider.Setup(x => x.SpbDateTimeNow).Returns(new SpbDateTime(DateTime.Now.AddMinutes(1)));
-
-        Result<OrderEntity> entranceResult = queue.Add(order, _dateTimeProvider.Object.SpbDateTimeNow);
+        Result<OrderEntity> entranceResult = queue.Add(order, default);
 
         entranceResult.IsFaulted.Should().BeTrue();
         entranceResult.Error.Should().Be(DomainErrors.Queue.ContainsOrderWithId(order.Id));
     }
 
-    [Theory]
-    [ClassData(typeof(QueueClassData))]
-    public void Remove_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue(
-        QueueEntity queue,
-        UserEntity user,
-        OrderEntity order)
+    [Fact]
+    public void Add_ShouldReturnFailureResult_WhenQueueIsFull()
     {
-        _ = queue.Remove(order);
+        var order = new OrderEntity(
+            id: Guid.NewGuid(),
+            queueId: Guid.Empty,
+            userId: Guid.Empty,
+            status: OrderStatus.New,
+            creationDateTimeUtc: default);
+
+        var queue = new QueueEntity(
+            id: Guid.Empty,
+            capacity: 1,
+            assignmentDate: default,
+            activeFrom: default,
+            activeUntil: default,
+            state: QueueState.Active,
+            orderIds: new HashSet<Guid> { Guid.NewGuid() });
+
+        Result<OrderEntity> incomingOrderResult = queue.Add(order, default);
+
+        incomingOrderResult.IsFaulted.Should().BeTrue();
+        incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Overfull);
+    }
+    
+    [Fact]
+    public void Add_ShouldReturnFailureResult_WhenQueueIsExpired()
+    {
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+        _dateTimeProvider.Setup(x => x.SpbDateTimeNow).Returns(new SpbDateTime(DateTime.UtcNow.AddMinutes(2)));
+        
+        var order = new OrderEntity(
+            id: Guid.NewGuid(),
+            queueId: Guid.Empty,
+            userId: Guid.Empty,
+            status: OrderStatus.New,
+            creationDateTimeUtc: default);
+
+        var queue = new QueueEntity(
+            id: Guid.Empty,
+            capacity: 2,
+            assignmentDate: _dateTimeProvider.Object.DateNow,
+            activeFrom: TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
+            activeUntil: TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddMinutes(1)),
+            state: QueueState.Active,
+            orderIds: new HashSet<Guid> { Guid.NewGuid() });
+
+        Result<OrderEntity> incomingOrderResult = queue.Add(order, _dateTimeProvider.Object.SpbDateTimeNow);
+
+        incomingOrderResult.IsFaulted.Should().BeTrue();
+        incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Expired);
+    }
+
+    [Fact]
+    public void Remove_ShouldReturnFailureResult_WhenUserOrderIsNotInQueue()
+    {
+        var order = new OrderEntity(
+            id: Guid.NewGuid(),
+            queueId: Guid.Empty,
+            userId: Guid.Empty,
+            status: OrderStatus.New,
+            creationDateTimeUtc: default);
+
+        var queue = new QueueEntity(
+            id: Guid.Empty,
+            capacity: 1,
+            assignmentDate: default,
+            activeFrom: default,
+            activeUntil: default,
+            state: QueueState.Active,
+            orderIds: Array.Empty<Guid>().ToHashSet());
 
         Result<OrderEntity> quitResult = queue.Remove(order);
 
@@ -138,20 +190,20 @@ public class QueueTests
     public void IncreaseCapacity_ShouldReturnSuccessResult_WhenNewCapacityIsGreaterThenCurrent()
     {
         var queue = new QueueEntity(
-            Guid.NewGuid(),
-            Capacity.Create(10).Value,
-            QueueDate.Create(DateOnly.FromDateTime(DateTime.UtcNow.AddDays(1)), new SpbDateTimeProvider()).Value,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)),
-                TimeOnly.FromDateTime(DateTime.UtcNow.AddDays(1)).AddHours(5)).Value,
-            QueueState.Active);
+            id: Guid.Empty,
+            capacity: 1,
+            assignmentDate: default,
+            activeFrom: default,
+            activeUntil: default,
+            state: QueueState.Active,
+            orderIds: Array.Empty<Guid>().ToHashSet());
 
-        var modificationDate = SpbDateTimeProvider.CurrentDateTime;
-        Result<QueueEntity> increasingResult = queue.IncreaseCapacity(Capacity.Create(11).Value, modificationDate);
+        SpbDateTime modificationDate = SpbDateTimeProvider.CurrentDateTime;
+        Result<QueueEntity> increasingResult = queue.IncreaseCapacity(Capacity.Create(2).Value, modificationDate);
 
         increasingResult.IsSuccess.Should().BeTrue();
         queue.ModifiedOn.Should().Be(modificationDate);
-        queue.Capacity.Value.Should().Be(11);
+        queue.Capacity.Should().Be(2);
     }
 
     [Fact]
@@ -160,14 +212,15 @@ public class QueueTests
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
         _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+
         var queue = new QueueEntity(
-            Guid.NewGuid(),
-            Capacity.Create(10).Value,
-            QueueDate.Create(_dateTimeProvider.Object.DateNow, _dateTimeProvider.Object).Value,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
-                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))).Value,
-            QueueState.Active);
+            id: Guid.Empty,
+            capacity: 10,
+            assignmentDate: _dateTimeProvider.Object.DateNow,
+            activeFrom: TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
+            activeUntil: TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1)),
+            state: QueueState.Active,
+            orderIds: Array.Empty<Guid>().ToHashSet());
 
         queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddMinutes(1)));
 
@@ -175,37 +228,20 @@ public class QueueTests
             .Which.Should().BeOfType<QueueExpiredDomainEvent>();
     }
 
-    [Theory]
-    [ClassData(typeof(QueueClassData))]
-    public void Add_ShouldReturnFailureResult_WhenQueueIsFull(
-        QueueEntity queue,
-        UserEntity user,
-        OrderEntity order)
+    [Fact]
+    public void TryNotifyAboutAvailablePosition_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached()
     {
-        Result<OrderEntity> incomingOrderResult = OrderEntity.Create(
-            Guid.NewGuid(),
-            user,
-            queue,
-            OrderStatus.New,
-            SpbDateTimeProvider.CurrentDateTime);
+        var queue = new QueueEntity(
+            id: Guid.Empty,
+            capacity: 10,
+            assignmentDate: default,
+            activeFrom: default,
+            activeUntil: default,
+            state: QueueState.Expired,
+            orderIds: Array.Empty<Guid>().ToHashSet(),
+            maxCapacityReached: true);
 
-        incomingOrderResult.IsFaulted.Should().BeTrue();
-        incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Overfull);
-    }
-
-    [Theory]
-    [ClassData(typeof(QueueClassData))]
-    public void TryNotifyAboutAvailablePosition_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached(
-        QueueEntity queue,
-        UserEntity user,
-        OrderEntity order)
-    {
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
-        
-        queue.Remove(order);
-        queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddHours(7)));
-        queue.ClearDomainEvents();
-        queue.TryNotifyAboutAvailablePosition(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddHours(7)));
+        queue.TryNotifyAboutAvailablePosition(default);
 
         queue.DomainEvents.Should().ContainSingle()
             .Which.Should().BeOfType<PositionAvailableDomainEvent>();

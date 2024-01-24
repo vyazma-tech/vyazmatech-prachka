@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Endpoints.Queue.IncreaseQueueCapacity;
-using static Application.Handlers.Queue.Commands.IncreaseQueueCapacity.IncreaseQueueCapacity;
+using static Application.Core.Contracts.Queues.Commands.IncreaseQueueCapacity;
 
 namespace Presentation.Endpoints.Queue.Summaries;
 

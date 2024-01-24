@@ -2,7 +2,7 @@
 using FastEndpoints;
 using Mediator;
 using Presentation.Endpoints.Extensions;
-using static Application.Handlers.Queue.Commands.IncreaseQueueCapacity.IncreaseQueueCapacity;
+using static Application.Core.Contracts.Queues.Commands.IncreaseQueueCapacity;
 
 namespace Presentation.Endpoints.Queue.IncreaseQueueCapacity;
 
