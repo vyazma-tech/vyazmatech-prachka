@@ -66,4 +66,15 @@ internal static class ServiceCollectionExtensions
             .AddTransient<GlobalExceptionHandlingMiddleware>()
             .AddTransient<RequestLogContextMiddleware>();
     }
+
+    public static IServiceCollection AddRedisCache(this IServiceCollection services, IConfiguration configuration)
+    {
+        RedisCacheConfiguration redisCacheConfiguration = configuration.GetSection(RedisCacheConfiguration.SectionKey)
+            .Get<RedisCacheConfiguration>() ?? throw new StartupException(nameof(RedisCacheConfiguration));
+        return services
+            .AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redisCacheConfiguration.ConnectionString;
+        });
+    }
 }

@@ -9,7 +9,8 @@ builder.Host.AddSerilog();
 
 builder.Services
     .AddWorkers(builder.Configuration)
-    .AddDatabase(builder.Configuration);
+    .AddDatabase(builder.Configuration)
+    .AddRedisCache(builder.Configuration);
 
 builder.Services
     .AddApplication(builder.Configuration)
