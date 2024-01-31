@@ -57,6 +57,8 @@ internal static class ServiceCollectionExtensions
 
         services.AddQueryBuilders();
         services.AddQuerying();
+        services.AddCurrentUsers();
+
         return services.AddHandlers();
     }
 

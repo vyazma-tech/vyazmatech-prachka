@@ -1,5 +1,7 @@
 using FastEndpoints.Swagger;
+using Infrastructure.Authentication.Extensions;
 using Infrastructure.DataAccess.Extensions;
+using Presentation.Authentication.Extensions;
 using Presentation.Endpoints.Extensions;
 using Presentation.WebAPI.Extensions;
 
@@ -9,7 +11,9 @@ builder.Host.AddSerilog();
 
 builder.Services
     .AddWorkers(builder.Configuration)
-    .AddDatabase(builder.Configuration);
+    .AddDatabase(builder.Configuration)
+    .AddIdentityConfiguration(builder.Configuration)
+    .AddTelegramAuthentication();
 
 builder.Services
     .AddApplication(builder.Configuration)
