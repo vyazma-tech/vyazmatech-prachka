@@ -12,6 +12,7 @@
       <ProjectReference Include="..\..\Infrastructure\Infrastructure.Authentication\Infrastructure.Authentication.csproj" />
       <ProjectReference Include="..\..\Infrastructure\Infrastructure.DataAccess\Infrastructure.DataAccess.csproj" />
       <ProjectReference Include="..\Presentation.Authentication\Presentation.Authentication.csproj" />
+      <ProjectReference Include="..\Presentation.Authorization\Presentation.Authorization.csproj" />
       <ProjectReference Include="..\Presentation.Endpoints\Presentation.Endpoints.csproj" />
     </ItemGroup>
 

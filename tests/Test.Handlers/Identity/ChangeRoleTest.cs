@@ -3,7 +3,6 @@ using Application.Core.Contracts.Identity.Commands;
 using Application.DataAccess.Contracts;
 using Application.Dto.Identity;
 using Application.Handlers.Identity.Commands.ChangeRole;
-using Domain.Common.Result;
 using FluentAssertions;
 using Moq;
 using Test.Handlers.Fixtures;
