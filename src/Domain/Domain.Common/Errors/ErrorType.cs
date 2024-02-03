@@ -15,5 +15,7 @@ public enum ErrorType
 
     Conflict = 4,
 
-    Unprocessable = 5
+    Unprocessable = 5,
+
+    Unauthorized = 6
 }

@@ -25,6 +25,7 @@ internal static class ResultExtensions
                 ErrorType.Unprocessable => StatusCodes.Status422UnprocessableEntity,
                 ErrorType.NotFound => StatusCodes.Status404NotFound,
                 ErrorType.BadRequest => StatusCodes.Status400BadRequest,
+                ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
 
                 _ => StatusCodes.Status500InternalServerError
             };
@@ -37,6 +38,7 @@ internal static class ResultExtensions
                 ErrorType.Unprocessable => "Unprocessable",
                 ErrorType.NotFound => "Not Found",
                 ErrorType.BadRequest => "Bad Request",
+                ErrorType.Unauthorized => "Unauthorized",
 
                 _ => "Internal Server Error"
             };
@@ -49,6 +51,7 @@ internal static class ResultExtensions
                 ErrorType.Unprocessable => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.21",
                 ErrorType.NotFound => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.5",
                 ErrorType.BadRequest => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.1",
+                ErrorType.Unauthorized => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.2",
 
                 _ => "Internal Server Error"
             };

@@ -35,6 +35,9 @@ public sealed class Error : ValueObject
     public static Error Failure(string code, string description, ErrorArea area) =>
         new (code, description, ErrorType.Failure, area);
 
+    public static Error Unauthorized(string code, string description, ErrorArea area) =>
+        new (code, description, ErrorType.Unauthorized, area);
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Code;

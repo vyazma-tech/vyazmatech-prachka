@@ -1,3 +1,5 @@
+using Application.Core.Abstractions;
+using Application.Core.Authentication;
 using Application.Core.Contracts.Orders.Queries;
 using Application.Core.Contracts.Queues.Queries;
 using Application.Core.Contracts.Users.Queries;
@@ -24,6 +26,15 @@ public static class ServiceCollectionExtensions
             .AddQueryChain<OrderByQuery.Query, IOrderQueryBuilder>()
             .AddQueryChain<UserByQuery.Query, IUserQueryBuilder>()
             .AddQueryChain<QueueByQuery.Query, IQueueQueryBuilder>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddCurrentUsers(this IServiceCollection services)
+    {
+        services.AddScoped<CurrentUserProxy>();
+        services.AddScoped<ICurrentUser>(x => x.GetRequiredService<CurrentUserProxy>());
+        services.AddScoped<ICurrentUserManager>(x => x.GetRequiredService<CurrentUserProxy>());
 
         return services;
     }

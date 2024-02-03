@@ -58,6 +58,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployment", "deployment", 
 		deployment\stop_database.sh = deployment\stop_database.sh
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Authentication", "src\Infrastructure\Infrastructure.Authentication\Infrastructure.Authentication.csproj", "{89BAF7FF-A8ED-4121-85DA-A59128D09729}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Dto", "src\Application\Application.Dto\Application.Dto.csproj", "{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Authentication", "src\Presentation\Presentation.Authentication\Presentation.Authentication.csproj", "{D36F6935-F38D-4D07-8289-A7C71ED98AC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Authorization", "src\Presentation\Presentation.Authorization\Presentation.Authorization.csproj", "{20A00E17-A0AA-41A8-AFB8-196202D68FAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +91,10 @@ Global
 		{53E9CE62-4DEA-4068-9097-B29F13282ED7} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
 		{01543956-3B90-4425-904D-8DF3E3E3BA2F} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
 		{5DD10590-2621-4E5B-9759-57F6D732FE3C} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -141,5 +153,21 @@ Global
 		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

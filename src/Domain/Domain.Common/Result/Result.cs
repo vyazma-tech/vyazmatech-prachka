@@ -31,7 +31,7 @@ public class Result<TValue> : Result
     }
 }
 
-public abstract class Result
+public class Result
 {
     private readonly Error _error;
     private readonly ResultState _state;
@@ -42,7 +42,12 @@ public abstract class Result
         _error = error;
     }
 
+    public static Result Success() => new (null!, ResultState.Success);
+
+    public static Result Failure() => new (null!, ResultState.Faulted);
+
     public bool IsFaulted => _state == ResultState.Faulted;
+
     public bool IsSuccess => _state == ResultState.Success;
 
     public Error Error => IsFaulted ? _error : throw new InvalidOperationException();
