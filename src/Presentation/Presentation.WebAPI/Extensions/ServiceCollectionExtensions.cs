@@ -4,12 +4,17 @@ using Application.Core.Configuration;
 using Application.Core.Extensions;
 using Application.DataAccess.Contracts.Extensions;
 using Application.Handlers.Extensions;
+using Infrastructure.Cache.CacheStore;
 using Infrastructure.DataAccess.Extensions;
 using Infrastructure.DataAccess.Interceptors;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Presentation.WebAPI.Configuration;
 using Presentation.WebAPI.Exceptions;
 using Presentation.WebAPI.Middlewares;
+using Presentation.WebAPI.Policies;
+using StackExchange.Redis;
 
 namespace Presentation.WebAPI.Extensions;
 
@@ -57,6 +62,8 @@ internal static class ServiceCollectionExtensions
 
         services.AddQueryBuilders();
         services.AddQuerying();
+        services.AddCurrentUsers();
+
         return services.AddHandlers();
     }
 

@@ -1,0 +1,17 @@
+{
+  "Authorization": {
+    "FeatureScopes": {
+      "ScopeArea": {
+        "FeatureName": [
+          "role"
+        ],
+        "AnotherFeature": [
+          "role"
+        ]
+      },
+      "AnotherScopeArea": {
+        
+      }
+    }
+  }
+}

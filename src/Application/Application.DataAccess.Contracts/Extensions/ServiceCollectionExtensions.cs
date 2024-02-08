@@ -17,7 +17,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<Querying.User.IQueryBuilder, UserQuery.QueryBuilder>();
         services.AddSingleton<Querying.OrderSubscription.IQueryBuilder, OrderSubscriptionQuery.QueryBuilder>();
         services.AddSingleton<Querying.QueueSubscription.IQueryBuilder, QueueSubscriptionQuery.QueryBuilder>();
-
         return services;
     }
 }
