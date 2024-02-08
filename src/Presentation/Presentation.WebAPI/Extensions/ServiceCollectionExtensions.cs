@@ -4,12 +4,17 @@ using Application.Core.Configuration;
 using Application.Core.Extensions;
 using Application.DataAccess.Contracts.Extensions;
 using Application.Handlers.Extensions;
+using Infrastructure.Cache.CacheStore;
 using Infrastructure.DataAccess.Extensions;
 using Infrastructure.DataAccess.Interceptors;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Presentation.WebAPI.Configuration;
 using Presentation.WebAPI.Exceptions;
 using Presentation.WebAPI.Middlewares;
+using Presentation.WebAPI.Policies;
+using StackExchange.Redis;
 
 namespace Presentation.WebAPI.Extensions;
 
@@ -67,5 +72,56 @@ internal static class ServiceCollectionExtensions
         return services
             .AddTransient<GlobalExceptionHandlingMiddleware>()
             .AddTransient<RequestLogContextMiddleware>();
+    }
+
+    public static IServiceCollection AddCachePolicy(this IServiceCollection services, IConfiguration configuration)
+    {
+        return services.AddRedisConnectionMultiplexer(
+            options =>
+            {
+                options.AddBasePolicy(
+                    policyBuilder =>
+                        policyBuilder.AddPolicy<QueueCachePolicy>(), excludeDefaultPolicy: true);
+            }, configuration);
+    }
+
+    private static IServiceCollection AddRedisConnectionMultiplexer(
+        this IServiceCollection services,
+        Action<OutputCacheOptions> configureOptions,
+        IConfiguration configuration)
+    {
+        RedisCacheConfiguration cacheConfiguration = services.AddRedisCache(configuration);
+
+        services.AddSingleton<IConnectionMultiplexer>(_ =>
+            ConnectionMultiplexer.Connect(cacheConfiguration.ConnectionString));
+
+        return services.AddRedisOutputCacheStore(configureOptions);
+    }
+
+    private static IServiceCollection AddRedisOutputCacheStore(
+        this IServiceCollection services,
+        Action<OutputCacheOptions> configureOptions)
+    {
+        services.AddOutputCache(configureOptions);
+
+        services.RemoveAll<IOutputCacheStore>();
+
+        services.AddSingleton<IOutputCacheStore, RedisOutputCacheStore>();
+
+        return services;
+    }
+
+    private static RedisCacheConfiguration AddRedisCache(this IServiceCollection services, IConfiguration configuration)
+    {
+        RedisCacheConfiguration redisCacheConfiguration = configuration.GetSection(RedisCacheConfiguration.SectionKey)
+            .Get<RedisCacheConfiguration>() ?? throw new StartupException(nameof(RedisCacheConfiguration));
+        services.AddSingleton(redisCacheConfiguration);
+        services
+            .AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisCacheConfiguration.ConnectionString;
+            });
+
+        return redisCacheConfiguration;
     }
 }

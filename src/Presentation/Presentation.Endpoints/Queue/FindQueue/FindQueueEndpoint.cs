@@ -1,11 +1,13 @@
 ﻿using Application.Core.Common;
 using FastEndpoints;
 using Mediator;
+using Microsoft.AspNetCore.OutputCaching;
 using Presentation.Endpoints.Extensions;
 using static Application.Core.Contracts.Queues.Queries.QueueByQuery;
 
 namespace Presentation.Endpoints.Queue.FindQueue;
 
+[OutputCache]
 public class FindQueueEndpoint : Endpoint<Query, PagedResponse<Response>>
 {
     private readonly ISender _sender;

@@ -14,6 +14,7 @@ builder.Configuration.AddJsonFile("features.json");
 builder.Services
     .AddWorkers(builder.Configuration)
     .AddDatabase(builder.Configuration)
+    .AddCachePolicy(builder.Configuration)
     .AddIdentityConfiguration(builder.Configuration)
     .AddTelegramAuthentication()
     .AddVyazmaTechAuthorization();
@@ -31,4 +32,5 @@ await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
     await scope.UseDatabase();
 }
 
+app.UseOutputCache();
 await app.RunAsync();

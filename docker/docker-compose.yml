@@ -27,6 +27,18 @@ services:
     networks:
       - tn
 
+  tn.redis:
+    image: redis:latest
+    container_name: tn-redis
+    ports:
+      - "6379:6379"
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./.containers/cache:/var/lib/redis/data
+    networks:
+      - tn
+
 networks:
   tn:
     name: tn
