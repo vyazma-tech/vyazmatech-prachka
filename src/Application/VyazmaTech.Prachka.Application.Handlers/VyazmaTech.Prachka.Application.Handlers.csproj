@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+        <PackageReference Include="Mediator.SourceGenerator" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+        <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj"/>
+        <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj"/>
+        <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Application.Core\VyazmaTech.Prachka.Application.Core.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Application.Mapping\VyazmaTech.Prachka.Application.Mapping.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Queue\Events\"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <InternalsVisibleTo Include="Presentation.Endpoints"/>
+        <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
+    </ItemGroup>
+</Project>

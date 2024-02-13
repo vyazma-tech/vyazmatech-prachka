@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <PackageReference Include="FastEndpoints" />
+      <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.Handlers\VyazmaTech.Prachka.Application.Handlers.csproj" />
+    </ItemGroup>
+    
+</Project>

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="Ardalis.GuardClauses"/>
+        <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Domain.Kernel\VyazmaTech.Prachka.Domain.Kernel.csproj"/>
+    </ItemGroup>
+
+</Project>

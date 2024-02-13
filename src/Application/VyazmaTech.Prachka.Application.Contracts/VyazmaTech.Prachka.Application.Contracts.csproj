@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+        <PackageReference Include="Mediator.Abstractions" />
+        <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="OrderSubscriptions\" />
+      <Folder Include="QueueSubscriptions\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Kernel\VyazmaTech.Prachka.Domain.Kernel.csproj" />
+      <ProjectReference Include="..\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>
