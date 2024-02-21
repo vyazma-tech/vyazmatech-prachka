@@ -5,8 +5,7 @@ using static VyazmaTech.Prachka.Application.Contracts.Identity.Commands.ChangeRo
 
 namespace VyazmaTech.Prachka.Application.Handlers.Identity.Commands.ChangeRole;
 
-internal sealed class
-    ChangeRoleCommandHandler : ICommandHandler<Command, Response>
+internal sealed class ChangeRoleCommandHandler : ICommandHandler<Command, Response>
 {
     private readonly IAuthenticationService _service;
     private readonly ICurrentUser _currentUser;

@@ -1,19 +1,22 @@
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
 using VyazmaTech.Prachka.Application.Abstractions.Identity.Models;
 using VyazmaTech.Prachka.Application.Contracts.Common;
+using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
 using VyazmaTech.Prachka.Domain.Common.Result;
-using static VyazmaTech.Prachka.Application.Contracts.Identity.Commands.CreateUser;
+using static VyazmaTech.Prachka.Application.Contracts.Identity.Commands.RegisterUser;
 
-namespace VyazmaTech.Prachka.Application.Handlers.Identity.Commands.CreateUser;
+namespace VyazmaTech.Prachka.Application.Handlers.Identity.Commands.RegisterUser;
 
-internal sealed class CreateUserCommandHandler : ICommandHandler<Command, Result<Response>>
+internal sealed class RegisterUserCommandHandler : ICommandHandler<Command, Result<Response>>
 {
     private readonly IAuthenticationService _service;
+    private readonly IPersistenceContext _context;
 
-    public CreateUserCommandHandler(IAuthenticationService service)
+    public RegisterUserCommandHandler(IAuthenticationService service, IPersistenceContext context)
     {
         _service = service;
+        _context = context;
     }
 
     public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
