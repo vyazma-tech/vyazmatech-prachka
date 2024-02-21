@@ -1,6 +1,5 @@
 ﻿using FastEndpoints;
 using Mediator;
-using Microsoft.AspNetCore.OutputCaching;
 using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
 using VyazmaTech.Prachka.Application.Dto;
 using VyazmaTech.Prachka.Application.Dto.Queue;
