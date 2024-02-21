@@ -1,16 +1,44 @@
 using Microsoft.AspNetCore.Identity;
 using VyazmaTech.Prachka.Application.Abstractions.Identity.Models;
+using VyazmaTech.Prachka.Domain.Kernel;
+using VyazmaTech.Prachka.Infrastructure.Authentication.Models.Events;
 
 namespace VyazmaTech.Prachka.Infrastructure.Authentication.Models;
 
-internal class VyazmaTechIdentityUser : IdentityUser<Guid>
+public class VyazmaTechIdentityUser : IdentityUser<Guid>
 {
-    public VyazmaTechIdentityUser(IdentityUserCredentials credentials)
-        : base(credentials.TelegramUsername)
+    private readonly List<IIntegrationEvent> _integrationEvents = new ();
+
+    public VyazmaTechIdentityUser(string fullname, string telegramId, string telegramImageUrl, string telegramUsername)
+        : base(telegramUsername)
     {
-        Fullname = credentials.Fullname;
-        TelegramId = credentials.TelegramId;
-        TelegramImageUrl = credentials.TelegramImageUrl;
+        Fullname = fullname;
+        TelegramId = telegramId;
+        TelegramImageUrl = telegramImageUrl;
+    }
+
+    public static VyazmaTechIdentityUser Create(
+        Guid id,
+        IdentityUserCredentials credentials,
+        string refreshToken,
+        DateTime refreshTokenExpiry,
+        Guid securityStamp)
+    {
+        var user = new VyazmaTechIdentityUser(
+            credentials.Fullname,
+            credentials.TelegramId,
+            credentials.TelegramImageUrl,
+            credentials.TelegramUsername)
+        {
+            Id = id,
+            RefreshToken = refreshToken,
+            RefreshTokenExpiryUtc = refreshTokenExpiry,
+            SecurityStamp = securityStamp.ToString()
+        };
+
+        user._integrationEvents.Add(new UserRegisteredIntegrationEvent(user));
+
+        return user;
     }
 
     protected VyazmaTechIdentityUser()
@@ -26,4 +54,8 @@ internal class VyazmaTechIdentityUser : IdentityUser<Guid>
     public string? RefreshToken { get; set; }
 
     public DateTime RefreshTokenExpiryUtc { get; init; }
+
+    public IReadOnlyCollection<IIntegrationEvent> IntegrationEvents => _integrationEvents.ToList();
+
+    public void ClearIntegrationEvents() => _integrationEvents.Clear();
 }

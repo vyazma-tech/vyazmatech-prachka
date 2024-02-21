@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Configuration;
+using VyazmaTech.Prachka.Application.BackgroundWorkers.Integration;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Queue;
 
 namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Extensions;
@@ -21,7 +22,8 @@ public static class ServiceCollectionExtensions
         services
             .AddHostedService<QueueActivatorBackgroundWorker>()
             .AddHostedService<QueueActivityBackgroundWorker>()
-            .AddHostedService<QueueAvailablePositionBackgroundWorker>();
+            .AddHostedService<QueueAvailablePositionBackgroundWorker>()
+            .AddHostedService<OutboxMessagesProcessingBackgroundWorker>();
 
         return services;
     }

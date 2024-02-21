@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Configuration;
+using VyazmaTech.Prachka.Infrastructure.Authentication.Interceptors;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Models;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Services;
 
@@ -20,14 +21,23 @@ public static class ServiceCollectionExtensions
             .BindConfiguration(TokenConfiguration.SectionKey);
 
         PostgresConfiguration postgresConfiguration = configuration
-            .GetSection(PostgresConfiguration.SectionKey)
-            .Get<PostgresConfiguration>()
-            ?? throw new InvalidOperationException("Identity postgres not configured.");
+                                                          .GetSection(PostgresConfiguration.SectionKey)
+                                                          .Get<PostgresConfiguration>()
+                                                      ?? throw new InvalidOperationException(
+                                                          "Identity postgres not configured.");
 
         services.AddScoped<IAuthenticationService, TelegramAuthenticationService>();
+        services.AddSingleton<IntegrationEventToOutboxMessageInterceptor>();
 
-        services.AddDbContext<VyazmaTechIdentityContext>(builder => builder
-            .UseNpgsql(postgresConfiguration.ToConnectionString()));
+        services.AddDbContext<VyazmaTechIdentityContext>((sp, builder) =>
+        {
+            IntegrationEventToOutboxMessageInterceptor interceptor = sp
+                .GetRequiredService<IntegrationEventToOutboxMessageInterceptor>();
+
+            builder
+                .UseNpgsql(postgresConfiguration.ToConnectionString())
+                .AddInterceptors(interceptor);
+        });
 
         services.AddIdentity<VyazmaTechIdentityUser, VyazmaTechIdentityRole>()
             .AddEntityFrameworkStores<VyazmaTechIdentityContext>()

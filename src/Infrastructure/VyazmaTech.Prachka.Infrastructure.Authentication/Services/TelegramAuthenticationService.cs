@@ -128,13 +128,12 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         string roleName,
         CancellationToken token)
     {
-        var user = new VyazmaTechIdentityUser(credentials)
-        {
-            Id = userId,
-            RefreshToken = GenerateRefreshToken(),
-            RefreshTokenExpiryUtc = DateTime.UtcNow.AddMinutes(_configuration.AccessTokenExpiresInMinutes),
-            SecurityStamp = Guid.NewGuid().ToString()
-        };
+        var user = VyazmaTechIdentityUser.Create(
+            userId,
+            credentials,
+            GenerateRefreshToken(),
+            DateTime.UtcNow.AddMinutes(_configuration.AccessTokenExpiresInMinutes),
+            Guid.NewGuid());
 
         IdentityResult result = await _userManager.CreateAsync(user);
 
