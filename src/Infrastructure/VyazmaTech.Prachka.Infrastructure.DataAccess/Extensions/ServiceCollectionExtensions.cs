@@ -36,7 +36,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
-        services.AddScoped<IUnitOfWork, DatabaseContext>();
+        services.AddScoped<IUnitOfWork, PersistenceContext>();
         services.AddScoped<IPersistenceContext, PersistenceContext>();
         services.AddSingleton<PublishDomainEventsInterceptor>();
 

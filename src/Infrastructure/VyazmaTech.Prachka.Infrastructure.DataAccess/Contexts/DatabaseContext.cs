@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
@@ -8,7 +6,7 @@ using VyazmaTech.Prachka.Infrastructure.DataAccess.ValueConverters;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 
-public sealed class DatabaseContext : DbContext, IUnitOfWork
+public sealed class DatabaseContext : DbContext
 {
     public DatabaseContext(DbContextOptions<DatabaseContext> options)
         : base(options)
@@ -24,11 +22,6 @@ public sealed class DatabaseContext : DbContext, IUnitOfWork
     public DbSet<QueueSubscriptionModel> QueueSubscriptions { get; private init; } = null!;
 
     public DbSet<OrderSubscriptionModel> OrderSubscriptions { get; private init; } = null!;
-
-    public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
-    {
-        return Database.BeginTransactionAsync(cancellationToken);
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

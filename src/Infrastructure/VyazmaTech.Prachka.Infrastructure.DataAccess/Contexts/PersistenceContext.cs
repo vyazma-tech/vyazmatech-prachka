@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 
-internal sealed class PersistenceContext : IPersistenceContext
+internal sealed class PersistenceContext : IPersistenceContext, IUnitOfWork
 {
     private readonly DatabaseContext _context;
 
@@ -36,6 +37,9 @@ internal sealed class PersistenceContext : IPersistenceContext
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         => _context.SaveChangesAsync(cancellationToken);
+
+    public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+        => _context.Database.BeginTransactionAsync(cancellationToken);
 
     public DbSet<TModel> Entities<TModel>()
         where TModel : class => _context.Set<TModel>();
