@@ -5,9 +5,12 @@ using VyazmaTech.Prachka.Domain.Common.Result;
 
 namespace VyazmaTech.Prachka.Application.Contracts.Identity.Commands;
 
-public static class CreateUser
+public static class RegisterUser
 {
-    public record struct Command(Guid Id, IdentityUserCredentials Credentials, string Role) : IValidatableRequest<Result<Response>>;
+    public record struct Command(
+        Guid Id,
+        IdentityUserCredentials Credentials,
+        string Role) : IValidatableRequest<Result<Response>>;
 
     public record struct Response(IdentityUserDto User, IdentityTokenDto Tokens);
 }
