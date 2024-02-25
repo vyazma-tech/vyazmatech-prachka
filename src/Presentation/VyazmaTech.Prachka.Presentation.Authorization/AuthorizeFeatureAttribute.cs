@@ -4,13 +4,13 @@ namespace VyazmaTech.Prachka.Presentation.Authorization;
 
 public sealed class AuthorizeFeatureAttribute : AuthorizeAttribute
 {
-    internal const string Prefix = "Feature_";
+    public const string Prefix = "Feature_";
 
     public AuthorizeFeatureAttribute(string scope, string feature)
+        : base($"{Prefix}{scope}:{feature}")
     {
         Scope = scope;
         Feature = feature;
-        Policy = $"{Prefix}{Scope}:{Feature}";
     }
 
     public string Scope { get; }

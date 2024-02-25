@@ -3,10 +3,23 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <WarningLevel>5</WarningLevel>
-        <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-        <NoWarn>SA1201; SA1313; SA1009; SA1413; SA1601; CA1716</NoWarn>
     </PropertyGroup>
+
+    <PropertyGroup>
+        <AnalysisLevel>latest</AnalysisLevel>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>SA1201; SA1313; SA1009; SA1011; SA1128; SA1413; SA1601; CA1716; CS1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="StyleCop.Analyzers">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
     <ItemGroup>
         <InternalsVisibleTo Include="$(AssemblyName).Tests"/>
     </ItemGroup>

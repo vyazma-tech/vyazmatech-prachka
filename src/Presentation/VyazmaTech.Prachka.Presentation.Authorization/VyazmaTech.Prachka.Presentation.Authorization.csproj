@@ -4,8 +4,4 @@
         <OutputType>Library</OutputType>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
-    </ItemGroup>
-
 </Project>

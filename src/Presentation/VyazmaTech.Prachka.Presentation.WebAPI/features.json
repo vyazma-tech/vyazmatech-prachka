@@ -1,16 +1,45 @@
 {
   "Authorization": {
     "FeatureScopes": {
-      "ScopeArea": {
-        "FeatureName": [
-          "role"
+      "Identity": {
+        "ChangeRole": [
+          "admin",
+          "moderator"
         ],
-        "AnotherFeature": [
-          "role"
+        "GetAllRoles": [
+          "admin",
+          "moderator"
         ]
       },
-      "AnotherScopeArea": {
-        
+      "Orders": {
+        "MarkAsPaid": [
+          "admin",
+          "employee"
+        ],
+        "MarkAsReady": [
+          "admin",
+          "employee"
+        ]
+      },
+      "Queues": {
+        "ChangeQueueActivityBoundaries": [
+          "admin",
+          "employee"
+        ],
+        "IncreaseCapacity" : [
+          "admin",
+          "employee"
+        ]
+      },
+      "Users": {
+        "GetAllUsers": [
+          "admin",
+          "moderator"
+        ],
+        "UserById": [
+          "admin",
+          "moderator"
+        ]
       }
     }
   }
