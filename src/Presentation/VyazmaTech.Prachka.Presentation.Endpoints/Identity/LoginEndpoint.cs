@@ -19,7 +19,7 @@ internal class LoginEndpoint : Endpoint<LoginRequest, IdentityTokenDto>
 
     public override void Configure()
     {
-        Put("api/login");
+        Put("api/identity/login");
         AllowAnonymous();
     }
 

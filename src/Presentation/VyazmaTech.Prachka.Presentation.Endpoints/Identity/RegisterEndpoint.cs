@@ -19,7 +19,7 @@ internal class RegisterEndpoint : Endpoint<RegisterRequest, RegisterResponse>
 
     public override void Configure()
     {
-        Post("api/register");
+        Post("api/identity/register");
         AllowAnonymous();
     }
 

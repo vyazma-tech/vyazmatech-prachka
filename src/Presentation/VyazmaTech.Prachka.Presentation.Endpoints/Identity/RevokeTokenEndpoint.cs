@@ -17,7 +17,7 @@ internal class RevokeTokenEndpoint : Endpoint<RevokeTokenRequest, IdentityTokenD
 
     public override void Configure()
     {
-        Delete("api/revoke");
+        Delete("api/identity/revoke");
         AllowAnonymous();
     }
 

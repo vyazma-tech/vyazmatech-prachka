@@ -27,7 +27,6 @@ internal class ValidateTokenEndpoint : Endpoint<ValidateTokenRequest, PrincipalD
 
         ValidateToken.Response response = await _sender.Send(query, ct);
 
-        // TODO: handle edge case
         await SendOkAsync(response.Principal, ct);
     }
 }

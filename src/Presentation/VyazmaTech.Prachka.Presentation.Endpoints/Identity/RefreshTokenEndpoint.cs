@@ -19,7 +19,7 @@ internal class RefreshTokenEndpoint : Endpoint<RefreshTokenRequest, IdentityToke
 
     public override void Configure()
     {
-        Put("api/refresh");
+        Put("api/identity/refresh");
         AllowAnonymous();
     }
 

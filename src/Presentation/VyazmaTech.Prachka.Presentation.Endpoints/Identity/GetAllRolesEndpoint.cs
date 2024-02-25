@@ -16,7 +16,7 @@ internal class GetAllRolesEndpoint : EndpointWithoutRequest<AllRolesDto>
 
     public override void Configure()
     {
-        Get("api/roles");
+        Get("api/identity/roles");
         AllowAnonymous();
     }
 

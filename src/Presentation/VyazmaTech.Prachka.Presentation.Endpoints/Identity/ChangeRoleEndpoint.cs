@@ -17,7 +17,7 @@ internal class ChangeRoleEndpoint : Endpoint<ChangeRoleRequest, Result>
 
     public override void Configure()
     {
-        Post("api/change");
+        Post("api/identity/change");
         AllowAnonymous();
     }
 
@@ -27,7 +27,9 @@ internal class ChangeRoleEndpoint : Endpoint<ChangeRoleRequest, Result>
 
         ChangeRole.Response response = await _sender.Send(command, ct);
 
-        // TODO: handle edge case
-        await SendOkAsync(response.Result, ct);
+        if (response.Result.IsFaulted)
+            await SendForbiddenAsync(ct);
+        else
+            await SendOkAsync(response.Result, ct);
     }
 }
