@@ -44,4 +44,29 @@ public class ChangeRoleTest : TestBase
 
         handlerResult.Result.IsFaulted.Should().BeFalse();
     }
+    
+    [Theory]
+    [ClassData(typeof(ChangeRoleClassData))]
+    public async Task Handle_ShouldReturnSuccessResult_WhenModeratorChangeRole(string currentRole, string newRole)
+    {
+        var user = new IdentityUserDto(
+            Id: Guid.Empty,
+            Fullname: string.Empty,
+            Role: string.Empty,
+            TelegramUsername: string.Empty,
+            TelegramImageUrl: string.Empty);
+
+        var currentUser = new ModeratorUser(user.Id);
+
+        _authService
+            .Setup(x => x.GetUserRoleAsync(user.TelegramUsername, default))
+            .ReturnsAsync(currentRole);
+
+        var command = new ChangeRole.Command(user.TelegramUsername, newRole);
+        var handler = new ChangeRoleCommandHandler(_authService.Object, currentUser);
+
+        ChangeRole.Response handlerResult = await handler.Handle(command, default);
+
+        handlerResult.Result.IsFaulted.Should().BeFalse();
+    }
 }
