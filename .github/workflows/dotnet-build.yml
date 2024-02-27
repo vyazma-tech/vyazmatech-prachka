@@ -6,7 +6,8 @@ on:
     paths:
       - 'src/**'
       - 'tests/**'
-      - '.github/workflows/backend-ci.yml'
+      - '.github/workflows/dotnet-build.yml'
+      - '.github/workflows/purge-report.yml'
       - '*.sln'
       - '*.props'
   workflow_dispatch:

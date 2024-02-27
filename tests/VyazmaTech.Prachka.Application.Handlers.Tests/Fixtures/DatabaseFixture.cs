@@ -89,7 +89,7 @@ public abstract class DatabaseFixture : IAsyncLifetime
     {
         return Task.CompletedTask;
     }
-    
+
     private async Task InitializeRespawnerAsync()
     {
         _respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions

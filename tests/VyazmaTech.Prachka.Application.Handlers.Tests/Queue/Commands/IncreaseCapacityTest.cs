@@ -24,7 +24,6 @@ public class IncreaseCapacityTest : TestBase
             fixture.PersistenceContext);
     }
 
-
     [Fact]
     public async Task Handle_ShouldReturnFailureResult_WhenQueueIsNotFound()
     {

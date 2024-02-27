@@ -129,14 +129,14 @@ public class QueueTests
         incomingOrderResult.IsFaulted.Should().BeTrue();
         incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Overfull);
     }
-    
+
     [Fact]
     public void Add_ShouldReturnFailureResult_WhenQueueIsExpired()
     {
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
         _dateTimeProvider.Setup(x => x.SpbDateTimeNow).Returns(new SpbDateTime(DateTime.UtcNow.AddMinutes(2)));
-        
+
         var order = new OrderEntity(
             id: Guid.NewGuid(),
             queueId: Guid.Empty,

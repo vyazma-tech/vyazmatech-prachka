@@ -13,13 +13,6 @@ public class CoreDatabaseFixture : DatabaseFixture
     public AsyncServiceScope Scope { get; private set; }
     public IPersistenceContext PersistenceContext { get; private set; } = null!;
 
-    protected override void ConfigureServices(IServiceCollection services)
-    {
-        services.AddDatabase(x =>
-            x.UseNpgsql(Container.GetConnectionString()));
-        services.AddInfrastructure();
-    }
-
     public override async Task ResetAsync()
     {
         await base.ResetAsync();
@@ -30,6 +23,13 @@ public class CoreDatabaseFixture : DatabaseFixture
     {
         await base.DisposeAsync();
         await Scope.DisposeAsync();
+    }
+
+    protected override void ConfigureServices(IServiceCollection services)
+    {
+        services.AddDatabase(x =>
+            x.UseNpgsql(Container.GetConnectionString()));
+        services.AddInfrastructure();
     }
 
     protected override DbConnection CreateConnection()

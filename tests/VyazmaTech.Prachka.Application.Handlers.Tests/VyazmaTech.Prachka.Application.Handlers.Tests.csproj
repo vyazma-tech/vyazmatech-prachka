@@ -14,7 +14,6 @@
         <PackageReference Include="xunit"/>
         <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
         <PackageReference Include="coverlet.collector" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
-        <PackageReference Remove="StyleCop.Analyzers" />
     </ItemGroup>
 
     <ItemGroup>
@@ -26,13 +25,7 @@
 
     <ItemGroup>
         <Compile Remove="TestResults\**"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <EmbeddedResource Remove="TestResults\**"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <None Remove="TestResults\**"/>
     </ItemGroup>
     

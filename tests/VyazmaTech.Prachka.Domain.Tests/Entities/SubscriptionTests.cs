@@ -46,7 +46,7 @@ public class SubscriptionTests
             user: Guid.Empty,
             creationDateUtc: default,
             orderIds: Array.Empty<Guid>().ToHashSet());
-        
+
         Result<OrderEntity> quitResult = subscription.Unsubscribe(order);
 
         quitResult.IsFaulted.Should().BeTrue();

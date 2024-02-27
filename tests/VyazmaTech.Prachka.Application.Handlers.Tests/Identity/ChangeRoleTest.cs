@@ -44,7 +44,7 @@ public class ChangeRoleTest : TestBase
 
         handlerResult.Result.IsFaulted.Should().BeFalse();
     }
-    
+
     [Theory]
     [ClassData(typeof(ChangeRoleClassData))]
     public async Task Handle_ShouldReturnSuccessResult_WhenModeratorChangeRole(string currentRole, string newRole)

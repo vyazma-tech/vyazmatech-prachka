@@ -67,8 +67,8 @@ public class OrderServiceTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Active,
-            orderIds: new HashSet<Guid> { Guid.NewGuid() }); 
-        
+            orderIds: new HashSet<Guid> { Guid.NewGuid() });
+
         var queue = new QueueEntity(
             id: Guid.NewGuid(),
             capacity: 1,
@@ -78,7 +78,8 @@ public class OrderServiceTests
             state: QueueState.Active,
             orderIds: Array.Empty<Guid>().ToHashSet());
 
-        Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, previousQueue: queue, targetQueue: targetQueue);
+        Result<OrderEntity> prolongationResult =
+            _service.ProlongOrder(order, previousQueue: queue, targetQueue: targetQueue);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Should().Be(DomainErrors.Order.UnableToTransferIntoFullQueue);
