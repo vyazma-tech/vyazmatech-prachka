@@ -52,15 +52,15 @@ jobs:
 
       - name: Install dependencies
         if: steps.cache-tests.outputs.cache-hit != 'true'
-        run: dotnet restore Trusov.NET.sln
+        run: dotnet restore VyazmaTech.sln
 
       - name: Build
         if: steps.cache-tests.outputs.cache-hit != 'true'
-        run: dotnet build Trusov.NET.sln -c Release --no-restore
+        run: dotnet build VyazmaTech.sln -c Release --no-restore
 
       - name: Test
         if: steps.cache-tests.outputs.cache-hit != 'true'
-        run: dotnet test Trusov.NET.sln -c Release --no-restore --no-build -l trx --results-directory ./allure-results
+        run: dotnet test VyazmaTech.sln -c Release --no-restore --no-build -l trx --results-directory ./allure-results
   
   compile-allure:
     name: 🔃 Compile allure pages
