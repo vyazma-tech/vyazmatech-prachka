@@ -13,10 +13,10 @@ public class QueueCachePolicy : IOutputCachePolicy
 
     public ValueTask CacheRequestAsync(OutputCacheContext context, CancellationToken cancellation)
     {
-        context.EnableOutputCaching = true;
-        context.AllowCacheLookup = true;
-        context.AllowCacheStorage = true;
-        context.AllowLocking = true;
+        context.EnableOutputCaching = false;
+        context.AllowCacheLookup = false;
+        context.AllowCacheStorage = false;
+        context.AllowLocking = false;
 
         context.CacheVaryByRules.QueryKeys = "*";
         context.ResponseExpirationTimeSpan = TimeSpan.FromMinutes(_cacheConfiguration.CacheExpirationInMinutes);

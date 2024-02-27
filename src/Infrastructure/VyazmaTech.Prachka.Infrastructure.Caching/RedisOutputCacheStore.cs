@@ -46,7 +46,7 @@ public class RedisOutputCacheStore : IOutputCacheStore
 
         if (cancellationToken.IsCancellationRequested)
             return;
-        
+
         IDatabase database = _connectionMultiplexer.GetDatabase();
 
         IAsyncEnumerable<string> asyncTags = tags?.ToAsyncEnumerable() ?? AsyncEnumerable.Empty<string>();

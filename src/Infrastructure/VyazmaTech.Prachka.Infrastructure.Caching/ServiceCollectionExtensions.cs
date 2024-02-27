@@ -46,7 +46,8 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    private static RedisCacheConfiguration? AddRedisCache(this IServiceCollection services,
+    private static RedisCacheConfiguration? AddRedisCache(
+        this IServiceCollection services,
         IConfiguration configuration)
     {
         RedisCacheConfiguration? redisCacheConfiguration = configuration
