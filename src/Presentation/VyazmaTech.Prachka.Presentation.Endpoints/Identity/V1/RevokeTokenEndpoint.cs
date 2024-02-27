@@ -1,12 +1,11 @@
 using FastEndpoints;
 using Mediator;
 using VyazmaTech.Prachka.Application.Contracts.Identity.Commands;
-using VyazmaTech.Prachka.Application.Dto.Identity;
 using VyazmaTech.Prachka.Presentation.Endpoints.Identity.V1.Models;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Identity.V1;
 
-internal class RevokeTokenEndpoint : Endpoint<RevokeTokenRequest, IdentityTokenDto>
+internal class RevokeTokenEndpoint : Endpoint<RevokeTokenRequest>
 {
     private readonly ISender _sender;
 

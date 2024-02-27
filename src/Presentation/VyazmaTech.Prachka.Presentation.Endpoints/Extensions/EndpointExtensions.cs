@@ -22,4 +22,15 @@ public static class EndpointExtensions
     {
         return endpoint.HttpContext.Response.SendResultAsync(result);
     }
+
+    public static Task SendAcceptedAsync<TResponse>(
+        this IEndpoint endpoint,
+        TResponse response,
+        CancellationToken cancellationToken)
+    {
+        return endpoint.HttpContext.Response.SendAsync(
+            response,
+            StatusCodes.Status202Accepted,
+            cancellation: cancellationToken);
+    }
 }

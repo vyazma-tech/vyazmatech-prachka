@@ -55,6 +55,6 @@ internal class RegisterEndpoint : Endpoint<RegisterRequest, RegisterResponse>
             identityUser.Tokens.AccessToken,
             identityUser.Tokens.RefreshToken);
 
-        await SendOkAsync(registrationResponse, ct);
+        await this.SendAcceptedAsync(registrationResponse, ct);
     }
 }

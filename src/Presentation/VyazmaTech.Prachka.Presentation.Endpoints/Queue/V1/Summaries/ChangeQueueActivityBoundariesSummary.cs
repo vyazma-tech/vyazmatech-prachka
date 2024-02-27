@@ -1,7 +1,7 @@
 ﻿using FastEndpoints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1.Models;
+using VyazmaTech.Prachka.Application.Dto.Queue;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1.Summaries;
 
@@ -11,7 +11,7 @@ internal sealed class ChangeQueueActivityBoundariesSummary : Summary<ChangeQueue
     {
         Summary = "Changes queue activity boundaries.";
         Description = "This endpoint changes queue activity boundaries.";
-        Response<ChangeActivityBoundariesRequest>();
+        Response<QueueDto>();
         Response<ValidationProblemDetails>(StatusCodes.Status400BadRequest, "Parameters were not in correct format");
     }
 }
