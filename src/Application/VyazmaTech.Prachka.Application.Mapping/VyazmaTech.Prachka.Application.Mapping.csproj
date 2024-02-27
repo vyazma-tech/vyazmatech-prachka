@@ -5,5 +5,5 @@
     <ProjectReference Include="..\VyazmaTech.Prachka.Application.Abstractions\VyazmaTech.Prachka.Application.Abstractions.csproj" />
     <ProjectReference Include="..\VyazmaTech.Prachka.Application.Dto\VyazmaTech.Prachka.Application.Dto.csproj" />
   </ItemGroup>
-  
+
 </Project>

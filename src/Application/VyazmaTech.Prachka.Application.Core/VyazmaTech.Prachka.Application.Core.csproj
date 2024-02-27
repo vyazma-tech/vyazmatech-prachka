@@ -4,7 +4,6 @@
         <PackageReference Include="FluentChaining"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="Serilog"/>
-        <PackageReference Include="StyleCop.Analyzers" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
     </ItemGroup>
 
     <ItemGroup>

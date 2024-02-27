@@ -16,7 +16,7 @@ public static class OrderMapping
             order.CreationDate,
             order.ModifiedOn?.Value);
     }
-    
+
     public static PagedResponse<OrderDto> ToPagedResponse(
         this IEnumerable<OrderDto> orders,
         int currentPage,

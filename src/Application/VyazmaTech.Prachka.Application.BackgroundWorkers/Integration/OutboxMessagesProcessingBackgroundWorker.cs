@@ -41,7 +41,7 @@ internal sealed class OutboxMessagesProcessingBackgroundWorker : BackgroundServi
 
             foreach (OutboxMessage message in messages)
             {
-                var integrationEvent = JsonConvert
+                IIntegrationEvent? integrationEvent = JsonConvert
                     .DeserializeObject<IIntegrationEvent>(message.Content, new JsonSerializerSettings
                     {
                         TypeNameHandling = TypeNameHandling.Objects,
