@@ -1,0 +1,203 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{EEABAF50-E29C-4424-B207-43C8534EB131}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2DD18CEA-A937-4A4C-9F28-5A350E3AF182}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{42299E0B-19FF-4416-96A1-F88E137D1189}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{BF188799-DA9B-458D-B290-D3CF5630857C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{23FCA160-3F5F-4BC0-867D-71FEB0C21271}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Core", "src\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj", "{0F170000-5942-4D4D-86BF-EA819CA2A0E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Common", "src\Domain\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj", "{92C03EB4-11E4-4E5F-B034-8428F047213B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Tests", "tests\VyazmaTech.Prachka.Domain.Tests\VyazmaTech.Prachka.Domain.Tests.csproj", "{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Tools", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Tools\VyazmaTech.Prachka.Infrastructure.Tools.csproj", "{0C438E6A-5E93-4907-B438-A2174C22E256}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.DataAccess", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj", "{42B68564-A20E-40B4-8591-9021ABBB8000}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.DataAccess.Contracts", "src\Application\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj", "{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Kernel", "src\Domain\VyazmaTech.Prachka.Domain.Kernel\VyazmaTech.Prachka.Domain.Kernel.csproj", "{2CB1F38E-717E-4567-A10B-B0F72C6A4808}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.Core", "src\Application\VyazmaTech.Prachka.Application.Core\VyazmaTech.Prachka.Application.Core.csproj", "{8791CAB3-2D2A-426D-9161-0E623F783A9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.Handlers.Tests", "tests\VyazmaTech.Prachka.Application.Handlers.Tests\VyazmaTech.Prachka.Application.Handlers.Tests.csproj", "{4C4EEEFE-BB6C-4401-897C-4449A7E3560F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.Handlers", "src\Application\VyazmaTech.Prachka.Application.Handlers\VyazmaTech.Prachka.Application.Handlers.csproj", "{6875A891-BEDB-42D5-BFC7-3459B9B84F06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Presentation.Endpoints", "src\Presentation\VyazmaTech.Prachka.Presentation.Endpoints\VyazmaTech.Prachka.Presentation.Endpoints.csproj", "{53E9CE62-4DEA-4068-9097-B29F13282ED7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Presentation.WebAPI", "src\Presentation\VyazmaTech.Prachka.Presentation.WebAPI\VyazmaTech.Prachka.Presentation.WebAPI.csproj", "{01543956-3B90-4425-904D-8DF3E3E3BA2F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{48C48F42-04B1-4B9E-93EB-C8F6A397B351}"
+	ProjectSection(SolutionItems) = preProject
+		docker\docker-compose.yml = docker\docker-compose.yml
+		docker\build.dockerfile = docker\build.dockerfile
+		docker\build.dockerfile.dockerignore = docker\build.dockerfile.dockerignore
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.BackgroundWorkers", "src\Application\VyazmaTech.Prachka.Application.BackgroundWorkers\VyazmaTech.Prachka.Application.BackgroundWorkers.csproj", "{5DD10590-2621-4E5B-9759-57F6D732FE3C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployment", "deployment", "{BDD8E4AF-E268-419B-A9EB-29640C57B17C}"
+	ProjectSection(SolutionItems) = preProject
+		deployment\run_container.sh = deployment\run_container.sh
+		deployment\run_database.sh = deployment\run_database.sh
+		deployment\run_prod.sh = deployment\run_prod.sh
+		deployment\run_test.sh = deployment\run_test.sh
+		deployment\stop_database.sh = deployment\stop_database.sh
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Caching", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Caching\VyazmaTech.Prachka.Infrastructure.Caching.csproj", "{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Authentication", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj", "{89BAF7FF-A8ED-4121-85DA-A59128D09729}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.Dto", "src\Application\VyazmaTech.Prachka.Application.Dto\VyazmaTech.Prachka.Application.Dto.csproj", "{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Presentation.Authentication", "src\Presentation\VyazmaTech.Prachka.Presentation.Authentication\VyazmaTech.Prachka.Presentation.Authentication.csproj", "{D36F6935-F38D-4D07-8289-A7C71ED98AC7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Presentation.Authorization", "src\Presentation\VyazmaTech.Prachka.Presentation.Authorization\VyazmaTech.Prachka.Presentation.Authorization.csproj", "{20A00E17-A0AA-41A8-AFB8-196202D68FAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.Abstractions", "src\Application\VyazmaTech.Prachka.Application.Abstractions\VyazmaTech.Prachka.Application.Abstractions.csproj", "{E7724F5B-26B5-4A6B-B4CE-F6BB279B706F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.Contracts", "src\Application\VyazmaTech.Prachka.Application.Contracts\VyazmaTech.Prachka.Application.Contracts.csproj", "{0E1D0DC7-771F-4774-BD41-7929FFC0C495}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.Mapping", "src\Application\VyazmaTech.Prachka.Application.Mapping\VyazmaTech.Prachka.Application.Mapping.csproj", "{0BB30A9C-3F59-4911-B1DD-8BA8F8874699}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{1D5E44FC-6CBD-440A-8683-AAF8900E5143}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet-build.yml = .github\workflows\dotnet-build.yml
+		.github\workflows\purge-report.yml = .github\workflows\purge-report.yml
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		README.md = README.md
+		VyazmaTech.sln.DotSettings = VyazmaTech.sln.DotSettings
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0F170000-5942-4D4D-86BF-EA819CA2A0E7} = {42299E0B-19FF-4416-96A1-F88E137D1189}
+		{92C03EB4-11E4-4E5F-B034-8428F047213B} = {42299E0B-19FF-4416-96A1-F88E137D1189}
+		{BF188799-DA9B-458D-B290-D3CF5630857C} = {EEABAF50-E29C-4424-B207-43C8534EB131}
+		{42299E0B-19FF-4416-96A1-F88E137D1189} = {EEABAF50-E29C-4424-B207-43C8534EB131}
+		{23FCA160-3F5F-4BC0-867D-71FEB0C21271} = {EEABAF50-E29C-4424-B207-43C8534EB131}
+		{9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D} = {EEABAF50-E29C-4424-B207-43C8534EB131}
+		{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED} = {2DD18CEA-A937-4A4C-9F28-5A350E3AF182}
+		{0C438E6A-5E93-4907-B438-A2174C22E256} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
+		{42B68564-A20E-40B4-8591-9021ABBB8000} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
+		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808} = {42299E0B-19FF-4416-96A1-F88E137D1189}
+		{8791CAB3-2D2A-426D-9161-0E623F783A9C} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{4C4EEEFE-BB6C-4401-897C-4449A7E3560F} = {2DD18CEA-A937-4A4C-9F28-5A350E3AF182}
+		{6875A891-BEDB-42D5-BFC7-3459B9B84F06} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{53E9CE62-4DEA-4068-9097-B29F13282ED7} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
+		{01543956-3B90-4425-904D-8DF3E3E3BA2F} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
+		{5DD10590-2621-4E5B-9759-57F6D732FE3C} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
+		{E7724F5B-26B5-4A6B-B4CE-F6BB279B706F} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{0E1D0DC7-771F-4774-BD41-7929FFC0C495} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92C03EB4-11E4-4E5F-B034-8428F047213B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92C03EB4-11E4-4E5F-B034-8428F047213B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92C03EB4-11E4-4E5F-B034-8428F047213B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92C03EB4-11E4-4E5F-B034-8428F047213B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C438E6A-5E93-4907-B438-A2174C22E256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C438E6A-5E93-4907-B438-A2174C22E256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C438E6A-5E93-4907-B438-A2174C22E256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C438E6A-5E93-4907-B438-A2174C22E256}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42B68564-A20E-40B4-8591-9021ABBB8000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42B68564-A20E-40B4-8591-9021ABBB8000}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42B68564-A20E-40B4-8591-9021ABBB8000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42B68564-A20E-40B4-8591-9021ABBB8000}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52ED80C0-0423-4958-BEA4-C3CE8B15EBB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CB1F38E-717E-4567-A10B-B0F72C6A4808}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8791CAB3-2D2A-426D-9161-0E623F783A9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8791CAB3-2D2A-426D-9161-0E623F783A9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8791CAB3-2D2A-426D-9161-0E623F783A9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8791CAB3-2D2A-426D-9161-0E623F783A9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C4EEEFE-BB6C-4401-897C-4449A7E3560F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4EEEFE-BB6C-4401-897C-4449A7E3560F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4EEEFE-BB6C-4401-897C-4449A7E3560F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4EEEFE-BB6C-4401-897C-4449A7E3560F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6875A891-BEDB-42D5-BFC7-3459B9B84F06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6875A891-BEDB-42D5-BFC7-3459B9B84F06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6875A891-BEDB-42D5-BFC7-3459B9B84F06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6875A891-BEDB-42D5-BFC7-3459B9B84F06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53E9CE62-4DEA-4068-9097-B29F13282ED7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E9CE62-4DEA-4068-9097-B29F13282ED7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E9CE62-4DEA-4068-9097-B29F13282ED7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E9CE62-4DEA-4068-9097-B29F13282ED7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01543956-3B90-4425-904D-8DF3E3E3BA2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01543956-3B90-4425-904D-8DF3E3E3BA2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01543956-3B90-4425-904D-8DF3E3E3BA2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01543956-3B90-4425-904D-8DF3E3E3BA2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D36F6935-F38D-4D07-8289-A7C71ED98AC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20A00E17-A0AA-41A8-AFB8-196202D68FAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7724F5B-26B5-4A6B-B4CE-F6BB279B706F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7724F5B-26B5-4A6B-B4CE-F6BB279B706F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7724F5B-26B5-4A6B-B4CE-F6BB279B706F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7724F5B-26B5-4A6B-B4CE-F6BB279B706F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E1D0DC7-771F-4774-BD41-7929FFC0C495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E1D0DC7-771F-4774-BD41-7929FFC0C495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E1D0DC7-771F-4774-BD41-7929FFC0C495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E1D0DC7-771F-4774-BD41-7929FFC0C495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

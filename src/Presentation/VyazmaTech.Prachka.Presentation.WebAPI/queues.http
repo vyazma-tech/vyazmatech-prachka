@@ -1,0 +1,30 @@
+﻿### querying date
+http://localhost:5290/api/v1/queues?assignmentDate=2024-01-15
+
+### by id
+http://localhost:5290/api/v1/queues/1ee0acef-dc13-43d9-ba20-bfcf0ca98c98
+
+### querying page
+http://localhost:5290/api/v1/queues?page=0
+
+### mixed querying
+http://localhost:5290/api/v1/queues?page=0&assignmentDate=2024-01-15&orderId=9bfe1f7f-6d6d-4341-9591-a767eef97ab6
+
+### change boundaries
+PATCH http://localhost:5290/api/v1/queues/activity
+Content-Type: application/json
+
+{
+  "queueId": "0c54105c-8ace-45e7-888a-18cc78bf9281",
+  "activeFrom": "13:",
+  "activeUntil": ":31:30"
+}
+
+### change capacity
+PATCH http://localhost:5290/api/v1/queues/capacity
+Content-Type: application/json
+
+{
+  "queueId": "0c54105c-8ace-45e7-888a-18cc78bf9280",
+  "capacity": 11
+}

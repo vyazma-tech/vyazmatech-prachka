@@ -24,6 +24,7 @@ services:
     ports:
       - "5341:5341"
       - "8081:80"
+    restart: unless-stopped
     networks:
       - tn
 

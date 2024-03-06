@@ -10,15 +10,15 @@ COPY ./*.sln .
 COPY ./*.props ./
 COPY ./.editorconfig .
 
-RUN dotnet restore "src/Presentation/Presentation.WebAPI/Presentation.WebAPI.csproj"
+RUN dotnet restore "src/Presentation/VyazmaTech.Prachka.Presentation.WebAPI/VyazmaTech.Prachka.Presentation.WebAPI.csproj"
 
 FROM build AS publish
-WORKDIR "/source/src/Presentation/Presentation.WebAPI"
-RUN dotnet publish "Presentation.WebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
+WORKDIR "/source/src/Presentation/VyazmaTech.Prachka.Presentation.WebAPI"
+RUN dotnet publish "VyazmaTech.Prachka.Presentation.WebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENV ASPNETCORE_URLS=http://0.0.0.0:5290 \
     ASPNETCORE_ENVIRONMENT=Production
-ENTRYPOINT ["dotnet", "Presentation.WebAPI.dll"]
+ENTRYPOINT ["dotnet", "VyazmaTech.Prachka.Presentation.WebAPI.dll"]

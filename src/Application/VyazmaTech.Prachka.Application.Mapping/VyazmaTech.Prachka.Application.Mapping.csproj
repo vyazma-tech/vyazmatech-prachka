@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj" />
+    <ProjectReference Include="..\VyazmaTech.Prachka.Application.Abstractions\VyazmaTech.Prachka.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\VyazmaTech.Prachka.Application.Dto\VyazmaTech.Prachka.Application.Dto.csproj" />
+  </ItemGroup>
+
+</Project>
