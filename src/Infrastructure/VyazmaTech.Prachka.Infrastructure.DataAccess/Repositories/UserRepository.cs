@@ -60,7 +60,7 @@ internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IU
 
         if (specification.TelegramId is not null)
         {
-            queryable = queryable.Where(x => EF.Functions.ILike(x.TelegramId, specification.TelegramId));
+            queryable = queryable.Where(x => EF.Functions.ILike(x.TelegramUsername, specification.TelegramId));
         }
 
         if (specification.Fullname is not null)

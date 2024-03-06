@@ -3,6 +3,7 @@ using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Result;
 using VyazmaTech.Prachka.Domain.Core.Order.Events;
 using VyazmaTech.Prachka.Domain.Core.Queue;
+using VyazmaTech.Prachka.Domain.Core.User;
 using VyazmaTech.Prachka.Domain.Kernel;
 
 namespace VyazmaTech.Prachka.Domain.Core.Order;
@@ -12,14 +13,14 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     public OrderEntity(
         Guid id,
         Guid queueId,
-        Guid userId,
+        UserInfo user,
         OrderStatus status,
         SpbDateTime creationDateTimeUtc,
         SpbDateTime? modifiedOn = null)
         : base(id)
     {
         Queue = queueId;
-        User = userId;
+        User = user;
         Status = status;
         CreationDateTime = creationDateTimeUtc;
         ModifiedOn = modifiedOn;
@@ -29,7 +30,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
 
     public Guid Queue { get; private set; }
 
-    public Guid User { get; }
+    public UserInfo User { get; }
 
     public OrderStatus Status { get; private set; }
 

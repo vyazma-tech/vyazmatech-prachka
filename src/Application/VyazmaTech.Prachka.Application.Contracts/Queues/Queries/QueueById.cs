@@ -8,5 +8,5 @@ public static class QueueById
 {
     public record struct Query(Guid Id) : IQuery<Result<Response>>;
 
-    public record struct Response(QueueDto Queue);
+    public record struct Response(QueueWithOrdersDto Queue);
 }

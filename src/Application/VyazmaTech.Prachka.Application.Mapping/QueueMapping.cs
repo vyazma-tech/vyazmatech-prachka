@@ -11,7 +11,21 @@ public static class QueueMapping
         return new QueueDto(
             Id: queue.Id,
             MaxCapacity: queue.Capacity,
-            CurrentCapacity: queue.Order.Count,
+            CurrentCapacity: queue.Orders.Count,
+            State: queue.State.ToString(),
+            ModifiedOn: queue.ModifiedOn?.Value,
+            AssignmentDate: queue.CreationDate,
+            ActiveFrom: queue.ActiveFrom,
+            ActiveUntil: queue.ActiveUntil);
+    }
+
+    public static QueueWithOrdersDto ToQueueWithOrdersDto(this QueueEntity queue)
+    {
+        return new QueueWithOrdersDto(
+            Id: queue.Id,
+            MaxCapacity: queue.Capacity,
+            CurrentCapacity: queue.Orders.Count,
+            Orders: queue.Orders.Select(x => x.ToDto()).ToArray(),
             State: queue.State.ToString(),
             ModifiedOn: queue.ModifiedOn?.Value,
             AssignmentDate: queue.CreationDate,

@@ -1,8 +1,10 @@
+using VyazmaTech.Prachka.Domain.Core.User;
+
 namespace VyazmaTech.Prachka.Domain.Core.Order;
 
 public sealed class OrderInfo
 {
-    public OrderInfo(Guid id, Guid user, Guid queue, OrderStatus status)
+    public OrderInfo(Guid id, UserInfo user, Guid queue, OrderStatus status)
     {
         Id = id;
         User = user;
@@ -12,7 +14,7 @@ public sealed class OrderInfo
 
     public Guid Id { get; }
 
-    public Guid User { get; }
+    public UserInfo User { get; }
 
     public Guid Queue { get; }
 

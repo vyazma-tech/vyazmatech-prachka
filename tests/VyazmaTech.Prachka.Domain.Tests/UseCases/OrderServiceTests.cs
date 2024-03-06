@@ -31,7 +31,7 @@ public class OrderServiceTests
         var order = new OrderEntity(
             id: Guid.Empty,
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.New,
             creationDateTimeUtc: default);
 
@@ -42,7 +42,7 @@ public class OrderServiceTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Active,
-            orderIds: Array.Empty<Guid>().ToHashSet());
+            orderInfos: Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
         Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, previousQueue: queue, targetQueue: queue);
 
@@ -56,7 +56,7 @@ public class OrderServiceTests
         var order = new OrderEntity(
             id: Guid.Empty,
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.New,
             creationDateTimeUtc: default);
 
@@ -67,7 +67,7 @@ public class OrderServiceTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Active,
-            orderIds: new HashSet<Guid> { Guid.NewGuid() });
+            orderInfos: new HashSet<OrderInfo>(new OrderByIdComparer()) { new (Guid.NewGuid(), default!, default, default) });
 
         var queue = new QueueEntity(
             id: Guid.NewGuid(),
@@ -76,7 +76,7 @@ public class OrderServiceTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Active,
-            orderIds: Array.Empty<Guid>().ToHashSet());
+            orderInfos: Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
         Result<OrderEntity> prolongationResult =
             _service.ProlongOrder(order, previousQueue: queue, targetQueue: targetQueue);

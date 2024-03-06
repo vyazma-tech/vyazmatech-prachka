@@ -8,7 +8,7 @@ public record UserModel
 {
     public Guid Id { get; set; }
 
-    public string TelegramId { get; set; }
+    public string TelegramUsername { get; set; }
 
     public string Fullname { get; set; }
 

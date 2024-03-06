@@ -11,7 +11,7 @@ internal sealed class FindQueueByIdSummary : Summary<FindQueueByIdEndpoint>
     public FindQueueByIdSummary()
     {
         Summary = "Find queue by id";
-        Response<QueueDto>();
+        Response<QueueWithOrdersDto>();
         Response<ProblemDetails>(StatusCodes.Status404NotFound, "Queue with specified id was not found");
         Response<ValidationProblemDetails>(StatusCodes.Status400BadRequest, "Id was not in correct format");
     }

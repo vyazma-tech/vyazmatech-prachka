@@ -1,4 +1,5 @@
 ﻿using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Domain.Core.User;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
@@ -10,7 +11,7 @@ public static class OrderMapping
         return new OrderEntity(
             model.Id,
             model.QueueId,
-            model.UserId,
+            new UserInfo(model.UserId, model.User.TelegramUsername, model.User.Fullname),
             Enum.Parse<OrderStatus>(model.Status),
             model.CreationDate,
             model.ModifiedOn);
@@ -22,7 +23,7 @@ public static class OrderMapping
         {
             Id = entity.Id,
             QueueId = entity.Queue,
-            UserId = entity.User,
+            UserId = entity.User.Id,
             CreationDate = entity.CreationDateTime,
             ModifiedOn = entity.ModifiedOn,
             Status = entity.Status.ToString()

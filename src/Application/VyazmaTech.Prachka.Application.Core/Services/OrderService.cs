@@ -30,7 +30,7 @@ public class OrderService
             return new Result<OrderEntity>(DomainErrors.Order.UnableToTransferIntoSameQueue);
         }
 
-        if (targetQueue.Capacity.Equals(targetQueue.Order.Count))
+        if (targetQueue.Capacity.Equals(targetQueue.Orders.Count))
         {
             return new Result<OrderEntity>(DomainErrors.Order.UnableToTransferIntoFullQueue);
         }

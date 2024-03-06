@@ -87,7 +87,7 @@ public class QueueTests
             orderId,
             queueId: Guid.Empty,
             status: OrderStatus.New,
-            userId: Guid.Empty,
+            user: null!,
             creationDateTimeUtc: default);
 
         var queue = new QueueEntity(
@@ -97,7 +97,7 @@ public class QueueTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Active,
-            new HashSet<Guid> { orderId });
+            new HashSet<OrderInfo>(new OrderByIdComparer()) { new (orderId, null!, default, default) });
 
         Result<OrderEntity> entranceResult = queue.Add(order, default);
 
@@ -111,7 +111,7 @@ public class QueueTests
         var order = new OrderEntity(
             id: Guid.NewGuid(),
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.New,
             creationDateTimeUtc: default);
 
@@ -122,7 +122,7 @@ public class QueueTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Active,
-            orderIds: new HashSet<Guid> { Guid.NewGuid() });
+            orderInfos: new HashSet<OrderInfo>(new OrderByIdComparer()) { new (Guid.NewGuid(), default!, default, default) });
 
         Result<OrderEntity> incomingOrderResult = queue.Add(order, default);
 
@@ -140,7 +140,7 @@ public class QueueTests
         var order = new OrderEntity(
             id: Guid.NewGuid(),
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.New,
             creationDateTimeUtc: default);
 
@@ -151,7 +151,7 @@ public class QueueTests
             activeFrom: TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
             activeUntil: TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddMinutes(1)),
             state: QueueState.Active,
-            orderIds: new HashSet<Guid> { Guid.NewGuid() });
+            orderInfos: new HashSet<OrderInfo>(new OrderByIdComparer()) { new (Guid.NewGuid(), default!, default, default) });
 
         Result<OrderEntity> incomingOrderResult = queue.Add(order, _dateTimeProvider.Object.SpbDateTimeNow);
 
@@ -165,7 +165,7 @@ public class QueueTests
         var order = new OrderEntity(
             id: Guid.NewGuid(),
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.New,
             creationDateTimeUtc: default);
 
@@ -176,7 +176,7 @@ public class QueueTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Active,
-            orderIds: Array.Empty<Guid>().ToHashSet());
+            orderInfos: Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
         Result<OrderEntity> quitResult = queue.Remove(order);
 
@@ -194,7 +194,7 @@ public class QueueTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Active,
-            orderIds: Array.Empty<Guid>().ToHashSet());
+            orderInfos: Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
         SpbDateTime modificationDate = SpbDateTimeProvider.CurrentDateTime;
         Result<QueueEntity> increasingResult = queue.IncreaseCapacity(Capacity.Create(2).Value, modificationDate);
@@ -218,7 +218,7 @@ public class QueueTests
             activeFrom: TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
             activeUntil: TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1)),
             state: QueueState.Active,
-            orderIds: Array.Empty<Guid>().ToHashSet());
+            orderInfos: Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
         queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddMinutes(1)));
 
@@ -236,7 +236,7 @@ public class QueueTests
             activeFrom: default,
             activeUntil: default,
             state: QueueState.Expired,
-            orderIds: Array.Empty<Guid>().ToHashSet(),
+            orderInfos: Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()),
             maxCapacityReached: true);
 
         queue.TryNotifyAboutAvailablePosition(default);

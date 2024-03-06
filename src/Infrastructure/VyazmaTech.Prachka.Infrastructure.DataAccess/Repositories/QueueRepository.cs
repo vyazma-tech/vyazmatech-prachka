@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VyazmaTech.Prachka.Application.Abstractions.Querying.Queue;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
+using VyazmaTech.Prachka.Domain.Core.Order;
 using VyazmaTech.Prachka.Domain.Core.Queue;
+using VyazmaTech.Prachka.Domain.Core.User;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
@@ -22,7 +24,14 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
         var finalQueryable = queryable.Select(queue => new
         {
             queue,
-            orders = queue.Orders.Select(x => x.Id)
+            orders = queue.Orders.Select(x => new OrderInfo(
+                x.Id,
+                new UserInfo(
+                    x.UserId,
+                    x.User.TelegramUsername,
+                    x.User.Fullname),
+                queue.Id,
+                Enum.Parse<OrderStatus>(x.Status)))
         });
 
         return finalQueryable.AsAsyncEnumerable().Select(x => MapTo(x.queue, x.orders));
@@ -54,9 +63,9 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
         model.ModifiedOn = entity.ModifiedOn;
     }
 
-    private static QueueEntity MapTo(QueueModel model, IEnumerable<Guid> orderIds)
+    private static QueueEntity MapTo(QueueModel model, IEnumerable<OrderInfo> orderIds)
     {
-        return QueueMapping.MapTo(model, orderIds.ToHashSet());
+        return QueueMapping.MapTo(model, orderIds.ToHashSet(new OrderByIdComparer()));
     }
 
     private IQueryable<QueueModel> ApplyQuery(QueueQuery specification)
@@ -66,7 +75,8 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
         queryable = queryable
             .AsSplitQuery()
             .Include(x => x.Orders)
-            .ThenInclude(x => x.User);
+            .ThenInclude(x => x.User)
+            .OrderBy(x => x.Id);
 
         if (specification.Id is not null)
         {

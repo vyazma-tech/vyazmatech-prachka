@@ -21,7 +21,7 @@ internal class FindUserByIdEndpoint : Endpoint<UserWithIdRequest, UserDto>
 
     public override void Configure()
     {
-        Get("{id}");
+        Get("{userId}");
         Policies($"{AuthorizeFeatureAttribute.Prefix}{FeatureScope.Name}:{FeatureName}");
         Group<UserEndpointGroup>();
         Version(1);

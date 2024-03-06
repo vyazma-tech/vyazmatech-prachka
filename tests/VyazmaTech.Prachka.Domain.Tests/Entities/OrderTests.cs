@@ -14,7 +14,7 @@ public class OrderTests
         var order = new OrderEntity(
             id: Guid.Empty,
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.Paid,
             creationDateTimeUtc: default);
 
@@ -32,7 +32,7 @@ public class OrderTests
         var order = new OrderEntity(
             id: Guid.Empty,
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.New,
             creationDateTimeUtc: default);
 

@@ -15,7 +15,7 @@ public class SubscriptionTests
         var order = new OrderEntity(
             id: Guid.Empty,
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.New,
             creationDateTimeUtc: default);
 
@@ -37,7 +37,7 @@ public class SubscriptionTests
         var order = new OrderEntity(
             id: Guid.Empty,
             queueId: Guid.Empty,
-            userId: Guid.Empty,
+            user: null!,
             status: OrderStatus.New,
             creationDateTimeUtc: default);
 

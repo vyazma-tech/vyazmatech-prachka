@@ -25,6 +25,36 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("OrderModelOrderSubscriptionModel", b =>
+                {
+                    b.Property<Guid>("OrderSubscriptionModelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrdersId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("OrderSubscriptionModelId", "OrdersId");
+
+                    b.HasIndex("OrdersId");
+
+                    b.ToTable("UserOrdersAndTheirSubscriptions", (string)null);
+                });
+
+            modelBuilder.Entity("QueueModelQueueSubscriptionModel", b =>
+                {
+                    b.Property<Guid>("QueueSubscriptionModelId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("QueuesId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("QueueSubscriptionModelId", "QueuesId");
+
+                    b.HasIndex("QueuesId");
+
+                    b.ToTable("UserQueuesAndTheirSubscriptions", (string)null);
+                });
+
             modelBuilder.Entity("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.OrderModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -161,7 +191,7 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                     b.Property<DateOnly>("RegistrationDate")
                         .HasColumnType("date");
 
-                    b.Property<string>("TelegramId")
+                    b.Property<string>("TelegramUsername")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -172,32 +202,32 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
 
             modelBuilder.Entity("OrderModelOrderSubscriptionModel", b =>
                 {
-                    b.Property<Guid>("OrderSubscriptionModelId")
-                        .HasColumnType("uuid");
+                    b.HasOne("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.OrderSubscriptionModel", null)
+                        .WithMany()
+                        .HasForeignKey("OrderSubscriptionModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<Guid>("OrdersId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("OrderSubscriptionModelId", "OrdersId");
-
-                    b.HasIndex("OrdersId");
-
-                    b.ToTable("UserOrdersAndTheirSubscriptions", (string)null);
+                    b.HasOne("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.OrderModel", null)
+                        .WithMany()
+                        .HasForeignKey("OrdersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("QueueModelQueueSubscriptionModel", b =>
                 {
-                    b.Property<Guid>("QueueSubscriptionModelId")
-                        .HasColumnType("uuid");
+                    b.HasOne("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.QueueSubscriptionModel", null)
+                        .WithMany()
+                        .HasForeignKey("QueueSubscriptionModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<Guid>("QueuesId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("QueueSubscriptionModelId", "QueuesId");
-
-                    b.HasIndex("QueuesId");
-
-                    b.ToTable("UserQueuesAndTheirSubscriptions", (string)null);
+                    b.HasOne("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.QueueModel", null)
+                        .WithMany()
+                        .HasForeignKey("QueuesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.OrderModel", b =>
@@ -239,36 +269,6 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("OrderModelOrderSubscriptionModel", b =>
-                {
-                    b.HasOne("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.OrderSubscriptionModel", null)
-                        .WithMany()
-                        .HasForeignKey("OrderSubscriptionModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.OrderModel", null)
-                        .WithMany()
-                        .HasForeignKey("OrdersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("QueueModelQueueSubscriptionModel", b =>
-                {
-                    b.HasOne("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.QueueSubscriptionModel", null)
-                        .WithMany()
-                        .HasForeignKey("QueueSubscriptionModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.QueueModel", null)
-                        .WithMany()
-                        .HasForeignKey("QueuesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.QueueModel", b =>

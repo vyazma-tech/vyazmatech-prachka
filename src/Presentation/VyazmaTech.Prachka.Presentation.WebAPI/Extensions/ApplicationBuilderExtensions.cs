@@ -17,8 +17,7 @@ public static class ApplicationBuilderExtensions
             .UseRouting()
             .UseAuthorization()
             .UseEndpoints()
-            .UseSwaggerGen()
-            .UseOutputCache();
+            .UseSwaggerGen();
 
         return (WebApplication)builder;
     }

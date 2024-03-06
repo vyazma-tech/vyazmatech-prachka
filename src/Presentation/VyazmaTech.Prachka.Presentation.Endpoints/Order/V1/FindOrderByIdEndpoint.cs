@@ -19,7 +19,7 @@ internal class FindOrderByIdEndpoint : Endpoint<OrderWithIdRequest, OrderDto>
 
     public override void Configure()
     {
-        Get("{id}");
+        Get("{orderId}");
         AllowAnonymous();
         Group<OrderEndpointGroup>();
         Version(1);

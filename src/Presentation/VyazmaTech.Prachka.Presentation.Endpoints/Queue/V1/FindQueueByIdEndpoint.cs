@@ -8,7 +8,7 @@ using VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1.Models;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1;
 
-internal class FindQueueByIdEndpoint : Endpoint<QueueWithIdRequest, QueueDto>
+internal class FindQueueByIdEndpoint : Endpoint<QueueWithIdRequest, QueueWithOrdersDto>
 {
     private readonly ISender _sender;
 
@@ -19,7 +19,7 @@ internal class FindQueueByIdEndpoint : Endpoint<QueueWithIdRequest, QueueDto>
 
     public override void Configure()
     {
-        Get("{id}");
+        Get("{queueId}");
         AllowAnonymous();
         Group<QueueEndpointGroup>();
         Version(1);

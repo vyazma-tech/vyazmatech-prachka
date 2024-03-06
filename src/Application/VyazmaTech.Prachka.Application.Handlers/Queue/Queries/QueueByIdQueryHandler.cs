@@ -27,6 +27,6 @@ internal sealed class QueueByIdQueryHandler : IQueryHandler<Query, Result<Respon
 
         QueueEntity queue = result.Value;
 
-        return new Response(queue.ToDto());
+        return new Response(queue.ToQueueWithOrdersDto());
     }
 }

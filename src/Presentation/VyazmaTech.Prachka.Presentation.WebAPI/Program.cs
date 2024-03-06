@@ -1,7 +1,6 @@
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Extensions;
 using VyazmaTech.Prachka.Application.Handlers.Extensions;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Extensions;
-using VyazmaTech.Prachka.Infrastructure.Caching;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Extensions;
 using VyazmaTech.Prachka.Presentation.Authentication.Extensions;
 using VyazmaTech.Prachka.Presentation.Authorization;
@@ -15,9 +14,9 @@ builder.Host.AddSerilog();
 builder.Configuration.AddJsonFile("features.json");
 
 builder.Services
-    .AddWorkersConfiguration(builder.Configuration)
-    .AddWorkers();
+    .AddWorkersConfiguration(builder.Configuration);
 
+// .AddWorkers();
 builder.Services
     .AddInfrastructure()
     .AddPostgresConfiguration(builder.Configuration)
@@ -27,7 +26,6 @@ builder.Services
     .AddIdentityConfiguration(builder.Configuration);
 
 builder.Services
-    .AddCaching(builder.Configuration)
     .AddTelegramAuthentication()
     .AddVyazmaTechAuthorization();
 
