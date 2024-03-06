@@ -4,6 +4,19 @@ namespace VyazmaTech.Prachka.Application.Core.Errors;
 
 public static class ValidationErrors
 {
+    public static class ProlongOrder
+    {
+        public static Error OrderIdIsRequired => Error.Validation(
+            $"{nameof(ProlongOrder)}.{nameof(OrderIdIsRequired)}",
+            "The order identifier is required.",
+            ErrorArea.Application);
+
+        public static Error TargetQueueIdIdIsRequired => Error.Validation(
+            $"{nameof(ProlongOrder)}.{nameof(TargetQueueIdIdIsRequired)}",
+            "The order identifier is required.",
+            ErrorArea.Application);
+    }
+
     public static class MarkOrderAsReady
     {
         public static Error OrderIdIsRequired => Error.Validation(

@@ -11,7 +11,7 @@
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>SA1201; SA1313; SA1009; SA1011; SA1401; SA1128; SA1413; SA1601; CA1716; CS1591</NoWarn>
+        <NoWarn>SA1201; SA1313; SA1009; SA1002; SA1011; SA1401; SA1128; SA1413; SA1601; CA1716; CS1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

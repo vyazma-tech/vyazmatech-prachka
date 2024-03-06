@@ -1,0 +1,9 @@
+﻿### by id
+http://localhost:5290/api/users/3d7503e1
+
+### querying name
+http://localhost:5290/api/users?fullname=b%25&telegramId=123%25
+
+
+### mixed querying
+http://localhost:5290/api/users?page=1
