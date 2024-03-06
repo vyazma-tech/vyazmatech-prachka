@@ -1,0 +1,39 @@
+﻿POST http://localhost:5290/api/identity/register
+Content-Type: application/json
+
+{
+  "telegramUsername": "@marokt0",
+  "fullName": "Bakhteev Bogdan Alekseeivich",
+  "telegramId": "1234567890",
+  "telegramImageUrl": "https://google.com",
+  "role": "admin"
+}
+
+### login
+PUT http://localhost:5290/api/v1/identity/login
+Content-Type: application/json
+
+{
+  "Username": "@marokt0"
+}
+
+### change capacity
+#{
+#  "id": "a36f6e0c-ad6d-459c-82a1-0588ffe4361d",
+#  "fullname": "Bakhteev Bogdan Alekseeivich",
+#  "role": "admin",
+#  "telegramUsername": "",
+#  "telegramImageUrl": "https://google.com",
+#  {
+#  "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsInN1YiI6IkBtYXJva3QwIiwibmFtZSI6IkJha2h0ZWV2IEJvZ2RhbiBBbGVrc2VlaXZpY2giLCJuYW1laWQiOiJhMzZmNmUwYy1hZDZkLTQ1OWMtODJhMS0wNTg4ZmZlNDM2MWQiLCJqdGkiOiIwY2NlZmE2Yy02NDAzLTQ1NmQtOWZiNy0wZWU2NGVkZDAyYTgiLCJleHAiOjE3MDg5OTIwNjMsImlzcyI6InRuLWRldiIsImF1ZCI6InRuLWRldiJ9.W-1VQZETaDNYtke9z5iuhfAoLpUJFrw0qRN_4S1em8M",
+#  "refreshToken": "by5x5ESy1RNM/iVf9Itvb3D3UUETnguE0xb8vBW+/SRvkbVGZqrEwwA4DJqiRyT1eTvaOEDcofbmTF+r1Stv9w=="
+#}
+#}
+PATCH http://localhost:5290/api/queues/capacity
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsInN1YiI6IkBtYXJva3QwIiwibmFtZSI6IkJha2h0ZWV2IEJvZ2RhbiBBbGVrc2VlaXZpY2giLCJuYW1laWQiOiJhMzZmNmUwYy1hZDZkLTQ1OWMtODJhMS0wNTg4ZmZlNDM2MWQiLCJqdGkiOiJlMTJlOGMzZS1jYzQ1LTQxNzYtOGFiNi01NGRkZmI1Zjc4OTciLCJleHAiOjE3MDg5NzI5MzMsImlzcyI6InRuLWRldiIsImF1ZCI6InRuLWRldiJ9.x5dLStKeQiYJoHMacCWixwn91p1KQzYGWuLIGRjClkU
+
+{
+  "queueId": "ca8e2caf-edc6-47b9-8945-b9d1807a5063",
+  "capacity": 6
+}

@@ -1,0 +1,16 @@
+name: Purge report history
+concurrency: allure
+
+on:
+  pull_request:
+    types: [ closed ]
+    
+jobs:
+  clean:
+    name: Report cleanup
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Remove merged pull request report
+        run: |
+          rm -rf ${{ github.workspace }}/allure-history/${{ github.event.pull_request.number }}
