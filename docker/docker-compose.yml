@@ -1,7 +1,7 @@
 ﻿version: '3.9'
 
 services:
-  tn.postgres:
+  tn-postgres:
     image: postgres:latest
     container_name: tn-postgres
     environment:
@@ -16,7 +16,7 @@ services:
     networks:
       - tn
   
-  tn.seq:
+  tn-seq:
     image: datalust/seq:latest
     container_name: tn-seq
     environment:
