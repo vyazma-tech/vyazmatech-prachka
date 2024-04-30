@@ -71,4 +71,12 @@ public static class ValidationErrors
             "Username should not be null or empty.",
             ErrorArea.Application);
     }
+
+    public static class BulkInsertOrders
+    {
+        public static Error OrderQuantityShouldBePositive => Error.Validation(
+            code: $"{nameof(BulkInsertOrders)}.{nameof(OrderQuantityShouldBePositive)}",
+            description: "You should provide positive order quantity to enter queue",
+            area: ErrorArea.Application);
+    }
 }
