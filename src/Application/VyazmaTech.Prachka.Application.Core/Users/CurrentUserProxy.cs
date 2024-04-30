@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.IdentityModel.JsonWebTokens;
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
 using VyazmaTech.Prachka.Application.Abstractions.Identity.Models;
 
@@ -21,7 +22,7 @@ internal class CurrentUserProxy : ICurrentUser, ICurrentUserManager
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         string nameIdentifier = principal.Claims
-            .Single(x => x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase))
+            .Single(x => x.Type.Equals(JwtRegisteredClaimNames.NameId, StringComparison.OrdinalIgnoreCase))
             .Value;
 
         if (!Guid.TryParse(nameIdentifier, out Guid id))

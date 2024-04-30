@@ -4,6 +4,7 @@
         <PackageReference Include="FluentChaining"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="Serilog"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     </ItemGroup>
 
     <ItemGroup>
