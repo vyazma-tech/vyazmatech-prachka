@@ -11,6 +11,8 @@ public interface IOrderRepository
 
     void InsertRange(IReadOnlyCollection<OrderEntity> orders);
 
+    void RemoveRange(IReadOnlyCollection<OrderEntity> orders);
+
     void Update(OrderEntity order);
 
     Task<long> CountAsync(OrderQuery query, CancellationToken cancellationToken);

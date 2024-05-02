@@ -1,5 +1,4 @@
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
-using VyazmaTech.Prachka.Application.Abstractions.Querying.User;
 using VyazmaTech.Prachka.Application.Contracts.Common;
 using VyazmaTech.Prachka.Application.Core.Errors;
 using VyazmaTech.Prachka.Application.Core.Specifications;
@@ -35,8 +34,6 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
 
         if (userId is null)
             return new Result<Response>(ApplicationErrors.BulkInsertOrders.AnonymousUserCantEnter);
-
-        var query = UserQuery.Build(x => x.WithId(userId.Value));
 
         Result<UserEntity> userSearchResult = await _context.Users.FindByIdAsync(userId.Value, cancellationToken);
 

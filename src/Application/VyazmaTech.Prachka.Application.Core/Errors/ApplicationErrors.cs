@@ -11,4 +11,17 @@ public static class ApplicationErrors
             description: "Anonymous user can't enter the queue.",
             area: ErrorArea.Application);
     }
+
+    public static class BulkRemoveOrders
+    {
+        public static Error AnonymousUserCantExit => Error.Unprocessable(
+            code: $"{nameof(BulkInsertOrders)}.{nameof(AnonymousUserCantExit)}",
+            description: "Anonymous user can't enter the queue.",
+            area: ErrorArea.Application);
+
+        public static Error UnableToRemoveWithExceededQuantity => Error.Unprocessable(
+            code: $"{nameof(BulkRemoveOrders)}.{nameof(UnableToRemoveWithExceededQuantity)}",
+            description: "Provided order quantity exceeds user order quantity.",
+            area: ErrorArea.Application);
+    }
 }

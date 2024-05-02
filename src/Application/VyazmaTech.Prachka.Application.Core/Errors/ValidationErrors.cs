@@ -79,4 +79,12 @@ public static class ValidationErrors
             description: "You should provide positive order quantity to enter queue",
             area: ErrorArea.Application);
     }
+
+    public static class BulkRemoveOrders
+    {
+        public static Error OrderQuantityShouldBePositive => Error.Validation(
+            code: $"{nameof(BulkRemoveOrders)}.{nameof(OrderQuantityShouldBePositive)}",
+            description: "You should provide positive order quantity to exit queue.",
+            area: ErrorArea.Application);
+    }
 }

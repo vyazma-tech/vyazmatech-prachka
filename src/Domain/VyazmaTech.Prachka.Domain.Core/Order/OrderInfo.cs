@@ -2,7 +2,7 @@ using VyazmaTech.Prachka.Domain.Core.User;
 
 namespace VyazmaTech.Prachka.Domain.Core.Order;
 
-public sealed class OrderInfo
+public sealed record OrderInfo
 {
     public OrderInfo(Guid id, UserInfo user, Guid queue, OrderStatus status)
     {

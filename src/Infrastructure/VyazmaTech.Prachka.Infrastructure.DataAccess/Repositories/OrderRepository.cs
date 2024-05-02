@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using VyazmaTech.Prachka.Application.Abstractions.Querying.Order;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 using VyazmaTech.Prachka.Domain.Core.Order;
@@ -20,6 +21,12 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
         IQueryable<OrderModel> queryable = ApplyQuery(query);
 
         return queryable.AsAsyncEnumerable().Select(MapTo);
+    }
+
+    public void RemoveRange(IReadOnlyCollection<OrderEntity> orders)
+    {
+        IEnumerable<OrderModel> model = orders.Select(GetEntry).Select(x => x.Entity);
+        DbSet.RemoveRange(model);
     }
 
     public Task<long> CountAsync(OrderQuery specification, CancellationToken cancellationToken)
@@ -47,6 +54,16 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
     private static OrderEntity MapTo(OrderModel model)
     {
         return OrderMapping.MapTo(model);
+    }
+
+    private EntityEntry<OrderModel> GetEntry(OrderEntity entity)
+    {
+        OrderModel? existing = DbSet.Local
+            .FirstOrDefault(x => x.Id.Equals(entity.Id));
+
+        return existing is not null
+            ? DbSet.Entry(existing)
+            : DbSet.Attach(MapFrom(entity));
     }
 
     private IQueryable<OrderModel> ApplyQuery(OrderQuery specification)

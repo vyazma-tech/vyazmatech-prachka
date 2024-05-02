@@ -1,6 +1,6 @@
 namespace VyazmaTech.Prachka.Domain.Core.User;
 
-public sealed class UserInfo
+public sealed record UserInfo
 {
     public UserInfo(Guid id, string telegram, string fullname)
     {
