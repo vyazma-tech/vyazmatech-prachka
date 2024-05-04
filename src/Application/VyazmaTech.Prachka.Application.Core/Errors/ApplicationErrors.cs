@@ -24,4 +24,17 @@ public static class ApplicationErrors
             description: "Provided order quantity exceeds user order quantity.",
             area: ErrorArea.Application);
     }
+
+    public static class Subscription
+    {
+        public static Error AnonymousUserCantSubscribe => Error.Unprocessable(
+            code: $"{nameof(Subscription)}.{nameof(AnonymousUserCantSubscribe)}",
+            description: "Authenticate against the system to subscribe",
+            area: ErrorArea.Application);
+
+        public static Error UserHasNoSubscriptions(Guid id) => Error.NotFound(
+            code: $"{nameof(Subscription)}.{nameof(UserHasNoSubscriptions)}",
+            description: $"User with Id = {id} has no subscriptions",
+            area: ErrorArea.Application);
+    }
 }

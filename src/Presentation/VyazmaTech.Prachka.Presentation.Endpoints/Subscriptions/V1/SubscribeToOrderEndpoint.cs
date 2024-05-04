@@ -8,7 +8,7 @@ using VyazmaTech.Prachka.Presentation.Endpoints.Subscriptions.V1.Models;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Subscriptions.V1;
 
-internal sealed class SubscribeToOrderEndpoint : Endpoint<SubscribeToOrderRequest>
+internal class SubscribeToOrderEndpoint : Endpoint<SubscribeToOrderRequest>
 {
     private readonly ISender _sender;
     private readonly ICurrentUser _currentUser;
