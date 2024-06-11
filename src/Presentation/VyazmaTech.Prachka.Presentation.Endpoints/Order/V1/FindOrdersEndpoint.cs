@@ -33,6 +33,7 @@ internal class FindOrdersEndpoint : Endpoint<FindOrdersRequest, PagedResponse<Or
 
         if (response.Orders.Bunch.Any())
             await this.SendPartialContentAsync(response, ct);
-        else await SendNoContentAsync(ct);
+        else
+            await SendNoContentAsync(ct);
     }
 }

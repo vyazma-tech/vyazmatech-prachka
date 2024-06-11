@@ -6,7 +6,7 @@ namespace VyazmaTech.Prachka.Application.Core.Services;
 
 public class QueueUpdatingService : IDisposable
 {
-    private readonly SemaphoreSlim _semaphore = new (1, 1);
+    private readonly SemaphoreSlim _semaphore = new(1, 1);
 
     public async Task<UpdateResult> UpdateQueueAsync(
         QueueEntity queue,

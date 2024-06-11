@@ -16,7 +16,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
         if (GetType() != obj.GetType())
             return false;
 
-        if (!(obj is ValueObject valueObject))
+        if (obj is not ValueObject valueObject)
             return false;
 
         return GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());

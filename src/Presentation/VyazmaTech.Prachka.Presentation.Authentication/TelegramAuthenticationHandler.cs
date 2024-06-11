@@ -13,9 +13,7 @@ public class TelegramAuthenticationHandler : AuthenticationHandler<TelegramAuthe
     public TelegramAuthenticationHandler(
         IOptionsMonitor<TelegramAuthenticationOptions> options,
         ILoggerFactory logger,
-        UrlEncoder encoder) : base(options, logger, encoder)
-    {
-    }
+        UrlEncoder encoder) : base(options, logger, encoder) { }
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {

@@ -6,13 +6,11 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <WarningLevel>999</WarningLevel>
-        <EnableNETAnalyzers>true</EnableNETAnalyzers>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <AnalysisLevel>latest</AnalysisLevel>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>SA1201; SA1313; SA1009; SA1002; SA1011; SA1401; SA1128; SA1413; SA1601; CA1716; CS1591</NoWarn>
+        <NoWarn>1591;SA1000;SA1009;SA1011;SA1633;SA1101;SA1503;SA1309;SA1601;SA1201;SA1502;SA1127;SA1128;SA1600;SA1611;SA1604;SA1629;SA1602;</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

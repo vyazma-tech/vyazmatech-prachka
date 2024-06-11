@@ -274,9 +274,9 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             ValidIssuer = _configuration.Issuer,
             IssuerSigningKeys = new[]
             {
-                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Secret))
+                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Secret)),
             },
-            ValidateLifetime = validateLifetime
+            ValidateLifetime = validateLifetime,
         };
     }
 

@@ -8,17 +8,18 @@ namespace VyazmaTech.Prachka.Application.Handlers.Tests;
 [Collection(nameof(CoreDatabaseCollectionFixture))]
 public abstract class TestBase : IAsyncLifetime
 {
-    protected readonly CoreDatabaseFixture Fixture;
+    private readonly CoreDatabaseFixture _fixture;
     private readonly Func<Task> _reset;
 
     protected TestBase(CoreDatabaseFixture fixture)
     {
-        Fixture = fixture;
+        _fixture = fixture;
         _reset = fixture.ResetAsync;
     }
 
-    protected IPersistenceContext PersistenceContext => Fixture.PersistenceContext;
-    protected DatabaseContext Context => Fixture.Context;
+    protected IPersistenceContext PersistenceContext => _fixture.PersistenceContext;
+
+    protected DatabaseContext Context => _fixture.Context;
 
     public Task InitializeAsync()
     {

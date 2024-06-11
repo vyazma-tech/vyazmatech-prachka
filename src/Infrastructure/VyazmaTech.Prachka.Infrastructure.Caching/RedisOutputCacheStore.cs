@@ -7,14 +7,10 @@ namespace VyazmaTech.Prachka.Infrastructure.Caching;
 public class RedisOutputCacheStore : IOutputCacheStore
 {
     private readonly IConnectionMultiplexer _connectionMultiplexer;
-    private readonly ILogger<RedisOutputCacheStore> _logger;
 
-    public RedisOutputCacheStore(
-        IConnectionMultiplexer connectionMultiplexer,
-        ILogger<RedisOutputCacheStore> logger)
+    public RedisOutputCacheStore(IConnectionMultiplexer connectionMultiplexer)
     {
         _connectionMultiplexer = connectionMultiplexer;
-        _logger = logger;
     }
 
     public async ValueTask EvictByTagAsync(string tag, CancellationToken cancellationToken)
@@ -39,7 +35,12 @@ public class RedisOutputCacheStore : IOutputCacheStore
         return await database.StringGetAsync(key);
     }
 
-    public async ValueTask SetAsync(string key, byte[] value, string[]? tags, TimeSpan validFor, CancellationToken cancellationToken)
+    public async ValueTask SetAsync(
+        string key,
+        byte[] value,
+        string[]? tags,
+        TimeSpan validFor,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(key);
         ArgumentNullException.ThrowIfNull(value);

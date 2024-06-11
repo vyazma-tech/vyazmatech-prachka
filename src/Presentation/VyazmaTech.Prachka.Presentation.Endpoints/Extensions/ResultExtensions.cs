@@ -14,7 +14,7 @@ internal static class ResultExtensions
             type: GetType(result.Error.Type),
             extensions: new Dictionary<string, object?>
             {
-                { "errors", new[] { result.Error } }
+                { "errors", new[] { result.Error } },
             });
 
         static int GetStatusCode(ErrorType type)
@@ -26,6 +26,7 @@ internal static class ResultExtensions
                 ErrorType.NotFound => StatusCodes.Status404NotFound,
                 ErrorType.BadRequest => StatusCodes.Status400BadRequest,
                 ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
+                ErrorType.Failure => StatusCodes.Status500InternalServerError,
 
                 _ => StatusCodes.Status500InternalServerError
             };
@@ -39,6 +40,7 @@ internal static class ResultExtensions
                 ErrorType.NotFound => "Not Found",
                 ErrorType.BadRequest => "Bad Request",
                 ErrorType.Unauthorized => "Unauthorized",
+                ErrorType.Failure => "Internal Server Error",
 
                 _ => "Internal Server Error"
             };
@@ -52,6 +54,7 @@ internal static class ResultExtensions
                 ErrorType.NotFound => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.5",
                 ErrorType.BadRequest => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.1",
                 ErrorType.Unauthorized => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.2",
+                ErrorType.Failure => "Internal Server Error",
 
                 _ => "Internal Server Error"
             };

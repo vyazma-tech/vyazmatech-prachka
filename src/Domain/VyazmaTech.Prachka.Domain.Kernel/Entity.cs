@@ -5,7 +5,7 @@
 /// </summary>
 public abstract class Entity : IEquatable<Entity>
 {
-    private readonly List<IDomainEvent> _domainEvents = new ();
+    private readonly List<IDomainEvent> _domainEvents = new();
 
     protected Entity(Guid id)
     {
