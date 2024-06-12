@@ -1,19 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VyazmaTech.Prachka.Application.Abstractions.Querying.User;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
-using VyazmaTech.Prachka.Domain.Core.User;
+using VyazmaTech.Prachka.Domain.Core.Users;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;
 
-internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IUserRepository
+internal sealed class UserRepository : RepositoryBase<User, UserModel>, IUserRepository
 {
     public UserRepository(DatabaseContext context)
         : base(context) { }
 
-    public IAsyncEnumerable<UserEntity> QueryAsync(UserQuery specification, CancellationToken cancellationToken)
+    public IAsyncEnumerable<User> QueryAsync(UserQuery specification, CancellationToken cancellationToken)
     {
         IQueryable<UserModel> queryable = ApplyQuery(specification);
 
@@ -26,23 +26,23 @@ internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IU
         return queryable.LongCountAsync(cancellationToken);
     }
 
-    protected override UserModel MapFrom(UserEntity entity)
+    protected override UserModel MapFrom(User entity)
     {
         return UserMapping.MapFrom(entity);
     }
 
-    protected override bool Equal(UserEntity entity, UserModel model)
+    protected override bool Equal(User entity, UserModel model)
     {
         return entity.Id.Equals(model.Id);
     }
 
-    protected override void UpdateModel(UserModel model, UserEntity entity)
+    protected override void UpdateModel(UserModel model, User entity)
     {
         model.Fullname = entity.Fullname;
         model.ModifiedOn = entity.ModifiedOnUtc;
     }
 
-    private static UserEntity MapTo(UserModel model)
+    private static User MapTo(UserModel model)
     {
         return UserMapping.MapTo(model);
     }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VyazmaTech.Prachka.Application.Abstractions.Querying.OrderSubscription;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
-using VyazmaTech.Prachka.Domain.Core.Subscription;
+using VyazmaTech.Prachka.Domain.Core.Subscriptions;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;

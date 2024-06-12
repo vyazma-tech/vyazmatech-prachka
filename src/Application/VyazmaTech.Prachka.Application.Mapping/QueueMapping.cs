@@ -1,12 +1,12 @@
 using VyazmaTech.Prachka.Application.Dto;
 using VyazmaTech.Prachka.Application.Dto.Queue;
-using VyazmaTech.Prachka.Domain.Core.Queue;
+using VyazmaTech.Prachka.Domain.Core.Queues;
 
 namespace VyazmaTech.Prachka.Application.Mapping;
 
 public static class QueueMapping
 {
-    public static QueueDto ToDto(this QueueEntity queue)
+    public static QueueDto ToDto(this Queue queue)
     {
         return new QueueDto(
             queue.Id,
@@ -19,7 +19,7 @@ public static class QueueMapping
             ActiveUntil: queue.ActivityBoundaries.ActiveUntil);
     }
 
-    public static QueueWithOrdersDto ToQueueWithOrdersDto(this QueueEntity queue)
+    public static QueueWithOrdersDto ToQueueWithOrdersDto(this Queue queue)
     {
         return new QueueWithOrdersDto(
             queue.Id,

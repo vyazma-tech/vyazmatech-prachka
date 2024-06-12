@@ -1,32 +1,22 @@
 using VyazmaTech.Prachka.Application.Dto;
 using VyazmaTech.Prachka.Application.Dto.Order;
-using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Domain.Core.Orders;
 
 namespace VyazmaTech.Prachka.Application.Mapping;
 
 public static class OrderMapping
 {
-    public static OrderDto ToDto(this OrderEntity order)
+    public static OrderDto ToDto(this Order order)
     {
         return new OrderDto(
             order.Id,
             order.User.Id,
-            order.User.Telegram,
+            order.User.TelegramUsername,
             order.User.Fullname,
-            order.Queue,
+            order.Queue.Id,
             order.Status.ToString(),
             order.CreationDate,
             order.ModifiedOnUtc);
-    }
-
-    public static OrderInfoDto ToDto(this OrderInfo orderInfo)
-    {
-        return new OrderInfoDto(
-            orderInfo.Id,
-            orderInfo.User.Id,
-            orderInfo.User.Telegram,
-            orderInfo.User.Fullname,
-            orderInfo.Status.ToString());
     }
 
     public static PagedResponse<OrderDto> ToPagedResponse(

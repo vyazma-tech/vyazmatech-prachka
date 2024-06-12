@@ -39,6 +39,8 @@ public sealed class Fullname : ValueObject
         return new Fullname(name);
     }
 
+    public static implicit operator string(Fullname fullname) => fullname.Value;
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;

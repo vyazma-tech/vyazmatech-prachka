@@ -1,19 +1,19 @@
 ﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Kernel;
 
-namespace VyazmaTech.Prachka.Domain.Core.Subscription;
+namespace VyazmaTech.Prachka.Domain.Core.Subscriptions;
 
 public abstract class SubscriptionEntity : Entity, IAuditableEntity
 {
     protected SubscriptionEntity(
         Guid id,
         Guid user,
-        DateOnly creationDateUtc,
+        DateOnly creationDate,
         DateTime? modifiedOn = null)
         : base(id)
     {
         User = user;
-        CreationDate = creationDateUtc;
+        CreationDate = creationDate;
         ModifiedOnUtc = modifiedOn;
     }
 

@@ -1,14 +1,13 @@
-﻿using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.Queue;
+﻿using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
 
 public static class QueueMapping
 {
-    public static QueueEntity MapTo(QueueModel model, HashSet<OrderInfo> orderIds)
+    public static Queue MapTo(QueueModel model, HashSet<OrderInfo> orderIds)
     {
-        return new QueueEntity(
+        return new Queue(
             model.Id,
             model.Capacity,
             model.AssignmentDate,
@@ -20,7 +19,7 @@ public static class QueueMapping
             model.ModifiedOn);
     }
 
-    public static QueueModel MapFrom(QueueEntity entity)
+    public static QueueModel MapFrom(Queue entity)
     {
         return new QueueModel
         {

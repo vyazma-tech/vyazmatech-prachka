@@ -1,6 +1,6 @@
 ﻿using VyazmaTech.Prachka.Domain.Kernel;
 
-namespace VyazmaTech.Prachka.Domain.Core.Order.Events;
+namespace VyazmaTech.Prachka.Domain.Core.Orders.Events;
 
 /// <summary>
 /// Order is ready. If it has subscribers, they should
@@ -8,10 +8,10 @@ namespace VyazmaTech.Prachka.Domain.Core.Order.Events;
 /// </summary>
 public sealed class OrderReadyDomainEvent : IDomainEvent
 {
-    public OrderReadyDomainEvent(OrderEntity order)
+    public OrderReadyDomainEvent(Orders.Order order)
     {
         Order = order;
     }
 
-    public OrderEntity Order { get; }
+    public Orders.Order Order { get; }
 }

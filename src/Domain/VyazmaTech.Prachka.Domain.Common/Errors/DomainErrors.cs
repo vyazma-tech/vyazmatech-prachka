@@ -72,6 +72,14 @@ public static class DomainErrors
             $"{nameof(Queue)}.{nameof(Overfull)}",
             "Queue is overfull. You are not able to enter it now.");
 
+        public static Error NotEnoughOrders(int count) => Error.Unprocessable(
+            $"{nameof(Queue)}.{nameof(NotEnoughOrders)}",
+            $"You have not enough orders. You are not able to exit queue with {count} orders");
+
+        public static Error WillOverflow => Error.Unprocessable(
+            $"{nameof(Queue)}.{nameof(WillOverflow)}",
+            "Queue has not enough places. You are not able to enter it now.");
+
         public static Error Expired => Error.Unprocessable(
             $"{nameof(Queue)}.{nameof(Expired)}",
             "Queue already expired. You cannot perform this action.");

@@ -6,7 +6,6 @@ using VyazmaTech.Prachka.Application.Core.Querying.Common;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Dto.Order;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Core.Order;
 using static VyazmaTech.Prachka.Application.Contracts.Orders.Queries.OrderByQuery;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Order.Queries;
@@ -34,7 +33,7 @@ internal sealed class OrderByQueryQueryHandler : IQueryHandler<Query, Response>
 
         long totalCount = await _persistenceContext.Orders.CountAsync(query, cancellationToken);
 
-        List<OrderEntity> orders = await _persistenceContext.Orders
+        List<Domain.Core.Orders.Order> orders = await _persistenceContext.Orders
             .QueryAsync(query, cancellationToken)
             .ToListAsync(cancellationToken);
 

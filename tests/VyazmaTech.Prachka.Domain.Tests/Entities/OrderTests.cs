@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.Order.Events;
+using VyazmaTech.Prachka.Domain.Core.Orders;
+using VyazmaTech.Prachka.Domain.Core.Orders.Events;
 using Xunit;
 
 namespace VyazmaTech.Prachka.Domain.Tests.Entities;
@@ -10,14 +10,14 @@ public class OrderTests
     [Fact]
     public void MakeReady_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyReady()
     {
-        var order = new OrderEntity(
+        var order = new Order(
             Guid.Empty,
-            Guid.Empty,
+            default!,
             null!,
             OrderStatus.Paid,
             default);
 
-        order.MakeReady(default);
+        order.MakeReady();
 
         order.Status.Should().Be(OrderStatus.Ready);
         order.DomainEvents.Should()
@@ -29,14 +29,14 @@ public class OrderTests
     [Fact]
     public void MakePayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid()
     {
-        var order = new OrderEntity(
+        var order = new Order(
             Guid.Empty,
-            Guid.Empty,
+            default!,
             null!,
             OrderStatus.New,
             default);
 
-        order.MakePayment(default);
+        order.MakePayment();
 
         order.Status.Should().Be(OrderStatus.Paid);
         order.DomainEvents.Should()

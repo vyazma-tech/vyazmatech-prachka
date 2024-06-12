@@ -4,8 +4,7 @@ using VyazmaTech.Prachka.Application.Core.Errors;
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.Subscription;
+using VyazmaTech.Prachka.Domain.Core.Subscriptions;
 using static VyazmaTech.Prachka.Application.Contracts.Subscriptions.SubscribeToOrder;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Subscriptions;
@@ -33,7 +32,7 @@ internal sealed class SubscribeToOrderCommandHandler : ICommandHandler<Command, 
         if (subscription is null)
             throw new NotFoundException(ApplicationErrors.Subscription.UserHasNoSubscriptions(request.UserId.Value));
 
-        OrderEntity order = await _context.Orders.FindByIdAsync(request.OrderId, cancellationToken);
+        Domain.Core.Orders.Order order = await _context.Orders.FindByIdAsync(request.OrderId, cancellationToken);
 
         subscription.Subscribe(order.Id);
 

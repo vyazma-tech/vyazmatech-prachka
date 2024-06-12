@@ -2,7 +2,6 @@
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Core.Order;
 using static VyazmaTech.Prachka.Application.Contracts.Orders.Queries.OrderById;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Order.Queries;
@@ -18,7 +17,7 @@ internal sealed class OrderByIdQueryHandler : IQueryHandler<Query, Response>
 
     public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
     {
-        OrderEntity order = await _persistenceContext.Orders.FindByIdAsync(request.Id, cancellationToken);
+        Domain.Core.Orders.Order order = await _persistenceContext.Orders.FindByIdAsync(request.Id, cancellationToken);
 
         return new Response(order.ToDto());
     }

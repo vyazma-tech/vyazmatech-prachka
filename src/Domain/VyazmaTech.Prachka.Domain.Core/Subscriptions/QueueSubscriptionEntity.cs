@@ -1,7 +1,7 @@
 ﻿using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
-namespace VyazmaTech.Prachka.Domain.Core.Subscription;
+namespace VyazmaTech.Prachka.Domain.Core.Subscriptions;
 
 public sealed class QueueSubscriptionEntity : SubscriptionEntity
 {
@@ -10,10 +10,10 @@ public sealed class QueueSubscriptionEntity : SubscriptionEntity
     public QueueSubscriptionEntity(
         Guid id,
         Guid user,
-        DateOnly creationDateUtc,
+        DateOnly creationDate,
         HashSet<Guid> queueIds,
         DateTime? modifiedOn = null)
-        : base(id, user, creationDateUtc, modifiedOn)
+        : base(id, user, creationDate, modifiedOn)
     {
         _queueIds = queueIds;
     }

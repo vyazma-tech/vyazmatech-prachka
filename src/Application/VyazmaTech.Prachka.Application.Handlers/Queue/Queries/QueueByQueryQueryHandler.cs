@@ -6,7 +6,6 @@ using VyazmaTech.Prachka.Application.Core.Querying.Common;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Dto.Queue;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Core.Queue;
 using static VyazmaTech.Prachka.Application.Contracts.Queues.Queries.QueueByQuery;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Queue.Queries;
@@ -34,7 +33,7 @@ internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, Response>
 
         long totalCount = await _persistenceContext.Queues.CountAsync(query, cancellationToken);
 
-        List<QueueEntity> queues = await _persistenceContext.Queues
+        List<Domain.Core.Queues.Queue> queues = await _persistenceContext.Queues
             .QueryAsync(query, cancellationToken)
             .ToListAsync(cancellationToken);
 

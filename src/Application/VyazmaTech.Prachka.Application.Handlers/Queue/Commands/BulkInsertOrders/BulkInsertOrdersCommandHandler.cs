@@ -4,9 +4,7 @@ using VyazmaTech.Prachka.Application.Core.Errors;
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.Queue;
-using VyazmaTech.Prachka.Domain.Core.User;
+using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Kernel;
 using static VyazmaTech.Prachka.Application.Contracts.Queues.Commands.BulkInsertOrders;
 
@@ -35,12 +33,12 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
         if (userId is null)
             throw new IdentityException(ApplicationErrors.BulkInsertOrders.AnonymousUserCantEnter);
 
-        UserEntity user = await _context.Users.FindByIdAsync(userId.Value, cancellationToken);
-        QueueEntity queue = await _context.Queues.FindByIdAsync(request.QueueId, cancellationToken);
+        Domain.Core.Users.User user = await _context.Users.FindByIdAsync(userId.Value, cancellationToken);
+        Domain.Core.Queues.Queue queue = await _context.Queues.FindByIdAsync(request.QueueId, cancellationToken);
 
-        IReadOnlyCollection<OrderEntity> orders = CreateOrders(request, user, _dateTimeProvider);
+        IReadOnlyCollection<Domain.Core.Orders.Order> orders = CreateOrders(request, user, _dateTimeProvider);
 
-        foreach (OrderEntity order in orders)
+        foreach (Domain.Core.Orders.Order order in orders)
         {
             queue.Add(order, _dateTimeProvider.UtcNow);
         }
@@ -51,22 +49,19 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
         return default;
     }
 
-    private static IReadOnlyCollection<OrderEntity> CreateOrders(
+    private static IReadOnlyCollection<Domain.Core.Orders.Order> CreateOrders(
         Command request,
-        UserEntity user,
+        Domain.Core.Users.User user,
         IDateTimeProvider dateTimeProvider)
     {
-        var orders = new List<OrderEntity>();
+        var orders = new List<Domain.Core.Orders.Order>();
 
         for (int i = 0; i < request.Quantity; i++)
         {
-            var order = new OrderEntity(
+            var order = new Domain.Core.Orders.Order(
                 Guid.NewGuid(),
-                request.QueueId,
-                new UserInfo(
-                    user.Id,
-                    user.TelegramUsername,
-                    user.Fullname),
+                default!,
+                user,
                 OrderStatus.New,
                 dateTimeProvider.UtcNow);
 

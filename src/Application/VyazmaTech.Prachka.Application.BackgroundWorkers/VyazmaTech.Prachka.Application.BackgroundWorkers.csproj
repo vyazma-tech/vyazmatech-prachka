@@ -11,4 +11,8 @@
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
         <ProjectReference Include="..\VyazmaTech.Prachka.Application.Core\VyazmaTech.Prachka.Application.Core.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Queue\"/>
+    </ItemGroup>
 </Project>

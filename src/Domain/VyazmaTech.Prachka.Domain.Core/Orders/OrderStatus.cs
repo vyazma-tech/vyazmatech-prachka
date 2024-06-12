@@ -1,4 +1,4 @@
-﻿namespace VyazmaTech.Prachka.Domain.Core.Order;
+﻿namespace VyazmaTech.Prachka.Domain.Core.Orders;
 
 public enum OrderStatus
 {

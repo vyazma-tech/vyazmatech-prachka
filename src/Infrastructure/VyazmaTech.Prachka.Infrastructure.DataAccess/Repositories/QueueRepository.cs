@@ -1,21 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VyazmaTech.Prachka.Application.Abstractions.Querying.Queue;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.Queue;
-using VyazmaTech.Prachka.Domain.Core.User;
+using VyazmaTech.Prachka.Domain.Core.Orders;
+using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;
 
-internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>, IQueueRepository
+internal sealed class QueueRepository : RepositoryBase<Queue, QueueModel>, IQueueRepository
 {
     public QueueRepository(DatabaseContext context)
         : base(context) { }
 
-    public IAsyncEnumerable<QueueEntity> QueryAsync(QueueQuery specification, CancellationToken cancellationToken)
+    public IAsyncEnumerable<Queue> QueryAsync(QueueQuery specification, CancellationToken cancellationToken)
     {
         IQueryable<QueueModel> queryable = ApplyQuery(specification);
 
@@ -43,17 +42,17 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
         return queryable.LongCountAsync(cancellationToken);
     }
 
-    protected override QueueModel MapFrom(QueueEntity entity)
+    protected override QueueModel MapFrom(Queue entity)
     {
         return QueueMapping.MapFrom(entity);
     }
 
-    protected override bool Equal(QueueEntity entity, QueueModel model)
+    protected override bool Equal(Queue entity, QueueModel model)
     {
         return entity.Id.Equals(model.Id);
     }
 
-    protected override void UpdateModel(QueueModel model, QueueEntity entity)
+    protected override void UpdateModel(QueueModel model, Queue entity)
     {
         model.ActiveFrom = entity.ActiveFrom;
         model.ActiveUntil = entity.ActiveUntil;
@@ -63,7 +62,7 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
         model.ModifiedOn = entity.ModifiedOnUtc;
     }
 
-    private static QueueEntity MapTo(QueueModel model, IEnumerable<OrderInfo> orderIds)
+    private static Queue MapTo(QueueModel model, IEnumerable<OrderInfo> orderIds)
     {
         return QueueMapping.MapTo(model, orderIds.ToHashSet(new OrderByIdComparer()));
     }

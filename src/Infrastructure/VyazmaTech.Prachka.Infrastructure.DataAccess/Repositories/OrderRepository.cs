@@ -2,26 +2,26 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using VyazmaTech.Prachka.Application.Abstractions.Querying.Order;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
-using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;
 
-internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrderRepository
+internal class OrderRepository : RepositoryBase<Order>, IOrderRepository
 {
     public OrderRepository(DatabaseContext context)
         : base(context) { }
 
-    public IAsyncEnumerable<OrderEntity> QueryAsync(OrderQuery query, CancellationToken cancellationToken)
+    public IAsyncEnumerable<Order> QueryAsync(OrderQuery query, CancellationToken cancellationToken)
     {
         IQueryable<OrderModel> queryable = ApplyQuery(query);
 
         return queryable.AsAsyncEnumerable().Select(MapTo);
     }
 
-    public void RemoveRange(IReadOnlyCollection<OrderEntity> orders)
+    public void RemoveRange(IReadOnlyCollection<Order> orders)
     {
         IEnumerable<OrderModel> model = orders.Select(GetEntry).Select(x => x.Entity);
         DbSet.RemoveRange(model);
@@ -33,28 +33,28 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
         return queryable.LongCountAsync(cancellationToken);
     }
 
-    protected override OrderModel MapFrom(OrderEntity entity)
+    protected override OrderModel MapFrom(Order entity)
     {
         return OrderMapping.MapFrom(entity);
     }
 
-    protected override bool Equal(OrderEntity entity, OrderModel model)
+    protected override bool Equal(Order entity, OrderModel model)
     {
         return entity.Id.Equals(model.Id);
     }
 
-    protected override void UpdateModel(OrderModel model, OrderEntity entity)
+    protected override void UpdateModel(OrderModel model, Order entity)
     {
         model.Status = entity.Status.ToString();
         model.ModifiedOn = entity.ModifiedOnUtc;
     }
 
-    private static OrderEntity MapTo(OrderModel model)
+    private static Order MapTo(OrderModel model)
     {
         return OrderMapping.MapTo(model);
     }
 
-    private EntityEntry<OrderModel> GetEntry(OrderEntity entity)
+    private EntityEntry<OrderModel> GetEntry(Order entity)
     {
         OrderModel? existing = DbSet.Local
             .FirstOrDefault(x => x.Id.Equals(entity.Id));

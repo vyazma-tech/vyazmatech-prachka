@@ -1,10 +1,8 @@
 ﻿using FluentAssertions;
-using Moq;
 using VyazmaTech.Prachka.Application.Contracts.Orders.Commands;
 using VyazmaTech.Prachka.Application.Handlers.Order.Commands.MarkOrderAsPaid;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
-using VyazmaTech.Prachka.Domain.Kernel;
 using Xunit;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests.Order.Commands;
@@ -15,11 +13,7 @@ public class MarkAsPaidTest : TestBase
 
     public MarkAsPaidTest(CoreDatabaseFixture fixture) : base(fixture)
     {
-        var dateTimeProvider = new Mock<IDateTimeProvider>();
-
-        _handler = new MarkOrderAsPaidCommandHandler(
-            dateTimeProvider.Object,
-            fixture.PersistenceContext);
+        _handler = new MarkOrderAsPaidCommandHandler(fixture.PersistenceContext);
     }
 
     [Fact]

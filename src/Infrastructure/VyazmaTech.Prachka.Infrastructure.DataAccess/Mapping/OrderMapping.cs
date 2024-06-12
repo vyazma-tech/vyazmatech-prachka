@@ -1,14 +1,13 @@
-﻿using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.User;
+﻿using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
 
 public static class OrderMapping
 {
-    public static OrderEntity MapTo(OrderModel model)
+    public static Order MapTo(OrderModel model)
     {
-        return new OrderEntity(
+        return new Order(
             model.Id,
             model.QueueId,
             new UserInfo(model.UserId, model.User.TelegramUsername, model.User.Fullname),
@@ -17,7 +16,7 @@ public static class OrderMapping
             model.ModifiedOn);
     }
 
-    public static OrderModel MapFrom(OrderEntity entity)
+    public static OrderModel MapFrom(Order entity)
     {
         return new OrderModel
         {

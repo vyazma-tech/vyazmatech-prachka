@@ -1,6 +1,6 @@
 ﻿using VyazmaTech.Prachka.Domain.Kernel;
 
-namespace VyazmaTech.Prachka.Domain.Core.Queue.Events;
+namespace VyazmaTech.Prachka.Domain.Core.Queues.Events;
 
 /// <summary>
 /// There is available position(s) in a queue. Subscribers
@@ -8,10 +8,10 @@ namespace VyazmaTech.Prachka.Domain.Core.Queue.Events;
 /// </summary>
 public sealed class PositionAvailableDomainEvent : IDomainEvent
 {
-    public PositionAvailableDomainEvent(QueueEntity queue)
+    public PositionAvailableDomainEvent(Queue queue)
     {
         Queue = queue;
     }
 
-    public QueueEntity Queue { get; }
+    public Queue Queue { get; }
 }

@@ -2,7 +2,6 @@
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Core.Queue;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
 using static VyazmaTech.Prachka.Application.Contracts.Queues.Commands.ChangeQueueActivityBoundaries;
@@ -24,10 +23,10 @@ internal sealed class ChangeQueueActivityBoundariesCommandHandler : ICommandHand
 
     public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
-        QueueEntity queue = await _persistenceContext.Queues
+        Domain.Core.Queues.Queue queue = await _persistenceContext.Queues
             .FindByIdAsync(request.QueueId, cancellationToken);
 
-        QueueActivityBoundaries activityBoundaries = QueueActivityBoundaries.Create(
+        var activityBoundaries = QueueActivityBoundaries.Create(
             request.ActiveFrom,
             request.ActiveUntil);
 

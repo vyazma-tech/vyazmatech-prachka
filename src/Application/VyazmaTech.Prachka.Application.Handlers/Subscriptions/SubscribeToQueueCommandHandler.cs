@@ -4,8 +4,7 @@ using VyazmaTech.Prachka.Application.Core.Errors;
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
-using VyazmaTech.Prachka.Domain.Core.Queue;
-using VyazmaTech.Prachka.Domain.Core.Subscription;
+using VyazmaTech.Prachka.Domain.Core.Subscriptions;
 using static VyazmaTech.Prachka.Application.Contracts.Subscriptions.SubscribeToQueue;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Subscriptions;
@@ -33,7 +32,7 @@ internal sealed class SubscribeToQueueCommandHandler : ICommandHandler<Command, 
         if (subscription is null)
             throw new NotFoundException(ApplicationErrors.Subscription.UserHasNoSubscriptions(request.UserId.Value));
 
-        QueueEntity queue = await _context.Queues.FindByIdAsync(request.QueueId, cancellationToken);
+        Domain.Core.Queues.Queue queue = await _context.Queues.FindByIdAsync(request.QueueId, cancellationToken);
 
         subscription.Subscribe(queue.Id);
 

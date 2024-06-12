@@ -1,4 +1,4 @@
-﻿using VyazmaTech.Prachka.Domain.Core.Subscription;
+﻿using VyazmaTech.Prachka.Domain.Core.Subscriptions;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;

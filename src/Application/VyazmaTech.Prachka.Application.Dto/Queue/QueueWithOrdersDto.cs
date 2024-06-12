@@ -6,7 +6,7 @@ public record QueueWithOrdersDto(
     Guid Id,
     int MaxCapacity,
     int CurrentCapacity,
-    IReadOnlyCollection<OrderInfoDto> Orders,
+    IReadOnlyCollection<OrderDto> Orders,
     string State,
     DateOnly AssignmentDate,
     TimeOnly ActiveFrom,

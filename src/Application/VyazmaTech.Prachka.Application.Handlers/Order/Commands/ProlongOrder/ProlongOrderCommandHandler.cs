@@ -2,8 +2,6 @@
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.Queue;
 using VyazmaTech.Prachka.Domain.Kernel;
 using static VyazmaTech.Prachka.Application.Contracts.Orders.Commands.ProlongOrder;
 
@@ -24,10 +22,10 @@ internal sealed class ProlongOrderCommandHandler : ICommandHandler<Command, Resp
 
     public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
-        OrderEntity order = await _persistenceContext.Orders
+        Domain.Core.Orders.Order order = await _persistenceContext.Orders
             .FindByIdAsync(request.OrderId, cancellationToken);
 
-        QueueEntity targetQueue = await _persistenceContext.Queues
+        Domain.Core.Queues.Queue targetQueue = await _persistenceContext.Queues
             .FindByIdAsync(request.TargetQueueId, cancellationToken);
 
         order.Prolong(targetQueue, _dateTimeProvider.UtcNow);

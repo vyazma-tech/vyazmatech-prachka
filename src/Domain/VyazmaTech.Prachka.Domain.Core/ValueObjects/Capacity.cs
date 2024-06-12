@@ -33,6 +33,33 @@ public sealed class Capacity : ValueObject
         return new Capacity(capacity);
     }
 
+    public static bool operator <=(Capacity? left, Capacity? right)
+    {
+        if (left is null && right is null)
+        {
+            return true;
+        }
+
+        if (left is null || right is null)
+        {
+            return false;
+        }
+
+        return left.Value <= right.Value;
+    }
+
+    public static bool operator >=(Capacity? left, Capacity? right)
+    {
+        bool equals = left == right;
+
+        if (equals is false)
+            return !(left <= right);
+
+        return equals;
+    }
+
+    public static implicit operator int(Capacity capacity) => capacity.Value;
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;

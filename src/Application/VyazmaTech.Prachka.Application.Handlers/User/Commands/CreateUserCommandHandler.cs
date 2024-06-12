@@ -1,7 +1,6 @@
 using VyazmaTech.Prachka.Application.Contracts.Common;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Core.User;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
 using static VyazmaTech.Prachka.Application.Contracts.Users.Commands.CreateUser;
@@ -21,12 +20,12 @@ internal sealed class CreateUserCommandHandler : ICommandHandler<Command, Respon
 
     public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
-        Fullname fullname = Fullname.Create(request.Fullname);
+        var fullname = Fullname.Create(request.Fullname);
 
-        var user = new UserEntity(
+        var user = Domain.Core.Users.User.Create(
             request.Id,
             request.TelegramUsername,
-            fullname.Value,
+            fullname,
             _timeProvider.DateNow);
 
         _context.Users.Insert(user);

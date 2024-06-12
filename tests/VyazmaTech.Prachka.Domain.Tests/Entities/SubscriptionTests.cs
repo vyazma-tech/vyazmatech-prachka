@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
-using VyazmaTech.Prachka.Domain.Core.Subscription;
+using VyazmaTech.Prachka.Domain.Core.Subscriptions;
 using Xunit;
 
 namespace VyazmaTech.Prachka.Domain.Tests.Entities;

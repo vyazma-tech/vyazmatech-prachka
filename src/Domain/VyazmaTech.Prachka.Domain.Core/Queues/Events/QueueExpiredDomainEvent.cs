@@ -1,6 +1,6 @@
 ﻿using VyazmaTech.Prachka.Domain.Kernel;
 
-namespace VyazmaTech.Prachka.Domain.Core.Queue.Events;
+namespace VyazmaTech.Prachka.Domain.Core.Queues.Events;
 
 /// <summary>
 /// Queue expired and all orders, which are not paid,
@@ -8,10 +8,10 @@ namespace VyazmaTech.Prachka.Domain.Core.Queue.Events;
 /// </summary>
 public sealed class QueueExpiredDomainEvent : IDomainEvent
 {
-    public QueueExpiredDomainEvent(QueueEntity queue)
+    public QueueExpiredDomainEvent(Queue queue)
     {
         Queue = queue;
     }
 
-    public QueueEntity Queue { get; }
+    public Queue Queue { get; }
 }

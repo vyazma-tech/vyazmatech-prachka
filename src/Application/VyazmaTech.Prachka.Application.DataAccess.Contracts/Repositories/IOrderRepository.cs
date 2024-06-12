@@ -1,19 +1,19 @@
 ﻿using VyazmaTech.Prachka.Application.Abstractions.Querying.Order;
-using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Domain.Core.Orders;
 
 namespace VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 
 public interface IOrderRepository
 {
-    IAsyncEnumerable<OrderEntity> QueryAsync(
+    IAsyncEnumerable<Order> QueryAsync(
         OrderQuery query,
         CancellationToken cancellationToken);
 
-    void InsertRange(IReadOnlyCollection<OrderEntity> orders);
+    void InsertRange(IReadOnlyCollection<Order> orders);
 
-    void RemoveRange(IReadOnlyCollection<OrderEntity> orders);
+    void RemoveRange(IReadOnlyCollection<Order> orders);
 
-    void Update(OrderEntity order);
+    void Update(Order order);
 
     Task<long> CountAsync(OrderQuery query, CancellationToken cancellationToken);
 }

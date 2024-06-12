@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Moq;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.Queue;
-using VyazmaTech.Prachka.Domain.Core.Queue.Events;
+using VyazmaTech.Prachka.Domain.Core.Orders;
+using VyazmaTech.Prachka.Domain.Core.Queues;
+using VyazmaTech.Prachka.Domain.Core.Queues.Events;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
 using Xunit;
@@ -23,46 +23,25 @@ public class QueueTests
     }
 
     [Fact]
-    public void CreateQueueDate_ShouldThrow_WhenCreationDateIsInThePast()
+    public void CreateAssignmentDate_ShouldThrow_WhenAssignmentDateIsInThePast()
     {
-        // TODO: переписать
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
 
-        var registrationDate = new DateTime(
-            2023,
-            1,
-            1,
-            1,
-            30,
-            30);
-
-        Func<QueueDate> action = () => QueueDate.Create(registrationDate.AsDateOnly(), _dateTimeProvider.Object);
+        Func<AssignmentDate> action = () => AssignmentDate.Create(
+            _dateTimeProvider.Object.DateNow.AddDays(-1),
+            _dateTimeProvider.Object.DateNow);
 
         action.Should().Throw<DomainInvalidOperationException>();
     }
 
     [Fact]
-    public void CreateQueueDate_ShouldThrow_WhenCreationDateIsNotNextWeek()
+    public void CreateAssignmentDate_ShouldThrow_WhenAssignmentDateIsNotNextWeek()
     {
-        // TODO: переписать
-        var dateTime = new DateTime(
-            2023,
-            1,
-            1,
-            1,
-            30,
-            0);
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(dateTime));
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
 
-        var registrationDate = new DateTime(
-            2023,
-            1,
-            9,
-            1,
-            30,
-            0);
-
-        Func<QueueDate> action = () => QueueDate.Create(registrationDate.AsDateOnly(), _dateTimeProvider.Object);
+        Func<AssignmentDate> action = () => AssignmentDate.Create(
+            _dateTimeProvider.Object.DateNow,
+            _dateTimeProvider.Object.DateNow.AddDays(AssignmentDate.Week + 1));
 
         action.Should().Throw<DomainInvalidOperationException>();
     }
@@ -72,20 +51,20 @@ public class QueueTests
     {
         var orderId = Guid.NewGuid();
 
-        var order = new OrderEntity(
+        var order = new Order(
             orderId,
-            Guid.Empty,
-            status: OrderStatus.New,
+            default!,
+            status: default,
             user: null!,
             creationDateTimeUtc: default);
 
-        var queue = new QueueEntity(
-            Guid.Empty,
-            1,
+        var queue = new Queue(
             default,
             default!,
-            QueueState.Active,
-            new HashSet<OrderInfo>(new OrderByIdComparer()) { new(orderId, null!, default, default) });
+            default!,
+            default!,
+            default,
+            [new(orderId, default!, default!, default, default)]);
 
         Action action = () => queue.Add(order, default);
 
@@ -95,20 +74,20 @@ public class QueueTests
     [Fact]
     public void Add_ShouldThrow_WhenQueueIsFull()
     {
-        var order = new OrderEntity(
+        var order = new Order(
             Guid.NewGuid(),
-            Guid.Empty,
+            default!,
             null!,
-            OrderStatus.New,
+            default,
             default);
 
-        var queue = new QueueEntity(
-            Guid.Empty,
-            1,
-            default,
+        var queue = new Queue(
             default!,
-            QueueState.Active,
-            new HashSet<OrderInfo>(new OrderByIdComparer()) { new(Guid.NewGuid(), default!, default, default) });
+            Capacity.Create(1),
+            default!,
+            default!,
+            default,
+            [new(Guid.NewGuid(), default!, default!, default, default)]);
 
         Action action = () => queue.Add(order, default);
 
@@ -118,25 +97,20 @@ public class QueueTests
     [Fact]
     public void Add_ShouldThrow_WhenQueueIsExpired()
     {
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
-        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
-
-        var order = new OrderEntity(
+        var order = new Order(
             Guid.NewGuid(),
-            Guid.Empty,
+            default!,
             null!,
-            OrderStatus.New,
+            default,
             default);
 
-        var queue = new QueueEntity(
-            Guid.Empty,
-            2,
-            _dateTimeProvider.Object.DateNow,
-            QueueActivityBoundaries.Create(
-                _dateTimeProvider.Object.UtcNow.Subtract(TimeSpan.FromMinutes(1)).AsTimeOnly(),
-                _dateTimeProvider.Object.UtcNow.AsTimeOnly()),
-            QueueState.Active,
-            new HashSet<OrderInfo>(new OrderByIdComparer()) { new(Guid.NewGuid(), default!, default, default) });
+        var queue = new Queue(
+            default,
+            Capacity.Create(1),
+            default!,
+            default!,
+            QueueState.Expired,
+            [new(Guid.NewGuid(), default!, default!, default, default)]);
 
         Action action = () => queue.Add(order, _dateTimeProvider.Object.UtcNow);
         action.Should().Throw<DomainInvalidOperationException>();
@@ -145,20 +119,20 @@ public class QueueTests
     [Fact]
     public void Remove_ShouldThrow_WhenUserOrderIsNotInQueue()
     {
-        var order = new OrderEntity(
+        var order = new Order(
             Guid.NewGuid(),
-            Guid.Empty,
+            default!,
             null!,
-            OrderStatus.New,
+            default,
             default);
 
-        var queue = new QueueEntity(
-            Guid.Empty,
-            1,
+        var queue = new Queue(
             default,
             default!,
-            QueueState.Active,
-            Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
+            default!,
+            default!,
+            default,
+            []);
 
         Action action = () => queue.Remove(order);
         action.Should().Throw<DomainInvalidOperationException>();
@@ -167,62 +141,43 @@ public class QueueTests
     [Fact]
     public void IncreaseCapacity_ShouldNotThrow_WhenNewCapacityIsGreaterThenCurrent()
     {
-        var queue = new QueueEntity(
-            Guid.Empty,
-            1,
+        int currentCapacity = 1;
+        int newCapacity = 2;
+
+        var queue = new Queue(
             default,
+            Capacity.Create(currentCapacity),
             default!,
-            QueueState.Active,
-            Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
+            default!,
+            default,
+            []);
 
-        DateTime modificationDate = DateTime.UtcNow;
-        queue.IncreaseCapacity(Capacity.Create(2), modificationDate);
+        queue.IncreaseCapacity(Capacity.Create(newCapacity));
 
-        queue.ModifiedOnUtc.Should().Be(modificationDate);
-        queue.Capacity.Should().Be(2);
+        queue.Capacity.Should().Be(newCapacity);
     }
 
     [Fact]
-    public void TryExpire_ShouldRaiseDomainEvent_WhenQueueExpired()
+    public void ModifyState_ShouldRaiseDomainEvent_WhenQueueExpired()
     {
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
 
-        var queue = new QueueEntity(
-            Guid.Empty,
-            10,
-            _dateTimeProvider.Object.DateNow,
+        var queue = new Queue(
+            default,
+            default!,
+            default!,
             QueueActivityBoundaries.Create(
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
                 TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))),
-            QueueState.Active,
-            Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
+            default!,
+            []);
 
-        queue.TryExpire(_dateTimeProvider.Object.UtcNow.AddMinutes(1));
+        queue.ModifyState(QueueState.Expired);
 
         queue.DomainEvents.Should()
             .ContainSingle()
             .Which.Should()
             .BeOfType<QueueExpiredDomainEvent>();
-    }
-
-    [Fact]
-    public void TryNotifyAboutAvailablePosition_ShouldRaiseDomainEvent_WhenItExpiredAndNotFullAndMaxCapacityReached()
-    {
-        var queue = new QueueEntity(
-            Guid.Empty,
-            10,
-            default,
-            default!,
-            QueueState.Expired,
-            Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()),
-            true);
-
-        queue.TryNotifyAboutAvailablePosition(default);
-
-        queue.DomainEvents.Should()
-            .ContainSingle()
-            .Which.Should()
-            .BeOfType<PositionAvailableDomainEvent>();
     }
 }

@@ -12,6 +12,8 @@ public abstract class Entity : IEquatable<Entity>
         Id = id;
     }
 
+    protected Entity() { }
+
     /// <summary>
     /// Gets unique identifier of an entity.
     /// </summary>
@@ -20,7 +22,7 @@ public abstract class Entity : IEquatable<Entity>
     /// <summary>
     /// Gets domain event list for a current entity.
     /// </summary>
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => [.. _domainEvents];
 
     public bool Equals(Entity? other)
     {

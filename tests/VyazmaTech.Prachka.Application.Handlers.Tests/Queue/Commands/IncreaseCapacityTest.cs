@@ -1,10 +1,8 @@
 ﻿using FluentAssertions;
-using Moq;
 using VyazmaTech.Prachka.Application.Contracts.Queues.Commands;
 using VyazmaTech.Prachka.Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
-using VyazmaTech.Prachka.Domain.Kernel;
 using Xunit;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests.Queue.Commands;
@@ -15,11 +13,7 @@ public class IncreaseCapacityTest : TestBase
 
     public IncreaseCapacityTest(CoreDatabaseFixture fixture) : base(fixture)
     {
-        var dateTimeProvider = new Mock<IDateTimeProvider>();
-
-        _handler = new IncreaseQueueCapacityCommandHandler(
-            dateTimeProvider.Object,
-            fixture.PersistenceContext);
+        _handler = new IncreaseQueueCapacityCommandHandler(fixture.PersistenceContext);
     }
 
     [Fact]

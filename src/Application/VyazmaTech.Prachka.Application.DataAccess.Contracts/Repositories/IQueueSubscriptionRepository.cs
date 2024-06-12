@@ -1,5 +1,5 @@
 ﻿using VyazmaTech.Prachka.Application.Abstractions.Querying.QueueSubscription;
-using VyazmaTech.Prachka.Domain.Core.Subscription;
+using VyazmaTech.Prachka.Domain.Core.Subscriptions;
 
 namespace VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 
