@@ -9,7 +9,9 @@ public class QueueIdQueryLink : QueryLinkBase<Query, IQueryBuilder>
     protected override IQueryBuilder Apply(Query query, IQueryBuilder builder)
     {
         if (query.QueueId is not null)
+        {
             builder = builder.WithQueueId(query.QueueId.Value);
+        }
 
         return builder;
     }

@@ -9,7 +9,9 @@ public class RegistrationDateQueryLink : QueryLinkBase<Query, IQueryBuilder>
     protected override IQueryBuilder Apply(Query query, IQueryBuilder builder)
     {
         if (query.RegistrationDate is not null)
+        {
             builder = builder.WithRegistrationDate(query.RegistrationDate.Value);
+        }
 
         return builder;
     }

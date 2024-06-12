@@ -12,9 +12,7 @@ internal class QueueSubscriptionRepository : RepositoryBase<QueueSubscriptionEnt
     IQueueSubscriptionRepository
 {
     public QueueSubscriptionRepository(DatabaseContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
 
     public IAsyncEnumerable<QueueSubscriptionEntity> QueryAsync(
         QueueSubscriptionQuery specification,
@@ -55,11 +53,12 @@ internal class QueueSubscriptionRepository : RepositoryBase<QueueSubscriptionEnt
             }
         }
 
-        var finalQueryable = queryable.Select(subscription => new
-        {
-            subscription,
-            queues = subscription.Queues.Select(x => x.Id)
-        });
+        var finalQueryable = queryable.Select(
+            subscription => new
+            {
+                subscription,
+                queues = subscription.Queues.Select(x => x.Id),
+            });
 
         return finalQueryable.AsAsyncEnumerable().Select(x => MapTo(x.subscription, x.queues));
     }

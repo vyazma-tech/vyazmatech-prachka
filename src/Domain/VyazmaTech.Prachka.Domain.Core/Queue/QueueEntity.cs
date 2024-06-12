@@ -46,7 +46,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public bool MaxCapacityReached { get; private set; }
 
-    public QueueInfo Info => new QueueInfo(Id, Capacity, AssignmentDate, ActiveFrom, ActiveUntil, State);
+    public QueueInfo Info => new(Id, Capacity, AssignmentDate, ActiveFrom, ActiveUntil, State);
 
     public IReadOnlyCollection<OrderInfo> Orders => _orderInfos;
 
@@ -73,7 +73,9 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
         _orderInfos.Add(order.Info);
         if (_orderInfos.Count.Equals(Capacity) is true)
+        {
             MaxCapacityReached = true;
+        }
 
         return order;
     }

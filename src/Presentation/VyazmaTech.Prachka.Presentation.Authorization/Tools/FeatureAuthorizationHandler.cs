@@ -17,7 +17,9 @@ internal sealed class FeatureAuthorizationHandler : AuthorizationHandler<Authori
         AuthorizeFeatureRequirement requirement)
     {
         if (_service.HasFeature(context.User, requirement.Scope, requirement.Feature))
+        {
             context.Succeed(requirement);
+        }
 
         return Task.CompletedTask;
     }

@@ -26,7 +26,9 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
     private async Task PublishDomainEvents(DbContext? context, CancellationToken cancellationToken)
     {
         if (context is null)
+        {
             return;
+        }
 
         var entities = context.ChangeTracker
             .Entries<Entity>()

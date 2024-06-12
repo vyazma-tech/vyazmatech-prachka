@@ -12,9 +12,7 @@ internal class OrderSubscriptionRepository : RepositoryBase<OrderSubscriptionEnt
     IOrderSubscriptionRepository
 {
     public OrderSubscriptionRepository(DatabaseContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
 
     public IAsyncEnumerable<OrderSubscriptionEntity> QueryAsync(
         OrderSubscriptionQuery specification,
@@ -55,11 +53,12 @@ internal class OrderSubscriptionRepository : RepositoryBase<OrderSubscriptionEnt
             }
         }
 
-        var finalQueryable = queryable.Select(subscription => new
-        {
-            subscription,
-            orders = subscription.Orders.Select(x => x.Id)
-        });
+        var finalQueryable = queryable.Select(
+            subscription => new
+            {
+                subscription,
+                orders = subscription.Orders.Select(x => x.Id),
+            });
 
         return finalQueryable.AsAsyncEnumerable().Select(x => MapTo(x.subscription, x.orders));
     }

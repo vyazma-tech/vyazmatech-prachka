@@ -32,8 +32,7 @@ public static class UserManagerExtensions
 
         if (user is null)
         {
-            return new Result<VyazmaTechIdentityUser>(
-                AuthenticationErrors.IdentityUser.NotFoundFor($"UserId = {id}"));
+            return new Result<VyazmaTechIdentityUser>(AuthenticationErrors.IdentityUser.NotFoundFor($"UserId = {id}"));
         }
 
         return user;

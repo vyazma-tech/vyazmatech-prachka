@@ -28,14 +28,18 @@ internal sealed class MarkOrderAsReadyCommandHandler : ICommandHandler<Command, 
             .FindByIdAsync(request.Id, cancellationToken);
 
         if (searchResult.IsFaulted)
+        {
             return new Result<Response>(searchResult.Error);
+        }
 
         OrderEntity order = searchResult.Value;
 
         Result<OrderEntity> makeReadyResult = order.MakeReady(_dateTimeProvider.SpbDateTimeNow);
 
         if (makeReadyResult.IsFaulted)
+        {
             return new Result<Response>(makeReadyResult.Error);
+        }
 
         order = makeReadyResult.Value;
 

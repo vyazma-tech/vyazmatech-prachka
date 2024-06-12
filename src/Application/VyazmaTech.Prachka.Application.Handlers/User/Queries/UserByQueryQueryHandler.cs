@@ -41,7 +41,7 @@ internal sealed class UserByQueryQueryHandler : IQueryHandler<Query, Response>
         IEnumerable<UserDto> result = users.Select(x => x.ToDto());
 
         var page = result.ToPagedResponse(
-            currentPage: query.Page + 1 ?? 1,
+            query.Page + 1 ?? 1,
             recordsPerPage: _recordsPerPage,
             totalPages: (totalCount / _recordsPerPage) + 1);
 

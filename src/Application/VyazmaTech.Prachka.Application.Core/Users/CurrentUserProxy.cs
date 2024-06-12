@@ -12,7 +12,9 @@ internal class CurrentUserProxy : ICurrentUser, ICurrentUserManager
     public Guid? Id => _user.Id;
 
     public bool CanChangeUserRole(string currentRoleName, string newRoleName)
-        => _user.CanChangeUserRole(currentRoleName, newRoleName);
+    {
+        return _user.CanChangeUserRole(currentRoleName, newRoleName);
+    }
 
     public void Authenticate(ClaimsPrincipal principal)
     {

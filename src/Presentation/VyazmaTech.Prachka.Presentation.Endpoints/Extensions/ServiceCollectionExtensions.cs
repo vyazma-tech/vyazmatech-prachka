@@ -11,26 +11,28 @@ public static class ServiceCollectionExtensions
     {
         return services
             .AddFastEndpoints()
-            .SwaggerDocument(options =>
-            {
-                options.MaxEndpointVersion = 1;
-                options.DocumentSettings = s =>
+            .SwaggerDocument(
+                options =>
                 {
-                    s.DocumentName = "v1";
-                    s.Title = "API";
-                    s.Version = "v1";
-                };
-            });
+                    options.MaxEndpointVersion = 1;
+                    options.DocumentSettings = s =>
+                    {
+                        s.DocumentName = "v1";
+                        s.Title = "API";
+                        s.Version = "v1";
+                    };
+                });
     }
 
     public static IApplicationBuilder UseEndpoints(this IApplicationBuilder app)
     {
-        return app.UseFastEndpoints(config =>
-        {
-            config.Versioning.Prefix = "v";
-            config.Versioning.PrependToRoute = true;
-            config.Endpoints.RoutePrefix = "api";
-            config.Versioning.DefaultVersion = 1;
-        });
+        return app.UseFastEndpoints(
+            config =>
+            {
+                config.Versioning.Prefix = "v";
+                config.Versioning.PrependToRoute = true;
+                config.Endpoints.RoutePrefix = "api";
+                config.Versioning.DefaultVersion = 1;
+            });
     }
 }

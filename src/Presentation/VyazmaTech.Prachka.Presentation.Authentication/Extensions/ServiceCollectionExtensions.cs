@@ -8,25 +8,28 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddAuthorization()
-            .AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = "Bearer";
-                o.DefaultChallengeScheme = "Bearer";
-            })
-            .AddScheme<TelegramAuthenticationOptions, TelegramAuthenticationHandler>("Bearer", options =>
-            {
-                options.Events = new JwtBearerEvents
+            .AddAuthentication(
+                o =>
                 {
-                    OnChallenge = context =>
+                    o.DefaultAuthenticateScheme = "Bearer";
+                    o.DefaultChallengeScheme = "Bearer";
+                })
+            .AddScheme<TelegramAuthenticationOptions, TelegramAuthenticationHandler>(
+                "Bearer",
+                options =>
+                {
+                    options.Events = new JwtBearerEvents
                     {
-                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                        context.HandleResponse();
+                        OnChallenge = context =>
+                        {
+                            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                            context.HandleResponse();
 
-                        return Task.CompletedTask;
-                    },
-                    OnAuthenticationFailed = _ => Task.CompletedTask
-                };
-            });
+                            return Task.CompletedTask;
+                        },
+                        OnAuthenticationFailed = _ => Task.CompletedTask,
+                    };
+                });
 
         return services;
     }

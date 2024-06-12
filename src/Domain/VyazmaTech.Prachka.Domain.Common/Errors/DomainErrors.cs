@@ -5,10 +5,12 @@ public static class DomainErrors
     public static class Entity
     {
         public static Error NotFoundFor<TEntity>(string searchInfo)
-            => Error.NotFound(
+        {
+            return Error.NotFound(
                 $"{nameof(Entity)}.{nameof(NotFoundFor)}",
                 $"The entity of type {typeof(TEntity)} with {searchInfo} was not found.",
                 ErrorArea.Infrastructure);
+        }
     }
 
     public static class Order
@@ -89,15 +91,21 @@ public static class DomainErrors
             "Queue already expired. You cannot perform this action.",
             ErrorArea.Domain);
 
-        public static Error ContainsOrderWithId(Guid id) => Error.Unprocessable(
-            $"{nameof(Queue)}.{nameof(ContainsOrderWithId)}",
-            $"The queue already contains order with OrderId = {id}",
-            ErrorArea.Domain);
+        public static Error ContainsOrderWithId(Guid id)
+        {
+            return Error.Unprocessable(
+                $"{nameof(Queue)}.{nameof(ContainsOrderWithId)}",
+                $"The queue already contains order with OrderId = {id}",
+                ErrorArea.Domain);
+        }
 
-        public static Error OrderIsNotInQueue(Guid id) => Error.Validation(
-            $"{nameof(Queue)}.{nameof(OrderIsNotInQueue)}",
-            $"The queue does not contain order with OrderId = {id}",
-            ErrorArea.Domain);
+        public static Error OrderIsNotInQueue(Guid id)
+        {
+            return Error.Validation(
+                $"{nameof(Queue)}.{nameof(OrderIsNotInQueue)}",
+                $"The queue does not contain order with OrderId = {id}",
+                ErrorArea.Domain);
+        }
     }
 
     public static class Subscription
@@ -112,25 +120,37 @@ public static class DomainErrors
             "The subscription for this request was not found",
             ErrorArea.Domain);
 
-        public static Error ContainsOrderWithId(Guid id) => Error.Unprocessable(
-            $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
-            $"Already subscribed on newsletter about order with OrderId = {id}",
-            ErrorArea.Domain);
+        public static Error ContainsOrderWithId(Guid id)
+        {
+            return Error.Unprocessable(
+                $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
+                $"Already subscribed on newsletter about order with OrderId = {id}",
+                ErrorArea.Domain);
+        }
 
-        public static Error OrderIsNotInSubscription(Guid id) => Error.Unprocessable(
-            $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
-            $"Not subscribed on newsletter about order with OrderId = {id}",
-            ErrorArea.Domain);
+        public static Error OrderIsNotInSubscription(Guid id)
+        {
+            return Error.Unprocessable(
+                $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
+                $"Not subscribed on newsletter about order with OrderId = {id}",
+                ErrorArea.Domain);
+        }
 
-        public static Error ContainsQueueWithId(Guid id) => Error.Unprocessable(
-            $"{nameof(Subscription)}.{nameof(ContainsQueueWithId)}",
-            $"Already subscribed on newsletter about queue with QueueId = {id}",
-            ErrorArea.Domain);
+        public static Error ContainsQueueWithId(Guid id)
+        {
+            return Error.Unprocessable(
+                $"{nameof(Subscription)}.{nameof(ContainsQueueWithId)}",
+                $"Already subscribed on newsletter about queue with QueueId = {id}",
+                ErrorArea.Domain);
+        }
 
-        public static Error QueueIsNotInSubscription(Guid id) => Error.Unprocessable(
-            $"{nameof(Subscription)}.{nameof(QueueIsNotInSubscription)}",
-            $"Not subscribed on newsletter about queue with QueueId = {id}",
-            ErrorArea.Domain);
+        public static Error QueueIsNotInSubscription(Guid id)
+        {
+            return Error.Unprocessable(
+                $"{nameof(Subscription)}.{nameof(QueueIsNotInSubscription)}",
+                $"Not subscribed on newsletter about queue with QueueId = {id}",
+                ErrorArea.Domain);
+        }
     }
 
     public static class TelegramId

@@ -30,7 +30,9 @@ public abstract class DatabaseFixture : IAsyncLifetime
     }
 
     public PostgreSqlContainer Container { get; }
+
     public DbConnection Connection { get; private set; }
+
     protected ServiceProvider Provider { get; private set; }
 
     public async Task InitializeAsync()
@@ -92,11 +94,13 @@ public abstract class DatabaseFixture : IAsyncLifetime
 
     private async Task InitializeRespawnerAsync()
     {
-        _respawner = await Respawner.CreateAsync(Connection, new RespawnerOptions
-        {
-            DbAdapter = DbAdapter.Postgres,
-            SchemasToExclude = new[] { "__EFMigrationsHistory" },
-            SchemasToInclude = new[] { "public" },
-        });
+        _respawner = await Respawner.CreateAsync(
+            Connection,
+            new RespawnerOptions
+            {
+                DbAdapter = DbAdapter.Postgres,
+                SchemasToExclude = new[] { "__EFMigrationsHistory" },
+                SchemasToInclude = new[] { "public" },
+            });
     }
 }

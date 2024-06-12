@@ -25,13 +25,19 @@ public abstract class Entity : IEquatable<Entity>
     public bool Equals(Entity? other)
     {
         if (other is null)
+        {
             return false;
+        }
 
         if (ReferenceEquals(this, other))
+        {
             return true;
+        }
 
         if (Id == Guid.Empty || other.Id == Guid.Empty)
+        {
             return false;
+        }
 
         return Id == other.Id;
     }
@@ -57,10 +63,14 @@ public abstract class Entity : IEquatable<Entity>
     public static bool operator ==(Entity? left, Entity? right)
     {
         if (left is null && right is null)
+        {
             return true;
+        }
 
         if (left is null || right is null)
+        {
             return false;
+        }
 
         return left.Equals(right);
     }
@@ -73,7 +83,9 @@ public abstract class Entity : IEquatable<Entity>
     public override bool Equals(object? obj)
     {
         if (obj is not Entity entity)
+        {
             return false;
+        }
 
         return Equals(entity);
     }

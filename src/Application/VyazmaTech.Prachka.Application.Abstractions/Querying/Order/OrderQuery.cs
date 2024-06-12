@@ -30,7 +30,10 @@ public sealed class OrderQuery
         return builder.Build();
     }
 
-    public static IQueryBuilder Builder() => new QueryBuilder();
+    public static IQueryBuilder Builder()
+    {
+        return new QueryBuilder();
+    }
 
     public Guid? Id { get; }
 
@@ -101,13 +104,13 @@ public sealed class OrderQuery
         public OrderQuery Build()
         {
             return new OrderQuery(
-                id: _id,
-                userId: _userId,
-                queueId: _queueId,
-                status: _status,
-                page: _page,
-                limit: _limit,
-                creationDate: _creationDate);
+                _id,
+                _userId,
+                _queueId,
+                _status,
+                _page,
+                _limit,
+                _creationDate);
         }
     }
 }

@@ -36,11 +36,18 @@ internal sealed class PersistenceContext : IPersistenceContext, IUnitOfWork
     public IQueueSubscriptionRepository QueueSubscriptions { get; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-        => _context.SaveChangesAsync(cancellationToken);
+    {
+        return _context.SaveChangesAsync(cancellationToken);
+    }
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
-        => _context.Database.BeginTransactionAsync(cancellationToken);
+    {
+        return _context.Database.BeginTransactionAsync(cancellationToken);
+    }
 
     public DbSet<TModel> Entities<TModel>()
-        where TModel : class => _context.Set<TModel>();
+        where TModel : class
+    {
+        return _context.Set<TModel>();
+    }
 }

@@ -5,7 +5,7 @@ namespace VyazmaTech.Prachka.Domain.Core.Subscription;
 
 public abstract class SubscriptionEntity : Entity, IAuditableEntity
 {
-    public SubscriptionEntity(
+    protected SubscriptionEntity(
         Guid id,
         Guid user,
         DateOnly creationDateUtc,

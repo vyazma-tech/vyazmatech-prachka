@@ -13,26 +13,26 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;
 internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>, IQueueRepository
 {
     public QueueRepository(DatabaseContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
 
     public IAsyncEnumerable<QueueEntity> QueryAsync(QueueQuery specification, CancellationToken cancellationToken)
     {
         IQueryable<QueueModel> queryable = ApplyQuery(specification);
 
-        var finalQueryable = queryable.Select(queue => new
-        {
-            queue,
-            orders = queue.Orders.Select(x => new OrderInfo(
-                x.Id,
-                new UserInfo(
-                    x.UserId,
-                    x.User.TelegramUsername,
-                    x.User.Fullname),
-                queue.Id,
-                Enum.Parse<OrderStatus>(x.Status)))
-        });
+        var finalQueryable = queryable.Select(
+            queue => new
+            {
+                queue,
+                orders = queue.Orders.Select(
+                    x => new OrderInfo(
+                        x.Id,
+                        new UserInfo(
+                            x.UserId,
+                            x.User.TelegramUsername,
+                            x.User.Fullname),
+                        queue.Id,
+                        Enum.Parse<OrderStatus>(x.Status))),
+            });
 
         return finalQueryable.AsAsyncEnumerable().Select(x => MapTo(x.queue, x.orders));
     }

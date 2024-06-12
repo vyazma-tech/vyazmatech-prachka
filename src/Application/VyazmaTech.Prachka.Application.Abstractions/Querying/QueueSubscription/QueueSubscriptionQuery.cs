@@ -19,7 +19,10 @@ public sealed class QueueSubscriptionQuery
         return builder.Build();
     }
 
-    public static IQueryBuilder Builder() => new QueryBuilder();
+    public static IQueryBuilder Builder()
+    {
+        return new QueryBuilder();
+    }
 
     public Guid? Id { get; }
 
@@ -72,11 +75,11 @@ public sealed class QueueSubscriptionQuery
         public QueueSubscriptionQuery Build()
         {
             return new QueueSubscriptionQuery(
-                id: _id,
-                userId: _userId,
-                queueId: _queueId,
-                page: _page,
-                limit: _limit);
+                _id,
+                _userId,
+                _queueId,
+                _page,
+                _limit);
         }
     }
 }

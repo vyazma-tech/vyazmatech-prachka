@@ -7,7 +7,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj"/>
         <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Kernel\VyazmaTech.Prachka.Domain.Kernel.csproj"/>
-        <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj" />
+        <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
         <ProjectReference Include="..\VyazmaTech.Prachka.Application.Core\VyazmaTech.Prachka.Application.Core.csproj"/>
     </ItemGroup>

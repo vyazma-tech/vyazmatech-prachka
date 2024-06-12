@@ -22,7 +22,9 @@ internal sealed class OrderByIdQueryHandler : IQueryHandler<Query, Result<Respon
         Result<OrderEntity> result = await _persistenceContext.Orders.FindByIdAsync(request.Id, cancellationToken);
 
         if (result.IsFaulted)
+        {
             return new Result<Response>(result.Error);
+        }
 
         OrderEntity order = result.Value;
 

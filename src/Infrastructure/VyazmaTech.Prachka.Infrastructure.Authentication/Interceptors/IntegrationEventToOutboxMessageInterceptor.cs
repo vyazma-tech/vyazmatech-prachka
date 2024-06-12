@@ -24,23 +24,27 @@ internal sealed class IntegrationEventToOutboxMessageInterceptor : SaveChangesIn
         var messages = context.ChangeTracker
             .Entries<VyazmaTechIdentityUser>()
             .Select(entry => entry.Entity)
-            .SelectMany(user =>
-            {
-                IReadOnlyCollection<IIntegrationEvent> integrationEvents = user.IntegrationEvents;
-                user.ClearIntegrationEvents();
-
-                return integrationEvents;
-            })
-            .Select(@event => new OutboxMessage
-            {
-                Id = Guid.NewGuid(),
-                OccuredOnUtc = DateTime.UtcNow,
-                Type = @event.GetType().Name,
-                Content = JsonConvert.SerializeObject(@event, new JsonSerializerSettings
+            .SelectMany(
+                user =>
                 {
-                    TypeNameHandling = TypeNameHandling.All
+                    IReadOnlyCollection<IIntegrationEvent> integrationEvents = user.IntegrationEvents;
+                    user.ClearIntegrationEvents();
+
+                    return integrationEvents;
                 })
-            })
+            .Select(
+                @event => new OutboxMessage
+                {
+                    Id = Guid.NewGuid(),
+                    OccuredOnUtc = DateTime.UtcNow,
+                    Type = @event.GetType().Name,
+                    Content = JsonConvert.SerializeObject(
+                        @event,
+                        new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.All,
+                        }),
+                })
             .ToList();
 
         context.Set<OutboxMessage>().AddRange(messages);

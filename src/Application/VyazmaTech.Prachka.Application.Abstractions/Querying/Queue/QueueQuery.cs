@@ -19,7 +19,10 @@ public sealed class QueueQuery
         return builder.Build();
     }
 
-    public static IQueryBuilder Builder() => new QueryBuilder();
+    public static IQueryBuilder Builder()
+    {
+        return new QueryBuilder();
+    }
 
     public Guid? Id { get; }
 
@@ -72,11 +75,11 @@ public sealed class QueueQuery
         public QueueQuery Build()
         {
             return new QueueQuery(
-                id: _id,
-                assignmentDate: _assignmentDate,
-                orderId: _orderId,
-                page: _page,
-                limit: _limit);
+                _id,
+                _assignmentDate,
+                _orderId,
+                _page,
+                _limit);
         }
     }
 }

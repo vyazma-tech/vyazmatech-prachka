@@ -7,14 +7,19 @@ namespace VyazmaTech.Prachka.Application.Handlers.Identity.Queries;
 
 internal sealed class GetAllRolesQueryHandler : IQueryHandler<Query, Response>
 {
-    private static ValueTask<Response> Response => ValueTask.FromResult(new Response(new AllRolesDto(new[]
-    {
-        VyazmaTechRoleNames.AdminRoleName,
-        VyazmaTechRoleNames.ModeratorRoleName,
-        VyazmaTechRoleNames.EmployeeRoleName,
-        VyazmaTechRoleNames.UserRoleName,
-    })));
+    private static ValueTask<Response> Response => ValueTask.FromResult(
+        new Response(
+            new AllRolesDto(
+                new[]
+                {
+                    VyazmaTechRoleNames.AdminRoleName,
+                    VyazmaTechRoleNames.ModeratorRoleName,
+                    VyazmaTechRoleNames.EmployeeRoleName,
+                    VyazmaTechRoleNames.UserRoleName,
+                })));
 
     public ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
-        => Response;
+    {
+        return Response;
+    }
 }

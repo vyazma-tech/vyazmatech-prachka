@@ -22,7 +22,9 @@ internal sealed class LoginQueryHandler : IQueryHandler<Query, Result<Response>>
             .GetUserTokensAsync(request.Username, cancellationToken);
 
         if (loginResult.IsFaulted)
+        {
             return new Result<Response>(loginResult.Error);
+        }
 
         IdentityTokenModel tokens = loginResult.Value;
 

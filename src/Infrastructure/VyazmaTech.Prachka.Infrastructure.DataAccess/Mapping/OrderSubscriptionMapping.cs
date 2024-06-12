@@ -22,7 +22,7 @@ public static class OrderSubscriptionMapping
             Id = entity.Id,
             UserId = entity.User,
             CreationDate = entity.CreationDate,
-            ModifiedOn = entity.ModifiedOn
+            ModifiedOn = entity.ModifiedOn,
         };
     }
 }

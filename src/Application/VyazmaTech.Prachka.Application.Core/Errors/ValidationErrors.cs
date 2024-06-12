@@ -75,16 +75,16 @@ public static class ValidationErrors
     public static class BulkInsertOrders
     {
         public static Error OrderQuantityShouldBePositive => Error.Validation(
-            code: $"{nameof(BulkInsertOrders)}.{nameof(OrderQuantityShouldBePositive)}",
-            description: "You should provide positive order quantity to enter queue",
-            area: ErrorArea.Application);
+            $"{nameof(BulkInsertOrders)}.{nameof(OrderQuantityShouldBePositive)}",
+            "You should provide positive order quantity to enter queue",
+            ErrorArea.Application);
     }
 
     public static class BulkRemoveOrders
     {
         public static Error OrderQuantityShouldBePositive => Error.Validation(
-            code: $"{nameof(BulkRemoveOrders)}.{nameof(OrderQuantityShouldBePositive)}",
-            description: "You should provide positive order quantity to exit queue.",
-            area: ErrorArea.Application);
+            $"{nameof(BulkRemoveOrders)}.{nameof(OrderQuantityShouldBePositive)}",
+            "You should provide positive order quantity to exit queue.",
+            ErrorArea.Application);
     }
 }

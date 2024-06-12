@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-      <PackageReference Include="FastEndpoints" />
-      <PackageReference Include="FastEndpoints.Swagger" />
+        <PackageReference Include="FastEndpoints"/>
+        <PackageReference Include="FastEndpoints.Swagger"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.Handlers\VyazmaTech.Prachka.Application.Handlers.csproj" />
-      <ProjectReference Include="..\VyazmaTech.Prachka.Presentation.Authorization\VyazmaTech.Prachka.Presentation.Authorization.csproj" />
+        <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.Handlers\VyazmaTech.Prachka.Application.Handlers.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Presentation.Authorization\VyazmaTech.Prachka.Presentation.Authorization.csproj"/>
     </ItemGroup>
 
 </Project>

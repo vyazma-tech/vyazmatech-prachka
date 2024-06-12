@@ -32,8 +32,12 @@ internal class FindQueueEndpoint : Endpoint<FindQueuesRequest, PagedResponse<Que
         QueueByQuery.Response response = await _sender.Send(query, ct);
 
         if (response.Queues.Bunch.Any())
+        {
             await this.SendPartialContentAsync(response, ct);
+        }
         else
+        {
             await SendNoContentAsync(ct);
+        }
     }
 }

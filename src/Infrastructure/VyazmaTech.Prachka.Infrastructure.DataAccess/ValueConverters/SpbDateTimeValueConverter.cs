@@ -8,8 +8,6 @@ public sealed class SpbDateTimeValueConverter : ValueConverter<SpbDateTime, Date
 {
     public SpbDateTimeValueConverter()
         : base(
-        spb => SpbDateTimeProvider.ToUtc(spb),
-        dateTime => SpbDateTimeProvider.FromUtc(dateTime))
-    {
-    }
+            spb => SpbDateTimeProvider.ToUtc(spb),
+            dateTime => SpbDateTimeProvider.FromUtc(dateTime)) { }
 }

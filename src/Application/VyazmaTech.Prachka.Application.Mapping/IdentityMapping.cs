@@ -8,11 +8,11 @@ public static class IdentityMapping
     public static IdentityUserDto ToDto(this IdentityUserModel model, string role)
     {
         return new IdentityUserDto(
-            Id: model.Id,
-            Fullname: model.Fullname,
-            Role: role,
-            TelegramUsername: model.TelegramUsername,
-            TelegramImageUrl: model.TelegramImageUrl);
+            model.Id,
+            model.Fullname,
+            role,
+            model.TelegramUsername,
+            model.TelegramImageUrl);
     }
 
     public static IdentityTokenDto ToDto(this IdentityTokenModel model)

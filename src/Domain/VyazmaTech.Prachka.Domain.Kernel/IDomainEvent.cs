@@ -2,6 +2,4 @@
 
 namespace VyazmaTech.Prachka.Domain.Kernel;
 
-public interface IDomainEvent : INotification
-{
-}
+public interface IDomainEvent : INotification { }

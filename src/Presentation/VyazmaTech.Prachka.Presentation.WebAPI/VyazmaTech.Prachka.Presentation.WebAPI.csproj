@@ -31,5 +31,5 @@
             <DependentUpon>appsettings.json</DependentUpon>
         </Content>
     </ItemGroup>
-    
+
 </Project>

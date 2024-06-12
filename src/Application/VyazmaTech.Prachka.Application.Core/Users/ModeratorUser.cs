@@ -12,5 +12,7 @@ internal sealed class ModeratorUser : ICurrentUser
     public Guid? Id { get; }
 
     public bool CanChangeUserRole(string currentRoleName, string newRoleName)
-        => true;
+    {
+        return true;
+    }
 }

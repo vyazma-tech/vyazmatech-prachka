@@ -20,7 +20,10 @@ public sealed class UserQuery
         return builder.Build();
     }
 
-    public static IQueryBuilder Builder() => new QueryBuilder();
+    public static IQueryBuilder Builder()
+    {
+        return new QueryBuilder();
+    }
 
     public Guid? Id { get; }
 
@@ -82,12 +85,12 @@ public sealed class UserQuery
         public UserQuery Build()
         {
             return new UserQuery(
-                id: _id,
-                fullname: _fullname,
-                registrationDate: _registrationDate,
-                telegramId: _telegramId,
-                page: _page,
-                limit: _limit);
+                _id,
+                _fullname,
+                _registrationDate,
+                _telegramId,
+                _page,
+                _limit);
         }
     }
 }

@@ -10,7 +10,9 @@ namespace VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 public class CoreDatabaseFixture : DatabaseFixture
 {
     public DatabaseContext Context { get; private set; } = null!;
+
     public AsyncServiceScope Scope { get; private set; }
+
     public IPersistenceContext PersistenceContext { get; private set; } = null!;
 
     public override async Task ResetAsync()
@@ -27,8 +29,9 @@ public class CoreDatabaseFixture : DatabaseFixture
 
     protected override void ConfigureServices(IServiceCollection services)
     {
-        services.AddDatabase(x =>
-            x.UseNpgsql(Container.GetConnectionString()));
+        services.AddDatabase(
+            x =>
+                x.UseNpgsql(Container.GetConnectionString()));
         services.AddInfrastructure();
     }
 

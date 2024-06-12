@@ -26,12 +26,13 @@ internal static class ServiceCollectionExtensions
 
     public static IServiceCollection AddDatabase(this IServiceCollection services)
     {
-        services.AddDatabase((sp, o) =>
-        {
-            o.UseNpgsql(sp.GetRequiredService<PostgresConfiguration>().ToConnectionString())
-                .UseLazyLoadingProxies()
-                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>());
-        });
+        services.AddDatabase(
+            (sp, o) =>
+            {
+                o.UseNpgsql(sp.GetRequiredService<PostgresConfiguration>().ToConnectionString())
+                    .UseLazyLoadingProxies()
+                    .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>());
+            });
 
         return services;
     }
@@ -40,8 +41,7 @@ internal static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<PaginationConfiguration>(
-            configuration.GetSection(PaginationConfiguration.SectionKey));
+        services.Configure<PaginationConfiguration>(configuration.GetSection(PaginationConfiguration.SectionKey));
 
         services.AddQueryBuilders();
         services.AddQuerying();

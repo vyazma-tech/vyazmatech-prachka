@@ -7,7 +7,12 @@ public static class UserMapping
 {
     public static UserEntity MapTo(UserModel model)
     {
-        return new UserEntity(model.Id, model.TelegramUsername, model.Fullname, model.RegistrationDate, model.ModifiedOn);
+        return new UserEntity(
+            model.Id,
+            model.TelegramUsername,
+            model.Fullname,
+            model.RegistrationDate,
+            model.ModifiedOn);
     }
 
     public static UserModel MapFrom(UserEntity entity)
@@ -18,7 +23,7 @@ public static class UserMapping
             Fullname = entity.Fullname,
             TelegramUsername = entity.TelegramUsername,
             RegistrationDate = entity.CreationDate,
-            ModifiedOn = entity.ModifiedOn
+            ModifiedOn = entity.ModifiedOn,
         };
     }
 }

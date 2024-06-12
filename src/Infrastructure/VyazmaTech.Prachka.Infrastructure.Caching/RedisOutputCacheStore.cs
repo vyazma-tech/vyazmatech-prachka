@@ -46,13 +46,15 @@ public class RedisOutputCacheStore : IOutputCacheStore
         ArgumentNullException.ThrowIfNull(value);
 
         if (cancellationToken.IsCancellationRequested)
+        {
             return;
+        }
 
         IDatabase database = _connectionMultiplexer.GetDatabase();
 
         IAsyncEnumerable<string> asyncTags = tags?.ToAsyncEnumerable() ?? AsyncEnumerable.Empty<string>();
         IAsyncEnumerable<Task<bool>> tasks = GetTagsKey(database, key, asyncTags, cancellationToken);
-        await Task.WhenAll(await tasks.ToListAsync(cancellationToken: cancellationToken));
+        await Task.WhenAll(await tasks.ToListAsync(cancellationToken));
 
         await database.StringSetAsync(key, value, validFor);
     }

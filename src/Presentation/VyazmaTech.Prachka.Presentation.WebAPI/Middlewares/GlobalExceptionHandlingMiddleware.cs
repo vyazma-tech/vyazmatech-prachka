@@ -37,7 +37,7 @@ internal class GlobalExceptionHandlingMiddleware : IMiddleware
 
         var serializerOptions = new JsonSerializerOptions
         {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
 
         string response = JsonSerializer.Serialize(
@@ -47,8 +47,7 @@ internal class GlobalExceptionHandlingMiddleware : IMiddleware
         await httpContext.Response.WriteAsync(response);
     }
 
-    private static ExceptionInformation GetExceptionInformation(
-        Exception exception)
+    private static ExceptionInformation GetExceptionInformation(Exception exception)
     {
         return exception switch
         {
@@ -60,7 +59,7 @@ internal class GlobalExceptionHandlingMiddleware : IMiddleware
                             x.ErrorCode,
                             $"{x.PropertyName} - {x.ErrorMessage}",
                             ErrorArea.Application))
-                    .ToList()
+                    .ToList(),
             },
 
             PostgresException postgresException => new ExceptionInformation
@@ -71,8 +70,8 @@ internal class GlobalExceptionHandlingMiddleware : IMiddleware
                     Error.Failure(
                         "Database Error",
                         postgresException.Detail ?? postgresException.Message,
-                        ErrorArea.Infrastructure)
-                }
+                        ErrorArea.Infrastructure),
+                },
             },
 
             _ => new ExceptionInformation
@@ -83,8 +82,8 @@ internal class GlobalExceptionHandlingMiddleware : IMiddleware
                     Error.Failure(
                         "Internal Server Error",
                         exception.Message,
-                        ErrorArea.Application)
-                }
+                        ErrorArea.Application),
+                },
             }
         };
     }

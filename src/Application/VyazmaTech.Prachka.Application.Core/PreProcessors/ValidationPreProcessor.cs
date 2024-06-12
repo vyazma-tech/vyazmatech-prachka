@@ -25,7 +25,9 @@ public sealed class ValidationPreProcessor<TRequest, TResponse> : MessagePreProc
             .ToList();
 
         if (failures.Count != 0)
+        {
             throw new ValidationException(failures);
+        }
 
         return ValueTask.CompletedTask;
     }

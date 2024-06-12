@@ -26,7 +26,9 @@ internal sealed class UserRegisteredIntegrationEventHandler : IIntegrationEventH
             .FindByIdAsync(notification.User.Id, cancellationToken);
 
         if (searchResult.IsSuccess)
+        {
             return;
+        }
 
         var createUserCommand = new CreateUser.Command(
             notification.User.Id,

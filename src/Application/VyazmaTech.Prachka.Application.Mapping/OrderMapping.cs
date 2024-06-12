@@ -22,11 +22,11 @@ public static class OrderMapping
     public static OrderInfoDto ToDto(this OrderInfo orderInfo)
     {
         return new OrderInfoDto(
-            OrderId: orderInfo.Id,
-            UserId: orderInfo.User.Id,
-            TelegramUsername: orderInfo.User.Telegram,
-            Fullname: orderInfo.User.Fullname,
-            Status: orderInfo.Status.ToString());
+            orderInfo.Id,
+            orderInfo.User.Id,
+            orderInfo.User.Telegram,
+            orderInfo.User.Fullname,
+            orderInfo.Status.ToString());
     }
 
     public static PagedResponse<OrderDto> ToPagedResponse(
@@ -40,7 +40,7 @@ public static class OrderMapping
             Bunch = orders.ToArray(),
             CurrentPage = currentPage,
             TotalPages = totalPages,
-            RecordPerPage = recordsPerPage
+            RecordPerPage = recordsPerPage,
         };
     }
 }

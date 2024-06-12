@@ -12,9 +12,7 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;
 internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrderRepository
 {
     public OrderRepository(DatabaseContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
 
     public IAsyncEnumerable<OrderEntity> QueryAsync(OrderQuery query, CancellationToken cancellationToken)
     {
@@ -99,8 +97,7 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
         {
             if (specification.Page is not null)
             {
-                queryable = queryable.
-                    Skip(specification.Page.Value * specification.Limit.Value)
+                queryable = queryable.Skip(specification.Page.Value * specification.Limit.Value)
                     .Take(specification.Limit.Value);
             }
             else

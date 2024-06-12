@@ -30,7 +30,9 @@ internal sealed class ProlongOrderCommandHandler : ICommandHandler<Command, Resu
             .FindByIdAsync(request.OrderId, cancellationToken);
 
         if (orderSearchResult.IsFaulted)
+        {
             return new Result<Response>(orderSearchResult.Error);
+        }
 
         OrderEntity order = orderSearchResult.Value;
 
@@ -38,7 +40,9 @@ internal sealed class ProlongOrderCommandHandler : ICommandHandler<Command, Resu
             .FindByIdAsync(order.Queue, cancellationToken);
 
         if (prevQueueSearchResult.IsFaulted)
+        {
             return new Result<Response>(prevQueueSearchResult.Error);
+        }
 
         QueueEntity prevQueue = prevQueueSearchResult.Value;
 
@@ -46,7 +50,9 @@ internal sealed class ProlongOrderCommandHandler : ICommandHandler<Command, Resu
             .FindByIdAsync(request.TargetQueueId, cancellationToken);
 
         if (targetQueueSearchResult.IsFaulted)
+        {
             return new Result<Response>(targetQueueSearchResult.Error);
+        }
 
         QueueEntity targetQueue = targetQueueSearchResult.Value;
 
@@ -55,7 +61,9 @@ internal sealed class ProlongOrderCommandHandler : ICommandHandler<Command, Resu
         Result<OrderEntity> prolongOrderResult = service.ProlongOrder(order, prevQueue, targetQueue);
 
         if (prolongOrderResult.IsFaulted)
+        {
             return new Result<Response>(prolongOrderResult.Error);
+        }
 
         order = prolongOrderResult.Value;
 

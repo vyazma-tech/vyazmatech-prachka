@@ -41,7 +41,7 @@ internal sealed class OrderByQueryQueryHandler : IQueryHandler<Query, Response>
         IEnumerable<OrderDto> result = orders.Select(x => x.ToDto());
 
         var page = result.ToPagedResponse(
-            currentPage: query.Page + 1 ?? 1,
+            query.Page + 1 ?? 1,
             recordsPerPage: _recordsPerPage,
             totalPages: (totalCount / _recordsPerPage) + 1);
 

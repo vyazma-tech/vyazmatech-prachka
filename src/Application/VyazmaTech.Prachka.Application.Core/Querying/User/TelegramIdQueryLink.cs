@@ -9,7 +9,9 @@ public class TelegramIdQueryLink : QueryLinkBase<Query, IQueryBuilder>
     protected override IQueryBuilder Apply(Query query, IQueryBuilder builder)
     {
         if (query.TelegramId is not null)
+        {
             builder = builder.WithTelegramId(query.TelegramId);
+        }
 
         return builder;
     }

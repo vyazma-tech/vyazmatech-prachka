@@ -42,9 +42,15 @@ public class Result
         _error = error;
     }
 
-    public static Result Success() => new (null!, ResultState.Success);
+    public static Result Success()
+    {
+        return new Result(null!, ResultState.Success);
+    }
 
-    public static Result Failure() => new (null!, ResultState.Faulted);
+    public static Result Failure()
+    {
+        return new Result(null!, ResultState.Faulted);
+    }
 
     public bool IsFaulted => _state == ResultState.Faulted;
 

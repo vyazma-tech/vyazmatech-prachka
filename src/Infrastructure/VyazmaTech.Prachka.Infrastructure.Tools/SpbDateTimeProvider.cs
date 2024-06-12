@@ -11,7 +11,7 @@ public class SpbDateTimeProvider : IDateTimeProvider
     /// Gets new instance with current spb date time.
     /// </summary>
     public static SpbDateTime CurrentDateTime
-        => new SpbDateTime(DateTime.SpecifyKind(FromLocal(DateTime.Now).Value, DateTimeKind.Unspecified));
+        => new(DateTime.SpecifyKind(FromLocal(DateTime.Now).Value, DateTimeKind.Unspecified));
 
     /// <summary>
     /// Gets current spb date.
@@ -49,7 +49,10 @@ public class SpbDateTimeProvider : IDateTimeProvider
     }
 
     public DateOnly DateNow => DateOnly.FromDateTime(UtcNow);
+
     public DateTime UtcNow => DateTime.Now;
+
     public SpbDateTime SpbDateTimeNow => CurrentDateTime;
+
     public DateOnly SpbDateOnlyNow => CurrentDateTime.AsDateOnly();
 }

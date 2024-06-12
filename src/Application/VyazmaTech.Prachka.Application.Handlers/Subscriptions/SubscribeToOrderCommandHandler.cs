@@ -22,7 +22,9 @@ internal sealed class SubscribeToOrderCommandHandler : ICommandHandler<Command, 
     public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
     {
         if (request.UserId is null)
+        {
             return new Result<Response>(ApplicationErrors.Subscription.AnonymousUserCantSubscribe);
+        }
 
         var query = OrderSubscriptionQuery.Build(x => x.WithUserId(request.UserId.Value));
         OrderSubscriptionEntity? existing = await _context.OrderSubscriptions
@@ -30,18 +32,24 @@ internal sealed class SubscribeToOrderCommandHandler : ICommandHandler<Command, 
             .FirstOrDefaultAsync(cancellationToken);
 
         if (existing is null)
+        {
             return new Result<Response>(ApplicationErrors.Subscription.UserHasNoSubscriptions(request.UserId.Value));
+        }
 
         Result<OrderEntity> orderSearchResult = await _context.Orders.FindByIdAsync(request.OrderId, cancellationToken);
 
         if (orderSearchResult.IsFaulted)
+        {
             return new Result<Response>(orderSearchResult.Error);
+        }
 
         OrderEntity order = orderSearchResult.Value;
         Result<OrderEntity> result = existing.Subscribe(order);
 
         if (result.IsFaulted)
+        {
             return new Result<Response>(result.Error);
+        }
 
         _context.OrderSubscriptions.Update(existing);
         await _context.SaveChangesAsync(cancellationToken);

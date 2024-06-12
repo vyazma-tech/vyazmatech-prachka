@@ -26,7 +26,7 @@ public static class OrderMapping
             UserId = entity.User.Id,
             CreationDate = entity.CreationDateTime,
             ModifiedOn = entity.ModifiedOn,
-            Status = entity.Status.ToString()
+            Status = entity.Status.ToString(),
         };
     }
 }

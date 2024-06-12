@@ -22,7 +22,9 @@ internal sealed class RefreshTokenQueryHandler : IQueryHandler<Query, Result<Res
             .RefreshToken(request.AccessToken, request.RefreshToken);
 
         if (result.IsFaulted)
+        {
             return new Result<Response>(result.Error);
+        }
 
         IdentityTokenModel tokens = result.Value;
 

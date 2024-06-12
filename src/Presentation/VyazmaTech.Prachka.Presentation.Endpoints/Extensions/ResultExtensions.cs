@@ -18,7 +18,8 @@ internal static class ResultExtensions
             });
 
         static int GetStatusCode(ErrorType type)
-            => type switch
+        {
+            return type switch
             {
                 ErrorType.Validation => StatusCodes.Status400BadRequest,
                 ErrorType.Conflict => StatusCodes.Status409Conflict,
@@ -30,9 +31,11 @@ internal static class ResultExtensions
 
                 _ => StatusCodes.Status500InternalServerError
             };
+        }
 
         static string GetTitle(ErrorType type)
-            => type switch
+        {
+            return type switch
             {
                 ErrorType.Validation => "Bad Request",
                 ErrorType.Conflict => "Conflict",
@@ -44,9 +47,11 @@ internal static class ResultExtensions
 
                 _ => "Internal Server Error"
             };
+        }
 
         static string GetType(ErrorType type)
-            => type switch
+        {
+            return type switch
             {
                 ErrorType.Validation => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.1",
                 ErrorType.Conflict => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.10",
@@ -58,5 +63,6 @@ internal static class ResultExtensions
 
                 _ => "Internal Server Error"
             };
+        }
     }
 }

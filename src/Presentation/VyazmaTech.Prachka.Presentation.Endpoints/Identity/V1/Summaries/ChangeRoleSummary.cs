@@ -10,6 +10,8 @@ internal sealed class ChangeRoleSummary : Summary<ChangeRoleEndpoint>
     {
         Summary = "changes role of specified user";
         Response<Result>();
-        Response<Result>(StatusCodes.Status403Forbidden, "Current identity user is not allowed to perform this operation");
+        Response<Result>(
+            StatusCodes.Status403Forbidden,
+            "Current identity user is not allowed to perform this operation");
     }
 }

@@ -11,11 +11,15 @@ internal static class RoleManagerExtensions
         CancellationToken token)
     {
         if (token.IsCancellationRequested)
+        {
             return;
+        }
 
         bool existingRole = await manager.RoleExistsAsync(roleName);
 
         if (existingRole is false)
+        {
             await manager.CreateAsync(new VyazmaTechIdentityRole(roleName));
+        }
     }
 }

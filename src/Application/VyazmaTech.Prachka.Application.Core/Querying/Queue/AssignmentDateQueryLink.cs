@@ -9,7 +9,9 @@ public class AssignmentDateQueryLink : QueryLinkBase<Query, IQueryBuilder>
     protected override IQueryBuilder Apply(Query query, IQueryBuilder builder)
     {
         if (query.AssignmentDate is not null)
+        {
             builder = builder.WithAssignmentDate(query.AssignmentDate.Value);
+        }
 
         return builder;
     }

@@ -13,8 +13,8 @@ namespace VyazmaTech.Prachka.Domain.Tests.UseCases;
 
 public class OrderServiceTests
 {
-    private readonly Mock<IOrderRepository> _orderRepository = new ();
-    private readonly Mock<IDateTimeProvider> _timeProvider = new ();
+    private readonly Mock<IOrderRepository> _orderRepository = new();
+    private readonly Mock<IDateTimeProvider> _timeProvider = new();
     private readonly OrderService _service;
 
     public OrderServiceTests()
@@ -29,22 +29,22 @@ public class OrderServiceTests
     public void ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoSameQueue()
     {
         var order = new OrderEntity(
-            id: Guid.Empty,
-            queueId: Guid.Empty,
-            user: null!,
-            status: OrderStatus.New,
-            creationDateTimeUtc: default);
+            Guid.Empty,
+            Guid.Empty,
+            null!,
+            OrderStatus.New,
+            default);
 
         var queue = new QueueEntity(
-            id: Guid.NewGuid(),
-            capacity: 1,
-            assignmentDate: default,
-            activeFrom: default,
-            activeUntil: default,
-            state: QueueState.Active,
-            orderInfos: Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
+            Guid.NewGuid(),
+            1,
+            default,
+            default,
+            default,
+            QueueState.Active,
+            Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
-        Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, previousQueue: queue, targetQueue: queue);
+        Result<OrderEntity> prolongationResult = _service.ProlongOrder(order, queue, queue);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Should().Be(DomainErrors.Order.UnableToTransferIntoSameQueue);
@@ -54,32 +54,32 @@ public class OrderServiceTests
     public void ProlongOrder_ShouldReturnFailureResult_WhenTransferringIntoFullQueue()
     {
         var order = new OrderEntity(
-            id: Guid.Empty,
-            queueId: Guid.Empty,
-            user: null!,
-            status: OrderStatus.New,
-            creationDateTimeUtc: default);
+            Guid.Empty,
+            Guid.Empty,
+            null!,
+            OrderStatus.New,
+            default);
 
         var targetQueue = new QueueEntity(
-            id: Guid.NewGuid(),
-            capacity: 1,
-            assignmentDate: default,
-            activeFrom: default,
-            activeUntil: default,
-            state: QueueState.Active,
-            orderInfos: new HashSet<OrderInfo>(new OrderByIdComparer()) { new (Guid.NewGuid(), default!, default, default) });
+            Guid.NewGuid(),
+            1,
+            default,
+            default,
+            default,
+            QueueState.Active,
+            new HashSet<OrderInfo>(new OrderByIdComparer()) { new(Guid.NewGuid(), default!, default, default) });
 
         var queue = new QueueEntity(
-            id: Guid.NewGuid(),
-            capacity: 1,
-            assignmentDate: default,
-            activeFrom: default,
-            activeUntil: default,
-            state: QueueState.Active,
-            orderInfos: Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
+            Guid.NewGuid(),
+            1,
+            default,
+            default,
+            default,
+            QueueState.Active,
+            Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
         Result<OrderEntity> prolongationResult =
-            _service.ProlongOrder(order, previousQueue: queue, targetQueue: targetQueue);
+            _service.ProlongOrder(order, queue, targetQueue);
 
         prolongationResult.IsFaulted.Should().BeTrue();
         prolongationResult.Error.Should().Be(DomainErrors.Order.UnableToTransferIntoFullQueue);

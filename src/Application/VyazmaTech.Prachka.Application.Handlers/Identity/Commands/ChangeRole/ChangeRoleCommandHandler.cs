@@ -22,12 +22,16 @@ internal sealed class ChangeRoleCommandHandler : ICommandHandler<Command, Respon
             .GetUserRoleAsync(request.TelegramUsername, cancellationToken);
 
         if (searchResult.IsFaulted)
+        {
             return new Response(searchResult);
+        }
 
         string role = searchResult.Value;
 
         if (!_currentUser.CanChangeUserRole(role, request.NewRoleName))
+        {
             return new Response(Result.Failure());
+        }
 
         await _service.UpdateUserRoleAsync(request.TelegramUsername, request.NewRoleName, cancellationToken);
 

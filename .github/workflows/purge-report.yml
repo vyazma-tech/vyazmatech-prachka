@@ -4,7 +4,7 @@ concurrency: allure
 on:
   pull_request:
     types: [ closed ]
-    
+
 jobs:
   clean:
     name: Report cleanup

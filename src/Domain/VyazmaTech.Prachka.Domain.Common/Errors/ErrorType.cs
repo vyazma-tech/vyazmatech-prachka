@@ -17,5 +17,5 @@ public enum ErrorType
 
     Unprocessable = 5,
 
-    Unauthorized = 6
+    Unauthorized = 6,
 }

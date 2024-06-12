@@ -37,14 +37,18 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             .GetByTelegramUsernameAsync(telegramUsername, token);
 
         if (searchResult.IsFaulted)
+        {
             return new Result<IdentityTokenModel>(searchResult.Error);
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
         SecurityToken accessToken = await GenerateAccessToken(user);
 
         if (user.RefreshToken is null || user.RefreshTokenExpiryUtc < DateTime.UtcNow)
+        {
             user.RefreshToken = GenerateRefreshToken();
+        }
 
         return new IdentityTokenModel(
             new JwtSecurityTokenHandler().WriteToken(accessToken),
@@ -61,12 +65,16 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
                 CancellationToken.None);
 
         if (searchResult.IsFaulted)
+        {
             return new Result<IdentityTokenModel>(searchResult.Error);
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
         if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryUtc < DateTime.UtcNow)
+        {
             return new Result<IdentityTokenModel>(AuthenticationErrors.IdentityToken.Refresh());
+        }
 
         SecurityToken jwtAccessToken = await GenerateAccessToken(user);
 
@@ -81,7 +89,9 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             .GetByTelegramUsernameAsync(telegramUsername, token);
 
         if (searchResult.IsFaulted)
+        {
             return Result.Failure();
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
@@ -94,7 +104,7 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
 
     public ClaimsPrincipal? DecodePrincipal(string token)
     {
-        TokenValidationParameters validationParameters = CreateValidationParameters(validateLifetime: true);
+        TokenValidationParameters validationParameters = CreateValidationParameters(true);
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -110,7 +120,7 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
 
     public ClaimsPrincipal DecodePrincipalFromExpiredToken(string token)
     {
-        TokenValidationParameters validationParameters = CreateValidationParameters(validateLifetime: false);
+        TokenValidationParameters validationParameters = CreateValidationParameters(false);
 
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -138,12 +148,16 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         IdentityResult result = await _userManager.CreateAsync(user);
 
         if (result.Succeeded is false)
+        {
             return new Result<IdentityUserModel>(result.ToError());
+        }
 
         result = await _userManager.AddToRoleAsync(user, roleName);
 
         if (result.Succeeded is false)
+        {
             return new Result<IdentityUserModel>(result.ToError());
+        }
 
         return new IdentityUserModel(
             user.Id,
@@ -157,7 +171,9 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         Result<VyazmaTechIdentityUser> searchResult = await _userManager.GetByIdAsync(userId, token);
 
         if (searchResult.IsFaulted)
+        {
             return new Result<IdentityUserModel>(searchResult.Error);
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
@@ -176,7 +192,9 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             await _userManager.GetByTelegramUsernameAsync(telegramUsername, token);
 
         if (searchResult.IsFaulted)
+        {
             return new Result<IdentityUserModel>(searchResult.Error);
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
@@ -190,12 +208,16 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
     public async Task<Result> UpdateUserRoleAsync(Guid userId, string newRoleName, CancellationToken token)
     {
         if (token.IsCancellationRequested)
+        {
             return Result.Failure();
+        }
 
         Result<VyazmaTechIdentityUser> searchResult = await _userManager.GetByIdAsync(userId, token);
 
         if (searchResult.IsFaulted)
+        {
             return Result.Failure();
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
@@ -209,13 +231,17 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
     public async Task<Result> UpdateUserRoleAsync(string telegramUsername, string newRoleName, CancellationToken token)
     {
         if (token.IsCancellationRequested)
+        {
             return Result.Failure();
+        }
 
         Result<VyazmaTechIdentityUser> searchResult = await _userManager
             .GetByTelegramUsernameAsync(telegramUsername, token);
 
         if (searchResult.IsFaulted)
+        {
             return Result.Failure();
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
@@ -231,7 +257,9 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         Result<VyazmaTechIdentityUser> searchResult = await _userManager.GetByIdAsync(userId, token);
 
         if (searchResult.IsFaulted)
+        {
             return new Result<string>(searchResult.Error);
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
@@ -246,7 +274,9 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             .GetByTelegramUsernameAsync(telegramUsername, token);
 
         if (searchResult.IsFaulted)
+        {
             return new Result<string>(searchResult.Error);
+        }
 
         VyazmaTechIdentityUser user = searchResult.Value;
 
@@ -294,8 +324,8 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Secret));
 
         var jwtToken = new JwtSecurityToken(
-            issuer: _configuration.Issuer,
-            audience: _configuration.Audience,
+            _configuration.Issuer,
+            _configuration.Audience,
             expires: DateTime.UtcNow.AddMinutes(_configuration.AccessTokenExpiresInMinutes),
             claims: claims,
             signingCredentials: new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256));

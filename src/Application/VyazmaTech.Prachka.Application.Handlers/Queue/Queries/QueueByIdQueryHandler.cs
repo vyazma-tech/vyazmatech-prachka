@@ -23,7 +23,9 @@ internal sealed class QueueByIdQueryHandler : IQueryHandler<Query, Result<Respon
             .FindByIdAsync(request.Id, cancellationToken);
 
         if (result.IsFaulted)
+        {
             return new Result<Response>(result.Error);
+        }
 
         QueueEntity queue = result.Value;
 

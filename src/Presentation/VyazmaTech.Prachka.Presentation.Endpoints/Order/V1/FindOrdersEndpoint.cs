@@ -32,8 +32,12 @@ internal class FindOrdersEndpoint : Endpoint<FindOrdersRequest, PagedResponse<Or
         OrderByQuery.Response response = await _sender.Send(query, ct);
 
         if (response.Orders.Bunch.Any())
+        {
             await this.SendPartialContentAsync(response, ct);
+        }
         else
+        {
             await SendNoContentAsync(ct);
+        }
     }
 }

@@ -8,7 +8,5 @@ public sealed class TelegramIdValueConverter : ValueConverter<TelegramId, string
     public TelegramIdValueConverter()
         : base(
             telegramId => telegramId.Value,
-            stringValue => TelegramId.Create(stringValue).Value)
-    {
-    }
+            stringValue => TelegramId.Create(stringValue).Value) { }
 }

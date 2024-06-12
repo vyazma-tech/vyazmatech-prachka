@@ -26,7 +26,7 @@ public sealed class OrderEntity : Entity, IAuditableEntity
         ModifiedOn = modifiedOn;
     }
 
-    public OrderInfo Info => new OrderInfo(Id, User, Queue, Status);
+    public OrderInfo Info => new(Id, User, Queue, Status);
 
     public Guid Queue { get; private set; }
 

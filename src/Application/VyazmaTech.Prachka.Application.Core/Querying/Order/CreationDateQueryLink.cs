@@ -10,7 +10,9 @@ public class CreationDateQueryLink : QueryLinkBase<Query, IQueryBuilder>
     protected override IQueryBuilder Apply(Query query, IQueryBuilder builder)
     {
         if (query.CreationDate is not null)
+        {
             builder = builder.WithCreationDate(new SpbDateTime(query.CreationDate.Value));
+        }
 
         return builder;
     }

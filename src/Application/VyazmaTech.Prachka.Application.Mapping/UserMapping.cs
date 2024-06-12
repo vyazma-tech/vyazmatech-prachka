@@ -27,7 +27,7 @@ public static class UserMapping
             Bunch = orders.ToArray(),
             CurrentPage = currentPage,
             TotalPages = totalPages,
-            RecordPerPage = recordsPerPage
+            RecordPerPage = recordsPerPage,
         };
     }
 }

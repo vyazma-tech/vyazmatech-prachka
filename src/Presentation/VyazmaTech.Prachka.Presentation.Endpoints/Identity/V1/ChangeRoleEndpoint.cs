@@ -32,8 +32,12 @@ internal class ChangeRoleEndpoint : Endpoint<ChangeRoleRequest, Result>
         ChangeRole.Response response = await _sender.Send(command, ct);
 
         if (response.Result.IsFaulted)
+        {
             await SendForbiddenAsync(ct);
+        }
         else
+        {
             await SendOkAsync(response.Result, ct);
+        }
     }
 }

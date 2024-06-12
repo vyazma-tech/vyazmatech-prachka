@@ -11,9 +11,7 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;
 internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IUserRepository
 {
     public UserRepository(DatabaseContext context)
-        : base(context)
-    {
-    }
+        : base(context) { }
 
     public IAsyncEnumerable<UserEntity> QueryAsync(UserQuery specification, CancellationToken cancellationToken)
     {

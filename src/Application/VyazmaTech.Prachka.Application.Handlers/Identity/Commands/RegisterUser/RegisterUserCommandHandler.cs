@@ -22,7 +22,9 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<Command, Resu
             .CreateUserAsync(request.Id, request.Credentials, request.Role, cancellationToken);
 
         if (creationResult.IsFaulted)
+        {
             return new Result<Response>(creationResult.Error);
+        }
 
         IdentityUserModel user = creationResult.Value;
 

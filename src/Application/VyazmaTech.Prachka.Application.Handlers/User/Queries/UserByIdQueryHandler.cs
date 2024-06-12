@@ -23,7 +23,9 @@ internal sealed class UserByIdQueryHandler : IQueryHandler<Query, Result<Respons
             .FindByIdAsync(request.Id, cancellationToken);
 
         if (result.IsFaulted)
+        {
             return new Result<Response>(result.Error);
+        }
 
         UserEntity user = result.Value;
 

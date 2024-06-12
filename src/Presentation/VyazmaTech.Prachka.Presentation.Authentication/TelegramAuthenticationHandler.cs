@@ -25,15 +25,21 @@ public class TelegramAuthenticationHandler : AuthenticationHandler<TelegramAuthe
         string? authorizationHeader = Request.Headers.Authorization.ToString();
 
         if (string.IsNullOrEmpty(authorizationHeader))
+        {
             return Task.FromResult(AuthenticateResult.NoResult());
+        }
 
         string token = authorizationHeader[(Scheme.Name.Length + 1)..];
 
         if (string.IsNullOrEmpty(token))
+        {
             return Task.FromResult(AuthenticateResult.NoResult());
+        }
 
         if (authService.DecodePrincipal(token) is null)
+        {
             return Task.FromResult(AuthenticateResult.Fail("Invalid token"));
+        }
 
         JwtSecurityToken? securityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
         var principal = new ClaimsPrincipal(new ClaimsIdentity(securityToken.Claims, "Jwt"));

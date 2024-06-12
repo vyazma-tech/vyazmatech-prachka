@@ -5,11 +5,7 @@ namespace VyazmaTech.Prachka.Infrastructure.Authentication.Models;
 internal class VyazmaTechIdentityRole : IdentityRole<Guid>
 {
     public VyazmaTechIdentityRole(string roleName)
-        : base(roleName)
-    {
-    }
+        : base(roleName) { }
 
-    protected VyazmaTechIdentityRole()
-    {
-    }
+    protected VyazmaTechIdentityRole() { }
 }

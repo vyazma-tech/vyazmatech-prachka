@@ -66,8 +66,9 @@ public static class ServiceCollectionExtensions
 
     private static IChainConfigurator AddQueryChain<TQuery, TQueryBuilder>(this IChainConfigurator configurator)
     {
-        return configurator.AddChain<QueryRequest<TQuery, TQueryBuilder>, TQueryBuilder>(x => x
-            .ThenFromAssemblies(IApplicationMarker.Assembly)
-            .FinishWith((r, _) => r.Builder));
+        return configurator.AddChain<QueryRequest<TQuery, TQueryBuilder>, TQueryBuilder>(
+            x => x
+                .ThenFromAssemblies(IApplicationMarker.Assembly)
+                .FinishWith((r, _) => r.Builder));
     }
 }

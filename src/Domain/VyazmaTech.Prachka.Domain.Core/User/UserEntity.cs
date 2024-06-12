@@ -22,7 +22,7 @@ public sealed class UserEntity : Entity, IAuditableEntity
         Raise(new UserRegisteredDomainEvent(this));
     }
 
-    public UserInfo Info => new UserInfo(Id, TelegramUsername, Fullname);
+    public UserInfo Info => new(Id, TelegramUsername, Fullname);
 
     public string TelegramUsername { get; }
 

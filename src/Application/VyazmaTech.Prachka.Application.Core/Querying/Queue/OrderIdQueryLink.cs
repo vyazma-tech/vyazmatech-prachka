@@ -9,7 +9,9 @@ public class OrderIdQueryLink : QueryLinkBase<Query, IQueryBuilder>
     protected override IQueryBuilder Apply(Query query, IQueryBuilder builder)
     {
         if (query.OrderId is not null)
+        {
             builder = builder.WithOrderId(query.OrderId.Value);
+        }
 
         return builder;
     }

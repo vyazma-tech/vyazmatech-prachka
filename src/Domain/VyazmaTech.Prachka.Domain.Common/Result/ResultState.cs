@@ -3,5 +3,5 @@
 public enum ResultState
 {
     Faulted,
-    Success
+    Success,
 }

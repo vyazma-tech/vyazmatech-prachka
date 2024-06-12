@@ -13,17 +13,17 @@ public class SubscriptionTests
     public void Subscribe_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription()
     {
         var order = new OrderEntity(
-            id: Guid.Empty,
-            queueId: Guid.Empty,
-            user: null!,
-            status: OrderStatus.New,
-            creationDateTimeUtc: default);
+            Guid.Empty,
+            Guid.Empty,
+            null!,
+            OrderStatus.New,
+            default);
 
         var subscription = new OrderSubscriptionEntity(
-            id: Guid.Empty,
-            user: Guid.Empty,
-            creationDateUtc: default,
-            orderIds: Array.Empty<Guid>().ToHashSet());
+            Guid.Empty,
+            Guid.Empty,
+            default,
+            Array.Empty<Guid>().ToHashSet());
 
         Result<OrderEntity> entranceResult = subscription.Subscribe(order);
 
@@ -35,17 +35,17 @@ public class SubscriptionTests
     public void Unsubscribe_ShouldReturnFailureResult_WhenUserOrderIsNotInSubscription()
     {
         var order = new OrderEntity(
-            id: Guid.Empty,
-            queueId: Guid.Empty,
-            user: null!,
-            status: OrderStatus.New,
-            creationDateTimeUtc: default);
+            Guid.Empty,
+            Guid.Empty,
+            null!,
+            OrderStatus.New,
+            default);
 
         var subscription = new OrderSubscriptionEntity(
-            id: Guid.Empty,
-            user: Guid.Empty,
-            creationDateUtc: default,
-            orderIds: Array.Empty<Guid>().ToHashSet());
+            Guid.Empty,
+            Guid.Empty,
+            default,
+            Array.Empty<Guid>().ToHashSet());
 
         Result<OrderEntity> quitResult = subscription.Unsubscribe(order);
 

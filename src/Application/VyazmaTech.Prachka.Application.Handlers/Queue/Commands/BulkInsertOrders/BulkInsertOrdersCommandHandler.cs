@@ -33,17 +33,23 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
         Guid? userId = _currentUser.Id;
 
         if (userId is null)
+        {
             return new Result<Response>(ApplicationErrors.BulkInsertOrders.AnonymousUserCantEnter);
+        }
 
         Result<UserEntity> userSearchResult = await _context.Users.FindByIdAsync(userId.Value, cancellationToken);
 
         if (userSearchResult.IsFaulted)
+        {
             return new Result<Response>(userSearchResult.Error);
+        }
 
         Result<QueueEntity> queueSearchResult = await _context.Queues.FindByIdAsync(request.QueueId, cancellationToken);
 
         if (queueSearchResult.IsFaulted)
+        {
             return new Result<Response>(queueSearchResult.Error);
+        }
 
         UserEntity user = userSearchResult.Value;
         QueueEntity queue = queueSearchResult.Value;
@@ -54,7 +60,9 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
             Result<OrderEntity> result = queue.Add(order, _dateTimeProvider.SpbDateTimeNow);
 
             if (result.IsFaulted)
+            {
                 return new Result<Response>(result.Error);
+            }
         }
 
         _context.Orders.InsertRange(orders);
@@ -73,14 +81,14 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
         for (int i = 0; i < request.Quantity; i++)
         {
             var order = new OrderEntity(
-                id: Guid.NewGuid(),
-                queueId: request.QueueId,
-                user: new UserInfo(
-                    id: user.Id,
-                    telegram: user.TelegramUsername,
-                    fullname: user.Fullname),
-                status: OrderStatus.New,
-                creationDateTimeUtc: dateTimeProvider.SpbDateTimeNow);
+                Guid.NewGuid(),
+                request.QueueId,
+                new UserInfo(
+                    user.Id,
+                    user.TelegramUsername,
+                    user.Fullname),
+                OrderStatus.New,
+                dateTimeProvider.SpbDateTimeNow);
 
             orders.Add(order);
         }

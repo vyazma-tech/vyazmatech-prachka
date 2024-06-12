@@ -13,8 +13,10 @@ public static class ServiceCollectionExtensions
             {
                 options.AddBasePolicy(
                     policyBuilder =>
-                        policyBuilder.AddPolicy<QueueCachePolicy>(), excludeDefaultPolicy: true);
-            }, configuration);
+                        policyBuilder.AddPolicy<QueueCachePolicy>(),
+                    true);
+            },
+            configuration);
     }
 
     private static IServiceCollection AddRedisConnectionMultiplexer(
@@ -25,10 +27,13 @@ public static class ServiceCollectionExtensions
         RedisCacheConfiguration? cacheConfiguration = services.AddRedisCache(configuration);
 
         if (cacheConfiguration is null)
+        {
             return services;
+        }
 
-        services.AddSingleton<IConnectionMultiplexer>(_ =>
-            ConnectionMultiplexer.Connect(cacheConfiguration.ConnectionString));
+        services.AddSingleton<IConnectionMultiplexer>(
+            _ =>
+                ConnectionMultiplexer.Connect(cacheConfiguration.ConnectionString));
 
         return services.AddRedisOutputCacheStore(configureOptions);
     }
@@ -55,14 +60,17 @@ public static class ServiceCollectionExtensions
             .Get<RedisCacheConfiguration>();
 
         if (redisCacheConfiguration is null)
+        {
             return redisCacheConfiguration;
+        }
 
         services.AddSingleton(redisCacheConfiguration);
         services
-            .AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = redisCacheConfiguration.ConnectionString;
-            });
+            .AddStackExchangeRedisCache(
+                options =>
+                {
+                    options.Configuration = redisCacheConfiguration.ConnectionString;
+                });
 
         return redisCacheConfiguration;
     }

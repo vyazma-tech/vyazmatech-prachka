@@ -30,7 +30,7 @@ internal sealed class BulkRemoveOrdersEndpoint : Endpoint<BulkInsertOrdersReques
         Result<BulkRemoveOrders.Response> response = await _sender.Send(command, ct);
 
         await response.Match(
-            _ => SendOkAsync(cancellation: ct),
+            _ => SendOkAsync(ct),
             _ => this.SendProblemsAsync(response.ToProblemDetails()));
     }
 }

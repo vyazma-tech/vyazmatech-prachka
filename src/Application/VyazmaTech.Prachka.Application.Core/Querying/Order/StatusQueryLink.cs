@@ -9,7 +9,9 @@ public class StatusQueryLink : QueryLinkBase<Query, IQueryBuilder>
     protected override IQueryBuilder Apply(Query query, IQueryBuilder builder)
     {
         if (query.Status is not null)
+        {
             builder = builder.WithStatus(query.Status);
+        }
 
         return builder;
     }

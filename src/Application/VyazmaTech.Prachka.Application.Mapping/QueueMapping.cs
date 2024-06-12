@@ -9,10 +9,10 @@ public static class QueueMapping
     public static QueueDto ToDto(this QueueEntity queue)
     {
         return new QueueDto(
-            Id: queue.Id,
-            MaxCapacity: queue.Capacity,
-            CurrentCapacity: queue.Orders.Count,
-            State: queue.State.ToString(),
+            queue.Id,
+            queue.Capacity,
+            queue.Orders.Count,
+            queue.State.ToString(),
             ModifiedOn: queue.ModifiedOn?.Value,
             AssignmentDate: queue.CreationDate,
             ActiveFrom: queue.ActiveFrom,
@@ -22,11 +22,11 @@ public static class QueueMapping
     public static QueueWithOrdersDto ToQueueWithOrdersDto(this QueueEntity queue)
     {
         return new QueueWithOrdersDto(
-            Id: queue.Id,
-            MaxCapacity: queue.Capacity,
-            CurrentCapacity: queue.Orders.Count,
-            Orders: queue.Orders.Select(x => x.ToDto()).ToArray(),
-            State: queue.State.ToString(),
+            queue.Id,
+            queue.Capacity,
+            queue.Orders.Count,
+            queue.Orders.Select(x => x.ToDto()).ToArray(),
+            queue.State.ToString(),
             ModifiedOn: queue.ModifiedOn?.Value,
             AssignmentDate: queue.CreationDate,
             ActiveFrom: queue.ActiveFrom,
@@ -44,7 +44,7 @@ public static class QueueMapping
             Bunch = orders.ToArray(),
             CurrentPage = currentPage,
             TotalPages = totalPages,
-            RecordPerPage = recordsPerPage
+            RecordPerPage = recordsPerPage,
         };
     }
 }

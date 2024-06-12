@@ -2,6 +2,4 @@
 
 namespace VyazmaTech.Prachka.Application.Contracts.Common;
 
-public interface IQuery<out TResponse> : IRequest<TResponse>
-{
-}
+public interface IQuery<out TResponse> : IRequest<TResponse> { }

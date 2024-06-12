@@ -25,7 +25,9 @@ internal sealed class CreateUserCommandHandler : ICommandHandler<Command, Result
         Result<Fullname> fullnameValidation = Fullname.Create(request.Fullname);
 
         if (fullnameValidation.IsFaulted)
+        {
             return new Result<Response>(fullnameValidation.Error);
+        }
 
         Fullname fullname = fullnameValidation.Value;
 

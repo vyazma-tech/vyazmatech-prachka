@@ -25,11 +25,11 @@ public class ChangeRoleTest : TestBase
     public async Task Handle_ShouldReturnSuccessResult_WhenAdminChangeRole(string currentRole, string newRole)
     {
         var user = new IdentityUserDto(
-            Id: Guid.Empty,
-            Fullname: string.Empty,
-            Role: string.Empty,
-            TelegramUsername: string.Empty,
-            TelegramImageUrl: string.Empty);
+            Guid.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty);
 
         var currentUser = new AdminUser(user.Id);
 
@@ -50,11 +50,11 @@ public class ChangeRoleTest : TestBase
     public async Task Handle_ShouldReturnSuccessResult_WhenModeratorChangeRole(string currentRole, string newRole)
     {
         var user = new IdentityUserDto(
-            Id: Guid.Empty,
-            Fullname: string.Empty,
-            Role: string.Empty,
-            TelegramUsername: string.Empty,
-            TelegramImageUrl: string.Empty);
+            Guid.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty);
 
         var currentUser = new ModeratorUser(user.Id);
 
