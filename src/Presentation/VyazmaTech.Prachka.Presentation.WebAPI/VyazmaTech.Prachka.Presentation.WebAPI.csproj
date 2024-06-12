@@ -3,7 +3,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.BackgroundWorkers\VyazmaTech.Prachka.Application.BackgroundWorkers.csproj"/>
         <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.Handlers\VyazmaTech.Prachka.Application.Handlers.csproj"/>
-        <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.Caching\VyazmaTech.Prachka.Infrastructure.Caching.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
         <ProjectReference Include="..\VyazmaTech.Prachka.Presentation.Authentication\VyazmaTech.Prachka.Presentation.Authentication.csproj"/>
