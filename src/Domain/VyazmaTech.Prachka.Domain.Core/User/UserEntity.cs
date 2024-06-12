@@ -11,13 +11,13 @@ public sealed class UserEntity : Entity, IAuditableEntity
         string telegramUsername,
         string fullname,
         DateOnly registrationDateUtc,
-        SpbDateTime? modifiedOn = null)
+        DateTime? modifiedOn = null)
         : base(id)
     {
         TelegramUsername = telegramUsername;
         Fullname = fullname;
         CreationDate = registrationDateUtc;
-        ModifiedOn = modifiedOn;
+        ModifiedOnUtc = modifiedOn;
 
         Raise(new UserRegisteredDomainEvent(this));
     }
@@ -30,5 +30,5 @@ public sealed class UserEntity : Entity, IAuditableEntity
 
     public DateOnly CreationDate { get; }
 
-    public SpbDateTime? ModifiedOn { get; }
+    public DateTime? ModifiedOnUtc { get; }
 }

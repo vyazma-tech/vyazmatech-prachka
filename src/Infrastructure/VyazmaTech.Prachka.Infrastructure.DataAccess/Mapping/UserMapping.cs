@@ -23,7 +23,7 @@ public static class UserMapping
             Fullname = entity.Fullname,
             TelegramUsername = entity.TelegramUsername,
             RegistrationDate = entity.CreationDate,
-            ModifiedOn = entity.ModifiedOn,
+            ModifiedOn = entity.ModifiedOnUtc,
         };
     }
 }

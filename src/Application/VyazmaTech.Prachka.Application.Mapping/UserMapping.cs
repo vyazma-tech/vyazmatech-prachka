@@ -12,7 +12,7 @@ public static class UserMapping
             user.Id,
             user.TelegramUsername,
             user.Fullname,
-            user.ModifiedOn?.Value,
+            user.ModifiedOnUtc,
             user.CreationDate);
     }
 

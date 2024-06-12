@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using Moq;
-using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Result;
 using VyazmaTech.Prachka.Domain.Core.Order;
@@ -8,7 +7,6 @@ using VyazmaTech.Prachka.Domain.Core.Queue;
 using VyazmaTech.Prachka.Domain.Core.Queue.Events;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
-using VyazmaTech.Prachka.Infrastructure.Tools;
 using Xunit;
 
 namespace VyazmaTech.Prachka.Domain.Tests.Entities;
@@ -36,7 +34,7 @@ public class QueueTests
             1,
             30,
             0);
-        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(SpbDateTimeProvider.CurrentDate);
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
 
         var registrationDate = new DateTime(
             2023,
@@ -133,9 +131,8 @@ public class QueueTests
     [Fact]
     public void Add_ShouldReturnFailureResult_WhenQueueIsExpired()
     {
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
-        _dateTimeProvider.Setup(x => x.SpbDateTimeNow).Returns(new SpbDateTime(DateTime.UtcNow.AddMinutes(2)));
 
         var order = new OrderEntity(
             Guid.NewGuid(),
@@ -148,12 +145,12 @@ public class QueueTests
             Guid.Empty,
             2,
             _dateTimeProvider.Object.DateNow,
-            TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
-            TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddMinutes(1)),
+            _dateTimeProvider.Object.UtcNow.Subtract(TimeSpan.FromMinutes(1)).AsTimeOnly(),
+            _dateTimeProvider.Object.UtcNow.AsTimeOnly(),
             QueueState.Active,
             new HashSet<OrderInfo>(new OrderByIdComparer()) { new(Guid.NewGuid(), default!, default, default) });
 
-        Result<OrderEntity> incomingOrderResult = queue.Add(order, _dateTimeProvider.Object.SpbDateTimeNow);
+        Result<OrderEntity> incomingOrderResult = queue.Add(order, _dateTimeProvider.Object.UtcNow);
 
         incomingOrderResult.IsFaulted.Should().BeTrue();
         incomingOrderResult.Error.Should().Be(DomainErrors.Queue.Expired);
@@ -196,20 +193,19 @@ public class QueueTests
             QueueState.Active,
             Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
-        SpbDateTime modificationDate = SpbDateTimeProvider.CurrentDateTime;
+        DateTime modificationDate = DateTime.UtcNow;
         Result<QueueEntity> increasingResult = queue.IncreaseCapacity(Capacity.Create(2).Value, modificationDate);
 
         increasingResult.IsSuccess.Should().BeTrue();
-        queue.ModifiedOn.Should().Be(modificationDate);
+        queue.ModifiedOnUtc.Should().Be(modificationDate);
         queue.Capacity.Should().Be(2);
     }
 
     [Fact]
     public void TryExpire_ShouldRaiseDomainEvent_WhenQueueExpired()
     {
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
-        _dateTimeProvider.Setup(x => x.SpbDateOnlyNow).Returns(DateOnly.FromDateTime(DateTime.UtcNow));
 
         var queue = new QueueEntity(
             Guid.Empty,
@@ -220,7 +216,7 @@ public class QueueTests
             QueueState.Active,
             Array.Empty<OrderInfo>().ToHashSet(new OrderByIdComparer()));
 
-        queue.TryExpire(new SpbDateTime(_dateTimeProvider.Object.UtcNow.AddMinutes(1)));
+        queue.TryExpire(_dateTimeProvider.Object.UtcNow.AddMinutes(1));
 
         queue.DomainEvents.Should()
             .ContainSingle()

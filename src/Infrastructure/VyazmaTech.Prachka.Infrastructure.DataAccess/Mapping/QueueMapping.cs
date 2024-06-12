@@ -29,7 +29,7 @@ public static class QueueMapping
             AssignmentDate = entity.CreationDate,
             ActiveFrom = entity.ActiveFrom,
             ActiveUntil = entity.ActiveUntil,
-            ModifiedOn = entity.ModifiedOn,
+            ModifiedOn = entity.ModifiedOnUtc,
         };
     }
 }

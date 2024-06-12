@@ -16,7 +16,7 @@ public static class OrderMapping
             order.Queue,
             order.Status.ToString(),
             order.CreationDate,
-            order.ModifiedOn?.Value);
+            order.ModifiedOnUtc);
     }
 
     public static OrderInfoDto ToDto(this OrderInfo orderInfo)

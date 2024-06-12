@@ -60,7 +60,7 @@ internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>,
         model.MaxCapacityReached = entity.MaxCapacityReached;
         model.State = entity.State.ToString();
         model.Capacity = entity.Capacity;
-        model.ModifiedOn = entity.ModifiedOn;
+        model.ModifiedOn = entity.ModifiedOnUtc;
     }
 
     private static QueueEntity MapTo(QueueModel model, IEnumerable<OrderInfo> orderIds)

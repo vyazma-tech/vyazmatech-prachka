@@ -75,7 +75,7 @@ internal class QueueSubscriptionRepository : RepositoryBase<QueueSubscriptionEnt
 
     protected override void UpdateModel(QueueSubscriptionModel model, QueueSubscriptionEntity entity)
     {
-        model.ModifiedOn = entity.ModifiedOn;
+        model.ModifiedOn = entity.ModifiedOnUtc;
     }
 
     private static QueueSubscriptionEntity MapTo(QueueSubscriptionModel model, IEnumerable<Guid> queueIds)

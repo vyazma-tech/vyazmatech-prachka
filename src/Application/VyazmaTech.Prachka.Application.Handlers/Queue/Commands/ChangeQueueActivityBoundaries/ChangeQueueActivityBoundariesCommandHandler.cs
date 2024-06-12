@@ -46,7 +46,7 @@ internal sealed class ChangeQueueActivityBoundariesCommandHandler : ICommandHand
         QueueActivityBoundaries newActivityBoundaries = activityBoundariesCreationResult.Value;
         Result<QueueEntity> changeResult = queue.ChangeActivityBoundaries(
             newActivityBoundaries,
-            _dateTimeProvider.SpbDateTimeNow);
+            _dateTimeProvider.UtcNow);
 
         if (changeResult.IsFaulted)
         {

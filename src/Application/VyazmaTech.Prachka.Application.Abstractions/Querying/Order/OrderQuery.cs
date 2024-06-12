@@ -1,5 +1,3 @@
-using VyazmaTech.Prachka.Domain.Common.Abstractions;
-
 namespace VyazmaTech.Prachka.Application.Abstractions.Querying.Order;
 
 public sealed class OrderQuery
@@ -11,7 +9,7 @@ public sealed class OrderQuery
         string? status,
         int? page,
         int? limit,
-        SpbDateTime? creationDate)
+        DateTime? creationDate)
     {
         Id = id;
         UserId = userId;
@@ -47,7 +45,7 @@ public sealed class OrderQuery
 
     public int? Limit { get; }
 
-    public SpbDateTime? CreationDate { get; }
+    public DateTime? CreationDate { get; }
 
     internal class QueryBuilder : IQueryBuilder
     {
@@ -57,7 +55,7 @@ public sealed class OrderQuery
         private string? _status;
         private int? _page;
         private int? _limit;
-        private SpbDateTime? _creationDate;
+        private DateTime? _creationDate;
 
         public IQueryBuilder WithId(Guid id)
         {
@@ -83,7 +81,7 @@ public sealed class OrderQuery
             return this;
         }
 
-        public IQueryBuilder WithCreationDate(SpbDateTime creationDate)
+        public IQueryBuilder WithCreationDate(DateTime creationDate)
         {
             _creationDate = creationDate;
             return this;

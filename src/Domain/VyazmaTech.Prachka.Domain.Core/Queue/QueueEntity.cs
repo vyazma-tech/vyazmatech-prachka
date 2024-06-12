@@ -21,7 +21,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         QueueState state,
         HashSet<OrderInfo> orderInfos,
         bool maxCapacityReached = false,
-        SpbDateTime? modifiedOn = null)
+        DateTime? modifiedOn = null)
         : base(id)
     {
         Capacity = capacity;
@@ -30,7 +30,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         ActiveUntil = activeUntil;
         State = state;
         MaxCapacityReached = maxCapacityReached;
-        ModifiedOn = modifiedOn;
+        ModifiedOnUtc = modifiedOn;
         _orderInfos = orderInfos;
     }
 
@@ -52,9 +52,9 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public DateOnly CreationDate => AssignmentDate;
 
-    public SpbDateTime? ModifiedOn { get; private set; }
+    public DateTime? ModifiedOnUtc { get; private set; }
 
-    public Result<OrderEntity> Add(OrderEntity order, SpbDateTime currentTimeUtc)
+    public Result<OrderEntity> Add(OrderEntity order, DateTime currentTimeUtc)
     {
         if (_orderInfos.Contains(order.Info))
         {
@@ -92,7 +92,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         return order;
     }
 
-    public Result<QueueEntity> IncreaseCapacity(Capacity newCapacity, SpbDateTime modifiedOnUtc)
+    public Result<QueueEntity> IncreaseCapacity(Capacity newCapacity, DateTime modifiedOnUtc)
     {
         if (newCapacity.Value <= Capacity)
         {
@@ -100,14 +100,14 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         }
 
         Capacity = newCapacity.Value;
-        ModifiedOn = modifiedOnUtc;
+        ModifiedOnUtc = modifiedOnUtc;
 
         return this;
     }
 
     public Result<QueueEntity> ChangeActivityBoundaries(
         QueueActivityBoundaries activityBoundaries,
-        SpbDateTime modifiedOnUtc)
+        DateTime modifiedOnUtc)
     {
         if (activityBoundaries.ActiveFrom == ActiveFrom && activityBoundaries.ActiveUntil == ActiveUntil)
         {
@@ -116,30 +116,30 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
         ActiveFrom = activityBoundaries.ActiveFrom;
         ActiveUntil = activityBoundaries.ActiveUntil;
-        ModifiedOn = modifiedOnUtc;
+        ModifiedOnUtc = modifiedOnUtc;
 
         return this;
     }
 
-    public bool TryExpire(SpbDateTime currentTimeUtc)
+    public bool TryExpire(DateTime currentTimeUtc)
     {
         if (Expired(currentTimeUtc) && State == QueueState.Active)
         {
             Raise(new QueueExpiredDomainEvent(this));
             State = QueueState.Expired;
-            ModifiedOn = currentTimeUtc;
+            ModifiedOnUtc = currentTimeUtc;
             return true;
         }
 
         return false;
     }
 
-    public bool TryNotifyAboutAvailablePosition(SpbDateTime currentDateTimeUtc)
+    public bool TryNotifyAboutAvailablePosition(DateTime currentDateTimeUtc)
     {
         if (State == QueueState.Expired && MaxCapacityReached)
         {
             Raise(new PositionAvailableDomainEvent(this));
-            ModifiedOn = currentDateTimeUtc;
+            ModifiedOnUtc = currentDateTimeUtc;
             MaxCapacityReached = false;
             return true;
         }
@@ -147,19 +147,19 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         return false;
     }
 
-    public bool TryActivate(SpbDateTime currentDateTimeUtc)
+    public bool TryActivate(DateTime currentDateTimeUtc)
     {
         if (currentDateTimeUtc.AsTimeOnly() >= ActiveFrom && State == QueueState.Prepared)
         {
             State = QueueState.Active;
-            ModifiedOn = currentDateTimeUtc;
+            ModifiedOnUtc = currentDateTimeUtc;
             return true;
         }
 
         return false;
     }
 
-    private bool Expired(SpbDateTime currentDateTimeUtc)
+    private bool Expired(DateTime currentDateTimeUtc)
     {
         DateOnly dateNow = currentDateTimeUtc.AsDateOnly();
 

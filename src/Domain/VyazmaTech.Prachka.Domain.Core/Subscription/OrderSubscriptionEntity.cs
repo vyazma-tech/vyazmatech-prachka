@@ -1,5 +1,4 @@
-﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
-using VyazmaTech.Prachka.Domain.Common.Errors;
+﻿using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Result;
 using VyazmaTech.Prachka.Domain.Core.Order;
 
@@ -14,7 +13,7 @@ public sealed class OrderSubscriptionEntity : SubscriptionEntity
         Guid user,
         DateOnly creationDateUtc,
         HashSet<Guid> orderIds,
-        SpbDateTime? modifiedOn = null)
+        DateTime? modifiedOn = null)
         : base(id, user, creationDateUtc, modifiedOn)
     {
         _orderIds = orderIds;

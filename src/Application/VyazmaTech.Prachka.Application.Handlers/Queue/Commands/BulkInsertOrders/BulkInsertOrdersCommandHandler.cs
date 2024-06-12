@@ -57,7 +57,7 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
 
         foreach (OrderEntity order in orders)
         {
-            Result<OrderEntity> result = queue.Add(order, _dateTimeProvider.SpbDateTimeNow);
+            Result<OrderEntity> result = queue.Add(order, _dateTimeProvider.UtcNow);
 
             if (result.IsFaulted)
             {
@@ -88,7 +88,7 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
                     user.TelegramUsername,
                     user.Fullname),
                 OrderStatus.New,
-                dateTimeProvider.SpbDateTimeNow);
+                dateTimeProvider.UtcNow);
 
             orders.Add(order);
         }

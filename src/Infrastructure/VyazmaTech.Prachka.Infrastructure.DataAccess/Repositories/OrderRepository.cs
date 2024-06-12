@@ -46,7 +46,7 @@ internal class OrderRepository : RepositoryBase<OrderEntity, OrderModel>, IOrder
     protected override void UpdateModel(OrderModel model, OrderEntity entity)
     {
         model.Status = entity.Status.ToString();
-        model.ModifiedOn = entity.ModifiedOn;
+        model.ModifiedOn = entity.ModifiedOnUtc;
     }
 
     private static OrderEntity MapTo(OrderModel model)

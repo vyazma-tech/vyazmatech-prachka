@@ -13,7 +13,7 @@ public static class QueueMapping
             queue.Capacity,
             queue.Orders.Count,
             queue.State.ToString(),
-            ModifiedOn: queue.ModifiedOn?.Value,
+            ModifiedOn: queue.ModifiedOnUtc,
             AssignmentDate: queue.CreationDate,
             ActiveFrom: queue.ActiveFrom,
             ActiveUntil: queue.ActiveUntil);
@@ -27,7 +27,7 @@ public static class QueueMapping
             queue.Orders.Count,
             queue.Orders.Select(x => x.ToDto()).ToArray(),
             queue.State.ToString(),
-            ModifiedOn: queue.ModifiedOn?.Value,
+            ModifiedOn: queue.ModifiedOnUtc,
             AssignmentDate: queue.CreationDate,
             ActiveFrom: queue.ActiveFrom,
             ActiveUntil: queue.ActiveUntil);

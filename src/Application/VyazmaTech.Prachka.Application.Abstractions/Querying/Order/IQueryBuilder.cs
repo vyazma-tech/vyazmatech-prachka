@@ -1,5 +1,3 @@
-using VyazmaTech.Prachka.Domain.Common.Abstractions;
-
 namespace VyazmaTech.Prachka.Application.Abstractions.Querying.Order;
 
 public interface IQueryBuilder
@@ -12,7 +10,7 @@ public interface IQueryBuilder
 
     IQueryBuilder WithStatus(string status);
 
-    IQueryBuilder WithCreationDate(SpbDateTime creationDate);
+    IQueryBuilder WithCreationDate(DateTime creationDate);
 
     IQueryBuilder WithPage(int page);
 

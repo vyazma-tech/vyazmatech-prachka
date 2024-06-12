@@ -1,5 +1,4 @@
-﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
-using VyazmaTech.Prachka.Domain.Common.Errors;
+﻿using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Result;
 using VyazmaTech.Prachka.Domain.Core.Queue;
 
@@ -14,7 +13,7 @@ public sealed class QueueSubscriptionEntity : SubscriptionEntity
         Guid user,
         DateOnly creationDateUtc,
         HashSet<Guid> queueIds,
-        SpbDateTime? modifiedOn = null)
+        DateTime? modifiedOn = null)
         : base(id, user, creationDateUtc, modifiedOn)
     {
         _queueIds = queueIds;

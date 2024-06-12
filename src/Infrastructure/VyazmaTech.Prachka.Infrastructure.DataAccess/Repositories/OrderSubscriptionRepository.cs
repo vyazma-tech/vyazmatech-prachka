@@ -75,7 +75,7 @@ internal class OrderSubscriptionRepository : RepositoryBase<OrderSubscriptionEnt
 
     protected override void UpdateModel(OrderSubscriptionModel model, OrderSubscriptionEntity entity)
     {
-        model.ModifiedOn = entity.ModifiedOn;
+        model.ModifiedOn = entity.ModifiedOnUtc;
     }
 
     private static OrderSubscriptionEntity MapTo(OrderSubscriptionModel model, IEnumerable<Guid> orderIds)

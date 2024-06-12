@@ -25,7 +25,7 @@ public static class OrderMapping
             QueueId = entity.Queue,
             UserId = entity.User.Id,
             CreationDate = entity.CreationDateTime,
-            ModifiedOn = entity.ModifiedOn,
+            ModifiedOn = entity.ModifiedOnUtc,
             Status = entity.Status.ToString(),
         };
     }

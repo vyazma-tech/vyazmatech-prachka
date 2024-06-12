@@ -31,12 +31,12 @@ public sealed class QueueDate : ValueObject
     /// <remarks>returns failure result, when assignment date is not around closest 7 days.</remarks>
     public static Result<QueueDate> Create(DateOnly assignmentDate, IDateTimeProvider dateTimeProvider)
     {
-        if (assignmentDate < dateTimeProvider.SpbDateOnlyNow)
+        if (assignmentDate < dateTimeProvider.DateNow)
         {
             return new Result<QueueDate>(DomainErrors.QueueDate.InThePast);
         }
 
-        if (assignmentDate > dateTimeProvider.SpbDateOnlyNow.AddDays(Week))
+        if (assignmentDate > dateTimeProvider.DateNow.AddDays(Week))
         {
             return new Result<QueueDate>(DomainErrors.QueueDate.NotNextWeek);
         }

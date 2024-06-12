@@ -34,7 +34,7 @@ internal sealed class MarkOrderAsPaidCommandHandler : ICommandHandler<Command, R
 
         OrderEntity order = searchResult.Value;
 
-        Result<OrderEntity> makePaidResult = order.MakePayment(_dateTimeProvider.SpbDateTimeNow);
+        Result<OrderEntity> makePaidResult = order.MakePayment(_dateTimeProvider.UtcNow);
 
         if (makePaidResult.IsFaulted)
         {

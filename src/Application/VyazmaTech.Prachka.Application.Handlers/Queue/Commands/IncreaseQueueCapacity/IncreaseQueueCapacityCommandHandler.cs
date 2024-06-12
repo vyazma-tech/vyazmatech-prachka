@@ -45,7 +45,7 @@ internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Comm
         Result<QueueEntity> increaseResult = queue
             .IncreaseCapacity(
                 newCapacity,
-                _dateTimeProvider.SpbDateTimeNow);
+                _dateTimeProvider.UtcNow);
 
         if (increaseResult.IsFaulted)
         {

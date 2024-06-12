@@ -41,13 +41,13 @@ public class OrderService
             return removalResult;
         }
 
-        Result<OrderEntity> entranceResult = targetQueue.Add(order, _timeProvider.SpbDateTimeNow);
+        Result<OrderEntity> entranceResult = targetQueue.Add(order, _timeProvider.UtcNow);
         if (entranceResult.IsFaulted)
         {
             return entranceResult;
         }
 
-        order.Prolong(targetQueue, _timeProvider.SpbDateTimeNow);
+        order.Prolong(targetQueue, _timeProvider.UtcNow);
         _orderRepository.Update(order);
 
         return order;

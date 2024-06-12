@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IOrderSubscriptionRepository, OrderSubscriptionRepository>();
         services.AddScoped<IQueueSubscriptionRepository, QueueSubscriptionRepository>();
-        services.AddTransient<IDateTimeProvider, SpbDateTimeProvider>();
+        services.AddTransient<IDateTimeProvider, DefaultTimeProvider>();
 
         return services;
     }

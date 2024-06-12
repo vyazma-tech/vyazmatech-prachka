@@ -39,7 +39,7 @@ internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IU
     protected override void UpdateModel(UserModel model, UserEntity entity)
     {
         model.Fullname = entity.Fullname;
-        model.ModifiedOn = entity.ModifiedOn;
+        model.ModifiedOn = entity.ModifiedOnUtc;
     }
 
     private static UserEntity MapTo(UserModel model)

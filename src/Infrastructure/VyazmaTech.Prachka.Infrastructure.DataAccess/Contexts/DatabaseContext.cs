@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.ValueConverters;
@@ -31,6 +30,5 @@ public sealed class DatabaseContext : DbContext
         configurationBuilder.Properties<Capacity>().HaveConversion<CapacityValueConverter>();
         configurationBuilder.Properties<TelegramId>().HaveConversion<TelegramIdValueConverter>();
         configurationBuilder.Properties<Fullname>().HaveConversion<FullnameValueConverter>();
-        configurationBuilder.Properties<SpbDateTime>().HaveConversion<SpbDateTimeValueConverter>();
     }
 }

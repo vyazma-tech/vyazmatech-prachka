@@ -9,17 +9,17 @@ public abstract class SubscriptionEntity : Entity, IAuditableEntity
         Guid id,
         Guid user,
         DateOnly creationDateUtc,
-        SpbDateTime? modifiedOn = null)
+        DateTime? modifiedOn = null)
         : base(id)
     {
         User = user;
         CreationDate = creationDateUtc;
-        ModifiedOn = modifiedOn;
+        ModifiedOnUtc = modifiedOn;
     }
 
     public Guid User { get; private set; }
 
     public DateOnly CreationDate { get; }
 
-    public SpbDateTime? ModifiedOn { get; }
+    public DateTime? ModifiedOnUtc { get; }
 }

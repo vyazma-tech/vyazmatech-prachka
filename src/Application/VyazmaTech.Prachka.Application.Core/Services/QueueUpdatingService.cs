@@ -43,7 +43,7 @@ public class QueueUpdatingService : IDisposable
 
     private Task<UpdateResult> Activate(QueueEntity queue, IDateTimeProvider timeProvider)
     {
-        if (queue.TryActivate(timeProvider.SpbDateTimeNow))
+        if (queue.TryActivate(timeProvider.UtcNow))
         {
             return Task.FromResult(new UpdateResult(QueueState.Prepared, true));
         }
@@ -53,7 +53,7 @@ public class QueueUpdatingService : IDisposable
 
     private Task<UpdateResult> Expire(QueueEntity queue, IDateTimeProvider timeProvider)
     {
-        if (queue.TryExpire(timeProvider.SpbDateTimeNow))
+        if (queue.TryExpire(timeProvider.UtcNow))
         {
             return Task.FromResult(new UpdateResult(QueueState.Active, true));
         }
@@ -63,7 +63,7 @@ public class QueueUpdatingService : IDisposable
 
     private Task<UpdateResult> NotifySubscribers(QueueEntity queue, IDateTimeProvider timeProvider)
     {
-        if (queue.TryNotifyAboutAvailablePosition(timeProvider.SpbDateTimeNow))
+        if (queue.TryNotifyAboutAvailablePosition(timeProvider.UtcNow))
         {
             return Task.FromResult(new UpdateResult(QueueState.Expired, true));
         }

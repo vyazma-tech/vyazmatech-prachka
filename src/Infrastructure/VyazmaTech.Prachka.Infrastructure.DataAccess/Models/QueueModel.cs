@@ -1,6 +1,4 @@
-﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
-
-#pragma warning disable CS8618
+﻿#pragma warning disable CS8618
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
@@ -20,7 +18,7 @@ public record QueueModel
 
     public DateOnly AssignmentDate { get; set; }
 
-    public SpbDateTime? ModifiedOn { get; set; }
+    public DateTime? ModifiedOn { get; set; }
 
     public virtual ICollection<OrderModel> Orders { get; init; }
 }
