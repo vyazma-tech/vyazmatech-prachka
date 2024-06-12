@@ -2,7 +2,6 @@
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Common.Result;
 using VyazmaTech.Prachka.Domain.Core.Queue;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
@@ -10,7 +9,7 @@ using static VyazmaTech.Prachka.Application.Contracts.Queues.Commands.IncreaseQu
 
 namespace VyazmaTech.Prachka.Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 
-internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Command, Result<Response>>
+internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Command, Response>
 {
     private readonly IPersistenceContext _persistenceContext;
     private readonly IDateTimeProvider _dateTimeProvider;
@@ -23,36 +22,14 @@ internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Comm
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
+    public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
-        Result<QueueEntity> searchResult = await _persistenceContext.Queues
+        QueueEntity queue = await _persistenceContext.Queues
             .FindByIdAsync(request.QueueId, cancellationToken);
 
-        Result<Capacity> capacityValidationResult = Capacity.Create(request.Capacity);
+        Capacity capacity = Capacity.Create(request.Capacity);
 
-        if (searchResult.IsFaulted)
-        {
-            return new Result<Response>(searchResult.Error);
-        }
-
-        if (capacityValidationResult.IsFaulted)
-        {
-            return new Result<Response>(searchResult.Error);
-        }
-
-        QueueEntity queue = searchResult.Value;
-        Capacity newCapacity = capacityValidationResult.Value;
-        Result<QueueEntity> increaseResult = queue
-            .IncreaseCapacity(
-                newCapacity,
-                _dateTimeProvider.UtcNow);
-
-        if (increaseResult.IsFaulted)
-        {
-            return new Result<Response>(increaseResult.Error);
-        }
-
-        queue = increaseResult.Value;
+        queue.IncreaseCapacity(capacity, _dateTimeProvider.UtcNow);
 
         _persistenceContext.Queues.Update(queue);
         await _persistenceContext.SaveChangesAsync(cancellationToken);

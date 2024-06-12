@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
 namespace VyazmaTech.Prachka.Domain.Core.ValueObjects;
 
@@ -28,17 +28,13 @@ public sealed class TelegramId : ValueObject
     /// <param name="telegramId">telegram id.</param>
     /// <returns>constructed telegram id instance.</returns>
     /// <remarks>returns failure result, when parameter didn't pass validation.</remarks>
-    public static Result<TelegramId> Create(string telegramId)
+    public static TelegramId Create(string telegramId)
     {
         if (string.IsNullOrWhiteSpace(telegramId))
-        {
-            return new Result<TelegramId>(DomainErrors.TelegramId.NullOrEmpty);
-        }
+            throw new UserInvalidInputException(DomainErrors.TelegramId.NullOrEmpty);
 
         if (Regex.IsMatch(telegramId, DigitNumberPattern) is false)
-        {
-            return new Result<TelegramId>(DomainErrors.TelegramId.InvalidFormat);
-        }
+            throw new UserInvalidInputException(DomainErrors.TelegramId.InvalidFormat);
 
         return new TelegramId(telegramId);
     }

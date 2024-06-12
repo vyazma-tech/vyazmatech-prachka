@@ -57,33 +57,30 @@ internal class GlobalExceptionHandlingMiddleware : IMiddleware
                 Errors = validationException.Errors.Select(
                         x => Error.Validation(
                             x.ErrorCode,
-                            $"{x.PropertyName} - {x.ErrorMessage}",
-                            ErrorArea.Application))
-                    .ToList(),
+                            $"{x.PropertyName} - {x.ErrorMessage}"))
+                    .ToArray(),
             },
 
             PostgresException postgresException => new ExceptionInformation
             {
                 StatusCode = HttpStatusCode.ServiceUnavailable,
-                Errors = new[]
-                {
+                Errors =
+                [
                     Error.Failure(
                         "Database Error",
-                        postgresException.Detail ?? postgresException.Message,
-                        ErrorArea.Infrastructure),
-                },
+                        postgresException.Detail ?? postgresException.Message)
+                ],
             },
 
             _ => new ExceptionInformation
             {
                 StatusCode = HttpStatusCode.InternalServerError,
-                Errors = new[]
-                {
+                Errors =
+                [
                     Error.Failure(
                         "Internal Server Error",
-                        exception.Message,
-                        ErrorArea.Application),
-                },
+                        exception.Message)
+                ],
             }
         };
     }

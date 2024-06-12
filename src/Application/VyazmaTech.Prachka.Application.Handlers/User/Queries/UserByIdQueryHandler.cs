@@ -2,13 +2,12 @@
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Common.Result;
 using VyazmaTech.Prachka.Domain.Core.User;
 using static VyazmaTech.Prachka.Application.Contracts.Users.Queries.UserById;
 
 namespace VyazmaTech.Prachka.Application.Handlers.User.Queries;
 
-internal sealed class UserByIdQueryHandler : IQueryHandler<Query, Result<Response>>
+internal sealed class UserByIdQueryHandler : IQueryHandler<Query, Response>
 {
     private readonly IPersistenceContext _persistenceContext;
 
@@ -17,17 +16,10 @@ internal sealed class UserByIdQueryHandler : IQueryHandler<Query, Result<Respons
         _persistenceContext = persistenceContext;
     }
 
-    public async ValueTask<Result<Response>> Handle(Query request, CancellationToken cancellationToken)
+    public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
     {
-        Result<UserEntity> result = await _persistenceContext.Users
+        UserEntity user = await _persistenceContext.Users
             .FindByIdAsync(request.Id, cancellationToken);
-
-        if (result.IsFaulted)
-        {
-            return new Result<Response>(result.Error);
-        }
-
-        UserEntity user = result.Value;
 
         return new Response(user.ToDto());
     }

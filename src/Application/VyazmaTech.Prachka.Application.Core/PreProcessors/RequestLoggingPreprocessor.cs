@@ -1,13 +1,12 @@
 using Mediator;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
 namespace VyazmaTech.Prachka.Application.Core.PreProcessors;
 
 public sealed class RequestLoggingPreprocessor<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IMessage
-    where TResponse : Result
 {
     private readonly ILogger<RequestLoggingPreprocessor<TRequest, TResponse>> _logger;
 
@@ -24,16 +23,18 @@ public sealed class RequestLoggingPreprocessor<TRequest, TResponse> : IPipelineB
         string? requestName = typeof(TRequest).FullName;
 
         _logger.LogInformation("Processing request RequestName = {RequestName}", requestName);
+        TResponse response = default!;
 
-        TResponse response = await next(message, cancellationToken);
-
-        if (response.IsSuccess)
+        try
         {
+            response = await next(message, cancellationToken);
             _logger.LogInformation("Completed request RequestName = {RequestName}", requestName);
+
+            return response;
         }
-        else
+        catch (DomainException e)
         {
-            using (LogContext.PushProperty("Error", response.Error, true))
+            using (LogContext.PushProperty("Error", e.Error, true))
             {
                 _logger.LogError("Completed request RequestName = {RequestName} with error", requestName);
             }

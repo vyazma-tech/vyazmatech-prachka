@@ -2,7 +2,7 @@
 using Mediator;
 using VyazmaTech.Prachka.Application.Contracts.Orders.Commands;
 using VyazmaTech.Prachka.Application.Dto.Order;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Authorization;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Order.V1.Models;
@@ -31,10 +31,14 @@ internal class MarkAsPaidEndpoint : Endpoint<OrderWithIdRequest, OrderDto>
     {
         var command = new MarkOrderAsPaid.Command(req.OrderId);
 
-        Result<MarkOrderAsPaid.Response> response = await _sender.Send(command, ct);
-
-        await response.Match(
-            success => SendOkAsync(success.Order, ct),
-            _ => this.SendProblemsAsync(response.ToProblemDetails()));
+        try
+        {
+            MarkOrderAsPaid.Response response = await _sender.Send(command, ct);
+            await SendOkAsync(response.Order, ct);
+        }
+        catch (DomainException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

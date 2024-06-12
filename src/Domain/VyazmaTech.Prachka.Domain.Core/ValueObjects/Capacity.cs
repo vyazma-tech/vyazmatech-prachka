@@ -1,6 +1,6 @@
 ﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
 namespace VyazmaTech.Prachka.Domain.Core.ValueObjects;
 
@@ -25,12 +25,10 @@ public sealed class Capacity : ValueObject
     /// <param name="capacity">capacity.</param>
     /// <returns>constructed capacity instance.</returns>
     /// <remarks>returns failure result, when capacity is negative.</remarks>
-    public static Result<Capacity> Create(int capacity)
+    public static Capacity Create(int capacity)
     {
         if (capacity < 0)
-        {
-            return new Result<Capacity>(DomainErrors.Capacity.Negative);
-        }
+            throw new UserInvalidInputException(DomainErrors.Capacity.Negative);
 
         return new Capacity(capacity);
     }

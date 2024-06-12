@@ -1,7 +1,7 @@
 ﻿using FastEndpoints;
 using Mediator;
 using VyazmaTech.Prachka.Application.Dto.Order;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Authorization;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Order.V1.Models;
@@ -30,10 +30,15 @@ internal class ProlongOrderEndpoint : Endpoint<ProlongOrderRequest, OrderDto>
     public override async Task HandleAsync(ProlongOrderRequest req, CancellationToken ct)
     {
         var command = new Command(req.OrderId, req.QueueId);
-        Result<Response> response = await _sender.Send(command, ct);
 
-        await response.Match(
-            success => SendOkAsync(success.Order, ct),
-            _ => this.SendProblemsAsync(response.ToProblemDetails()));
+        try
+        {
+            Response response = await _sender.Send(command, ct);
+            await SendOkAsync(response.Order, ct);
+        }
+        catch (DomainException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

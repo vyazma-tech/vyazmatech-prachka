@@ -3,9 +3,7 @@ using Moq;
 using VyazmaTech.Prachka.Application.Contracts.Orders.Commands;
 using VyazmaTech.Prachka.Application.Handlers.Order.Commands.MarkOrderAsReady;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
-using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
-using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Kernel;
 using Xunit;
 using CancellationToken = System.Threading.CancellationToken;
@@ -26,14 +24,14 @@ public class MakeReadyTest : TestBase
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFailureResult_WhenOrderNotFound()
+    public async Task Handle_ShouldThrow_WhenOrderNotFound()
     {
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsReady.Command(orderId);
 
-        Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
+        Func<Task<MarkOrderAsReady.Response>> action = async () =>
+            await _handler.Handle(command, CancellationToken.None);
 
-        response.IsFaulted.Should().BeTrue();
-        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<OrderEntity>(orderId.ToString()));
+        await action.Should().ThrowAsync<NotFoundException>();
     }
 }

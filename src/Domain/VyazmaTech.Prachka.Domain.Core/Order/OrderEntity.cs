@@ -1,6 +1,6 @@
 ﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Order.Events;
 using VyazmaTech.Prachka.Domain.Core.Queue;
 using VyazmaTech.Prachka.Domain.Core.User;
@@ -46,12 +46,10 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <param name="dateTimeUtc">payment utc date.</param>
     /// <returns>same order instance.</returns>
     /// <remarks>returns failure result, when order is already is paid.</remarks>
-    public Result<OrderEntity> MakePayment(DateTime dateTimeUtc)
+    public OrderEntity MakePayment(DateTime dateTimeUtc)
     {
         if (Status == OrderStatus.Paid)
-        {
-            return new Result<OrderEntity>(DomainErrors.Order.AlreadyPaid);
-        }
+            throw new DomainInvalidOperationException(DomainErrors.Order.AlreadyPaid);
 
         Status = OrderStatus.Paid;
         ModifiedOnUtc = dateTimeUtc;
@@ -66,12 +64,10 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <param name="dateTimeUtc">ready utc date.</param>
     /// <returns>same order instance.</returns>
     /// <remarks>returns failure result, when order is already marked as ready.</remarks>
-    public Result<OrderEntity> MakeReady(DateTime dateTimeUtc)
+    public OrderEntity MakeReady(DateTime dateTimeUtc)
     {
         if (Status == OrderStatus.Ready)
-        {
-            return new Result<OrderEntity>(DomainErrors.Order.IsReady);
-        }
+            throw new DomainInvalidOperationException(DomainErrors.Order.IsReady);
 
         Status = OrderStatus.Ready;
         ModifiedOnUtc = dateTimeUtc;
@@ -86,14 +82,10 @@ public sealed class OrderEntity : Entity, IAuditableEntity
     /// <param name="queue">queue, which order should be assigned to.</param>
     /// <param name="dateTimeUtc">modification date.</param>
     /// <returns>same order instance.</returns>
-    public Result<OrderEntity> Prolong(QueueEntity queue, DateTime dateTimeUtc)
+    public OrderEntity Prolong(QueueEntity queue, DateTime dateTimeUtc)
     {
-        Result<OrderEntity> entranceResult = queue.Add(this, dateTimeUtc);
-
-        if (entranceResult.IsFaulted)
-        {
-            return new Result<OrderEntity>(entranceResult.Error);
-        }
+        // TODO: remove from current queue
+        queue.Add(this, dateTimeUtc);
 
         ModifiedOnUtc = dateTimeUtc;
         Queue = queue.Id;

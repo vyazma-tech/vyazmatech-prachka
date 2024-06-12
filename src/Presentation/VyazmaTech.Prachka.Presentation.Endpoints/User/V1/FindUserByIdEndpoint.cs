@@ -2,7 +2,7 @@
 using Mediator;
 using VyazmaTech.Prachka.Application.Contracts.Users.Queries;
 using VyazmaTech.Prachka.Application.Dto.User;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Authorization;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.User.V1.Models;
@@ -31,10 +31,14 @@ internal class FindUserByIdEndpoint : Endpoint<UserWithIdRequest, UserDto>
     {
         var query = new UserById.Query(req.UserId);
 
-        Result<UserById.Response> response = await _sender.Send(query, ct);
-
-        await response.Match(
-            success => SendOkAsync(success.User, ct),
-            _ => this.SendProblemsAsync(response.ToProblemDetails()));
+        try
+        {
+            UserById.Response response = await _sender.Send(query, ct);
+            await SendOkAsync(response.User, ct);
+        }
+        catch (DomainException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

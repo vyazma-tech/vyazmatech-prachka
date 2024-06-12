@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using VyazmaTech.Prachka.Domain.Common.Result;
 using VyazmaTech.Prachka.Domain.Core.Order;
 using VyazmaTech.Prachka.Domain.Core.Order.Events;
 using Xunit;
@@ -18,11 +17,10 @@ public class OrderTests
             OrderStatus.Paid,
             default);
 
-        Result<OrderEntity> actionResult = order.MakeReady(default);
+        order.MakeReady(default);
 
-        actionResult.IsSuccess.Should().BeTrue();
-        actionResult.Value.Status.Should().Be(OrderStatus.Ready);
-        actionResult.Value.DomainEvents.Should()
+        order.Status.Should().Be(OrderStatus.Ready);
+        order.DomainEvents.Should()
             .ContainSingle()
             .Which.Should()
             .BeOfType<OrderReadyDomainEvent>();
@@ -38,11 +36,10 @@ public class OrderTests
             OrderStatus.New,
             default);
 
-        Result<OrderEntity> actionResult = order.MakePayment(default);
+        order.MakePayment(default);
 
-        actionResult.IsSuccess.Should().BeTrue();
-        actionResult.Value.Status.Should().Be(OrderStatus.Paid);
-        actionResult.Value.DomainEvents.Should()
+        order.Status.Should().Be(OrderStatus.Paid);
+        order.DomainEvents.Should()
             .ContainSingle()
             .Which.Should()
             .BeOfType<OrderPaidDomainEvent>();

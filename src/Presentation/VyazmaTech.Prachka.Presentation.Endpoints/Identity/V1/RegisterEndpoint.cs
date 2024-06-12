@@ -2,7 +2,7 @@ using FastEndpoints;
 using Mediator;
 using VyazmaTech.Prachka.Application.Abstractions.Identity.Models;
 using VyazmaTech.Prachka.Application.Contracts.Identity.Commands;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Identity.V1.Models;
 
@@ -27,6 +27,7 @@ internal class RegisterEndpoint : Endpoint<RegisterRequest, RegisterResponse>
 
     public override async Task HandleAsync(RegisterRequest req, CancellationToken ct)
     {
+        // TODO: переписать
         var registerCommand = new RegisterUser.Command(
             Guid.NewGuid(),
             new IdentityUserCredentials(
@@ -36,25 +37,24 @@ internal class RegisterEndpoint : Endpoint<RegisterRequest, RegisterResponse>
                 req.TelegramImageUrl),
             req.Role);
 
-        Result<RegisterUser.Response> registerResponse = await _sender.Send(registerCommand, ct);
-
-        if (registerResponse.IsFaulted)
+        try
         {
-            await this.SendProblemsAsync(registerResponse.ToProblemDetails());
-            return;
+            RegisterUser.Response registerResponse = await _sender.Send(registerCommand, ct);
+
+            var registrationResponse = new RegisterResponse(
+                registerResponse.User.Id,
+                registerResponse.User.Fullname,
+                registerResponse.User.Role,
+                registerResponse.User.TelegramUsername,
+                registerResponse.User.TelegramImageUrl,
+                registerResponse.Tokens.AccessToken,
+                registerResponse.Tokens.RefreshToken);
+
+            await SendOkAsync(registrationResponse, ct);
         }
-
-        RegisterUser.Response identityUser = registerResponse.Value;
-
-        var registrationResponse = new RegisterResponse(
-            identityUser.User.Id,
-            identityUser.User.Fullname,
-            identityUser.User.Role,
-            identityUser.User.TelegramUsername,
-            identityUser.User.TelegramImageUrl,
-            identityUser.Tokens.AccessToken,
-            identityUser.Tokens.RefreshToken);
-
-        await this.SendAcceptedAsync(registrationResponse, ct);
+        catch (IdentityException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

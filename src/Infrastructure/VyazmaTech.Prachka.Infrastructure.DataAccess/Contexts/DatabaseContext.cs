@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.ValueConverters;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 
@@ -23,12 +21,5 @@ public sealed class DatabaseContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(IDataAccessMarker.Assembly);
-    }
-
-    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
-    {
-        configurationBuilder.Properties<Capacity>().HaveConversion<CapacityValueConverter>();
-        configurationBuilder.Properties<TelegramId>().HaveConversion<TelegramIdValueConverter>();
-        configurationBuilder.Properties<Fullname>().HaveConversion<FullnameValueConverter>();
     }
 }

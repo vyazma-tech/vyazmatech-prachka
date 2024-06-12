@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
 using VyazmaTech.Prachka.Application.Abstractions.Identity.Models;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Configuration;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Errors;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Extensions;
@@ -31,17 +31,10 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         _configuration = configuration.Value;
     }
 
-    public async Task<Result<IdentityTokenModel>> GetUserTokensAsync(string telegramUsername, CancellationToken token)
+    public async Task<IdentityTokenModel> GetUserTokensAsync(string telegramUsername, CancellationToken token)
     {
-        Result<VyazmaTechIdentityUser> searchResult = await _userManager
+        VyazmaTechIdentityUser user = await _userManager
             .GetByTelegramUsernameAsync(telegramUsername, token);
-
-        if (searchResult.IsFaulted)
-        {
-            return new Result<IdentityTokenModel>(searchResult.Error);
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
 
         SecurityToken accessToken = await GenerateAccessToken(user);
 
@@ -55,26 +48,17 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             user.RefreshToken ?? string.Empty);
     }
 
-    public async Task<Result<IdentityTokenModel>> RefreshToken(string accessToken, string refreshToken)
+    public async Task<IdentityTokenModel> RefreshToken(string accessToken, string refreshToken)
     {
         ClaimsPrincipal principal = DecodePrincipalFromExpiredToken(accessToken);
 
-        Result<VyazmaTechIdentityUser> searchResult = await _userManager
+        VyazmaTechIdentityUser user = await _userManager
             .GetByTelegramUsernameAsync(
                 principal.Identity?.Name ?? string.Empty,
                 CancellationToken.None);
 
-        if (searchResult.IsFaulted)
-        {
-            return new Result<IdentityTokenModel>(searchResult.Error);
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
-
         if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryUtc < DateTime.UtcNow)
-        {
-            return new Result<IdentityTokenModel>(AuthenticationErrors.IdentityToken.Refresh());
-        }
+            throw new IdentityException(AuthenticationErrors.IdentityToken.Refresh());
 
         SecurityToken jwtAccessToken = await GenerateAccessToken(user);
 
@@ -83,23 +67,14 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             refreshToken);
     }
 
-    public async Task<Result> RevokeToken(string telegramUsername, CancellationToken token)
+    public async Task RevokeToken(string telegramUsername, CancellationToken token)
     {
-        Result<VyazmaTechIdentityUser> searchResult = await _userManager
+        VyazmaTechIdentityUser user = await _userManager
             .GetByTelegramUsernameAsync(telegramUsername, token);
-
-        if (searchResult.IsFaulted)
-        {
-            return Result.Failure();
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
 
         user.RefreshToken = null;
 
         await _userManager.UpdateAsync(user);
-
-        return Result.Success();
     }
 
     public ClaimsPrincipal? DecodePrincipal(string token)
@@ -132,7 +107,7 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         await _roleManager.CreateIfNotExists(roleName, token);
     }
 
-    public async Task<Result<IdentityUserModel>> CreateUserAsync(
+    public async Task<IdentityUserModel> CreateUserAsync(
         Guid userId,
         IdentityUserCredentials credentials,
         string roleName,
@@ -148,16 +123,12 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         IdentityResult result = await _userManager.CreateAsync(user);
 
         if (result.Succeeded is false)
-        {
-            return new Result<IdentityUserModel>(result.ToError());
-        }
+            throw new IdentityException(result.ToError());
 
         result = await _userManager.AddToRoleAsync(user, roleName);
 
         if (result.Succeeded is false)
-        {
-            return new Result<IdentityUserModel>(result.ToError());
-        }
+            throw new IdentityException(result.ToError());
 
         return new IdentityUserModel(
             user.Id,
@@ -166,16 +137,9 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             user.TelegramImageUrl);
     }
 
-    public async Task<Result<IdentityUserModel>> GetUserByIdAsync(Guid userId, CancellationToken token)
+    public async Task<IdentityUserModel> GetUserByIdAsync(Guid userId, CancellationToken token)
     {
-        Result<VyazmaTechIdentityUser> searchResult = await _userManager.GetByIdAsync(userId, token);
-
-        if (searchResult.IsFaulted)
-        {
-            return new Result<IdentityUserModel>(searchResult.Error);
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
+        VyazmaTechIdentityUser user = await _userManager.GetByIdAsync(userId, token);
 
         return new IdentityUserModel(
             user.Id,
@@ -184,19 +148,12 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             user.TelegramImageUrl);
     }
 
-    public async Task<Result<IdentityUserModel>> GetUserByTelegramUsernameAsync(
+    public async Task<IdentityUserModel> GetUserByTelegramUsernameAsync(
         string telegramUsername,
         CancellationToken token)
     {
-        Result<VyazmaTechIdentityUser> searchResult =
+        VyazmaTechIdentityUser user =
             await _userManager.GetByTelegramUsernameAsync(telegramUsername, token);
-
-        if (searchResult.IsFaulted)
-        {
-            return new Result<IdentityUserModel>(searchResult.Error);
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
 
         return new IdentityUserModel(
             user.Id,
@@ -205,80 +162,38 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
             user.TelegramImageUrl);
     }
 
-    public async Task<Result> UpdateUserRoleAsync(Guid userId, string newRoleName, CancellationToken token)
+    public async Task UpdateUserRoleAsync(Guid userId, string newRoleName, CancellationToken token)
     {
-        if (token.IsCancellationRequested)
-        {
-            return Result.Failure();
-        }
-
-        Result<VyazmaTechIdentityUser> searchResult = await _userManager.GetByIdAsync(userId, token);
-
-        if (searchResult.IsFaulted)
-        {
-            return Result.Failure();
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
+        VyazmaTechIdentityUser user = await _userManager.GetByIdAsync(userId, token);
 
         IList<string> roles = await _userManager.GetRolesAsync(user);
         await _userManager.RemoveFromRolesAsync(user, roles);
         await _userManager.AddToRoleAsync(user, newRoleName);
-
-        return Result.Success();
     }
 
-    public async Task<Result> UpdateUserRoleAsync(string telegramUsername, string newRoleName, CancellationToken token)
+    public async Task UpdateUserRoleAsync(string telegramUsername, string newRoleName, CancellationToken token)
     {
-        if (token.IsCancellationRequested)
-        {
-            return Result.Failure();
-        }
-
-        Result<VyazmaTechIdentityUser> searchResult = await _userManager
+        VyazmaTechIdentityUser user = await _userManager
             .GetByTelegramUsernameAsync(telegramUsername, token);
 
-        if (searchResult.IsFaulted)
-        {
-            return Result.Failure();
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
-
         IList<string> roles = await _userManager.GetRolesAsync(user);
         await _userManager.RemoveFromRolesAsync(user, roles);
         await _userManager.AddToRoleAsync(user, newRoleName);
-
-        return Result.Success();
     }
 
-    public async Task<Result<string>> GetUserRoleAsync(Guid userId, CancellationToken token)
+    public async Task<string> GetUserRoleAsync(Guid userId, CancellationToken token)
     {
-        Result<VyazmaTechIdentityUser> searchResult = await _userManager.GetByIdAsync(userId, token);
-
-        if (searchResult.IsFaulted)
-        {
-            return new Result<string>(searchResult.Error);
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
+        VyazmaTechIdentityUser user = await _userManager.GetByIdAsync(userId, token);
 
         IList<string> roles = await _userManager.GetRolesAsync(user);
 
         return roles.Single();
     }
 
-    public async Task<Result<string>> GetUserRoleAsync(string telegramUsername, CancellationToken token)
+    public async Task<string> GetUserRoleAsync(string telegramUsername, CancellationToken token)
     {
-        Result<VyazmaTechIdentityUser> searchResult = await _userManager
+        VyazmaTechIdentityUser user = await _userManager
             .GetByTelegramUsernameAsync(telegramUsername, token);
-
-        if (searchResult.IsFaulted)
-        {
-            return new Result<string>(searchResult.Error);
-        }
-
-        VyazmaTechIdentityUser user = searchResult.Value;
 
         IList<string> roles = await _userManager.GetRolesAsync(user);
 

@@ -1,6 +1,5 @@
 ﻿using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
-using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
 namespace VyazmaTech.Prachka.Domain.Core.Subscription;
 
@@ -21,27 +20,19 @@ public sealed class OrderSubscriptionEntity : SubscriptionEntity
 
     public IReadOnlyCollection<Guid> SubscribedOrders => _orderIds;
 
-    public Result<OrderEntity> Subscribe(OrderEntity order)
+    public void Subscribe(Guid id)
     {
-        if (_orderIds.Contains(order.Id))
-        {
-            return new Result<OrderEntity>(DomainErrors.Subscription.ContainsOrderWithId(order.Id));
-        }
+        if (_orderIds.Contains(id))
+            throw new DomainInvalidOperationException(DomainErrors.Subscription.ContainsOrderWithId(id));
 
-        _orderIds.Add(order.Id);
-
-        return order;
+        _orderIds.Add(id);
     }
 
-    public Result<OrderEntity> Unsubscribe(OrderEntity order)
+    public void Unsubscribe(Guid id)
     {
-        if (_orderIds.Contains(order.Id) is false)
-        {
-            return new Result<OrderEntity>(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
-        }
+        if (_orderIds.Contains(id) is false)
+            throw new DomainInvalidOperationException(DomainErrors.Subscription.OrderIsNotInSubscription(id));
 
-        _orderIds.Remove(order.Id);
-
-        return order;
+        _orderIds.Remove(id);
     }
 }

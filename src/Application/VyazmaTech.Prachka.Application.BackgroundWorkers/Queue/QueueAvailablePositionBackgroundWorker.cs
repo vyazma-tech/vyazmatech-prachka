@@ -7,7 +7,7 @@ using VyazmaTech.Prachka.Application.BackgroundWorkers.Configuration;
 using VyazmaTech.Prachka.Application.Core.Services;
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Queue;
 using VyazmaTech.Prachka.Domain.Kernel;
 
@@ -44,20 +44,22 @@ public class QueueAvailablePositionBackgroundWorker : BackgroundService
 
             IPersistenceContext context = scope.ServiceProvider.GetRequiredService<IPersistenceContext>();
 
-            Result<QueueEntity> queueFindResult = await context.Queues
-                .FindByAssignmentDateAsync(timeProvider.DateNow, stoppingToken);
+            QueueEntity queue;
 
-            if (queueFindResult.IsFaulted)
+            try
+            {
+                queue = await context.Queues
+                    .FindByAssignmentDateAsync(timeProvider.DateNow, stoppingToken);
+            }
+            catch (NotFoundException)
             {
                 _logger.LogInformation(
-                    "Queue is not assigned on DateNow = {DateNow}. Attempt DateTime = {DateTime}",
+                    "Queue is not assigned on DateNow = {DateNow}. Attempt DateTime = {UtcNow}",
                     timeProvider.DateNow,
                     timeProvider.UtcNow);
 
                 continue;
             }
-
-            QueueEntity queue = queueFindResult.Value;
 
             try
             {

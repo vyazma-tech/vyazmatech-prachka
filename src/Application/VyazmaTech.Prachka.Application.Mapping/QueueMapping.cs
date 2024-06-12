@@ -15,8 +15,8 @@ public static class QueueMapping
             queue.State.ToString(),
             ModifiedOn: queue.ModifiedOnUtc,
             AssignmentDate: queue.CreationDate,
-            ActiveFrom: queue.ActiveFrom,
-            ActiveUntil: queue.ActiveUntil);
+            ActiveFrom: queue.ActivityBoundaries.ActiveFrom,
+            ActiveUntil: queue.ActivityBoundaries.ActiveUntil);
     }
 
     public static QueueWithOrdersDto ToQueueWithOrdersDto(this QueueEntity queue)
@@ -29,8 +29,8 @@ public static class QueueMapping
             queue.State.ToString(),
             ModifiedOn: queue.ModifiedOnUtc,
             AssignmentDate: queue.CreationDate,
-            ActiveFrom: queue.ActiveFrom,
-            ActiveUntil: queue.ActiveUntil);
+            ActiveFrom: queue.ActivityBoundaries.ActiveFrom,
+            ActiveUntil: queue.ActivityBoundaries.ActiveUntil);
     }
 
     public static PagedResponse<QueueDto> ToPagedResponse(

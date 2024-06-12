@@ -2,13 +2,12 @@
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
-using VyazmaTech.Prachka.Domain.Common.Result;
 using VyazmaTech.Prachka.Domain.Core.Queue;
 using static VyazmaTech.Prachka.Application.Contracts.Queues.Queries.QueueById;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Queue.Queries;
 
-internal sealed class QueueByIdQueryHandler : IQueryHandler<Query, Result<Response>>
+internal sealed class QueueByIdQueryHandler : IQueryHandler<Query, Response>
 {
     private readonly IPersistenceContext _context;
 
@@ -17,17 +16,10 @@ internal sealed class QueueByIdQueryHandler : IQueryHandler<Query, Result<Respon
         _context = context;
     }
 
-    public async ValueTask<Result<Response>> Handle(Query request, CancellationToken cancellationToken)
+    public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
     {
-        Result<QueueEntity> result = await _context.Queues
+        QueueEntity queue = await _context.Queues
             .FindByIdAsync(request.Id, cancellationToken);
-
-        if (result.IsFaulted)
-        {
-            return new Result<Response>(result.Error);
-        }
-
-        QueueEntity queue = result.Value;
 
         return new Response(queue.ToQueueWithOrdersDto());
     }

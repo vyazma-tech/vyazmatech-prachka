@@ -3,9 +3,7 @@ using Moq;
 using VyazmaTech.Prachka.Application.Contracts.Orders.Commands;
 using VyazmaTech.Prachka.Application.Handlers.Order.Commands.MarkOrderAsPaid;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
-using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
-using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Kernel;
 using Xunit;
 
@@ -25,14 +23,13 @@ public class MarkAsPaidTest : TestBase
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFailureResult_WhenOrderNotFound()
+    public async Task Handle_ShouldThrow_WhenOrderNotFound()
     {
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsPaid.Command(orderId);
 
-        Result<MarkOrderAsPaid.Response> response = await _handler.Handle(command, CancellationToken.None);
-
-        response.IsFaulted.Should().BeTrue();
-        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<OrderEntity>(orderId.ToString()));
+        Func<Task<MarkOrderAsPaid.Response>>
+            action = async () => await _handler.Handle(command, CancellationToken.None);
+        await action.Should().ThrowAsync<NotFoundException>();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Kernel;
 
 namespace VyazmaTech.Prachka.Domain.Core.ValueObjects;
@@ -29,17 +29,14 @@ public sealed class QueueDate : ValueObject
     /// <param name="dateTimeProvider">time provider.</param>
     /// <returns>constructed queue date instance.</returns>
     /// <remarks>returns failure result, when assignment date is not around closest 7 days.</remarks>
-    public static Result<QueueDate> Create(DateOnly assignmentDate, IDateTimeProvider dateTimeProvider)
+    public static QueueDate Create(DateOnly assignmentDate, IDateTimeProvider dateTimeProvider)
     {
+        // TODO: remove date time provider & rename
         if (assignmentDate < dateTimeProvider.DateNow)
-        {
-            return new Result<QueueDate>(DomainErrors.QueueDate.InThePast);
-        }
+            throw new DomainInvalidOperationException(DomainErrors.QueueDate.InThePast);
 
         if (assignmentDate > dateTimeProvider.DateNow.AddDays(Week))
-        {
-            return new Result<QueueDate>(DomainErrors.QueueDate.NotNextWeek);
-        }
+            throw new DomainInvalidOperationException(DomainErrors.QueueDate.NotNextWeek);
 
         return new QueueDate(assignmentDate);
     }

@@ -22,7 +22,7 @@ public class ChangeRoleTest : TestBase
 
     [Theory]
     [ClassData(typeof(ChangeRoleClassData))]
-    public async Task Handle_ShouldReturnSuccessResult_WhenAdminChangeRole(string currentRole, string newRole)
+    public async Task Handle_ShouldNotThrow_WhenAdminChangeRole(string currentRole, string newRole)
     {
         var user = new IdentityUserDto(
             Guid.Empty,
@@ -40,9 +40,9 @@ public class ChangeRoleTest : TestBase
         var command = new ChangeRole.Command(user.TelegramUsername, newRole);
         var handler = new ChangeRoleCommandHandler(_authService.Object, currentUser);
 
-        ChangeRole.Response handlerResult = await handler.Handle(command, default);
+        Func<Task<ChangeRole.Response>> action = async () => await handler.Handle(command, default);
 
-        handlerResult.Result.IsFaulted.Should().BeFalse();
+        await action.Should().NotThrowAsync();
     }
 
     [Theory]
@@ -65,8 +65,8 @@ public class ChangeRoleTest : TestBase
         var command = new ChangeRole.Command(user.TelegramUsername, newRole);
         var handler = new ChangeRoleCommandHandler(_authService.Object, currentUser);
 
-        ChangeRole.Response handlerResult = await handler.Handle(command, default);
+        Func<Task<ChangeRole.Response>> action = async () => await handler.Handle(command, default);
 
-        handlerResult.Result.IsFaulted.Should().BeFalse();
+        await action.Should().NotThrowAsync();
     }
 }

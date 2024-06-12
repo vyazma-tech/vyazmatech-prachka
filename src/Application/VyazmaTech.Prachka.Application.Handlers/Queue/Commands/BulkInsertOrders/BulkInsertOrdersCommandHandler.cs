@@ -3,7 +3,7 @@ using VyazmaTech.Prachka.Application.Contracts.Common;
 using VyazmaTech.Prachka.Application.Core.Errors;
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Order;
 using VyazmaTech.Prachka.Domain.Core.Queue;
 using VyazmaTech.Prachka.Domain.Core.User;
@@ -12,7 +12,7 @@ using static VyazmaTech.Prachka.Application.Contracts.Queues.Commands.BulkInsert
 
 namespace VyazmaTech.Prachka.Application.Handlers.Queue.Commands.BulkInsertOrders;
 
-internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, Result<Response>>
+internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, Response>
 {
     private readonly IPersistenceContext _context;
     private readonly ICurrentUser _currentUser;
@@ -28,47 +28,27 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async ValueTask<Result<Response>> Handle(Command request, CancellationToken cancellationToken)
+    public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
         Guid? userId = _currentUser.Id;
 
         if (userId is null)
-        {
-            return new Result<Response>(ApplicationErrors.BulkInsertOrders.AnonymousUserCantEnter);
-        }
+            throw new IdentityException(ApplicationErrors.BulkInsertOrders.AnonymousUserCantEnter);
 
-        Result<UserEntity> userSearchResult = await _context.Users.FindByIdAsync(userId.Value, cancellationToken);
+        UserEntity user = await _context.Users.FindByIdAsync(userId.Value, cancellationToken);
+        QueueEntity queue = await _context.Queues.FindByIdAsync(request.QueueId, cancellationToken);
 
-        if (userSearchResult.IsFaulted)
-        {
-            return new Result<Response>(userSearchResult.Error);
-        }
-
-        Result<QueueEntity> queueSearchResult = await _context.Queues.FindByIdAsync(request.QueueId, cancellationToken);
-
-        if (queueSearchResult.IsFaulted)
-        {
-            return new Result<Response>(queueSearchResult.Error);
-        }
-
-        UserEntity user = userSearchResult.Value;
-        QueueEntity queue = queueSearchResult.Value;
         IReadOnlyCollection<OrderEntity> orders = CreateOrders(request, user, _dateTimeProvider);
 
         foreach (OrderEntity order in orders)
         {
-            Result<OrderEntity> result = queue.Add(order, _dateTimeProvider.UtcNow);
-
-            if (result.IsFaulted)
-            {
-                return new Result<Response>(result.Error);
-            }
+            queue.Add(order, _dateTimeProvider.UtcNow);
         }
 
         _context.Orders.InsertRange(orders);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return default(Response);
+        return default;
     }
 
     private static IReadOnlyCollection<OrderEntity> CreateOrders(

@@ -1,7 +1,7 @@
 using FastEndpoints;
 using Mediator;
 using VyazmaTech.Prachka.Application.Contracts.Queues.Commands;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1.Models;
 
@@ -27,10 +27,14 @@ internal sealed class BulkRemoveOrdersEndpoint : Endpoint<BulkInsertOrdersReques
     {
         var command = new BulkRemoveOrders.Command(req.QueueId, req.Quantity);
 
-        Result<BulkRemoveOrders.Response> response = await _sender.Send(command, ct);
-
-        await response.Match(
-            _ => SendOkAsync(ct),
-            _ => this.SendProblemsAsync(response.ToProblemDetails()));
+        try
+        {
+            BulkRemoveOrders.Response response = await _sender.Send(command, ct);
+            await SendOkAsync(ct);
+        }
+        catch (DomainException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

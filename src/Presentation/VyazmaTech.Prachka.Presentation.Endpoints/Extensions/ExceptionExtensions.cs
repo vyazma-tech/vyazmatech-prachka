@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 
-internal static class ResultExtensions
+internal static class ExceptionExtensions
 {
-    public static IResult ToProblemDetails<TResponse>(this Result<TResponse> result)
+    public static IResult ToProblemDetails(this DomainException e)
     {
         return Results.Problem(
-            statusCode: GetStatusCode(result.Error.Type),
-            title: GetTitle(result.Error.Type),
-            type: GetType(result.Error.Type),
+            statusCode: GetStatusCode(e.Error.Type),
+            title: GetTitle(e.Error.Type),
+            type: GetType(e.Error.Type),
             extensions: new Dictionary<string, object?>
             {
-                { "errors", new[] { result.Error } },
+                { "errors", new[] { e.Error } },
             });
 
         static int GetStatusCode(ErrorType type)
@@ -27,6 +27,7 @@ internal static class ResultExtensions
                 ErrorType.NotFound => StatusCodes.Status404NotFound,
                 ErrorType.BadRequest => StatusCodes.Status400BadRequest,
                 ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
+                ErrorType.Forbidden => StatusCodes.Status403Forbidden,
                 ErrorType.Failure => StatusCodes.Status500InternalServerError,
 
                 _ => StatusCodes.Status500InternalServerError
@@ -43,6 +44,7 @@ internal static class ResultExtensions
                 ErrorType.NotFound => "Not Found",
                 ErrorType.BadRequest => "Bad Request",
                 ErrorType.Unauthorized => "Unauthorized",
+                ErrorType.Forbidden => "No access",
                 ErrorType.Failure => "Internal Server Error",
 
                 _ => "Internal Server Error"
@@ -59,6 +61,7 @@ internal static class ResultExtensions
                 ErrorType.NotFound => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.5",
                 ErrorType.BadRequest => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.1",
                 ErrorType.Unauthorized => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.2",
+                ErrorType.Forbidden => "https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.4",
                 ErrorType.Failure => "Internal Server Error",
 
                 _ => "Internal Server Error"

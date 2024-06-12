@@ -10,16 +10,21 @@ public static class AuthenticationErrors
         {
             return Error.NotFound(
                 $"{nameof(IdentityUser)}.{nameof(NotFoundFor)}",
-                $"Identity user with search info \"{searchInfo}\" was not found.",
-                ErrorArea.Infrastructure);
+                $"Identity user with search info \"{searchInfo}\" was not found.");
         }
 
         public static Error Creation(string details)
         {
             return Error.Unauthorized(
                 $"{nameof(IdentityUser)}.{nameof(Creation)}",
-                details,
-                ErrorArea.Infrastructure);
+                details);
+        }
+
+        public static Error NotInRole()
+        {
+            return Error.Forbidden(
+                $"{nameof(IdentityUser)}.{nameof(NotInRole)}",
+                "Identity user has no granted access");
         }
     }
 
@@ -29,8 +34,7 @@ public static class AuthenticationErrors
         {
             return Error.Unauthorized(
                 $"{nameof(IdentityToken)}.{nameof(Refresh)}",
-                "Unauthorized.",
-                ErrorArea.Infrastructure);
+                "Unauthorized.");
         }
     }
 }

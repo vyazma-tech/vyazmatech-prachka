@@ -1,6 +1,5 @@
 ﻿using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
-using VyazmaTech.Prachka.Domain.Core.Queue;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
 namespace VyazmaTech.Prachka.Domain.Core.Subscription;
 
@@ -21,27 +20,19 @@ public sealed class QueueSubscriptionEntity : SubscriptionEntity
 
     public IReadOnlyCollection<Guid> SubscribedQueues => _queueIds;
 
-    public Result<QueueEntity> Subscribe(QueueEntity queue)
+    public void Subscribe(Guid id)
     {
-        if (_queueIds.Contains(queue.Id))
-        {
-            return new Result<QueueEntity>(DomainErrors.Subscription.ContainsQueueWithId(queue.Id));
-        }
+        if (_queueIds.Contains(id))
+            throw new DomainInvalidOperationException(DomainErrors.Subscription.ContainsQueueWithId(id));
 
-        _queueIds.Add(queue.Id);
-
-        return queue;
+        _queueIds.Add(id);
     }
 
-    public Result<QueueEntity> Unsubscribe(QueueEntity queue)
+    public void Unsubscribe(Guid id)
     {
-        if (_queueIds.Contains(queue.Id) is false)
-        {
-            return new Result<QueueEntity>(DomainErrors.Subscription.QueueIsNotInSubscription(queue.Id));
-        }
+        if (_queueIds.Contains(id) is false)
+            throw new DomainInvalidOperationException(DomainErrors.Subscription.QueueIsNotInSubscription(id));
 
-        _queueIds.Remove(queue.Id);
-
-        return queue;
+        _queueIds.Remove(id);
     }
 }

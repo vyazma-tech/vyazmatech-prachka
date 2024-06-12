@@ -3,7 +3,7 @@ using VyazmaTech.Prachka.Application.Contracts.Common;
 using VyazmaTech.Prachka.Application.Contracts.Users.Commands;
 using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.User;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Models.Events;
 
@@ -22,19 +22,23 @@ internal sealed class UserRegisteredIntegrationEventHandler : IIntegrationEventH
 
     public async ValueTask Handle(UserRegisteredIntegrationEvent notification, CancellationToken cancellationToken)
     {
-        Result<UserEntity> searchResult = await _context.Users
-            .FindByIdAsync(notification.User.Id, cancellationToken);
-
-        if (searchResult.IsSuccess)
+        // Если юзер существует, то не создаем его
+        // Если юзер не существует, то бросим ошибку
+        try
         {
+            UserEntity existingUser = await _context.Users
+                .FindByIdAsync(notification.User.Id, cancellationToken);
+
             return;
         }
+        catch (NotFoundException)
+        {
+            var createUserCommand = new CreateUser.Command(
+                notification.User.Id,
+                notification.User.Fullname,
+                notification.User.UserName ?? string.Empty);
 
-        var createUserCommand = new CreateUser.Command(
-            notification.User.Id,
-            notification.User.Fullname,
-            notification.User.UserName ?? string.Empty);
-
-        await _sender.Send(createUserCommand, cancellationToken);
+            await _sender.Send(createUserCommand, cancellationToken);
+        }
     }
 }

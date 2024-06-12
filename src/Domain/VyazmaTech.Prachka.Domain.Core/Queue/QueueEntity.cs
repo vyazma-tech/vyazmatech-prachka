@@ -1,6 +1,6 @@
 ﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Order;
 using VyazmaTech.Prachka.Domain.Core.Queue.Events;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
@@ -16,8 +16,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         Guid id,
         int capacity,
         DateOnly assignmentDate,
-        TimeOnly activeFrom,
-        TimeOnly activeUntil,
+        QueueActivityBoundaries activityBoundaries,
         QueueState state,
         HashSet<OrderInfo> orderInfos,
         bool maxCapacityReached = false,
@@ -26,8 +25,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
     {
         Capacity = capacity;
         AssignmentDate = assignmentDate;
-        ActiveFrom = activeFrom;
-        ActiveUntil = activeUntil;
+        ActivityBoundaries = activityBoundaries;
         State = state;
         MaxCapacityReached = maxCapacityReached;
         ModifiedOnUtc = modifiedOn;
@@ -38,15 +36,13 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public DateOnly AssignmentDate { get; }
 
-    public TimeOnly ActiveFrom { get; private set; }
-
-    public TimeOnly ActiveUntil { get; private set; }
+    public QueueActivityBoundaries ActivityBoundaries { get; private set; }
 
     public QueueState State { get; private set; }
 
     public bool MaxCapacityReached { get; private set; }
 
-    public QueueInfo Info => new(Id, Capacity, AssignmentDate, ActiveFrom, ActiveUntil, State);
+    public QueueInfo Info => new(Id, Capacity, AssignmentDate, default, default, State);
 
     public IReadOnlyCollection<OrderInfo> Orders => _orderInfos;
 
@@ -54,71 +50,52 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public DateTime? ModifiedOnUtc { get; private set; }
 
-    public Result<OrderEntity> Add(OrderEntity order, DateTime currentTimeUtc)
+    public void Add(OrderEntity order, DateTime currentTimeUtc)
     {
         if (_orderInfos.Contains(order.Info))
-        {
-            return new Result<OrderEntity>(DomainErrors.Queue.ContainsOrderWithId(order.Id));
-        }
+            throw new DomainInvalidOperationException(DomainErrors.Queue.ContainsOrderWithId(order.Id));
 
         if (_orderInfos.Count.Equals(Capacity))
-        {
-            return new Result<OrderEntity>(DomainErrors.Queue.Overfull);
-        }
+            throw new DomainInvalidOperationException(DomainErrors.Queue.Overfull);
 
         if (Expired(currentTimeUtc))
-        {
-            return new Result<OrderEntity>(DomainErrors.Queue.Expired);
-        }
+            throw new DomainInvalidOperationException(DomainErrors.Queue.Expired);
 
         _orderInfos.Add(order.Info);
+
+        // TODO: domain event
         if (_orderInfos.Count.Equals(Capacity) is true)
         {
             MaxCapacityReached = true;
         }
-
-        return order;
     }
 
-    public Result<OrderEntity> Remove(OrderEntity order)
+    public void Remove(OrderEntity order)
     {
         if (_orderInfos.Contains(order.Info) is false)
-        {
-            return new Result<OrderEntity>(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
-        }
+            throw new DomainInvalidOperationException(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
 
         _orderInfos.Remove(order.Info);
-
-        return order;
     }
 
-    public Result<QueueEntity> IncreaseCapacity(Capacity newCapacity, DateTime modifiedOnUtc)
+    public void IncreaseCapacity(Capacity newCapacity, DateTime modifiedOnUtc)
     {
         if (newCapacity.Value <= Capacity)
-        {
-            return new Result<QueueEntity>(DomainErrors.Queue.InvalidNewCapacity);
-        }
+            throw new DomainInvalidOperationException(DomainErrors.Queue.InvalidNewCapacity);
 
         Capacity = newCapacity.Value;
         ModifiedOnUtc = modifiedOnUtc;
-
-        return this;
     }
 
-    public Result<QueueEntity> ChangeActivityBoundaries(
+    public void ChangeActivityBoundaries(
         QueueActivityBoundaries activityBoundaries,
         DateTime modifiedOnUtc)
     {
-        if (activityBoundaries.ActiveFrom == ActiveFrom && activityBoundaries.ActiveUntil == ActiveUntil)
-        {
-            return new Result<QueueEntity>(DomainErrors.Queue.InvalidNewActivityBoundaries);
-        }
+        if (ActivityBoundaries == activityBoundaries)
+            throw new DomainInvalidOperationException(DomainErrors.Queue.InvalidNewActivityBoundaries);
 
-        ActiveFrom = activityBoundaries.ActiveFrom;
-        ActiveUntil = activityBoundaries.ActiveUntil;
+        ActivityBoundaries = activityBoundaries;
         ModifiedOnUtc = modifiedOnUtc;
-
-        return this;
     }
 
     public bool TryExpire(DateTime currentTimeUtc)
@@ -149,7 +126,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
 
     public bool TryActivate(DateTime currentDateTimeUtc)
     {
-        if (currentDateTimeUtc.AsTimeOnly() >= ActiveFrom && State == QueueState.Prepared)
+        if (currentDateTimeUtc.AsTimeOnly() >= ActivityBoundaries.ActiveFrom && State == QueueState.Prepared)
         {
             State = QueueState.Active;
             ModifiedOnUtc = currentDateTimeUtc;
@@ -164,7 +141,7 @@ public sealed class QueueEntity : Entity, IAuditableEntity
         DateOnly dateNow = currentDateTimeUtc.AsDateOnly();
 
         return
-            (currentDateTimeUtc.AsTimeOnly() >= ActiveUntil
+            (currentDateTimeUtc.AsTimeOnly() >= ActivityBoundaries.ActiveUntil
              && dateNow == CreationDate)
             || dateNow > CreationDate;
     }

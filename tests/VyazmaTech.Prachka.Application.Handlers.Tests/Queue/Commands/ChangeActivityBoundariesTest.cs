@@ -5,9 +5,7 @@ using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 using VyazmaTech.Prachka.Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
-using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
-using VyazmaTech.Prachka.Domain.Core.Queue;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Kernel;
 using Xunit;
 
@@ -30,15 +28,14 @@ public class ChangeActivityBoundariesTest : TestBase
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFailureResult_WhenQueueIsNotFound()
+    public async Task Handle_ShouldThrow_WhenQueueIsNotFound()
     {
         var queueId = Guid.NewGuid();
         var command = new ChangeQueueActivityBoundaries.Command(queueId, TimeOnly.MinValue, TimeOnly.MaxValue);
 
-        Result<ChangeQueueActivityBoundaries.Response>
-            response = await _handler.Handle(command, CancellationToken.None);
+        Func<Task<ChangeQueueActivityBoundaries.Response>> action = async () =>
+            await _handler.Handle(command, CancellationToken.None);
 
-        response.IsFaulted.Should().BeTrue();
-        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<QueueEntity>(queueId.ToString()));
+        await action.Should().ThrowAsync<NotFoundException>();
     }
 }

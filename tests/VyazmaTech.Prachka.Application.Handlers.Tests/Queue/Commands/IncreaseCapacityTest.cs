@@ -3,9 +3,7 @@ using Moq;
 using VyazmaTech.Prachka.Application.Contracts.Queues.Commands;
 using VyazmaTech.Prachka.Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
-using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
-using VyazmaTech.Prachka.Domain.Core.Queue;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Kernel;
 using Xunit;
 
@@ -25,14 +23,13 @@ public class IncreaseCapacityTest : TestBase
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFailureResult_WhenQueueIsNotFound()
+    public async Task Handle_ShouldThrow_WhenQueueIsNotFound()
     {
         var queueId = Guid.NewGuid();
         var command = new IncreaseQueueCapacity.Command(queueId, 2);
 
-        Result<IncreaseQueueCapacity.Response> response = await _handler.Handle(command, CancellationToken.None);
-
-        response.IsFaulted.Should().BeTrue();
-        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<QueueEntity>(queueId.ToString()));
+        Func<Task<IncreaseQueueCapacity.Response>> action = async () =>
+            await _handler.Handle(command, CancellationToken.None);
+        await action.Should().ThrowAsync<NotFoundException>();
     }
 }

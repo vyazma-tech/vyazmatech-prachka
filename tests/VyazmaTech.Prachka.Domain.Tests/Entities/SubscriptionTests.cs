@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
-using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
-using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Subscription;
 using Xunit;
 
@@ -10,36 +8,24 @@ namespace VyazmaTech.Prachka.Domain.Tests.Entities;
 public class SubscriptionTests
 {
     [Fact]
-    public void Subscribe_ShouldReturnSuccessResult_WhenOrderIsNotInSubscription()
+    public void Subscribe_ShouldNotThrow_WhenOrderIsNotInSubscription()
     {
-        var order = new OrderEntity(
-            Guid.Empty,
-            Guid.Empty,
-            null!,
-            OrderStatus.New,
-            default);
-
+        var id = Guid.NewGuid();
         var subscription = new OrderSubscriptionEntity(
             Guid.Empty,
             Guid.Empty,
             default,
             Array.Empty<Guid>().ToHashSet());
 
-        Result<OrderEntity> entranceResult = subscription.Subscribe(order);
+        subscription.Subscribe(id);
 
-        entranceResult.IsSuccess.Should().BeTrue();
-        subscription.SubscribedOrders.Should().Contain(order.Id);
+        subscription.SubscribedOrders.Should().Contain(id);
     }
 
     [Fact]
-    public void Unsubscribe_ShouldReturnFailureResult_WhenUserOrderIsNotInSubscription()
+    public void Unsubscribe_ShouldThrow_WhenUserOrderIsNotInSubscription()
     {
-        var order = new OrderEntity(
-            Guid.Empty,
-            Guid.Empty,
-            null!,
-            OrderStatus.New,
-            default);
+        var id = Guid.NewGuid();
 
         var subscription = new OrderSubscriptionEntity(
             Guid.Empty,
@@ -47,9 +33,8 @@ public class SubscriptionTests
             default,
             Array.Empty<Guid>().ToHashSet());
 
-        Result<OrderEntity> quitResult = subscription.Unsubscribe(order);
+        Action action = () => subscription.Unsubscribe(id);
 
-        quitResult.IsFaulted.Should().BeTrue();
-        quitResult.Error.Should().Be(DomainErrors.Subscription.OrderIsNotInSubscription(order.Id));
+        action.Should().Throw<DomainInvalidOperationException>();
     }
 }
