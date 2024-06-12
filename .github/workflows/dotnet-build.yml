@@ -23,6 +23,8 @@ jobs:
     
     steps:
       - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Create cache key
         id: create-cache-key
@@ -40,7 +42,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         if: steps.cache-tests.outputs.cache-hit != 'true'
         with:
-          dotnet-version: 7.0.203
+          dotnet-version: 8.0.302
 
       - name: Cache nuget packages
         uses: actions/cache@v3
@@ -107,28 +109,28 @@ jobs:
         with:
           path: "${{ github.workspace }}/allure-history"
 
-  deploy-pages:
-    name: 🚀 Deploy test summary on github pages
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      deployments: write
-      pull-requests: write
-      id-token: write
-    needs: compile-allure
-    
-    environment:
-      name: github-pages
-      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.event.number }}/${{ github.run_number }}
-    
-    steps:
-      - name: Deploy Allure reports to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2.0.1
-
-      - name: Post allure test run link
-        uses: mshick/add-pr-comment@v2
-        with:
-          message: |
-            Link to allure test run:  
-            https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.event.number }}/${{ github.run_number }}
+#  deploy-pages:
+#    name: 🚀 Deploy test summary on github pages
+#    runs-on: ubuntu-latest
+#    permissions:
+#      pages: write
+#      deployments: write
+#      pull-requests: write
+#      id-token: write
+#    needs: compile-allure
+#    
+#    environment:
+#      name: github-pages
+#      url: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.event.number }}/${{ github.run_number }}
+#    
+#    steps:
+#      - name: Deploy Allure reports to GitHub Pages
+#        id: deployment
+#        uses: actions/deploy-pages@v2.0.1
+#
+#      - name: Post allure test run link
+#        uses: mshick/add-pr-comment@v2
+#        with:
+#          message: |
+#            Link to allure test run:  
+#            https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${{ github.event.number }}/${{ github.run_number }}
