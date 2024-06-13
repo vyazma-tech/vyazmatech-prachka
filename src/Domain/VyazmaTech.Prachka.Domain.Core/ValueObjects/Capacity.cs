@@ -9,6 +9,8 @@ namespace VyazmaTech.Prachka.Domain.Core.ValueObjects;
 /// </summary>
 public sealed class Capacity : ValueObject
 {
+    private Capacity() { }
+
     private Capacity(int value)
     {
         Value = value;

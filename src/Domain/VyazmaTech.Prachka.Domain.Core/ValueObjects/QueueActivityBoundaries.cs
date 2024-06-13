@@ -10,6 +10,8 @@ namespace VyazmaTech.Prachka.Domain.Core.ValueObjects;
 /// </summary>
 public sealed class QueueActivityBoundaries : ValueObject
 {
+    private QueueActivityBoundaries() { }
+
     private QueueActivityBoundaries(TimeOnly activeFrom, TimeOnly activeUntil)
     {
         ActiveFrom = activeFrom;

@@ -3,6 +3,8 @@ using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
+#pragma warning disable CS8618
+
 namespace VyazmaTech.Prachka.Domain.Core.ValueObjects;
 
 /// <summary>
@@ -11,6 +13,8 @@ namespace VyazmaTech.Prachka.Domain.Core.ValueObjects;
 public sealed class Fullname : ValueObject
 {
     private const string LetterWithUppercasePattern = @"^[\p{Lu}\p{L}' \.\-]+$";
+
+    private Fullname() { }
 
     private Fullname(string value)
     {

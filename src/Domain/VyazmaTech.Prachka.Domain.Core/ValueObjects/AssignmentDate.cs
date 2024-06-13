@@ -11,6 +11,8 @@ public sealed class AssignmentDate : ValueObject
 {
     public const int Week = 7;
 
+    private AssignmentDate() { }
+
     private AssignmentDate(DateOnly value)
     {
         Value = value;
