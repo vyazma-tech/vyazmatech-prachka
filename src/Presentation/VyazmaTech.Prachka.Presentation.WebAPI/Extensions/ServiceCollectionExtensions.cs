@@ -31,7 +31,8 @@ internal static class ServiceCollectionExtensions
             {
                 o.UseNpgsql(sp.GetRequiredService<PostgresConfiguration>().ToConnectionString())
                     .UseLazyLoadingProxies()
-                    .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>());
+                    .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>())
+                    .AddInterceptors(sp.GetRequiredService<AuditableEntityUpdatingInterceptor>());
             });
 
         return services;
