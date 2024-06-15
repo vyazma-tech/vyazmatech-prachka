@@ -2,11 +2,7 @@ namespace VyazmaTech.Prachka.Application.Abstractions.Querying.Queue;
 
 public interface IQueryBuilder
 {
-    IQueryBuilder WithId(Guid id);
-
-    IQueryBuilder WithAssignmentDate(DateOnly assignmentDate);
-
-    IQueryBuilder WithOrderId(Guid orderId);
+    IQueryBuilder WithSearchFromDate(DateOnly assignmentDate);
 
     IQueryBuilder WithPage(int page);
 

@@ -49,12 +49,12 @@ public sealed class Queue : Entity, IAuditableEntity
 
     public DateTime? ModifiedOnUtc { get; set; }
 
-    public void BulkInsert(IReadOnlyCollection<Order> orders, DateTime currentTimeUtc)
+    public void BulkInsert(IReadOnlyCollection<Order> orders)
     {
         if (orders.Count + _orders.Count > Capacity.Value)
             throw new DomainInvalidOperationException(DomainErrors.Queue.WillOverflow);
 
-        if (IsExpired(currentTimeUtc))
+        if (IsExpired())
             throw new DomainInvalidOperationException(DomainErrors.Queue.Expired);
 
         Order? existingOrder = _orders.FirstOrDefault(orders.Contains);
@@ -63,6 +63,9 @@ public sealed class Queue : Entity, IAuditableEntity
             throw new DomainInvalidOperationException(DomainErrors.Queue.ContainsOrderWithId(existingOrder.Id));
 
         _orders.AddRange(orders);
+
+        if (_orders.Count.Equals(Capacity))
+            Raise(new QueueMaxCapacityReachedDomainEvent(this));
     }
 
     public void RemoveFor(Guid userId, int count)
@@ -75,26 +78,7 @@ public sealed class Queue : Entity, IAuditableEntity
         _orders.RemoveAll(x => userOrders.Contains(x));
     }
 
-    public void Add(Order order, DateTime currentTimeUtc)
-    {
-        if (_orders.Contains(order))
-            throw new DomainInvalidOperationException(DomainErrors.Queue.ContainsOrderWithId(order.Id));
-
-        if (_orders.Count.Equals(Capacity.Value))
-            throw new DomainInvalidOperationException(DomainErrors.Queue.Overfull);
-
-        if (IsExpired(currentTimeUtc))
-            throw new DomainInvalidOperationException(DomainErrors.Queue.Expired);
-
-        _orders.Add(order);
-
-        if (_orders.Count.Equals(Capacity.Value))
-        {
-            Raise(new QueueMaxCapacityReachedDomainEvent(this));
-        }
-    }
-
-    public void Remove(Order order)
+    internal void Remove(Order order)
     {
         if (_orders.Contains(order) is false)
             throw new DomainInvalidOperationException(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
@@ -125,7 +109,7 @@ public sealed class Queue : Entity, IAuditableEntity
         ActivityBoundaries = activityBoundaries;
     }
 
-    public bool IsExpired(DateTime currentDateTimeUtc)
+    public bool IsExpired()
     {
         return State == QueueState.Expired;
     }

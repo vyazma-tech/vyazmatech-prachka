@@ -26,5 +26,10 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<Queue>
 
         builder.Navigation(queue => queue.Orders).HasField("_orders");
         builder.Property(queue => queue.State).HasDefaultValue(QueueState.Prepared);
+
+        builder.Property<DateOnly>("assignment_date");
+        builder.HasIndex("assignment_date")
+            .IsUnique()
+            .IsDescending();
     }
 }

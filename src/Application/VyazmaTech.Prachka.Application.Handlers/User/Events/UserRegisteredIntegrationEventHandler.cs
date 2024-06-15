@@ -1,7 +1,6 @@
 using Mediator;
 using VyazmaTech.Prachka.Application.Contracts.Common;
 using VyazmaTech.Prachka.Application.Contracts.Users.Commands;
-using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Models.Events;
@@ -26,7 +25,7 @@ internal sealed class UserRegisteredIntegrationEventHandler : IIntegrationEventH
         try
         {
             Domain.Core.Users.User existingUser = await _context.Users
-                .FindByIdAsync(notification.User.Id, cancellationToken);
+                .GetByIdAsync(notification.User.Id, cancellationToken);
 
             return;
         }

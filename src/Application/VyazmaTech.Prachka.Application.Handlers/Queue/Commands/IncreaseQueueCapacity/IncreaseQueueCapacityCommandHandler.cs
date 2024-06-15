@@ -1,5 +1,4 @@
 ﻿using VyazmaTech.Prachka.Application.Contracts.Common;
-using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
@@ -19,13 +18,12 @@ internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<Comm
     public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
         Domain.Core.Queues.Queue queue = await _persistenceContext.Queues
-            .FindByIdAsync(request.QueueId, cancellationToken);
+            .GetByIdAsync(request.QueueId, cancellationToken);
 
         var capacity = Capacity.Create(request.Capacity);
 
         queue.IncreaseCapacity(capacity);
 
-        _persistenceContext.Queues.Update(queue);
         await _persistenceContext.SaveChangesAsync(cancellationToken);
 
         return new Response(queue.ToDto());

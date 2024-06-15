@@ -11,10 +11,6 @@ public interface IPersistenceContext
 
     IUserRepository Users { get; }
 
-    IOrderSubscriptionRepository OrderSubscriptions { get; }
-
-    IQueueSubscriptionRepository QueueSubscriptions { get; }
-
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     DbSet<TModel> Entities<TModel>()

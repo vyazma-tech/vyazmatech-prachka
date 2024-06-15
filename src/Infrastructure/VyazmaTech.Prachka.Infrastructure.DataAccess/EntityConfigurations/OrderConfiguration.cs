@@ -11,16 +11,21 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder
             .HasOne(order => order.User)
             .WithMany()
-            .HasForeignKey()
-            .HasPrincipalKey(user => user.Id);
+            .HasForeignKey("user_id")
+            .HasPrincipalKey(user => user.Id)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .HasOne(order => order.Queue)
             .WithMany(queue => queue.Orders)
-            .HasForeignKey()
-            .HasPrincipalKey(queue => queue.Id);
+            .HasForeignKey("queue_id")
+            .HasPrincipalKey(queue => queue.Id)
+            .OnDelete(DeleteBehavior.Restrict);
 
-        builder.Ignore(order => order.CreationDate);
-        builder.Property(order => order.Status).HasDefaultValue(OrderStatus.New.ToString());
+        builder.Property(order => order.Status).HasDefaultValue(OrderStatus.New);
+        builder.Property(order => order.CreationDateTime);
+
+        builder.HasIndex("queue_id", "user_id")
+            .IsUnique(false);
     }
 }

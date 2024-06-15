@@ -4,4 +4,4 @@ internal sealed record FindUsersRequest(
     string? TelegramId,
     string? Fullname,
     DateOnly? RegistrationDate,
-    int? Page);
+    int Page);

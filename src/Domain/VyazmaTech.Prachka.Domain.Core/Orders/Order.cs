@@ -6,10 +6,14 @@ using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.Users;
 using VyazmaTech.Prachka.Domain.Kernel;
 
+#pragma warning disable CS8618
+
 namespace VyazmaTech.Prachka.Domain.Core.Orders;
 
 public sealed class Order : Entity, IAuditableEntity
 {
+    private Order() { }
+
     public Order(
         Guid id,
         Queue queue,
@@ -68,11 +72,10 @@ public sealed class Order : Entity, IAuditableEntity
     /// Sets new queue for an order.
     /// </summary>
     /// <param name="queue">queue, which order should be assigned to.</param>
-    /// <param name="dateTimeUtc">modification date.</param>
-    public void Prolong(Queue queue, DateTime dateTimeUtc)
+    public void ProlongInto(Queue queue)
     {
         Queue.Remove(this);
-        queue.Add(this, dateTimeUtc);
+        queue.BulkInsert([this]);
 
         Status = OrderStatus.Prolonged;
     }

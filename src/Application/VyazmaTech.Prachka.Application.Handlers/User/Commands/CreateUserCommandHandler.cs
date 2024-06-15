@@ -21,10 +21,11 @@ internal sealed class CreateUserCommandHandler : ICommandHandler<Command, Respon
     public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
         var fullname = Fullname.Create(request.Fullname);
+        var telegramUsername = TelegramUsername.Create(request.TelegramUsername);
 
         var user = Domain.Core.Users.User.Create(
             request.Id,
-            request.TelegramUsername,
+            telegramUsername,
             fullname,
             _timeProvider.DateNow);
 

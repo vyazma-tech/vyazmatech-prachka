@@ -10,18 +10,14 @@ internal sealed class PersistenceContext : IPersistenceContext, IUnitOfWork
     private readonly DatabaseContext _context;
 
     public PersistenceContext(
+        DatabaseContext context,
         IQueueRepository queues,
         IOrderRepository orders,
-        IUserRepository users,
-        IOrderSubscriptionRepository orderSubscriptions,
-        IQueueSubscriptionRepository queueSubscriptions,
-        DatabaseContext context)
+        IUserRepository users)
     {
         Queues = queues;
         Orders = orders;
         Users = users;
-        OrderSubscriptions = orderSubscriptions;
-        QueueSubscriptions = queueSubscriptions;
         _context = context;
     }
 
@@ -30,10 +26,6 @@ internal sealed class PersistenceContext : IPersistenceContext, IUnitOfWork
     public IOrderRepository Orders { get; }
 
     public IUserRepository Users { get; }
-
-    public IOrderSubscriptionRepository OrderSubscriptions { get; }
-
-    public IQueueSubscriptionRepository QueueSubscriptions { get; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {

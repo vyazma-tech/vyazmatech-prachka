@@ -1,5 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <PropertyGroup>
+        <NoWarn>$(NoWarn); IDE0005; SA1300; 8981; CA1825</NoWarn>
+    </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj"/>
         <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj"/>

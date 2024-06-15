@@ -10,5 +10,6 @@ public sealed class EntityConfiguration : IEntityTypeConfiguration<Entity>
     {
         builder.HasKey(entity => entity.Id);
         builder.Ignore(entity => entity.DomainEvents);
+        builder.UseTpcMappingStrategy();
     }
 }

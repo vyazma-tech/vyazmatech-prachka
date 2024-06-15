@@ -30,7 +30,6 @@ internal static class ServiceCollectionExtensions
             (sp, o) =>
             {
                 o.UseNpgsql(sp.GetRequiredService<PostgresConfiguration>().ToConnectionString())
-                    .UseLazyLoadingProxies()
                     .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>())
                     .AddInterceptors(sp.GetRequiredService<AuditableEntityUpdatingInterceptor>());
             });
@@ -45,7 +44,6 @@ internal static class ServiceCollectionExtensions
         services.Configure<PaginationConfiguration>(configuration.GetSection(PaginationConfiguration.SectionKey));
 
         services.AddQueryBuilders();
-        services.AddQuerying();
         services.AddCurrentUsers();
 
         return services;

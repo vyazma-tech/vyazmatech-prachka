@@ -1,7 +1,6 @@
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
 using VyazmaTech.Prachka.Application.Contracts.Common;
 using VyazmaTech.Prachka.Application.Core.Errors;
-using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Orders;
@@ -33,15 +32,12 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<Command, 
         if (userId is null)
             throw new IdentityException(ApplicationErrors.BulkInsertOrders.AnonymousUserCantEnter);
 
-        Domain.Core.Users.User user = await _context.Users.FindByIdAsync(userId.Value, cancellationToken);
-        Domain.Core.Queues.Queue queue = await _context.Queues.FindByIdAsync(request.QueueId, cancellationToken);
+        Domain.Core.Users.User user = await _context.Users.GetByIdAsync(userId.Value, cancellationToken);
+        Domain.Core.Queues.Queue queue = await _context.Queues.GetByIdAsync(request.QueueId, cancellationToken);
 
         IReadOnlyCollection<Domain.Core.Orders.Order> orders = CreateOrders(request, user, _dateTimeProvider);
 
-        foreach (Domain.Core.Orders.Order order in orders)
-        {
-            queue.Add(order, _dateTimeProvider.UtcNow);
-        }
+        queue.BulkInsert(orders);
 
         _context.Orders.InsertRange(orders);
         await _context.SaveChangesAsync(cancellationToken);

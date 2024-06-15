@@ -1,10 +1,8 @@
 ﻿using FluentAssertions;
-using Moq;
 using VyazmaTech.Prachka.Application.Contracts.Orders.Commands;
 using VyazmaTech.Prachka.Application.Handlers.Order.Commands.ProlongOrder;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
-using VyazmaTech.Prachka.Domain.Kernel;
 using Xunit;
 using CancellationToken = System.Threading.CancellationToken;
 
@@ -16,11 +14,7 @@ public class ProlongOrderTest : TestBase
 
     public ProlongOrderTest(CoreDatabaseFixture fixture) : base(fixture)
     {
-        var dateTimeProvider = new Mock<IDateTimeProvider>();
-
-        _handler = new ProlongOrderCommandHandler(
-            dateTimeProvider.Object,
-            fixture.PersistenceContext);
+        _handler = new ProlongOrderCommandHandler(fixture.PersistenceContext);
     }
 
     [Fact]

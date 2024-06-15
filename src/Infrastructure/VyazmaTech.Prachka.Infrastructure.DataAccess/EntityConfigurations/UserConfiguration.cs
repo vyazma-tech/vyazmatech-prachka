@@ -11,5 +11,15 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ComplexProperty(user => user.Fullname)
             .Property(x => x.Value)
             .HasColumnName("fullname");
+
+        builder.ComplexProperty(user => user.TelegramUsername)
+            .Property(x => x.Value)
+            .HasColumnName("telegram_username");
+
+        builder.Property(user => user.CreationDate);
+
+        builder.Property<string>("fullname");
+        builder.Property<string>("telegram_username");
+        builder.HasIndex("fullname", "telegram_username");
     }
 }

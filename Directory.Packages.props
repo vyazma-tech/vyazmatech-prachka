@@ -4,7 +4,6 @@
     <EnablePackageVersionOverride>false</EnablePackageVersionOverride>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="Ardalis.GuardClauses" Version="4.1.1"/>
     <PackageVersion Include="FastEndpoints" Version="5.21.2"/>
     <PackageVersion Include="FastEndpoints.Swagger" Version="5.21.2"/>
     <PackageVersion Include="FluentChaining" Version="1.0.4"/>
@@ -16,7 +15,6 @@
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6"/>
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.6"/>
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6"/>
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.6"/>
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.6" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1"/>

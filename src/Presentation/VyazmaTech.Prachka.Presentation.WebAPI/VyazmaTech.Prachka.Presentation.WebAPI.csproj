@@ -12,7 +12,6 @@
 
     <ItemGroup>
         <PackageReference Include="FastEndpoints.Swagger"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
         <PackageReference Include="Serilog.AspNetCore"/>
         <PackageReference Include="Serilog.Sinks.Seq"/>

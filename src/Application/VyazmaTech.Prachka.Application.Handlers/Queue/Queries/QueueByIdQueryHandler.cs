@@ -1,5 +1,4 @@
 ﻿using VyazmaTech.Prachka.Application.Contracts.Common;
-using VyazmaTech.Prachka.Application.Core.Specifications;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
 using static VyazmaTech.Prachka.Application.Contracts.Queues.Queries.QueueById;
@@ -18,7 +17,7 @@ internal sealed class QueueByIdQueryHandler : IQueryHandler<Query, Response>
     public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
     {
         Domain.Core.Queues.Queue queue = await _context.Queues
-            .FindByIdAsync(request.Id, cancellationToken);
+            .GetByIdAsync(request.Id, cancellationToken);
 
         return new Response(queue.ToQueueWithOrdersDto());
     }

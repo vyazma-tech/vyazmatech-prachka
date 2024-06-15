@@ -7,10 +7,10 @@ namespace VyazmaTech.Prachka.Application.Contracts.Users.Queries;
 public static class UserByQuery
 {
     public record struct Query(
-        string? TelegramId,
+        string? TelegramUsername,
         string? Fullname,
         DateOnly? RegistrationDate,
-        int? Page) : IQuery<Response>;
+        int Page) : IQuery<Response>;
 
     public record struct Response(PagedResponse<UserDto> Users);
 }

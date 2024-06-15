@@ -2,12 +2,11 @@ namespace VyazmaTech.Prachka.Application.Abstractions.Querying.User;
 
 public sealed class UserQuery
 {
-    private UserQuery(Guid? id, string? fullname, DateOnly? registrationDate, string? telegramId, int? page, int? limit)
+    private UserQuery(string? fullname, DateOnly? registrationDate, string? telegramUsername, int page, int limit)
     {
-        Id = id;
         Fullname = fullname;
         RegistrationDate = registrationDate;
-        TelegramId = telegramId;
+        TelegramUsername = telegramUsername;
         Page = page;
         Limit = limit;
     }
@@ -25,32 +24,23 @@ public sealed class UserQuery
         return new QueryBuilder();
     }
 
-    public Guid? Id { get; }
-
     public string? Fullname { get; }
 
     public DateOnly? RegistrationDate { get; }
 
-    public string? TelegramId { get; }
+    public string? TelegramUsername { get; }
 
-    public int? Page { get; }
+    public int Page { get; }
 
-    public int? Limit { get; }
+    public int Limit { get; }
 
     internal class QueryBuilder : IQueryBuilder
     {
-        private Guid? _id;
         private string? _fullname;
         private DateOnly? _registrationDate;
         private string? _telegramId;
-        private int? _page;
-        private int? _limit;
-
-        public IQueryBuilder WithId(Guid id)
-        {
-            _id = id;
-            return this;
-        }
+        private int _page;
+        private int _limit;
 
         public IQueryBuilder WithFullname(string fullname)
         {
@@ -64,7 +54,7 @@ public sealed class UserQuery
             return this;
         }
 
-        public IQueryBuilder WithTelegramId(string telegramId)
+        public IQueryBuilder WithTelegramUsername(string telegramId)
         {
             _telegramId = telegramId;
             return this;
@@ -85,7 +75,6 @@ public sealed class UserQuery
         public UserQuery Build()
         {
             return new UserQuery(
-                _id,
                 _fullname,
                 _registrationDate,
                 _telegramId,

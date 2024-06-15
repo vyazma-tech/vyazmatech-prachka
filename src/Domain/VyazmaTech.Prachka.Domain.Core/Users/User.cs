@@ -13,7 +13,7 @@ public sealed class User : Entity, IAuditableEntity
 
     private User(
         Guid id,
-        string telegramUsername,
+        TelegramUsername telegramUsername,
         Fullname fullname,
         DateOnly registrationDate,
         DateTime? modifiedOn = null)
@@ -25,7 +25,7 @@ public sealed class User : Entity, IAuditableEntity
         ModifiedOnUtc = modifiedOn;
     }
 
-    public string TelegramUsername { get; }
+    public TelegramUsername TelegramUsername { get; }
 
     public Fullname Fullname { get; }
 
@@ -33,7 +33,7 @@ public sealed class User : Entity, IAuditableEntity
 
     public DateTime? ModifiedOnUtc { get; set; }
 
-    public static User Create(Guid id, string telegramUsername, Fullname fullname, DateOnly registrationDate)
+    public static User Create(Guid id, TelegramUsername telegramUsername, Fullname fullname, DateOnly registrationDate)
     {
         var user = new User(id, telegramUsername, fullname, registrationDate);
 

@@ -146,7 +146,7 @@ public static class DomainErrors
 
         public static Error InvalidFormat => Error.Validation(
             $"{nameof(TelegramId)}.{nameof(InvalidFormat)}",
-            "Telegram ID should be a number.");
+            "Telegram username should start with '@'.");
     }
 
     public static class Fullname

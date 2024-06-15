@@ -5,6 +5,8 @@ namespace VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 
 public interface IUserRepository
 {
+    Task<User> GetByIdAsync(Guid id, CancellationToken token);
+
     IAsyncEnumerable<User> QueryAsync(
         UserQuery specification,
         CancellationToken cancellationToken);

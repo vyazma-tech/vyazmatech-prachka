@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Common", "src\Domain\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj", "{92C03EB4-11E4-4E5F-B034-8428F047213B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Tests", "tests\VyazmaTech.Prachka.Domain.Tests\VyazmaTech.Prachka.Domain.Tests.csproj", "{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Core.Tests", "tests\VyazmaTech.Prachka.Domain.Core.Tests\VyazmaTech.Prachka.Domain.Core.Tests.csproj", "{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Tools", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Tools\VyazmaTech.Prachka.Infrastructure.Tools.csproj", "{0C438E6A-5E93-4907-B438-A2174C22E256}"
 EndProject
@@ -52,6 +52,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployment", "deployment", 
 		deployment\run_prod.sh = deployment\run_prod.sh
 		deployment\run_test.sh = deployment\run_test.sh
 		deployment\stop_database.sh = deployment\stop_database.sh
+		deployment\add_migration.sh = deployment\add_migration.sh
+		deployment\remove_migration.sh = deployment\remove_migration.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Authentication", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj", "{89BAF7FF-A8ED-4121-85DA-A59128D09729}"

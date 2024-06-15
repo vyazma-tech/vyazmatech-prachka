@@ -2,10 +2,10 @@
 using VyazmaTech.Prachka.Application.Abstractions.Configuration;
 using VyazmaTech.Prachka.Application.Abstractions.Querying.Queue;
 using VyazmaTech.Prachka.Application.Contracts.Common;
-using VyazmaTech.Prachka.Application.Core.Querying.Common;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Dto.Queue;
 using VyazmaTech.Prachka.Application.Mapping;
+using VyazmaTech.Prachka.Domain.Kernel;
 using static VyazmaTech.Prachka.Application.Contracts.Queues.Queries.QueueByQuery;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Queue.Queries;
@@ -14,33 +14,35 @@ internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, Response>
 {
     private readonly IPersistenceContext _persistenceContext;
     private readonly int _recordsPerPage;
-    private readonly IQueryProcessor<Query, IQueryBuilder> _queryProcessor;
+    private readonly IDateTimeProvider _timerProvider;
 
     public QueueByQueryQueryHandler(
         IPersistenceContext persistenceContext,
         IOptions<PaginationConfiguration> paginationConfiguration,
-        IQueryProcessor<Query, IQueryBuilder> queryProcessor)
+        IDateTimeProvider timerProvider)
     {
         _persistenceContext = persistenceContext;
-        _queryProcessor = queryProcessor;
+        _timerProvider = timerProvider;
         _recordsPerPage = paginationConfiguration.Value.RecordsPerPage;
     }
 
     public async ValueTask<Response> Handle(Query request, CancellationToken cancellationToken)
     {
-        IQueryBuilder builder = _queryProcessor.Process(request, QueueQuery.Builder());
-        QueueQuery query = builder.Build();
+        QueueQuery query = QueueQuery.Builder()
+            .WithSearchFromDate(request.AssignmentDate ?? _timerProvider.DateNow)
+            .WithLimit(_recordsPerPage)
+            .WithPage(request.Page)
+            .Build();
 
         long totalCount = await _persistenceContext.Queues.CountAsync(query, cancellationToken);
 
-        List<Domain.Core.Queues.Queue> queues = await _persistenceContext.Queues
-            .QueryAsync(query, cancellationToken)
+        List<QueueDto> queues = await _persistenceContext.Queues
+            .QueryFromAsync(query)
+            .Select(x => x.ToDto())
             .ToListAsync(cancellationToken);
 
-        IEnumerable<QueueDto> result = queues.Select(x => x.ToDto());
-
-        var page = result.ToPagedResponse(
-            query.Page + 1 ?? 1,
+        var page = queues.ToPagedResponse(
+            currentPage: request.Page,
             recordsPerPage: _recordsPerPage,
             totalPages: (totalCount / _recordsPerPage) + 1);
 
