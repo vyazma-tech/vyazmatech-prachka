@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Core.Users;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.EntityConfigurations;
@@ -17,6 +18,7 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasColumnName("telegram_username");
 
         builder.Property(user => user.CreationDate);
+        builder.Property(user => user.ModifiedOnUtc);
 
         builder.Property<string>("fullname");
         builder.Property<string>("telegram_username");

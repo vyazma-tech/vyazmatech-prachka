@@ -27,6 +27,7 @@ public sealed class Order : Entity, IAuditableEntity
         User = user;
         Status = status;
         CreationDateTime = creationDateTimeUtc;
+        CreationDate = creationDateTimeUtc.AsDateOnly();
         ModifiedOnUtc = modifiedOn;
     }
 
@@ -36,11 +37,11 @@ public sealed class Order : Entity, IAuditableEntity
 
     public OrderStatus Status { get; private set; }
 
-    public DateOnly CreationDate => CreationDateTime.AsDateOnly();
+    public DateOnly CreationDate { get; }
 
     public DateTime CreationDateTime { get; }
 
-    public DateTime? ModifiedOnUtc { get; set; }
+    public DateTime? ModifiedOnUtc { get; }
 
     /// <summary>
     /// Pays order and raises <see cref="OrderPaidDomainEvent" />.

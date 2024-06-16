@@ -12,18 +12,18 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasOne(order => order.User)
             .WithMany()
             .HasForeignKey("user_id")
-            .HasPrincipalKey(user => user.Id)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasPrincipalKey(user => user.Id);
 
         builder
             .HasOne(order => order.Queue)
             .WithMany(queue => queue.Orders)
             .HasForeignKey("queue_id")
-            .HasPrincipalKey(queue => queue.Id)
-            .OnDelete(DeleteBehavior.Restrict);
+            .HasPrincipalKey(queue => queue.Id);
 
         builder.Property(order => order.Status).HasDefaultValue(OrderStatus.New);
         builder.Property(order => order.CreationDateTime);
+        builder.Property(order => order.CreationDate);
+        builder.Property(order => order.ModifiedOnUtc);
 
         builder.HasIndex("queue_id", "user_id")
             .IsUnique(false);

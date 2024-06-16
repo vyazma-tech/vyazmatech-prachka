@@ -38,8 +38,8 @@ public sealed class RequestLoggingPreprocessor<TRequest, TResponse> : IPipelineB
             {
                 _logger.LogError("Completed request RequestName = {RequestName} with error", requestName);
             }
-        }
 
-        return response;
+            throw;
+        }
     }
 }

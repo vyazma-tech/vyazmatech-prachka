@@ -13,10 +13,13 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Host.AddSerilog();
 builder.Configuration.AddJsonFile("features.json");
 
+// if (bool.Parse(Environment.GetEnvironmentVariable("VYAZMATECH_WORKERS_ENABLED")!))
+// {
 builder.Services
-    .AddWorkersConfiguration(builder.Configuration);
+    .AddWorkersConfiguration(builder.Configuration)
+    .AddWorkers();
 
-// .AddWorkers();
+// }
 builder.Services
     .AddInfrastructure()
     .AddPostgresConfiguration(builder.Configuration)
@@ -36,7 +39,6 @@ builder.Services
     .AddEndpoints();
 
 WebApplication app = builder.Build().ConfigureApp();
-
 await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
 {
     await scope.UseDatabase();

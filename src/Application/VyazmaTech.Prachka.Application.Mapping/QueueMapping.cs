@@ -28,7 +28,7 @@ public static class QueueMapping
             queue.Orders.Select(x => x.ToDto()).ToArray(),
             queue.State.ToString(),
             ModifiedOn: queue.ModifiedOnUtc,
-            AssignmentDate: queue.CreationDate,
+            AssignmentDate: queue.AssignmentDate,
             ActiveFrom: queue.ActivityBoundaries.ActiveFrom,
             ActiveUntil: queue.ActivityBoundaries.ActiveUntil);
     }

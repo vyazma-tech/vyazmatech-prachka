@@ -31,7 +31,7 @@ public sealed class User : Entity, IAuditableEntity
 
     public DateOnly CreationDate { get; }
 
-    public DateTime? ModifiedOnUtc { get; set; }
+    public DateTime? ModifiedOnUtc { get; }
 
     public static User Create(Guid id, TelegramUsername telegramUsername, Fullname fullname, DateOnly registrationDate)
     {

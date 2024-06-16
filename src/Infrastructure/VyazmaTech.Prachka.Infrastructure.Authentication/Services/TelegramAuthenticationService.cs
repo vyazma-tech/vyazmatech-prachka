@@ -41,6 +41,10 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
         if (user.RefreshToken is null || user.RefreshTokenExpiryUtc < DateTime.UtcNow)
         {
             user.RefreshToken = GenerateRefreshToken();
+            IdentityResult result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded is false)
+                throw new IdentityException(result.ToError());
         }
 
         return new IdentityTokenModel(
@@ -231,7 +235,7 @@ internal sealed class TelegramAuthenticationService : IAuthenticationService
 
         IEnumerable<Claim> claims = roles
             .Select(role => new Claim(ClaimTypes.Role, role))
-            .Append(new Claim(JwtRegisteredClaimNames.Sub, user.UserName ?? string.Empty))
+            .Append(new Claim(ClaimTypes.Name, user.UserName ?? string.Empty))
             .Append(new Claim(JwtRegisteredClaimNames.Name, user.Fullname))
             .Append(new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()))
             .Append(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));

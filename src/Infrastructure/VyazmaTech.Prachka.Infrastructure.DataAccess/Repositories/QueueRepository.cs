@@ -41,8 +41,8 @@ internal sealed class QueueRepository : IQueueRepository
                 on user.Id equals order.User.Id
             join queue in _context.Queues.AsNoTracking()
                 on order.Queue.Id equals queue.Id
-            where user.TelegramUsername == username && queue.AssignmentDate >= searchFrom
-            orderby queue.AssignmentDate
+            where user.TelegramUsername == username && queue.AssignmentDate.Value >= searchFrom
+            orderby queue.AssignmentDate.Value
             select queue;
 
         return queues.AsSplitQuery().AsAsyncEnumerable();
@@ -65,12 +65,12 @@ internal sealed class QueueRepository : IQueueRepository
 
     private IQueryable<Queue> GetSearchQueryable(QueueQuery specification)
     {
-        IQueryable<Queue> queryable = _context.Queues;
+        IQueryable<Queue> queryable = _context.Queues.Include(x => x.Orders);
 
-        queryable = queryable.Where(x => x.AssignmentDate >= specification.SearchFrom)
+        queryable = queryable.Where(x => x.AssignmentDate.Value >= specification.SearchFrom)
             .Skip(specification.Page * specification.Limit)
             .Take(specification.Limit)
-            .OrderByDescending(x => x.AssignmentDate);
+            .OrderByDescending(x => x.AssignmentDate.Value);
 
         return queryable;
     }

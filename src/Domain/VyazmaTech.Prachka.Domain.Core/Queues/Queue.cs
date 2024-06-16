@@ -29,6 +29,7 @@ public sealed class Queue : Entity, IAuditableEntity
     {
         Capacity = capacity;
         AssignmentDate = assignmentDate;
+        CreationDate = assignmentDate.Value;
         ActivityBoundaries = activityBoundaries;
         State = state;
         ModifiedOnUtc = modifiedOn;
@@ -45,9 +46,9 @@ public sealed class Queue : Entity, IAuditableEntity
 
     public IReadOnlyCollection<Order> Orders => _orders;
 
-    public DateOnly CreationDate => AssignmentDate.Value;
+    public DateOnly CreationDate { get; }
 
-    public DateTime? ModifiedOnUtc { get; set; }
+    public DateTime? ModifiedOnUtc { get; }
 
     public void BulkInsert(IReadOnlyCollection<Order> orders)
     {

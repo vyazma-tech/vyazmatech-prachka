@@ -41,6 +41,10 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                 {
                     b.HasBaseType("VyazmaTech.Prachka.Domain.Kernel.Entity");
 
+                    b.Property<DateOnly>("CreationDate")
+                        .HasColumnType("date")
+                        .HasColumnName("creation_date");
+
                     b.Property<DateTime>("CreationDateTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("creation_date_time");
@@ -72,6 +76,10 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
             modelBuilder.Entity("VyazmaTech.Prachka.Domain.Core.Queues.Queue", b =>
                 {
                     b.HasBaseType("VyazmaTech.Prachka.Domain.Kernel.Entity");
+
+                    b.Property<DateOnly>("CreationDate")
+                        .HasColumnType("date")
+                        .HasColumnName("creation_date");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone")
@@ -183,14 +191,14 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                     b.HasOne("VyazmaTech.Prachka.Domain.Core.Queues.Queue", "Queue")
                         .WithMany("Orders")
                         .HasForeignKey("queue_id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_orders_queues_queue_id");
 
                     b.HasOne("VyazmaTech.Prachka.Domain.Core.Users.User", "User")
                         .WithMany()
                         .HasForeignKey("user_id")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_orders_users_user_id");
 

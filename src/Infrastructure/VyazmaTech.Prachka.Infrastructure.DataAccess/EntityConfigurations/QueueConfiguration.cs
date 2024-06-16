@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.EntityConfigurations;
@@ -26,6 +27,8 @@ public sealed class QueueConfiguration : IEntityTypeConfiguration<Queue>
 
         builder.Navigation(queue => queue.Orders).HasField("_orders");
         builder.Property(queue => queue.State).HasDefaultValue(QueueState.Prepared);
+        builder.Property(queue => queue.CreationDate);
+        builder.Property(queue => queue.ModifiedOnUtc);
 
         builder.Property<DateOnly>("assignment_date");
         builder.HasIndex("assignment_date")
