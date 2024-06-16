@@ -43,10 +43,13 @@ internal sealed class UserRepository : IUserRepository
         IQueryable<User> queryable = _context.Users;
 
         if (specification.Fullname is not null)
-            queryable = queryable.Where(x => EF.Functions.ILike(x.Fullname, specification.Fullname));
+            queryable = queryable.Where(x => EF.Functions.ILike(x.Fullname.Value, specification.Fullname));
 
         if (specification.TelegramUsername is not null)
-            queryable = queryable.Where(x => EF.Functions.ILike(x.TelegramUsername, specification.TelegramUsername));
+        {
+            queryable = queryable
+                .Where(x => EF.Functions.ILike(x.TelegramUsername.Value, specification.TelegramUsername));
+        }
 
         if (specification.RegistrationDate is not null)
             queryable = queryable.Where(x => x.CreationDate == specification.RegistrationDate);

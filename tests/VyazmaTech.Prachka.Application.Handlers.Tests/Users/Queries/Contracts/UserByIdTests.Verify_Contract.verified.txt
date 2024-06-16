@@ -1,0 +1,8 @@
+﻿{
+  User: {
+    Id: Guid_1,
+    TelegramUsername: @bobster,
+    Fullname: Bobby Shmurda,
+    RegistrationDate: Date_1
+  }
+}

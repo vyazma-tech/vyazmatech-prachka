@@ -15,8 +15,8 @@ internal sealed class UserByQueryQueryHandler : IQueryHandler<Query, Response>
     private readonly int _recordsPerPage;
 
     public UserByQueryQueryHandler(
-        IOptions<PaginationConfiguration> paginationConfiguration,
-        IPersistenceContext persistenceContext)
+        IPersistenceContext persistenceContext,
+        IOptions<PaginationConfiguration> paginationConfiguration)
     {
         _persistenceContext = persistenceContext;
         _recordsPerPage = paginationConfiguration.Value.RecordsPerPage;

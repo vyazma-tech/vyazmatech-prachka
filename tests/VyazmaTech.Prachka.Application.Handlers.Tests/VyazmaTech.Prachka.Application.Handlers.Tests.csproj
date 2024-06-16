@@ -33,6 +33,22 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <ParentFile>ChangeActivityBoundariesTest</ParentFile>
         </None>
+        <None Update="Queue\Queries\Contracts\QueueByIdTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>OrderByIdTests</ParentFile>
+        </None>
+        <None Update="Queue\Queries\Contracts\QueueByQueryTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>QueueByIdTests</ParentFile>
+        </None>
+        <None Update="Users\Queries\Contracts\UserByIdTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>QueueByIdTests</ParentFile>
+        </None>
+        <None Update="Users\Queries\Contracts\UserByQueryTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>QueueByQueryTests</ParentFile>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

@@ -1,0 +1,15 @@
+﻿{
+  Queues: {
+    RecordPerPage: 10,
+    TotalPages: 1,
+    Bunch: [
+      {
+        Id: Guid_1,
+        MaxCapacity: 1,
+        State: Prepared,
+        AssignmentDate: Date_1,
+        ActiveUntil: Time_MaxValue
+      }
+    ]
+  }
+}

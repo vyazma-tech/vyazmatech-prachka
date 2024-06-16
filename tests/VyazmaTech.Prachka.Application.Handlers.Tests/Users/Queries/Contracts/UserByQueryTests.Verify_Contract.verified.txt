@@ -1,0 +1,6 @@
+﻿{
+  Users: {
+    RecordPerPage: 10,
+    TotalPages: 1
+  }
+}
