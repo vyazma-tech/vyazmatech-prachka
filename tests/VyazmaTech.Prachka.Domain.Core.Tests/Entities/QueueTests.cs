@@ -1,11 +1,13 @@
 ﻿using FluentAssertions;
 using Moq;
+using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.Queues.Events;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
+using VyazmaTech.Prachka.Tests.Tools.FluentBuilders;
 using Xunit;
 
 namespace VyazmaTech.Prachka.Domain.Core.Tests.Entities;
@@ -15,144 +17,104 @@ public class QueueTests
     private readonly Mock<IDateTimeProvider> _dateTimeProvider = new();
 
     [Fact]
-    public void CreateQueueCapacity_ShouldThrow_WhenCapacityIsNegative()
-    {
-        Func<Capacity> action = () => Capacity.Create(-1);
-
-        action.Should().Throw<UserInvalidInputException>();
-    }
-
-    [Fact]
-    public void CreateAssignmentDate_ShouldThrow_WhenAssignmentDateIsInThePast()
-    {
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
-
-        Func<AssignmentDate> action = () => AssignmentDate.Create(
-            _dateTimeProvider.Object.DateNow.AddDays(-1),
-            _dateTimeProvider.Object.DateNow);
-
-        action.Should().Throw<DomainInvalidOperationException>();
-    }
-
-    [Fact]
-    public void CreateAssignmentDate_ShouldThrow_WhenAssignmentDateIsNotNextWeek()
-    {
-        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
-
-        Func<AssignmentDate> action = () => AssignmentDate.Create(
-            _dateTimeProvider.Object.DateNow,
-            _dateTimeProvider.Object.DateNow.AddDays(AssignmentDate.Week + 1));
-
-        action.Should().Throw<DomainInvalidOperationException>();
-    }
-
-    [Fact]
-    public void Add_ShouldThrow_WhenUserOrderIsAlreadyInQueue()
+    public void BulkInsert_ShouldThrow_WhenTransferCauseOverflow()
     {
         var orderId = Guid.NewGuid();
-
-        var order = new Order(
-            orderId,
-            default!,
-            status: default,
-            user: null!,
-            creationDateTimeUtc: default);
-
-        var queue = new Queue(
-            default,
-            default!,
-            default!,
-            default!,
-            default,
-            [new(orderId, default!, default!, default, default)]);
+        Order order = Create.Order.WithId(orderId).Build();
+        Queue queue = Create.Queue
+            .WithCapacity(1)
+            .WithOrders([order])
+            .Build();
 
         Action action = () => queue.BulkInsert([order]);
 
-        action.Should().Throw<DomainInvalidOperationException>();
+        action.Should()
+            .Throw<DomainInvalidOperationException>()
+            .Which.Error.Should()
+            .Be(DomainErrors.Queue.WillOverflow);
     }
 
     [Fact]
-    public void Add_ShouldThrow_WhenQueueIsFull()
+    public void BulkInsert_ShouldThrow_WhenQueueExpired()
     {
-        var order = new Order(
-            Guid.NewGuid(),
-            default!,
-            null!,
-            default,
-            default);
-
-        var queue = new Queue(
-            default!,
-            Capacity.Create(1),
-            default!,
-            default!,
-            default,
-            [new(Guid.NewGuid(), default!, default!, default, default)]);
+        var orderId = Guid.NewGuid();
+        Order order = Create.Order.WithId(orderId).Build();
+        Queue queue = Create.Queue
+            .WithCapacity(2)
+            .WithState(QueueState.Expired)
+            .WithOrders([order])
+            .Build();
 
         Action action = () => queue.BulkInsert([order]);
 
-        action.Should().Throw<DomainInvalidOperationException>();
+        action.Should()
+            .Throw<DomainInvalidOperationException>()
+            .Which.Error.Should()
+            .Be(DomainErrors.Queue.Expired);
     }
 
     [Fact]
-    public void Add_ShouldThrow_WhenQueueIsExpired()
+    public void BulkInsert_ShouldThrow_WhenUserOrderIsAlreadyInQueue()
     {
-        var order = new Order(
-            Guid.NewGuid(),
-            default!,
-            null!,
-            default,
-            default);
-
-        var queue = new Queue(
-            default,
-            Capacity.Create(1),
-            default!,
-            default!,
-            QueueState.Expired,
-            [new(Guid.NewGuid(), default!, default!, default, default)]);
+        var orderId = Guid.NewGuid();
+        Order order = Create.Order.WithId(orderId).Build();
+        Queue queue = Create.Queue
+            .WithState(QueueState.Active)
+            .WithCapacity(2)
+            .WithOrders([order])
+            .Build();
 
         Action action = () => queue.BulkInsert([order]);
-        action.Should().Throw<DomainInvalidOperationException>();
+
+        action.Should()
+            .Throw<DomainInvalidOperationException>()
+            .Which.Error.Should()
+            .Be(DomainErrors.Queue.ContainsOrderWithId(order.Id));
+    }
+
+    [Fact]
+    public void BulkInsert_ShouldRaiseDomainEvent_WhenInsertSucceededAndMaxCapacityReached()
+    {
+        var orderId = Guid.NewGuid();
+        Order order = Create.Order.WithId(orderId).Build();
+        Order newOrder = Create.Order.Build();
+        Queue queue = Create.Queue
+            .WithState(QueueState.Active)
+            .WithCapacity(2)
+            .WithOrders([order])
+            .Build();
+
+        queue.BulkInsert([newOrder]);
+
+        queue.Orders.Should().Contain(order);
+        queue.DomainEvents.Should()
+            .ContainSingle()
+            .Which.Should()
+            .BeOfType<QueueMaxCapacityReachedDomainEvent>();
     }
 
     [Fact]
     public void Remove_ShouldThrow_WhenUserOrderIsNotInQueue()
     {
-        var order = new Order(
-            Guid.NewGuid(),
-            default!,
-            null!,
-            default,
-            default);
-
-        var queue = new Queue(
-            default,
-            default!,
-            default!,
-            default!,
-            default,
-            []);
+        Order order = Create.Order.Build();
+        Queue queue = Create.Queue.Build();
 
         Action action = () => queue.Remove(order);
-        action.Should().Throw<DomainInvalidOperationException>();
+
+        action.Should()
+            .Throw<DomainInvalidOperationException>()
+            .Which.Error.Should()
+            .Be(DomainErrors.Queue.OrderIsNotInQueue(order.Id));
     }
 
     [Fact]
     public void IncreaseCapacity_ShouldNotThrow_WhenNewCapacityIsGreaterThenCurrent()
     {
         int currentCapacity = 1;
-        int newCapacity = 2;
+        var newCapacity = Capacity.Create(2);
+        Queue queue = Create.Queue.WithCapacity(currentCapacity).Build();
 
-        var queue = new Queue(
-            default,
-            Capacity.Create(currentCapacity),
-            default!,
-            default!,
-            default,
-            []);
-
-        queue.IncreaseCapacity(Capacity.Create(newCapacity));
+        queue.IncreaseCapacity(newCapacity);
 
         queue.Capacity.Should().Be(newCapacity);
     }
@@ -163,18 +125,15 @@ public class QueueTests
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
         _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1)));
 
-        var queue = new Queue(
-            default,
-            default!,
-            default!,
-            QueueActivityBoundaries.Create(
-                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow),
-                TimeOnly.FromDateTime(_dateTimeProvider.Object.UtcNow.AddSeconds(1))),
-            default!,
-            []);
+        Queue queue = Create.Queue
+            .WithActivityBoundaries(
+                startDate: _dateTimeProvider.Object.UtcNow.AsTimeOnly(),
+                endDate: _dateTimeProvider.Object.UtcNow.AddSeconds(1).AsTimeOnly())
+            .Build();
 
         queue.ModifyState(QueueState.Expired);
 
+        queue.State.Should().Be(QueueState.Expired);
         queue.DomainEvents.Should()
             .ContainSingle()
             .Which.Should()

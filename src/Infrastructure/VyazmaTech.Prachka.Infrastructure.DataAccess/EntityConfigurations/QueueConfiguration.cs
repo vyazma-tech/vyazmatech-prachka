@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.EntityConfigurations;

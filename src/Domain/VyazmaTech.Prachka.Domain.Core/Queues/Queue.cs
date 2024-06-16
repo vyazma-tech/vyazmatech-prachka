@@ -117,7 +117,7 @@ public sealed class Queue : Entity, IAuditableEntity
 
     public void ModifyState(QueueState state)
     {
-        if (State == QueueState.Expired)
+        if (state == QueueState.Expired)
             Raise(new QueueExpiredDomainEvent(this));
 
         State = state;

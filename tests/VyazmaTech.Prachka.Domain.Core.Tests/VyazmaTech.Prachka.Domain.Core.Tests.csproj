@@ -19,6 +19,7 @@
         <ProjectReference Include="..\..\src\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj"/>
         <ProjectReference Include="..\..\src\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
         <ProjectReference Include="..\..\src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Tools\VyazmaTech.Prachka.Infrastructure.Tools.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Tests.Tools\VyazmaTech.Prachka.Tests.Tools.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

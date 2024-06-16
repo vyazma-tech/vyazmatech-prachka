@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.Users;
-using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Extensions;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;

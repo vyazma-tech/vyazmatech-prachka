@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 
-namespace VyazmaTech.Prachka.Domain.Core.Tests.Entities.ClassData;
+namespace VyazmaTech.Prachka.Domain.Core.Tests.ValueObject.ClassData;
 
-public sealed class TelegramIdClassData : IEnumerable<object[]>
+public sealed class TelegramUsernameClassData : IEnumerable<object[]>
 {
     public IEnumerator<object[]> GetEnumerator()
     {

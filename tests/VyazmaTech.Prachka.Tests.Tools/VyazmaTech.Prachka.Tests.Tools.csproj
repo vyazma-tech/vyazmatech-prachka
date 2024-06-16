@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);SA1401; SA1306; IDE1006; SA1000</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="GenFu"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="VyazmaTech.Prachka.Domain.Core.Tests"/>
+        <InternalsVisibleTo Include="VyazmaTech.Prachka.Application.Handlers.Tests"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\src\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj"/>
+    </ItemGroup>
+</Project>
