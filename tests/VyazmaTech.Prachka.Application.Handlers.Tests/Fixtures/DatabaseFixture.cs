@@ -5,7 +5,6 @@ using Npgsql;
 using Respawn;
 using Testcontainers.PostgreSql;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures.Extensions;
-using Xunit;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 

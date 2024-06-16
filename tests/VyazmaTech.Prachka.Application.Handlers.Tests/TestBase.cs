@@ -1,7 +1,6 @@
 ﻿using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
-using Xunit;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests;
 

@@ -1,0 +1,10 @@
+﻿{
+  Queue: {
+    Id: Guid_1,
+    MaxCapacity: 2,
+    CurrentCapacity: 1,
+    State: Prepared,
+    AssignmentDate: Date_1,
+    ActiveUntil: Time_MaxValue
+  }
+}

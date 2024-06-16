@@ -7,7 +7,7 @@ using VyazmaTech.Prachka.Application.Dto.Identity;
 using VyazmaTech.Prachka.Application.Handlers.Identity.Commands.ChangeRole;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Identity.ClassData;
-using Xunit;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests.Identity;
 
@@ -21,7 +21,8 @@ public class ChangeRoleTest : TestBase
     }
 
     [Theory]
-    [ClassData(typeof(ChangeRoleClassData))]
+    [ClassData(typeof(AdminChangeRoleClassData))]
+    [ClassData(typeof(ModeratorChangeRoleClassData))]
     public async Task Handle_ShouldNotThrow_WhenAdminChangeRole(string currentRole, string newRole)
     {
         var user = new IdentityUserDto(
@@ -46,8 +47,8 @@ public class ChangeRoleTest : TestBase
     }
 
     [Theory]
-    [ClassData(typeof(ChangeRoleClassData))]
-    public async Task Handle_ShouldReturnSuccessResult_WhenModeratorChangeRole(string currentRole, string newRole)
+    [ClassData(typeof(ModeratorChangeRoleClassData))]
+    public async Task Handle_ShouldNotThrow_WhenModeratorChangeRole(string currentRole, string newRole)
     {
         var user = new IdentityUserDto(
             Guid.Empty,
@@ -68,5 +69,30 @@ public class ChangeRoleTest : TestBase
         Func<Task<ChangeRole.Response>> action = async () => await handler.Handle(command, default);
 
         await action.Should().NotThrowAsync();
+    }
+
+    [Theory]
+    [ClassData(typeof(AdminChangeRoleClassData))]
+    public async Task Handle_ShouldThrow_WhenModeratorPromoteToAdminOrManageAdmin(string currentRole, string newRole)
+    {
+        var user = new IdentityUserDto(
+            Guid.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty,
+            string.Empty);
+
+        var currentUser = new ModeratorUser(user.Id);
+
+        _authService
+            .Setup(x => x.GetUserRoleAsync(user.TelegramUsername, default))
+            .ReturnsAsync(currentRole);
+
+        var command = new ChangeRole.Command(user.TelegramUsername, newRole);
+        var handler = new ChangeRoleCommandHandler(_authService.Object, currentUser);
+
+        Func<Task<ChangeRole.Response>> action = async () => await handler.Handle(command, default);
+
+        await action.Should().ThrowAsync<IdentityException>();
     }
 }

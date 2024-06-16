@@ -16,4 +16,9 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="VyazmaTech.Prachka.Domain.Core.Tests"/>
+        <InternalsVisibleTo Include="VyazmaTech.Prachka.Application.Handlers.Tests"/>
+    </ItemGroup>
 </Project>

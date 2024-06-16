@@ -1,0 +1,10 @@
+﻿{
+  Queue: {
+    Id: Guid_1,
+    CurrentCapacity: 1,
+    State: Active,
+    AssignmentDate: Date_1,
+    ActiveFrom: Time_1,
+    ActiveUntil: Time_2
+  }
+}

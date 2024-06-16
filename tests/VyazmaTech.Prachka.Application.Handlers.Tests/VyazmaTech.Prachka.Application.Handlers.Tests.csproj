@@ -11,6 +11,7 @@
         <PackageReference Include="Moq"/>
         <PackageReference Include="Respawn"/>
         <PackageReference Include="Testcontainers.PostgreSql"/>
+        <PackageReference Include="Verify.Xunit"/>
         <PackageReference Include="xunit"/>
         <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
         <PackageReference Include="coverlet.collector" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
@@ -27,6 +28,16 @@
         <Compile Remove="TestResults\**"/>
         <EmbeddedResource Remove="TestResults\**"/>
         <None Remove="TestResults\**"/>
+        <None Update="Queue\Commands\Contracts\IncreaseCapacityTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>ChangeActivityBoundariesTest</ParentFile>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="**\**\Contracts\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>
