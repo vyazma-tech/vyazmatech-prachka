@@ -10,7 +10,8 @@ public static class UserByQuery
         string? TelegramUsername,
         string? Fullname,
         DateOnly? RegistrationDate,
-        int Page) : IQuery<Response>;
+        int Page,
+        int Limit) : IQuery<Response>;
 
     public record struct Response(PagedResponse<UserDto> Users);
 }

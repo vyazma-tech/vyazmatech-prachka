@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Application.Abstractions.Querying.Queue;
+using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
@@ -48,7 +48,7 @@ internal sealed class QueueRepository : IQueueRepository
         return queues.AsSplitQuery().AsAsyncEnumerable();
     }
 
-    public IAsyncEnumerable<Queue> QueryFromAsync(QueueQuery specification)
+    public IAsyncEnumerable<Queue> QueryFromAsync(QueueByQuery.Query specification)
     {
         IQueryable<Queue> queryable = GetSearchQueryable(specification);
         return queryable.AsAsyncEnumerable();
@@ -57,13 +57,13 @@ internal sealed class QueueRepository : IQueueRepository
     public void InsertRange(IReadOnlyCollection<Queue> queues)
         => _context.AddRange(queues);
 
-    public Task<long> CountAsync(QueueQuery specification, CancellationToken cancellationToken)
+    public Task<long> CountAsync(QueueByQuery.Query specification, CancellationToken cancellationToken)
     {
         IQueryable<Queue> queryable = GetSearchQueryable(specification);
         return queryable.LongCountAsync(cancellationToken);
     }
 
-    private IQueryable<Queue> GetSearchQueryable(QueueQuery specification)
+    private IQueryable<Queue> GetSearchQueryable(QueueByQuery.Query specification)
     {
         IQueryable<Queue> queryable = _context.Queues.Include(x => x.Orders);
 

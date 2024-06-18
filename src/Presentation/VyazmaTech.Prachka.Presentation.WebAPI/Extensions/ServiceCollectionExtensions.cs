@@ -42,8 +42,6 @@ internal static class ServiceCollectionExtensions
         IConfiguration configuration)
     {
         services.Configure<PaginationConfiguration>(configuration.GetSection(PaginationConfiguration.SectionKey));
-
-        services.AddQueryBuilders();
         services.AddCurrentUsers();
 
         return services;

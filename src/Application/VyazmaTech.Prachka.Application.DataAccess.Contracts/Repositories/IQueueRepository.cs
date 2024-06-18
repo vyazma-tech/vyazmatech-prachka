@@ -1,4 +1,4 @@
-﻿using VyazmaTech.Prachka.Application.Abstractions.Querying.Queue;
+﻿using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 
@@ -12,9 +12,9 @@ public interface IQueueRepository
 
     IAsyncEnumerable<Queue> QueryByTelegramUsername(TelegramUsername username, DateOnly searchFrom);
 
-    IAsyncEnumerable<Queue> QueryFromAsync(QueueQuery specification);
+    IAsyncEnumerable<Queue> QueryFromAsync(QueueByQuery.Query specification);
 
     void InsertRange(IReadOnlyCollection<Queue> queues);
 
-    Task<long> CountAsync(QueueQuery specification, CancellationToken cancellationToken);
+    Task<long> CountAsync(QueueByQuery.Query specification, CancellationToken cancellationToken);
 }

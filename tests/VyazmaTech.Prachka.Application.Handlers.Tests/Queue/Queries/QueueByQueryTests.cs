@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Moq;
-using VyazmaTech.Prachka.Application.Abstractions.Configuration;
-using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
+﻿using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
 using VyazmaTech.Prachka.Application.Handlers.Queue.Queries;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Kernel;
@@ -23,14 +20,7 @@ public sealed class QueueByQueryTests : TestBase
 
     public QueueByQueryTests(CoreDatabaseFixture fixture) : base(fixture)
     {
-        var timeProvider = new Mock<IDateTimeProvider>();
-        var pagination = new Mock<IOptions<PaginationConfiguration>>();
-
-        pagination
-            .Setup(x => x.Value)
-            .Returns(new PaginationConfiguration { RecordsPerPage = 10 });
-
-        _handler = new QueueByQueryQueryHandler(fixture.PersistenceContext, pagination.Object, timeProvider.Object);
+        _handler = new QueueByQueryQueryHandler(fixture.PersistenceContext);
     }
 
     [Fact]
@@ -48,7 +38,7 @@ public sealed class QueueByQueryTests : TestBase
         await PersistenceContext.SaveChangesAsync(CancellationToken.None);
 
         // Act
-        var query = new QueueByQuery.Query(assignmentDate, 0);
+        var query = new QueueByQuery.Query(assignmentDate, Page: 0, Limit: 10);
         var response = await _handler.Handle(query, CancellationToken.None);
 
         // Assert

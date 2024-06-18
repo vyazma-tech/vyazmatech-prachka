@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Application.Abstractions.Querying.User;
+using VyazmaTech.Prachka.Application.Contracts.Users.Queries;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
@@ -23,7 +23,7 @@ internal sealed class UserRepository : IUserRepository
                ?? throw new NotFoundException(DomainErrors.User.NotFound);
     }
 
-    public IAsyncEnumerable<User> QueryAsync(UserQuery specification, CancellationToken cancellationToken)
+    public IAsyncEnumerable<User> QueryAsync(UserByQuery.Query specification, CancellationToken cancellationToken)
     {
         IQueryable<User> queryable = GetSearchQueryable(specification);
         return queryable.ToAsyncEnumerable();
@@ -32,13 +32,13 @@ internal sealed class UserRepository : IUserRepository
     public void Insert(User user)
         => _context.Users.Add(user);
 
-    public Task<long> CountAsync(UserQuery specification, CancellationToken cancellationToken)
+    public Task<long> CountAsync(UserByQuery.Query specification, CancellationToken cancellationToken)
     {
         IQueryable<User> queryable = GetSearchQueryable(specification);
         return queryable.LongCountAsync(cancellationToken);
     }
 
-    private IQueryable<User> GetSearchQueryable(UserQuery specification)
+    private IQueryable<User> GetSearchQueryable(UserByQuery.Query specification)
     {
         IQueryable<User> queryable = _context.Users;
 

@@ -1,7 +1,4 @@
-﻿using Microsoft.Extensions.Options;
-using Moq;
-using VyazmaTech.Prachka.Application.Abstractions.Configuration;
-using VyazmaTech.Prachka.Application.Contracts.Users.Queries;
+﻿using VyazmaTech.Prachka.Application.Contracts.Users.Queries;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Application.Handlers.User.Queries;
 using VyazmaTech.Prachka.Tests.Tools.FluentBuilders;
@@ -22,13 +19,7 @@ public sealed class UserByQueryTests : TestBase
 
     public UserByQueryTests(CoreDatabaseFixture fixture) : base(fixture)
     {
-        var pagination = new Mock<IOptions<PaginationConfiguration>>();
-
-        pagination
-            .Setup(x => x.Value)
-            .Returns(new PaginationConfiguration { RecordsPerPage = 10 });
-
-        _handler = new UserByQueryQueryHandler(fixture.PersistenceContext, pagination.Object);
+        _handler = new UserByQueryQueryHandler(fixture.PersistenceContext);
     }
 
     [Fact]
@@ -44,7 +35,12 @@ public sealed class UserByQueryTests : TestBase
         await PersistenceContext.SaveChangesAsync(CancellationToken.None);
 
         // Act
-        var query = new UserByQuery.Query("@bo", "Bobby", default, 0);
+        var query = new UserByQuery.Query(
+            TelegramUsername: "@bo",
+            Fullname: "Bobby",
+            RegistrationDate: default,
+            Page: 0,
+            Limit: 10);
         var response = await _handler.Handle(query, CancellationToken.None);
 
         // Assert

@@ -1,5 +1,7 @@
 ﻿using FastEndpoints;
 using Mediator;
+using Microsoft.Extensions.Options;
+using VyazmaTech.Prachka.Application.Abstractions.Configuration;
 using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
 using VyazmaTech.Prachka.Application.Dto;
 using VyazmaTech.Prachka.Application.Dto.Queue;
@@ -11,10 +13,12 @@ namespace VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1;
 internal class FindQueuesEndpoint : Endpoint<FindQueuesRequest, PagedResponse<QueueDto>>
 {
     private readonly ISender _sender;
+    private readonly int _recordPerPage;
 
-    public FindQueuesEndpoint(ISender sender)
+    public FindQueuesEndpoint(ISender sender, IOptions<PaginationConfiguration> paginationConfiguration)
     {
         _sender = sender;
+        _recordPerPage = paginationConfiguration.Value.RecordsPerPage;
     }
 
     public override void Configure()
@@ -27,7 +31,10 @@ internal class FindQueuesEndpoint : Endpoint<FindQueuesRequest, PagedResponse<Qu
 
     public override async Task HandleAsync(FindQueuesRequest req, CancellationToken ct)
     {
-        var query = new QueueByQuery.Query(req.AssignmentDate, req.Page);
+        var query = new QueueByQuery.Query(
+            SearchFrom: req.SearchFrom,
+            Page: req.Page,
+            Limit: req.Limit ?? _recordPerPage);
 
         QueueByQuery.Response response = await _sender.Send(query, ct);
 

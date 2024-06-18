@@ -6,7 +6,7 @@ namespace VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
 
 public static class QueueByQuery
 {
-    public record struct Query(DateOnly? AssignmentDate, int Page) : IQuery<Response>;
+    public record struct Query(DateOnly? SearchFrom, int Page, int Limit) : IQuery<Response>;
 
     public record struct Response(PagedResponse<QueueDto> Queues);
 }
