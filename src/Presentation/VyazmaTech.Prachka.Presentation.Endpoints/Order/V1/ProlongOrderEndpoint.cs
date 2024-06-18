@@ -1,11 +1,11 @@
 ﻿using FastEndpoints;
 using Mediator;
-using VyazmaTech.Prachka.Application.Dto.Order;
+using VyazmaTech.Prachka.Application.Dto.Core.Order;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Authorization;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Order.V1.Models;
-using static VyazmaTech.Prachka.Application.Contracts.Orders.Commands.ProlongOrder;
+using static VyazmaTech.Prachka.Application.Contracts.Core.Orders.Commands.ProlongOrder;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Order.V1;
 

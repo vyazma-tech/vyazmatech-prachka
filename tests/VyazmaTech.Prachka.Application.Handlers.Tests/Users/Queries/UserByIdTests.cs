@@ -1,6 +1,6 @@
-﻿using VyazmaTech.Prachka.Application.Contracts.Users.Queries;
+﻿using VyazmaTech.Prachka.Application.Contracts.Core.Users.Queries;
+using VyazmaTech.Prachka.Application.Handlers.Core.User.Queries;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
-using VyazmaTech.Prachka.Application.Handlers.User.Queries;
 using VyazmaTech.Prachka.Domain.Kernel;
 using VyazmaTech.Prachka.Tests.Tools.FluentBuilders;
 

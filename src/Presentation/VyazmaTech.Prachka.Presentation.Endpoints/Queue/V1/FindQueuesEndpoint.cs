@@ -2,9 +2,9 @@
 using Mediator;
 using Microsoft.Extensions.Options;
 using VyazmaTech.Prachka.Application.Abstractions.Configuration;
-using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
+using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries;
 using VyazmaTech.Prachka.Application.Dto;
-using VyazmaTech.Prachka.Application.Dto.Queue;
+using VyazmaTech.Prachka.Application.Dto.Core.Queue;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1.Models;
 

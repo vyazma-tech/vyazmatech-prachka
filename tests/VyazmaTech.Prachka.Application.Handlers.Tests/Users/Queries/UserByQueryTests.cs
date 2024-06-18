@@ -1,11 +1,10 @@
-﻿using VyazmaTech.Prachka.Application.Contracts.Users.Queries;
+﻿using VyazmaTech.Prachka.Application.Contracts.Core.Users.Queries;
+using VyazmaTech.Prachka.Application.Handlers.Core.User.Queries;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
-using VyazmaTech.Prachka.Application.Handlers.User.Queries;
 using VyazmaTech.Prachka.Tests.Tools.FluentBuilders;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests.Users.Queries;
 
-// TODO: что то с кьюрингом
 public sealed class UserByQueryTests : TestBase
 {
     private static readonly VerifySettings Settings;
@@ -36,8 +35,8 @@ public sealed class UserByQueryTests : TestBase
 
         // Act
         var query = new UserByQuery.Query(
-            TelegramUsername: "@bo",
-            Fullname: "Bobby",
+            TelegramUsername: "@bo%",
+            Fullname: "%by s%",
             RegistrationDate: default,
             Page: 0,
             Limit: 10);

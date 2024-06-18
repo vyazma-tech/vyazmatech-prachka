@@ -4,12 +4,10 @@
     <EnablePackageVersionOverride>false</EnablePackageVersionOverride>
   </PropertyGroup>
   <ItemGroup>
-      <PackageVersion Include="FastEndpoints" Version="5.21.2"/>
-      <PackageVersion Include="FastEndpoints.Swagger" Version="5.21.2"/>
-      <PackageVersion Include="FluentChaining" Version="1.0.4"/>
+      <PackageVersion Include="FastEndpoints" Version="5.26.0"/>
+      <PackageVersion Include="FastEndpoints.Swagger" Version="5.26.0"/>
       <PackageVersion Include="FluentValidation" Version="11.8.1"/>
       <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.8.1"/>
-      <PackageVersion Include="GenFu" Version="1.6.0"/>
       <PackageVersion Include="Mediator.Abstractions" Version="2.1.7"/>
       <PackageVersion Include="Mediator.SourceGenerator" Version="2.1.7"/>
       <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6"/>
@@ -39,8 +37,6 @@
   </ItemGroup>
   <!--Tests-->
   <ItemGroup>
-      <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.14"/>
-      <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="7.0.14"/>
       <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.14"/>
       <PackageVersion Include="Respawn" Version="6.1.0"/>
       <PackageVersion Include="Testcontainers.PostgreSql" Version="3.6.0"/>
@@ -51,5 +47,6 @@
       <PackageVersion Include="xunit" Version="2.8.1"/>
       <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5"/>
       <PackageVersion Include="coverlet.collector" Version="3.1.2"/>
+      <PackageVersion Include="GenFu" Version="1.6.0"/>
   </ItemGroup>
 </Project>

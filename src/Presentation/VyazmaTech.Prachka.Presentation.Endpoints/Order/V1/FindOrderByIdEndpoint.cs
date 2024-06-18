@@ -1,7 +1,7 @@
 ﻿using FastEndpoints;
 using Mediator;
-using VyazmaTech.Prachka.Application.Contracts.Orders.Queries;
-using VyazmaTech.Prachka.Application.Dto.Order;
+using VyazmaTech.Prachka.Application.Contracts.Core.Orders.Queries;
+using VyazmaTech.Prachka.Application.Dto.Core.Order;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Order.V1.Models;

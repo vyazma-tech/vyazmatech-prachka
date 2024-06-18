@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using VyazmaTech.Prachka.Application.Contracts.Orders.Commands;
-using VyazmaTech.Prachka.Application.Handlers.Order.Commands.ProlongOrder;
+using VyazmaTech.Prachka.Application.Contracts.Core.Orders.Commands;
+using VyazmaTech.Prachka.Application.Handlers.Core.Order.Commands.ProlongOrder;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Orders;

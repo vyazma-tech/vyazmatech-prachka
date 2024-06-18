@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Moq;
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
-using VyazmaTech.Prachka.Application.Contracts.Queues.Commands;
+using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Commands;
 using VyazmaTech.Prachka.Application.Core.Errors;
-using VyazmaTech.Prachka.Application.Handlers.Queue.Commands.BulkRemoveOrders;
+using VyazmaTech.Prachka.Application.Handlers.Core.Queue.Commands.BulkRemoveOrders;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;

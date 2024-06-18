@@ -1,5 +1,5 @@
 using VyazmaTech.Prachka.Application.Dto;
-using VyazmaTech.Prachka.Application.Dto.Queue;
+using VyazmaTech.Prachka.Application.Dto.Core.Queue;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 
 namespace VyazmaTech.Prachka.Application.Mapping;

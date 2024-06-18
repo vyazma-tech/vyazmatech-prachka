@@ -1,5 +1,5 @@
-﻿using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
-using VyazmaTech.Prachka.Application.Handlers.Queue.Queries;
+﻿using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries;
+using VyazmaTech.Prachka.Application.Handlers.Core.Queue.Queries;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Kernel;
 using VyazmaTech.Prachka.Tests.Tools.FluentBuilders;

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using VyazmaTech.Prachka.Application.Contracts.Queues.Commands;
-using VyazmaTech.Prachka.Application.Handlers.Queue.Commands.IncreaseQueueCapacity;
+using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Commands;
+using VyazmaTech.Prachka.Application.Handlers.Core.Queue.Commands.IncreaseQueueCapacity;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Kernel;

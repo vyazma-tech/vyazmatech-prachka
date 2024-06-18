@@ -1,6 +1,13 @@
 ﻿{
   Users: {
     RecordPerPage: 10,
-    TotalPages: 1
+    TotalPages: 1,
+    Bunch: [
+      {
+        Id: Guid_1,
+        TelegramUsername: @bobster,
+        Fullname: Bobby Shmurda
+      }
+    ]
   }
 }

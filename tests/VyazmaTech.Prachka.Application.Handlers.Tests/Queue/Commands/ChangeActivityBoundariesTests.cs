@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Moq;
-using VyazmaTech.Prachka.Application.Contracts.Queues.Commands;
+using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Commands;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
-using VyazmaTech.Prachka.Application.Handlers.Queue.Commands.ChangeQueueActivityBoundaries;
+using VyazmaTech.Prachka.Application.Handlers.Core.Queue.Commands.ChangeQueueActivityBoundaries;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Kernel;

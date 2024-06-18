@@ -1,5 +1,5 @@
 using VyazmaTech.Prachka.Application.Dto;
-using VyazmaTech.Prachka.Application.Dto.User;
+using VyazmaTech.Prachka.Application.Dto.Core.User;
 using VyazmaTech.Prachka.Domain.Core.Users;
 
 namespace VyazmaTech.Prachka.Application.Mapping;

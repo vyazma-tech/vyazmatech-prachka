@@ -10,4 +10,8 @@
         <ProjectReference Include="..\VyazmaTech.Prachka.Application.Dto\VyazmaTech.Prachka.Application.Dto.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Folder Include="Core\"/>
+    </ItemGroup>
+
 </Project>

@@ -19,4 +19,8 @@
         <InternalsVisibleTo Include="Presentation.Endpoints"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Core\"/>
+    </ItemGroup>
 </Project>

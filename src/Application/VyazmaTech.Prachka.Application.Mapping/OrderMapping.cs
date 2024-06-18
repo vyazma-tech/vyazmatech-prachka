@@ -1,5 +1,5 @@
 using VyazmaTech.Prachka.Application.Dto;
-using VyazmaTech.Prachka.Application.Dto.Order;
+using VyazmaTech.Prachka.Application.Dto.Core.Order;
 using VyazmaTech.Prachka.Domain.Core.Orders;
 
 namespace VyazmaTech.Prachka.Application.Mapping;

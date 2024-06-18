@@ -1,4 +1,4 @@
-﻿using VyazmaTech.Prachka.Application.Contracts.Queues.Queries;
+﻿using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Application.Contracts.Users.Queries;
+using VyazmaTech.Prachka.Application.Contracts.Core.Users.Queries;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
