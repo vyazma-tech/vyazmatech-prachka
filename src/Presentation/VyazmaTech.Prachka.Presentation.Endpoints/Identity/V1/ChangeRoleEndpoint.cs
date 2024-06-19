@@ -1,13 +1,14 @@
 using FastEndpoints;
 using Mediator;
 using VyazmaTech.Prachka.Application.Contracts.Identity.Commands;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Authorization;
+using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Identity.V1.Models;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Identity.V1;
 
-internal class ChangeRoleEndpoint : Endpoint<ChangeRoleRequest, Result>
+internal class ChangeRoleEndpoint : Endpoint<ChangeRoleRequest, ChangeRole.Response>
 {
     private const string FeatureName = "ChangeRole";
     private readonly ISender _sender;
@@ -29,11 +30,15 @@ internal class ChangeRoleEndpoint : Endpoint<ChangeRoleRequest, Result>
     {
         var command = new ChangeRole.Command(req.Username, req.NewRoleName);
 
-        ChangeRole.Response response = await _sender.Send(command, ct);
+        try
+        {
+            ChangeRole.Response response = await _sender.Send(command, ct);
 
-        if (response.Result.IsFaulted)
-            await SendForbiddenAsync(ct);
-        else
-            await SendOkAsync(response.Result, ct);
+            await SendOkAsync(response, ct);
+        }
+        catch (IdentityException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

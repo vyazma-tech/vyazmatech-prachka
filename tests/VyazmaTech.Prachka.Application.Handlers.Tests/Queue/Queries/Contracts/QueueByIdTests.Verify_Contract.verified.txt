@@ -1,0 +1,10 @@
+﻿{
+  Queue: {
+    Id: Guid_1,
+    MaxCapacity: 1,
+    Orders: [],
+    State: Prepared,
+    AssignmentDate: Date_1,
+    ActiveUntil: Time_MaxValue
+  }
+}

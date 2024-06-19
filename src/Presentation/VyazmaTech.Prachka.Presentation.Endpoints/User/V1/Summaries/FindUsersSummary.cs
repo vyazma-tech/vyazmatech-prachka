@@ -1,7 +1,7 @@
 ﻿using FastEndpoints;
 using Microsoft.AspNetCore.Http;
 using VyazmaTech.Prachka.Application.Dto;
-using VyazmaTech.Prachka.Application.Dto.User;
+using VyazmaTech.Prachka.Application.Dto.Core.User;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.User.V1.Summaries;
 

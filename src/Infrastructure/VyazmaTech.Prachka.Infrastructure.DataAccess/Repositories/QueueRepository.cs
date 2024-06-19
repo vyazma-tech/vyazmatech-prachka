@@ -1,111 +1,76 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Application.Abstractions.Querying.Queue;
+using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Core.Queue;
-using VyazmaTech.Prachka.Domain.Core.User;
+using VyazmaTech.Prachka.Domain.Common.Errors;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
+using VyazmaTech.Prachka.Domain.Core.Queues;
+using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;
 
-internal sealed class QueueRepository : RepositoryBase<QueueEntity, QueueModel>, IQueueRepository
+internal sealed class QueueRepository : IQueueRepository
 {
+    private readonly DatabaseContext _context;
+
     public QueueRepository(DatabaseContext context)
-        : base(context)
     {
+        _context = context;
     }
 
-    public IAsyncEnumerable<QueueEntity> QueryAsync(QueueQuery specification, CancellationToken cancellationToken)
+    public async Task<Queue> GetByIdAsync(Guid id, CancellationToken token)
     {
-        IQueryable<QueueModel> queryable = ApplyQuery(specification);
-
-        var finalQueryable = queryable.Select(queue => new
-        {
-            queue,
-            orders = queue.Orders.Select(x => new OrderInfo(
-                x.Id,
-                new UserInfo(
-                    x.UserId,
-                    x.User.TelegramUsername,
-                    x.User.Fullname),
-                queue.Id,
-                Enum.Parse<OrderStatus>(x.Status)))
-        });
-
-        return finalQueryable.AsAsyncEnumerable().Select(x => MapTo(x.queue, x.orders));
+        return await _context.Queues
+                   .AsSplitQuery()
+                   .Include(x => x.Orders)
+                   .ThenInclude(x => x.User)
+                   .FirstOrDefaultAsync(x => x.Id == id, token)
+               ?? throw new NotFoundException(DomainErrors.Queue.NotFound);
     }
 
-    public Task<long> CountAsync(QueueQuery specification, CancellationToken cancellationToken)
+    public async Task<Queue?> FindByAssignmentDate(AssignmentDate assignmentDate, CancellationToken token)
+        => await _context.Queues.FirstOrDefaultAsync(x => x.AssignmentDate == assignmentDate, token);
+
+    public IAsyncEnumerable<Queue> QueryByTelegramUsername(
+        TelegramUsername username,
+        DateOnly searchFrom)
     {
-        IQueryable<QueueModel> queryable = ApplyQuery(specification);
+        IQueryable<Queue> queues =
+            from user in _context.Users.AsNoTracking()
+            join order in _context.Orders.AsNoTracking()
+                on user.Id equals order.User.Id
+            join queue in _context.Queues.AsNoTracking()
+                on order.Queue.Id equals queue.Id
+            where user.TelegramUsername == username && queue.AssignmentDate.Value >= searchFrom
+            orderby queue.AssignmentDate.Value
+            select queue;
+
+        return queues.AsSplitQuery().AsAsyncEnumerable();
+    }
+
+    public IAsyncEnumerable<Queue> QueryFromAsync(QueueByQuery.Query specification)
+    {
+        IQueryable<Queue> queryable = GetSearchQueryable(specification);
+        return queryable.AsAsyncEnumerable();
+    }
+
+    public void InsertRange(IReadOnlyCollection<Queue> queues)
+        => _context.AddRange(queues);
+
+    public Task<long> CountAsync(QueueByQuery.Query specification, CancellationToken cancellationToken)
+    {
+        IQueryable<Queue> queryable = GetSearchQueryable(specification);
         return queryable.LongCountAsync(cancellationToken);
     }
 
-    protected override QueueModel MapFrom(QueueEntity entity)
+    private IQueryable<Queue> GetSearchQueryable(QueueByQuery.Query specification)
     {
-        return QueueMapping.MapFrom(entity);
-    }
+        IQueryable<Queue> queryable = _context.Queues.Include(x => x.Orders);
 
-    protected override bool Equal(QueueEntity entity, QueueModel model)
-    {
-        return entity.Id.Equals(model.Id);
-    }
-
-    protected override void UpdateModel(QueueModel model, QueueEntity entity)
-    {
-        model.ActiveFrom = entity.ActiveFrom;
-        model.ActiveUntil = entity.ActiveUntil;
-        model.MaxCapacityReached = entity.MaxCapacityReached;
-        model.State = entity.State.ToString();
-        model.Capacity = entity.Capacity;
-        model.ModifiedOn = entity.ModifiedOn;
-    }
-
-    private static QueueEntity MapTo(QueueModel model, IEnumerable<OrderInfo> orderIds)
-    {
-        return QueueMapping.MapTo(model, orderIds.ToHashSet(new OrderByIdComparer()));
-    }
-
-    private IQueryable<QueueModel> ApplyQuery(QueueQuery specification)
-    {
-        IQueryable<QueueModel> queryable = DbSet;
-
-        queryable = queryable
-            .AsSplitQuery()
-            .Include(x => x.Orders)
-            .ThenInclude(x => x.User)
-            .OrderBy(x => x.Id);
-
-        if (specification.Id is not null)
-        {
-            queryable = queryable.Where(x => x.Id == specification.Id);
-        }
-
-        if (specification.AssignmentDate is not null)
-        {
-            queryable = queryable.Where(x => x.AssignmentDate == specification.AssignmentDate);
-        }
-
-        if (specification.OrderId is not null)
-        {
-            queryable = queryable.Where(x => x.Orders.Any(model => model.Id == specification.OrderId));
-        }
-
-        if (specification.Limit is not null)
-        {
-            if (specification.Page is not null)
-            {
-                queryable = queryable
-                    .Skip(specification.Page.Value * specification.Limit.Value)
-                    .Take(specification.Limit.Value);
-            }
-            else
-            {
-                queryable = queryable.Take(specification.Limit.Value);
-            }
-        }
+        queryable = queryable.Where(x => x.AssignmentDate.Value >= specification.SearchFrom)
+            .Skip(specification.Page * specification.Limit)
+            .Take(specification.Limit)
+            .OrderByDescending(x => x.AssignmentDate.Value);
 
         return queryable;
     }

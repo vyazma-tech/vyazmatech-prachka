@@ -9,11 +9,12 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddHandlers(this IServiceCollection services)
     {
-        services.AddMediator(s =>
-        {
-            s.Namespace = "VyazmaTech.Prachka.Application.Handlers";
-            s.ServiceLifetime = ServiceLifetime.Transient;
-        });
+        services.AddMediator(
+            s =>
+            {
+                s.Namespace = "VyazmaTech.Prachka.Application.Handlers";
+                s.ServiceLifetime = ServiceLifetime.Transient;
+            });
 
         services.AddValidatorsFromAssembly(IApplicationHandlersMarker.Assembly);
 

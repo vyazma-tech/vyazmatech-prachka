@@ -1,0 +1,10 @@
+﻿{
+  Order: {
+    Id: Guid_1,
+    UserId: Guid_2,
+    TelegramUsername: @bobster,
+    Fullname: Bobby Shmurda,
+    QueueId: Guid_3,
+    Status: Ready
+  }
+}

@@ -1,39 +1,74 @@
 ﻿using FluentAssertions;
-using Moq;
-using VyazmaTech.Prachka.Application.Contracts.Orders.Commands;
-using VyazmaTech.Prachka.Application.Handlers.Order.Commands.MarkOrderAsReady;
+using VyazmaTech.Prachka.Application.Contracts.Core.Orders.Commands;
+using VyazmaTech.Prachka.Application.Handlers.Core.Order.Commands.MarkOrderAsReady;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
-using VyazmaTech.Prachka.Domain.Common.Errors;
-using VyazmaTech.Prachka.Domain.Common.Result;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Domain.Kernel;
-using Xunit;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
+using VyazmaTech.Prachka.Domain.Core.Orders;
+using VyazmaTech.Prachka.Tests.Tools.FluentBuilders;
 using CancellationToken = System.Threading.CancellationToken;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests.Order.Commands;
 
 public class MakeReadyTest : TestBase
 {
+    private static readonly VerifySettings Settings;
     private readonly MarkOrderAsReadyCommandHandler _handler;
+
+    static MakeReadyTest()
+    {
+        Settings = new VerifySettings();
+        Settings.UseDirectory("Contracts");
+    }
 
     public MakeReadyTest(CoreDatabaseFixture fixture) : base(fixture)
     {
-        var dateTimeProvider = new Mock<IDateTimeProvider>();
-
-        _handler = new MarkOrderAsReadyCommandHandler(
-            dateTimeProvider.Object,
-            fixture.PersistenceContext);
+        _handler = new MarkOrderAsReadyCommandHandler(fixture.PersistenceContext);
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFailureResult_WhenOrderNotFound()
+    public async Task Handle_ShouldThrow_WhenOrderNotFound()
     {
         var orderId = Guid.NewGuid();
         var command = new MarkOrderAsReady.Command(orderId);
 
-        Result<MarkOrderAsReady.Response> response = await _handler.Handle(command, CancellationToken.None);
+        Func<Task<MarkOrderAsReady.Response>> action = async () =>
+            await _handler.Handle(command, CancellationToken.None);
 
-        response.IsFaulted.Should().BeTrue();
-        response.Error.Should().Be(DomainErrors.Entity.NotFoundFor<OrderEntity>(orderId.ToString()));
+        await action.Should().ThrowAsync<NotFoundException>();
+    }
+
+    [Fact]
+    public async Task Verify_Contract()
+    {
+        // Arrange
+        Domain.Core.Queues.Queue queue = Create.Queue
+            .WithCapacity(1)
+            .WithActivityBoundaries(TimeOnly.Parse("10:00"), TimeOnly.Parse("12:00"))
+            .Build();
+
+        Domain.Core.Users.User user = Create.User
+            .WithFullname("Bobby Shmurda")
+            .WithTelegramUsername("@bobster")
+            .Build();
+
+        Domain.Core.Orders.Order order = Create.Order
+            .WithId(Guid.NewGuid())
+            .WithUser(user)
+            .WithQueue(queue)
+            .WithStatus(OrderStatus.New)
+            .Build();
+
+        PersistenceContext.Queues.InsertRange([queue]);
+        PersistenceContext.Users.Insert(user);
+        PersistenceContext.Orders.InsertRange([order]);
+        await PersistenceContext.SaveChangesAsync(CancellationToken.None);
+
+        var command = new MarkOrderAsReady.Command(order.Id);
+
+        // Act
+        MarkOrderAsReady.Response response = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        await Verify(response, Settings);
     }
 }

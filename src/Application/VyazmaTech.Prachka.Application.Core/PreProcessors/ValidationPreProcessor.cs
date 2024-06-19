@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using FluentValidation.Results;
 using Mediator;
 using VyazmaTech.Prachka.Application.Contracts.Common;
 
@@ -19,14 +18,16 @@ public sealed class ValidationPreProcessor<TRequest, TResponse> : MessagePreProc
     {
         var context = new ValidationContext<TRequest>(message);
 
-        List<ValidationFailure> failures = _validators
+        var failures = _validators
             .Select(v => v.Validate(context))
             .SelectMany(result => result.Errors)
             .Where(f => f is not null)
             .ToList();
 
         if (failures.Count != 0)
+        {
             throw new ValidationException(failures);
+        }
 
         return ValueTask.CompletedTask;
     }

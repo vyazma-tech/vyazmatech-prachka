@@ -1,15 +1,17 @@
-﻿using VyazmaTech.Prachka.Application.Abstractions.Querying.User;
-using VyazmaTech.Prachka.Domain.Core.User;
+﻿using VyazmaTech.Prachka.Application.Contracts.Core.Users.Queries;
+using VyazmaTech.Prachka.Domain.Core.Users;
 
 namespace VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 
 public interface IUserRepository
 {
-    IAsyncEnumerable<UserEntity> QueryAsync(
-        UserQuery specification,
+    Task<User> GetByIdAsync(Guid id, CancellationToken token);
+
+    IAsyncEnumerable<User> QueryAsync(
+        UserByQuery.Query specification,
         CancellationToken cancellationToken);
 
-    void Insert(UserEntity user);
+    void Insert(User user);
 
-    Task<long> CountAsync(UserQuery specification, CancellationToken cancellationToken);
+    Task<long> CountAsync(UserByQuery.Query specification, CancellationToken cancellationToken);
 }

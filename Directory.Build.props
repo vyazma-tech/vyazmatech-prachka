@@ -1,17 +1,16 @@
 ﻿<Project>
     <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
     <PropertyGroup>
-        <AnalysisLevel>latest</AnalysisLevel>
-        <WarningLevel>4</WarningLevel>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AnalysisLevel>latest</AnalysisLevel>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <NoWarn>SA1201; SA1313; SA1009; SA1002; SA1011; SA1401; SA1128; SA1413; SA1601; CA1716; CS1591</NoWarn>
+        <NoWarn>1591;SA1000;SA1009;SA1200;SA1202;CA1716;SA1516;SA1313;SA1413;CA1724;SA1011;SA1633;SA1101;SA1503;SA1309;SA1601;SA1201;SA1502;SA1127;SA1128;SA1600;SA1611;SA1604;SA1629;SA1602;</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

@@ -2,6 +2,4 @@ using Mediator;
 
 namespace VyazmaTech.Prachka.Domain.Kernel;
 
-public interface IIntegrationEvent : INotification
-{
-}
+public interface IIntegrationEvent : INotification { }

@@ -1,6 +1,5 @@
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
 using VyazmaTech.Prachka.Application.Contracts.Common;
-using VyazmaTech.Prachka.Domain.Common.Result;
 using static VyazmaTech.Prachka.Application.Contracts.Identity.Commands.RevokeToken;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Identity.Commands.RevokeToken;
@@ -16,8 +15,8 @@ internal sealed class RevokeTokenCommandHandler : ICommandHandler<Command, Respo
 
     public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
-        Result result = await _service.RevokeToken(request.TelegramUsername, cancellationToken);
+        await _service.RevokeToken(request.TelegramUsername, cancellationToken);
 
-        return new Response(result);
+        return default;
     }
 }

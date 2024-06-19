@@ -1,6 +1,7 @@
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
 using VyazmaTech.Prachka.Application.Contracts.Common;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
+using VyazmaTech.Prachka.Infrastructure.Authentication.Errors;
 using static VyazmaTech.Prachka.Application.Contracts.Identity.Commands.ChangeRole;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Identity.Commands.ChangeRole;
@@ -18,19 +19,14 @@ internal sealed class ChangeRoleCommandHandler : ICommandHandler<Command, Respon
 
     public async ValueTask<Response> Handle(Command request, CancellationToken cancellationToken)
     {
-        Result<string> searchResult = await _service
+        string role = await _service
             .GetUserRoleAsync(request.TelegramUsername, cancellationToken);
 
-        if (searchResult.IsFaulted)
-            return new Response(searchResult);
-
-        string role = searchResult.Value;
-
         if (!_currentUser.CanChangeUserRole(role, request.NewRoleName))
-            return new Response(Result.Failure());
+            throw new IdentityException(AuthenticationErrors.IdentityUser.NotInRole());
 
         await _service.UpdateUserRoleAsync(request.TelegramUsername, request.NewRoleName, cancellationToken);
 
-        return new Response(Result.Success());
+        return default;
     }
 }

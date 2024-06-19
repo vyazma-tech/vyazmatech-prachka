@@ -1,11 +1,11 @@
 ﻿using FastEndpoints;
 using Microsoft.AspNetCore.Http;
 using VyazmaTech.Prachka.Application.Dto;
-using VyazmaTech.Prachka.Application.Dto.Queue;
+using VyazmaTech.Prachka.Application.Dto.Core.Queue;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1.Summaries;
 
-internal sealed class FindQueueSummary : Summary<FindQueueEndpoint>
+internal sealed class FindQueueSummary : Summary<FindQueuesEndpoint>
 {
     public FindQueueSummary()
     {

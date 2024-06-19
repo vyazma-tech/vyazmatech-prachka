@@ -1,18 +1,18 @@
 using VyazmaTech.Prachka.Application.Dto;
-using VyazmaTech.Prachka.Application.Dto.User;
-using VyazmaTech.Prachka.Domain.Core.User;
+using VyazmaTech.Prachka.Application.Dto.Core.User;
+using VyazmaTech.Prachka.Domain.Core.Users;
 
 namespace VyazmaTech.Prachka.Application.Mapping;
 
 public static class UserMapping
 {
-    public static UserDto ToDto(this UserEntity user)
+    public static UserDto ToDto(this User user)
     {
         return new UserDto(
             user.Id,
             user.TelegramUsername,
             user.Fullname,
-            user.ModifiedOn?.Value,
+            user.ModifiedOnUtc,
             user.CreationDate);
     }
 
@@ -27,7 +27,7 @@ public static class UserMapping
             Bunch = orders.ToArray(),
             CurrentPage = currentPage,
             TotalPages = totalPages,
-            RecordPerPage = recordsPerPage
+            RecordPerPage = recordsPerPage,
         };
     }
 }

@@ -29,15 +29,16 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAuthenticationService, TelegramAuthenticationService>();
         services.AddSingleton<IntegrationEventToOutboxMessageInterceptor>();
 
-        services.AddDbContext<VyazmaTechIdentityContext>((sp, builder) =>
-        {
-            IntegrationEventToOutboxMessageInterceptor interceptor = sp
-                .GetRequiredService<IntegrationEventToOutboxMessageInterceptor>();
+        services.AddDbContext<VyazmaTechIdentityContext>(
+            (sp, builder) =>
+            {
+                IntegrationEventToOutboxMessageInterceptor interceptor = sp
+                    .GetRequiredService<IntegrationEventToOutboxMessageInterceptor>();
 
-            builder
-                .UseNpgsql(postgresConfiguration.ToConnectionString())
-                .AddInterceptors(interceptor);
-        });
+                builder
+                    .UseNpgsql(postgresConfiguration.ToConnectionString())
+                    .AddInterceptors(interceptor);
+            });
 
         services.AddIdentity<VyazmaTechIdentityUser, VyazmaTechIdentityRole>()
             .AddEntityFrameworkStores<VyazmaTechIdentityContext>()

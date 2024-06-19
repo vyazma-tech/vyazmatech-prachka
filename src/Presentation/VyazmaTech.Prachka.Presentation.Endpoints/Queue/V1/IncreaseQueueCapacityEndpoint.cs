@@ -1,8 +1,8 @@
 ﻿using FastEndpoints;
 using Mediator;
-using VyazmaTech.Prachka.Application.Contracts.Queues.Commands;
-using VyazmaTech.Prachka.Application.Dto.Queue;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Commands;
+using VyazmaTech.Prachka.Application.Dto.Core.Queue;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Authorization;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Queue.V1.Models;
@@ -31,10 +31,14 @@ internal class IncreaseQueueCapacityEndpoint : Endpoint<IncreaseCapacityRequest,
     {
         var command = new IncreaseQueueCapacity.Command(req.QueueId, req.Capacity);
 
-        Result<IncreaseQueueCapacity.Response> response = await _sender.Send(command, ct);
-
-        await response.Match(
-            success => SendOkAsync(success.Queue, ct),
-            _ => this.SendProblemsAsync(response.ToProblemDetails()));
+        try
+        {
+            IncreaseQueueCapacity.Response response = await _sender.Send(command, ct);
+            await SendOkAsync(response.Queue, ct);
+        }
+        catch (DomainException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

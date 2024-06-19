@@ -3,6 +3,7 @@
     <PropertyGroup>
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
+        <NoWarn>$(NoWarn);IDE0008</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,6 +12,7 @@
         <PackageReference Include="Moq"/>
         <PackageReference Include="Respawn"/>
         <PackageReference Include="Testcontainers.PostgreSql"/>
+        <PackageReference Include="Verify.Xunit"/>
         <PackageReference Include="xunit"/>
         <PackageReference Include="xunit.runner.visualstudio" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
         <PackageReference Include="coverlet.collector" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
@@ -20,13 +22,39 @@
         <ProjectReference Include="..\..\src\Application\VyazmaTech.Prachka.Application.Handlers\VyazmaTech.Prachka.Application.Handlers.csproj"/>
         <ProjectReference Include="..\..\src\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
         <ProjectReference Include="..\..\src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Tools\VyazmaTech.Prachka.Infrastructure.Tools.csproj"/>
-        <ProjectReference Include="..\VyazmaTech.Prachka.Domain.Tests\VyazmaTech.Prachka.Domain.Tests.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Domain.Core.Tests\VyazmaTech.Prachka.Domain.Core.Tests.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
         <Compile Remove="TestResults\**"/>
         <EmbeddedResource Remove="TestResults\**"/>
         <None Remove="TestResults\**"/>
+        <None Update="Queue\Commands\Contracts\IncreaseCapacityTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>ChangeActivityBoundariesTest</ParentFile>
+        </None>
+        <None Update="Queue\Queries\Contracts\QueueByIdTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>OrderByIdTests</ParentFile>
+        </None>
+        <None Update="Queue\Queries\Contracts\QueueByQueryTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>QueueByIdTests</ParentFile>
+        </None>
+        <None Update="Users\Queries\Contracts\UserByIdTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>QueueByIdTests</ParentFile>
+        </None>
+        <None Update="Users\Queries\Contracts\UserByQueryTests.Verify_Contract.verified.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <ParentFile>QueueByQueryTests</ParentFile>
+        </None>
     </ItemGroup>
-    
+
+    <ItemGroup>
+        <None Update="**\**\Contracts\**">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
 </Project>

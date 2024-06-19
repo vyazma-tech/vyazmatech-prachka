@@ -15,7 +15,9 @@ internal sealed class AuthorizeFeaturePolicyProvider : IAuthorizationPolicyProvi
     public Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
     {
         if (policyName.StartsWith(AuthorizeFeatureAttribute.Prefix, StringComparison.OrdinalIgnoreCase) is false)
+        {
             return _defaultProvider.GetPolicyAsync(policyName);
+        }
 
         var builder = new AuthorizationPolicyBuilder();
 
@@ -23,7 +25,9 @@ internal sealed class AuthorizeFeaturePolicyProvider : IAuthorizationPolicyProvi
         int separator = policyName.IndexOf(":", start, StringComparison.OrdinalIgnoreCase);
 
         if (separator < 0)
+        {
             return _defaultProvider.GetPolicyAsync(policyName);
+        }
 
         string scope = policyName[start..separator];
         string feature = policyName[(separator + 1)..];
@@ -36,8 +40,12 @@ internal sealed class AuthorizeFeaturePolicyProvider : IAuthorizationPolicyProvi
     }
 
     public Task<AuthorizationPolicy> GetDefaultPolicyAsync()
-        => _defaultProvider.GetDefaultPolicyAsync();
+    {
+        return _defaultProvider.GetDefaultPolicyAsync();
+    }
 
     public Task<AuthorizationPolicy?> GetFallbackPolicyAsync()
-        => _defaultProvider.GetFallbackPolicyAsync();
+    {
+        return _defaultProvider.GetFallbackPolicyAsync();
+    }
 }

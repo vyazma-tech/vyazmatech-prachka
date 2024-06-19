@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.IdentityModel.JsonWebTokens;
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
 using VyazmaTech.Prachka.Application.Abstractions.Identity.Models;
 
@@ -11,7 +12,9 @@ internal class CurrentUserProxy : ICurrentUser, ICurrentUserManager
     public Guid? Id => _user.Id;
 
     public bool CanChangeUserRole(string currentRoleName, string newRoleName)
-        => _user.CanChangeUserRole(currentRoleName, newRoleName);
+    {
+        return _user.CanChangeUserRole(currentRoleName, newRoleName);
+    }
 
     public void Authenticate(ClaimsPrincipal principal)
     {
@@ -21,7 +24,7 @@ internal class CurrentUserProxy : ICurrentUser, ICurrentUserManager
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         string nameIdentifier = principal.Claims
-            .Single(x => x.Type.Equals(ClaimTypes.NameIdentifier, StringComparison.OrdinalIgnoreCase))
+            .Single(x => x.Type.Equals(JwtRegisteredClaimNames.NameId, StringComparison.OrdinalIgnoreCase))
             .Value;
 
         if (!Guid.TryParse(nameIdentifier, out Guid id))

@@ -2,7 +2,7 @@ using FastEndpoints;
 using Mediator;
 using VyazmaTech.Prachka.Application.Contracts.Identity.Queries;
 using VyazmaTech.Prachka.Application.Dto.Identity;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Identity.V1.Models;
 
@@ -29,10 +29,14 @@ internal class LoginEndpoint : Endpoint<LoginRequest, IdentityTokenDto>
     {
         var query = new Login.Query(req.Username);
 
-        Result<Login.Response> response = await _sender.Send(query, ct);
-
-        await response.Match(
-            success => SendOkAsync(success.Tokens, ct),
-            _ => this.SendProblemsAsync(response.ToProblemDetails()));
+        try
+        {
+            Login.Response response = await _sender.Send(query, ct);
+            await SendOkAsync(response.Tokens, ct);
+        }
+        catch (IdentityException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

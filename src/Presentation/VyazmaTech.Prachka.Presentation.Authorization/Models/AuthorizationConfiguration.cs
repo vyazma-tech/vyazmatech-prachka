@@ -4,5 +4,5 @@ internal sealed class AuthorizationConfiguration
 {
     public const string SectionKey = "Authorization";
 
-    public FeatureScopes FeatureScopes { get; set; } = new FeatureScopes();
+    public FeatureScopes FeatureScopes { get; set; } = new();
 }

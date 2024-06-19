@@ -1,90 +1,62 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Application.Abstractions.Querying.User;
+using VyazmaTech.Prachka.Application.Contracts.Core.Users.Queries;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
-using VyazmaTech.Prachka.Domain.Core.User;
+using VyazmaTech.Prachka.Domain.Common.Errors;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
+using VyazmaTech.Prachka.Domain.Core.Users;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Mapping;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;
 
-internal sealed class UserRepository : RepositoryBase<UserEntity, UserModel>, IUserRepository
+internal sealed class UserRepository : IUserRepository
 {
+    private readonly DatabaseContext _context;
+
     public UserRepository(DatabaseContext context)
-        : base(context)
     {
+        _context = context;
     }
 
-    public IAsyncEnumerable<UserEntity> QueryAsync(UserQuery specification, CancellationToken cancellationToken)
+    public async Task<User> GetByIdAsync(Guid id, CancellationToken token)
     {
-        IQueryable<UserModel> queryable = ApplyQuery(specification);
-
-        return queryable.AsAsyncEnumerable().Select(MapTo);
+        return await _context.Users.FirstOrDefaultAsync(x => x.Id == id, token)
+               ?? throw new NotFoundException(DomainErrors.User.NotFound);
     }
 
-    public Task<long> CountAsync(UserQuery specification, CancellationToken cancellationToken)
+    public IAsyncEnumerable<User> QueryAsync(UserByQuery.Query specification, CancellationToken cancellationToken)
     {
-        IQueryable<UserModel> queryable = ApplyQuery(specification);
+        IQueryable<User> queryable = GetSearchQueryable(specification);
+        return queryable.ToAsyncEnumerable();
+    }
+
+    public void Insert(User user)
+        => _context.Users.Add(user);
+
+    public Task<long> CountAsync(UserByQuery.Query specification, CancellationToken cancellationToken)
+    {
+        IQueryable<User> queryable = GetSearchQueryable(specification);
         return queryable.LongCountAsync(cancellationToken);
     }
 
-    protected override UserModel MapFrom(UserEntity entity)
+    private IQueryable<User> GetSearchQueryable(UserByQuery.Query specification)
     {
-        return UserMapping.MapFrom(entity);
-    }
-
-    protected override bool Equal(UserEntity entity, UserModel model)
-    {
-        return entity.Id.Equals(model.Id);
-    }
-
-    protected override void UpdateModel(UserModel model, UserEntity entity)
-    {
-        model.Fullname = entity.Fullname;
-        model.ModifiedOn = entity.ModifiedOn;
-    }
-
-    private static UserEntity MapTo(UserModel model)
-    {
-        return UserMapping.MapTo(model);
-    }
-
-    private IQueryable<UserModel> ApplyQuery(UserQuery specification)
-    {
-        IQueryable<UserModel> queryable = DbSet;
-
-        if (specification.Id is not null)
-        {
-            queryable = queryable.Where(x => x.Id == specification.Id);
-        }
-
-        if (specification.TelegramId is not null)
-        {
-            queryable = queryable.Where(x => EF.Functions.ILike(x.TelegramUsername, specification.TelegramId));
-        }
+        IQueryable<User> queryable = _context.Users;
 
         if (specification.Fullname is not null)
+            queryable = queryable.Where(x => EF.Functions.ILike(x.Fullname.Value, specification.Fullname));
+
+        if (specification.TelegramUsername is not null)
         {
-            queryable = queryable.Where(x => EF.Functions.ILike(x.Fullname, specification.Fullname));
+            queryable = queryable
+                .Where(x => EF.Functions.ILike(x.TelegramUsername.Value, specification.TelegramUsername));
         }
 
         if (specification.RegistrationDate is not null)
-        {
-            queryable = queryable.Where(x => x.RegistrationDate == specification.RegistrationDate);
-        }
+            queryable = queryable.Where(x => x.CreationDate == specification.RegistrationDate);
 
-        if (specification.Limit is not null)
-        {
-            if (specification.Page is not null)
-            {
-                queryable = queryable.Skip(specification.Page.Value * specification.Limit.Value)
-                    .Take(specification.Limit.Value);
-            }
-            else
-            {
-                queryable = queryable.Take(specification.Limit.Value);
-            }
-        }
+        queryable = queryable
+            .Skip(specification.Page * specification.Limit)
+            .Take(specification.Limit);
 
         return queryable;
     }

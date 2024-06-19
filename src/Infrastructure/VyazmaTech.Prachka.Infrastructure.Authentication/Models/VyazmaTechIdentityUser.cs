@@ -7,7 +7,7 @@ namespace VyazmaTech.Prachka.Infrastructure.Authentication.Models;
 
 public class VyazmaTechIdentityUser : IdentityUser<Guid>
 {
-    private readonly List<IIntegrationEvent> _integrationEvents = new ();
+    private readonly List<IIntegrationEvent> _integrationEvents = new();
 
     public VyazmaTechIdentityUser(string fullname, string telegramId, string telegramImageUrl, string telegramUsername)
         : base(telegramUsername)
@@ -33,7 +33,7 @@ public class VyazmaTechIdentityUser : IdentityUser<Guid>
             Id = id,
             RefreshToken = refreshToken,
             RefreshTokenExpiryUtc = refreshTokenExpiry,
-            SecurityStamp = securityStamp.ToString()
+            SecurityStamp = securityStamp.ToString(),
         };
 
         user._integrationEvents.Add(new UserRegisteredIntegrationEvent(user));
@@ -41,9 +41,7 @@ public class VyazmaTechIdentityUser : IdentityUser<Guid>
         return user;
     }
 
-    protected VyazmaTechIdentityUser()
-    {
-    }
+    protected VyazmaTechIdentityUser() { }
 
     public string Fullname { get; init; } = string.Empty;
 
@@ -57,5 +55,8 @@ public class VyazmaTechIdentityUser : IdentityUser<Guid>
 
     public IReadOnlyCollection<IIntegrationEvent> IntegrationEvents => _integrationEvents.ToList();
 
-    public void ClearIntegrationEvents() => _integrationEvents.Clear();
+    public void ClearIntegrationEvents()
+    {
+        _integrationEvents.Clear();
+    }
 }

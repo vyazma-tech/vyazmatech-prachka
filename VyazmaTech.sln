@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Common", "src\Domain\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj", "{92C03EB4-11E4-4E5F-B034-8428F047213B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Tests", "tests\VyazmaTech.Prachka.Domain.Tests\VyazmaTech.Prachka.Domain.Tests.csproj", "{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Domain.Core.Tests", "tests\VyazmaTech.Prachka.Domain.Core.Tests\VyazmaTech.Prachka.Domain.Core.Tests.csproj", "{EB0D1D41-5ED3-426A-A4A1-E3B93149A5ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Tools", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Tools\VyazmaTech.Prachka.Infrastructure.Tools.csproj", "{0C438E6A-5E93-4907-B438-A2174C22E256}"
 EndProject
@@ -34,7 +34,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Applicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Presentation.Endpoints", "src\Presentation\VyazmaTech.Prachka.Presentation.Endpoints\VyazmaTech.Prachka.Presentation.Endpoints.csproj", "{53E9CE62-4DEA-4068-9097-B29F13282ED7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Presentation.WebAPI", "src\Presentation\VyazmaTech.Prachka.Presentation.WebAPI\VyazmaTech.Prachka.Presentation.WebAPI.csproj", "{01543956-3B90-4425-904D-8DF3E3E3BA2F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka", "src\Presentation\VyazmaTech.Prachka\VyazmaTech.Prachka.csproj", "{01543956-3B90-4425-904D-8DF3E3E3BA2F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{48C48F42-04B1-4B9E-93EB-C8F6A397B351}"
 	ProjectSection(SolutionItems) = preProject
@@ -52,9 +52,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployment", "deployment", 
 		deployment\run_prod.sh = deployment\run_prod.sh
 		deployment\run_test.sh = deployment\run_test.sh
 		deployment\stop_database.sh = deployment\stop_database.sh
+		deployment\add_migration.sh = deployment\add_migration.sh
+		deployment\remove_migration.sh = deployment\remove_migration.sh
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Caching", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Caching\VyazmaTech.Prachka.Infrastructure.Caching.csproj", "{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Authentication", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj", "{89BAF7FF-A8ED-4121-85DA-A59128D09729}"
 EndProject
@@ -82,6 +82,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{1D5E44
 		VyazmaTech.sln.DotSettings = VyazmaTech.sln.DotSettings
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Tests.Tools", "tests\VyazmaTech.Prachka.Tests.Tools\VyazmaTech.Prachka.Tests.Tools.csproj", "{FC6B7750-C30B-4090-A09E-9E89B1285C25}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VyazmaTech.Prachka", "VyazmaTech.Prachka", "{94A9CDDF-FE6D-4E8E-92EC-B220910695FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,9 +107,7 @@ Global
 		{4C4EEEFE-BB6C-4401-897C-4449A7E3560F} = {2DD18CEA-A937-4A4C-9F28-5A350E3AF182}
 		{6875A891-BEDB-42D5-BFC7-3459B9B84F06} = {BF188799-DA9B-458D-B290-D3CF5630857C}
 		{53E9CE62-4DEA-4068-9097-B29F13282ED7} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
-		{01543956-3B90-4425-904D-8DF3E3E3BA2F} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
 		{5DD10590-2621-4E5B-9759-57F6D732FE3C} = {BF188799-DA9B-458D-B290-D3CF5630857C}
-		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
 		{89BAF7FF-A8ED-4121-85DA-A59128D09729} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
 		{38DB9059-B47B-42C4-9EBF-D7733ABC0EB6} = {BF188799-DA9B-458D-B290-D3CF5630857C}
 		{D36F6935-F38D-4D07-8289-A7C71ED98AC7} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
@@ -113,6 +115,9 @@ Global
 		{E7724F5B-26B5-4A6B-B4CE-F6BB279B706F} = {BF188799-DA9B-458D-B290-D3CF5630857C}
 		{0E1D0DC7-771F-4774-BD41-7929FFC0C495} = {BF188799-DA9B-458D-B290-D3CF5630857C}
 		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699} = {BF188799-DA9B-458D-B290-D3CF5630857C}
+		{FC6B7750-C30B-4090-A09E-9E89B1285C25} = {2DD18CEA-A937-4A4C-9F28-5A350E3AF182}
+		{94A9CDDF-FE6D-4E8E-92EC-B220910695FB} = {EEABAF50-E29C-4424-B207-43C8534EB131}
+		{01543956-3B90-4425-904D-8DF3E3E3BA2F} = {94A9CDDF-FE6D-4E8E-92EC-B220910695FB}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -167,10 +172,6 @@ Global
 		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DD10590-2621-4E5B-9759-57F6D732FE3C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BE5B42BC-5E3B-47B8-A7FC-4B984F39C193}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89BAF7FF-A8ED-4121-85DA-A59128D09729}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -199,5 +200,9 @@ Global
 		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0BB30A9C-3F59-4911-B1DD-8BA8F8874699}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC6B7750-C30B-4090-A09E-9E89B1285C25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC6B7750-C30B-4090-A09E-9E89B1285C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC6B7750-C30B-4090-A09E-9E89B1285C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC6B7750-C30B-4090-A09E-9E89B1285C25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

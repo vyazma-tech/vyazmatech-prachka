@@ -1,28 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VyazmaTech.Prachka.Domain.Core.Order;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
+using VyazmaTech.Prachka.Domain.Core.Orders;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.EntityConfigurations;
 
-public sealed class OrderConfiguration : IEntityTypeConfiguration<OrderModel>
+public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
-    public void Configure(EntityTypeBuilder<OrderModel> builder)
+    public void Configure(EntityTypeBuilder<Order> builder)
     {
-        builder.HasKey(order => order.Id);
+        builder
+            .HasOne(order => order.User)
+            .WithMany()
+            .HasForeignKey("user_id")
+            .HasPrincipalKey(user => user.Id);
 
         builder
             .HasOne(order => order.Queue)
             .WithMany(queue => queue.Orders)
-            .HasForeignKey(order => order.QueueId)
+            .HasForeignKey("queue_id")
             .HasPrincipalKey(queue => queue.Id);
 
-        builder
-            .HasOne(order => order.User)
-            .WithMany(user => user.Orders)
-            .HasForeignKey(order => order.UserId)
-            .HasPrincipalKey(user => user.Id);
+        builder.Property(order => order.Status).HasDefaultValue(OrderStatus.New);
+        builder.Property(order => order.CreationDateTime);
+        builder.Property(order => order.CreationDate);
+        builder.Property(order => order.ModifiedOnUtc);
 
-        builder.Property(order => order.Status).HasDefaultValue(OrderStatus.New.ToString());
+        builder.HasIndex("queue_id", "user_id")
+            .IsUnique(false);
     }
 }

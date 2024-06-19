@@ -1,17 +1,20 @@
-﻿using VyazmaTech.Prachka.Application.Abstractions.Querying.Queue;
-using VyazmaTech.Prachka.Domain.Core.Queue;
+﻿using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries;
+using VyazmaTech.Prachka.Domain.Core.Queues;
+using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 
 namespace VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 
 public interface IQueueRepository
 {
-    IAsyncEnumerable<QueueEntity> QueryAsync(
-        QueueQuery specification,
-        CancellationToken cancellationToken);
+    Task<Queue> GetByIdAsync(Guid id, CancellationToken token);
 
-    void InsertRange(IReadOnlyCollection<QueueEntity> queues);
+    Task<Queue?> FindByAssignmentDate(AssignmentDate assignmentDate, CancellationToken token);
 
-    void Update(QueueEntity queue);
+    IAsyncEnumerable<Queue> QueryByTelegramUsername(TelegramUsername username, DateOnly searchFrom);
 
-    Task<long> CountAsync(QueueQuery specification, CancellationToken cancellationToken);
+    IAsyncEnumerable<Queue> QueryFromAsync(QueueByQuery.Query specification);
+
+    void InsertRange(IReadOnlyCollection<Queue> queues);
+
+    Task<long> CountAsync(QueueByQuery.Query specification, CancellationToken cancellationToken);
 }

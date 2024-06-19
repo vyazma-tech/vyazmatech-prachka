@@ -39,13 +39,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUnitOfWork, PersistenceContext>();
         services.AddScoped<IPersistenceContext, PersistenceContext>();
         services.AddSingleton<PublishDomainEventsInterceptor>();
+        services.AddSingleton<AuditableEntityUpdatingInterceptor>();
 
+        services.AddTransient<IDateTimeProvider, DefaultTimeProvider>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IQueueRepository, QueueRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
-        services.AddScoped<IOrderSubscriptionRepository, OrderSubscriptionRepository>();
-        services.AddScoped<IQueueSubscriptionRepository, QueueSubscriptionRepository>();
-        services.AddTransient<IDateTimeProvider, SpbDateTimeProvider>();
 
         return services;
     }

@@ -12,5 +12,7 @@ internal class EmployeeUser : ICurrentUser
     public Guid? Id { get; }
 
     public bool CanChangeUserRole(string currentRoleName, string newRoleName)
-        => false;
+    {
+        return false;
+    }
 }

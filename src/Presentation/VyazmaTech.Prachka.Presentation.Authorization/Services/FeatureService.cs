@@ -19,7 +19,9 @@ internal sealed class FeatureService : IFeatureService
     public bool HasFeature(ClaimsPrincipal principal, string scope, string feature)
     {
         if (principal.Identity?.IsAuthenticated is false)
+        {
             return false;
+        }
 
         FeatureScopes featureScopes = _configuration.CurrentValue.FeatureScopes;
 

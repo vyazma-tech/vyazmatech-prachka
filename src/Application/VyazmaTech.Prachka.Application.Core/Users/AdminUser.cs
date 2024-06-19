@@ -12,5 +12,7 @@ internal sealed class AdminUser : ICurrentUser
     public Guid? Id { get; }
 
     public bool CanChangeUserRole(string currentRoleName, string newRoleName)
-        => true;
+    {
+        return true;
+    }
 }

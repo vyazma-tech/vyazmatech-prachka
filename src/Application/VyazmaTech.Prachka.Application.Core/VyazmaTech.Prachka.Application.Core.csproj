@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <PackageReference Include="FluentChaining"/>
         <PackageReference Include="FluentValidation"/>
         <PackageReference Include="Serilog"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -11,8 +11,8 @@
         <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj"/>
         <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Kernel\VyazmaTech.Prachka.Domain.Kernel.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
-        <ProjectReference Include="..\VyazmaTech.Prachka.Application.Abstractions\VyazmaTech.Prachka.Application.Abstractions.csproj" />
-        <ProjectReference Include="..\VyazmaTech.Prachka.Application.Contracts\VyazmaTech.Prachka.Application.Contracts.csproj" />
+        <ProjectReference Include="..\VyazmaTech.Prachka.Application.Abstractions\VyazmaTech.Prachka.Application.Abstractions.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Application.Contracts\VyazmaTech.Prachka.Application.Contracts.csproj"/>
         <ProjectReference Include="..\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj"/>
     </ItemGroup>
 

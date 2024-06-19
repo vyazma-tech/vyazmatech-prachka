@@ -10,18 +10,14 @@ internal sealed class PersistenceContext : IPersistenceContext, IUnitOfWork
     private readonly DatabaseContext _context;
 
     public PersistenceContext(
+        DatabaseContext context,
         IQueueRepository queues,
         IOrderRepository orders,
-        IUserRepository users,
-        IOrderSubscriptionRepository orderSubscriptions,
-        IQueueSubscriptionRepository queueSubscriptions,
-        DatabaseContext context)
+        IUserRepository users)
     {
         Queues = queues;
         Orders = orders;
         Users = users;
-        OrderSubscriptions = orderSubscriptions;
-        QueueSubscriptions = queueSubscriptions;
         _context = context;
     }
 
@@ -31,16 +27,19 @@ internal sealed class PersistenceContext : IPersistenceContext, IUnitOfWork
 
     public IUserRepository Users { get; }
 
-    public IOrderSubscriptionRepository OrderSubscriptions { get; }
-
-    public IQueueSubscriptionRepository QueueSubscriptions { get; }
-
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
-        => _context.SaveChangesAsync(cancellationToken);
+    {
+        return _context.SaveChangesAsync(cancellationToken);
+    }
 
     public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
-        => _context.Database.BeginTransactionAsync(cancellationToken);
+    {
+        return _context.Database.BeginTransactionAsync(cancellationToken);
+    }
 
     public DbSet<TModel> Entities<TModel>()
-        where TModel : class => _context.Set<TModel>();
+        where TModel : class
+    {
+        return _context.Set<TModel>();
+    }
 }

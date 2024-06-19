@@ -42,11 +42,13 @@ internal sealed class OutboxMessagesProcessingBackgroundWorker : BackgroundServi
             foreach (OutboxMessage message in messages)
             {
                 IIntegrationEvent? integrationEvent = JsonConvert
-                    .DeserializeObject<IIntegrationEvent>(message.Content, new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.Objects,
-                        ContractResolver = new IgnoreEventsCollectionResolver(new[] { "IntegrationEvents" })
-                    });
+                    .DeserializeObject<IIntegrationEvent>(
+                        message.Content,
+                        new JsonSerializerSettings
+                        {
+                            TypeNameHandling = TypeNameHandling.Objects,
+                            ContractResolver = new IgnoreEventsCollectionResolver(new[] { "IntegrationEvents" }),
+                        });
 
                 if (integrationEvent is null)
                 {

@@ -1,38 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Domain.Common.Abstractions;
-using VyazmaTech.Prachka.Domain.Core.ValueObjects;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.ValueConverters;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using VyazmaTech.Prachka.Domain.Core.Orders;
+using VyazmaTech.Prachka.Domain.Core.Queues;
+using VyazmaTech.Prachka.Domain.Core.Users;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Extensions;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 
 public sealed class DatabaseContext : DbContext
 {
     public DatabaseContext(DbContextOptions<DatabaseContext> options)
-        : base(options)
-    {
-    }
+        : base(options) { }
 
-    public DbSet<OrderModel> Orders { get; private init; } = null!;
+    public DbSet<Order> Orders { get; private init; } = null!;
 
-    public DbSet<UserModel> Users { get; private init; } = null!;
+    public DbSet<User> Users { get; private init; } = null!;
 
-    public DbSet<QueueModel> Queues { get; private init; } = null!;
-
-    public DbSet<QueueSubscriptionModel> QueueSubscriptions { get; private init; } = null!;
-
-    public DbSet<OrderSubscriptionModel> OrderSubscriptions { get; private init; } = null!;
+    public DbSet<Queue> Queues { get; private init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(IDataAccessMarker.Assembly);
+        modelBuilder.UseSnakeCaseNamingConvention();
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        configurationBuilder.Properties<Capacity>().HaveConversion<CapacityValueConverter>();
-        configurationBuilder.Properties<TelegramId>().HaveConversion<TelegramIdValueConverter>();
-        configurationBuilder.Properties<Fullname>().HaveConversion<FullnameValueConverter>();
-        configurationBuilder.Properties<SpbDateTime>().HaveConversion<SpbDateTimeValueConverter>();
+        configurationBuilder.Conventions.Remove<ForeignKeyIndexConvention>();
     }
 }

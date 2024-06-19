@@ -1,8 +1,8 @@
 ﻿using FastEndpoints;
 using Mediator;
-using VyazmaTech.Prachka.Application.Contracts.Orders.Queries;
-using VyazmaTech.Prachka.Application.Dto.Order;
-using VyazmaTech.Prachka.Domain.Common.Result;
+using VyazmaTech.Prachka.Application.Contracts.Core.Orders.Queries;
+using VyazmaTech.Prachka.Application.Dto.Core.Order;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Order.V1.Models;
 
@@ -29,10 +29,15 @@ internal class FindOrderByIdEndpoint : Endpoint<OrderWithIdRequest, OrderDto>
     {
         var query = new OrderById.Query(req.OrderId);
 
-        Result<OrderById.Response> response = await _sender.Send(query, ct);
+        try
+        {
+            OrderById.Response response = await _sender.Send(query, ct);
 
-        await response.Match(
-            success => SendOkAsync(success.Order, ct),
-            _ => this.SendProblemsAsync(response.ToProblemDetails()));
+            await SendOkAsync(response.Order, ct);
+        }
+        catch (DomainException e)
+        {
+            await this.SendProblemsAsync(e.ToProblemDetails());
+        }
     }
 }

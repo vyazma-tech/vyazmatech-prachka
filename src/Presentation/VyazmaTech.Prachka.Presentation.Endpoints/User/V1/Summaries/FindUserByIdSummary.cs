@@ -1,7 +1,7 @@
 ﻿using FastEndpoints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using VyazmaTech.Prachka.Application.Dto.User;
+using VyazmaTech.Prachka.Application.Dto.Core.User;
 using ProblemDetails = FastEndpoints.ProblemDetails;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.User.V1.Summaries;

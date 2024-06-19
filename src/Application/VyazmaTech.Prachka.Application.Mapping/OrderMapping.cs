@@ -1,32 +1,22 @@
 using VyazmaTech.Prachka.Application.Dto;
-using VyazmaTech.Prachka.Application.Dto.Order;
-using VyazmaTech.Prachka.Domain.Core.Order;
+using VyazmaTech.Prachka.Application.Dto.Core.Order;
+using VyazmaTech.Prachka.Domain.Core.Orders;
 
 namespace VyazmaTech.Prachka.Application.Mapping;
 
 public static class OrderMapping
 {
-    public static OrderDto ToDto(this OrderEntity order)
+    public static OrderDto ToDto(this Order order)
     {
         return new OrderDto(
             order.Id,
             order.User.Id,
-            order.User.Telegram,
+            order.User.TelegramUsername,
             order.User.Fullname,
-            order.Queue,
+            order.Queue.Id,
             order.Status.ToString(),
             order.CreationDate,
-            order.ModifiedOn?.Value);
-    }
-
-    public static OrderInfoDto ToDto(this OrderInfo orderInfo)
-    {
-        return new OrderInfoDto(
-            OrderId: orderInfo.Id,
-            UserId: orderInfo.User.Id,
-            TelegramUsername: orderInfo.User.Telegram,
-            Fullname: orderInfo.User.Fullname,
-            Status: orderInfo.Status.ToString());
+            order.ModifiedOnUtc);
     }
 
     public static PagedResponse<OrderDto> ToPagedResponse(
@@ -40,7 +30,7 @@ public static class OrderMapping
             Bunch = orders.ToArray(),
             CurrentPage = currentPage,
             TotalPages = totalPages,
-            RecordPerPage = recordsPerPage
+            RecordPerPage = recordsPerPage,
         };
     }
 }
