@@ -13,17 +13,11 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Host.AddSerilog();
 builder.Configuration.AddJsonFile("features.json");
 
-// if (bool.Parse(Environment.GetEnvironmentVariable("VYAZMATECH_WORKERS_ENABLED")!))
-// {
-builder.Services
-    .AddWorkersConfiguration(builder.Configuration)
-    .AddWorkers();
-
-// }
 builder.Services
     .AddInfrastructure()
     .AddPostgresConfiguration(builder.Configuration)
-    .AddDatabase();
+    .AddDatabase()
+    .AddQueueScheduling(builder.Configuration);
 
 builder.Services
     .AddIdentityConfiguration(builder.Configuration);
@@ -45,5 +39,7 @@ await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
     await scope.SeedRoles();
     await scope.SeedDefaultAdmins(builder.Configuration);
 }
+
+app.UseSchedulingDashboard();
 
 await app.RunAsync();

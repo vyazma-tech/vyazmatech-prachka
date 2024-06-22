@@ -1,6 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
+        <PackageReference Include="Hangfire.AspNetCore"/>
+        <PackageReference Include="Hangfire.PostgreSql"/>
         <PackageReference Include="Microsoft.Extensions.Hosting"/>
     </ItemGroup>
 
@@ -10,9 +12,5 @@
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
         <ProjectReference Include="..\VyazmaTech.Prachka.Application.Core\VyazmaTech.Prachka.Application.Core.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Queue\"/>
     </ItemGroup>
 </Project>
