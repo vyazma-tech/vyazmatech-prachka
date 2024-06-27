@@ -1,32 +1,31 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Configuration;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Extensions;
-using VyazmaTech.Prachka.Application.BackgroundWorkers.Queues.Jobs;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
-using VyazmaTech.Prachka.Domain.Core.Queues;
-using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Outbox;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.Factories;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
 namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Queues;
 
 internal sealed class QueueSchedulingBackgroundWorker : RestartableBackgroundWorker
 {
-    private readonly IOptionsMonitor<QueueSchedulingConfiguration> _configuration;
-    private readonly IDateTimeProvider _timeProvider;
+    private readonly IOptionsMonitor<QueueJobOutboxConfiguration> _configuration;
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ILogger<QueueSchedulingBackgroundWorker> _logger;
+    private readonly ILogger<QueueSeedingBackgroundWorker> _logger;
 
     public QueueSchedulingBackgroundWorker(
-        IOptionsMonitor<QueueSchedulingConfiguration> configuration,
-        IDateTimeProvider timeProvider,
-        IServiceScopeFactory scopeFactory,
-        ILogger<QueueSchedulingBackgroundWorker> logger) : base(logger)
+        ILogger<QueueSeedingBackgroundWorker> logger,
+        IOptionsMonitor<QueueJobOutboxConfiguration> configuration,
+        IServiceScopeFactory scopeFactory) : base(logger)
     {
         _configuration = configuration;
-        _timeProvider = timeProvider;
         _scopeFactory = scopeFactory;
         _logger = logger;
     }
@@ -35,100 +34,84 @@ internal sealed class QueueSchedulingBackgroundWorker : RestartableBackgroundWor
     {
         using var timer = new PeriodicTimer(_configuration.CurrentValue.Delay);
         using IDisposable? delayChange = _configuration.OnValueChange(
-            nameof(QueueSchedulingConfiguration.Delay),
+            nameof(QueueJobOutboxConfiguration.Delay),
+            cts.Cancel);
+
+        using IDisposable? batchSizeChange = _configuration.OnValueChange(
+            nameof(QueueJobOutboxConfiguration.BatchSize),
             cts.Cancel);
 
         while (cts.IsCancellationRequested is false && await timer.WaitForNextTickAsync(cts.Token))
         {
             using IServiceScope scope = _scopeFactory.CreateScope();
             IServiceProvider sp = scope.ServiceProvider;
-
-            IPersistenceContext context = sp.GetRequiredService<IPersistenceContext>();
-            IUnitOfWork unitOfWork = sp.GetRequiredService<IUnitOfWork>();
-            QueueSchedulingConfiguration configuration = _configuration.CurrentValue;
+            QueueJobOutboxConfiguration configuration = _configuration.CurrentValue;
 
             _logger.LogInformation(
                 "Starting queues seeding with configuration {@Configuration}",
                 configuration);
 
-            await using IDbContextTransaction transaction = await unitOfWork.BeginTransactionAsync(cts.Token);
-
             try
             {
-                List<Queue> queues = await SeedQueuesAsync(cts.Token, configuration, context);
-                ScheduleQueueJobs(sp, queues);
+                int processedMessages = await ProcessOutboxMessagesAsync(sp, configuration, cts.Token);
 
-                await transaction.CommitAsync(cts.Token);
+                _logger.LogInformation(
+                    "Worker processed {OutboxProcessed} queue job outbox messages",
+                    processedMessages);
             }
             catch (Exception e) when (e is not OperationCanceledException or TaskCanceledException)
             {
-                _logger.LogError(e, "Exception occured during queue seeding");
-                await transaction.RollbackAsync();
+                _logger.LogError(e, "Exception occured during job outbox processing");
                 throw;
             }
-
-            _logger.LogInformation("Finished queue seeding for the next {Days} days", configuration.SeedingInterval);
         }
     }
 
-    private async Task<List<Queue>> SeedQueuesAsync(
-        CancellationToken stoppingToken,
-        QueueSchedulingConfiguration configuration,
-        IPersistenceContext context)
+    private async Task<int> ProcessOutboxMessagesAsync(
+        IServiceProvider provider,
+        QueueJobOutboxConfiguration configuration,
+        CancellationToken token)
     {
-        var queues = CreateQueues(configuration).ToList();
-        context.Queues.InsertRange(queues);
+        DatabaseContext context = provider.GetRequiredService<DatabaseContext>();
+        IPersistenceContext persistenceContext = provider.GetRequiredService<IPersistenceContext>();
+        QueueJobScheduler scheduler = provider.GetRequiredService<QueueJobScheduler>();
+        IDateTimeProvider timeProvider = provider.GetRequiredService<IDateTimeProvider>();
 
-        await context.SaveChangesAsync(stoppingToken);
-        return queues;
-    }
+        var factories = provider
+            .GetKeyedServices<SchedulingCommandFactory>(nameof(SchedulingCommandFactory))
+            .ToList();
 
-    private void ScheduleQueueJobs(IServiceProvider sp, IReadOnlyList<Queue> queues)
-    {
-        QueueJobScheduler scheduler = sp.GetRequiredService<QueueJobScheduler>();
-        foreach (Queue queue in queues)
+        List<QueueJobOutboxMessage> messages = await context.QueueJobOutboxMessages
+            .Take(configuration.BatchSize)
+            .ToListAsync(token);
+
+        int processedMessages = 0;
+        foreach (QueueJobOutboxMessage message in messages)
         {
-            scheduler.ScheduleActivation(queue, _timeProvider.UtcNow);
-            scheduler.ScheduleExpiration(queue, _timeProvider.UtcNow);
+            try
+            {
+                Domain.Core.Queues.Queue queue = await persistenceContext.Queues.GetByIdAsync(message.QueueId, token);
+
+                factories.Select(
+                        factory => factory.CreateEnclosingCommand(
+                            message.JobId,
+                            queue.AssignmentDate,
+                            queue.ActivityBoundaries))
+                    .ToList()
+                    .ForEach(command => scheduler.Reschedule(command));
+
+                message.ProcessedOnUtc = timeProvider.UtcNow;
+
+                await context.SaveChangesAsync(token);
+                processedMessages += 1;
+            }
+            catch (Exception e)
+            {
+                message.Error = JsonConvert.SerializeObject(e);
+                await context.SaveChangesAsync(token);
+            }
         }
-    }
 
-    private IEnumerable<Queue> CreateQueues(QueueSchedulingConfiguration configuration)
-    {
-        for (int day = 1; day <= configuration.SeedingInterval; day++)
-        {
-            var capacity = Capacity.Create(configuration.DefaultCapacity);
-            AssignmentDate assignmentDate = CreateAssignmentDate(day);
-            QueueActivityBoundaries createActivity = CreateActivity(day, configuration);
-
-            yield return new Queue(
-                id: Guid.NewGuid(),
-                capacity: capacity,
-                assignmentDate: assignmentDate,
-                activityBoundaries: createActivity,
-                state: QueueState.Prepared,
-                orders: []);
-        }
-    }
-
-    private AssignmentDate CreateAssignmentDate(int day)
-    {
-        DateOnly dateTime = _timeProvider.UtcNow.Date.AddDays(day).AsDateOnly();
-
-        return AssignmentDate.Create(dateTime, _timeProvider.DateNow);
-    }
-
-    private QueueActivityBoundaries CreateActivity(int day, QueueSchedulingConfiguration configuration)
-    {
-        DayOfWeek dayOfWeek = _timeProvider.DateNow.AddDays(day).DayOfWeek;
-
-        return dayOfWeek switch
-        {
-            DayOfWeek.Saturday or DayOfWeek.Sunday => QueueActivityBoundaries.Create(
-                configuration.DayOfActiveFrom,
-                configuration.DayOfActiveUntil),
-
-            _ => QueueActivityBoundaries.Create(configuration.WeekdayActiveFrom, configuration.WeekdayActiveUntil)
-        };
+        return processedMessages;
     }
 }

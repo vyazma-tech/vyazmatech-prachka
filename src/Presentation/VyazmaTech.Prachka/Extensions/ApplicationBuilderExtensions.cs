@@ -1,5 +1,6 @@
 ﻿using FastEndpoints.Swagger;
 using Serilog;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.WebAPI.Middlewares;
 
@@ -17,7 +18,8 @@ public static class ApplicationBuilderExtensions
             .UseRouting()
             .UseAuthorization()
             .UseEndpoints()
-            .UseSwaggerGen();
+            .UseSwaggerGen()
+            .UseSchedulingDashboard();
 
         return (WebApplication)builder;
     }

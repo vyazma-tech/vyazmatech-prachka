@@ -7,7 +7,7 @@ using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
 
-namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Queues.Jobs;
+namespace VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
 [AutomaticRetry(Attempts = 3, DelaysInSeconds = [5, 25, 125])]
 internal abstract class QueueStateModificationJob : IQueueJob

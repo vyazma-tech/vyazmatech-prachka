@@ -1,6 +1,6 @@
 ﻿namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Configuration;
 
-public class QueueSchedulingConfiguration
+public class QueueSeedingConfiguration
 {
     public const string SectionKey = "Application:SchedulingConfiguration";
 

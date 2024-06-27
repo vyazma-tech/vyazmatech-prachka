@@ -17,7 +17,7 @@ public sealed class Queue : Entity, IAuditableEntity
 
     private Queue() { }
 
-    public Queue(
+    private Queue(
         Guid id,
         Capacity capacity,
         AssignmentDate assignmentDate,
@@ -34,6 +34,24 @@ public sealed class Queue : Entity, IAuditableEntity
         State = state;
         ModifiedOnUtc = modifiedOn;
         _orders = [.. orders];
+    }
+
+    public static Queue Create(
+        Capacity capacity,
+        AssignmentDate assignmentDate,
+        QueueActivityBoundaries activityBoundaries)
+    {
+        var queue = new Queue(
+            Guid.NewGuid(),
+            capacity,
+            assignmentDate,
+            activityBoundaries,
+            QueueState.Prepared,
+            []);
+
+        queue.Raise(new QueueCreatedDomainEvent(queue.Id, queue.ActivityBoundaries, queue.AssignmentDate));
+
+        return queue;
     }
 
     public Capacity Capacity { get; private set; }
@@ -95,18 +113,12 @@ public sealed class Queue : Entity, IAuditableEntity
         Capacity = newCapacity;
     }
 
-    public void ChangeActivityBoundaries(QueueActivityBoundaries activityBoundaries, DateTime currentTimeUtc)
+    public void ChangeActivityBoundaries(QueueActivityBoundaries activityBoundaries)
     {
         if (ActivityBoundaries == activityBoundaries)
             throw new DomainInvalidOperationException(DomainErrors.Queue.InvalidNewActivityBoundaries);
 
-        if (currentTimeUtc.AsTimeOnly() < activityBoundaries.ActiveFrom)
-            ModifyState(QueueState.Prepared);
-
-        if (currentTimeUtc.AsTimeOnly() > activityBoundaries.ActiveUntil)
-            ModifyState(QueueState.Closed);
-
-        State = QueueState.Active;
+        Raise(new ActivityChangedDomainEvent(Id, AssignmentDate, current: activityBoundaries));
         ActivityBoundaries = activityBoundaries;
     }
 

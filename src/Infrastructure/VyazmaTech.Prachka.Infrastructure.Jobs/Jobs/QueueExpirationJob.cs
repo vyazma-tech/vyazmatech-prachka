@@ -2,7 +2,7 @@
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 
-namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Queues.Jobs;
+namespace VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
 internal sealed class QueueExpirationJob : QueueStateModificationJob
 {

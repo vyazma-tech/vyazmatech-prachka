@@ -1,0 +1,79 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using VyazmaTech.Prachka.Application.Contracts.Common;
+using VyazmaTech.Prachka.Domain.Core.Queues;
+using VyazmaTech.Prachka.Domain.Core.Queues.Events;
+using VyazmaTech.Prachka.Domain.Kernel;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Outbox;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.Factories;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
+
+namespace VyazmaTech.Prachka.Application.Handlers.Core.Queue.Events;
+
+internal sealed class ActivityChangedDomainEventHandler : IEventHandler<ActivityChangedDomainEvent>
+{
+    private readonly DatabaseContext _context;
+    private readonly IDateTimeProvider _timeProvider;
+    private readonly IServiceProvider _serviceProvider;
+
+    public ActivityChangedDomainEventHandler(
+        DatabaseContext context,
+        IServiceProvider serviceProvider,
+        IDateTimeProvider timeProvider)
+    {
+        _context = context;
+        _serviceProvider = serviceProvider;
+        _timeProvider = timeProvider;
+    }
+
+    public async ValueTask Handle(ActivityChangedDomainEvent notification, CancellationToken cancellationToken)
+    {
+        Domain.Core.Queues.Queue queue = await _context.Queues.FirstAsync(
+            x => x.Id == notification.QueueId,
+            cancellationToken);
+
+        ChangeState(queue);
+
+        List<QueueJobOutboxMessage> messages = await _context.QueueJobOutboxMessages
+            .IgnoreQueryFilters()
+            .Where(x => x.QueueId == notification.QueueId)
+            .ToListAsync(cancellationToken);
+
+        RescheduleJobs(notification, messages);
+
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    private void ChangeState(Domain.Core.Queues.Queue queue)
+    {
+        DateTime currentTimeUtc = _timeProvider.UtcNow;
+
+        if (currentTimeUtc.AsTimeOnly() < queue.ActivityBoundaries.ActiveFrom)
+            queue.ModifyState(QueueState.Prepared);
+
+        if (currentTimeUtc.AsTimeOnly() > queue.ActivityBoundaries.ActiveUntil)
+            queue.ModifyState(QueueState.Closed);
+    }
+
+    private void RescheduleJobs(
+        ActivityChangedDomainEvent notification,
+        List<QueueJobOutboxMessage> messages)
+    {
+        QueueJobScheduler scheduler = _serviceProvider.GetRequiredService<QueueJobScheduler>();
+        var factories = _serviceProvider
+            .GetKeyedServices<SchedulingCommandFactory>(nameof(SchedulingCommandFactory))
+            .ToList();
+
+        foreach (QueueJobOutboxMessage message in messages)
+        {
+            factories.Select(
+                    factory => factory.CreateEnclosingCommand(
+                        message.JobId,
+                        notification.AssignmentDate,
+                        notification.Current))
+                .ToList()
+                .ForEach(command => scheduler.Reschedule(command));
+        }
+    }
+}

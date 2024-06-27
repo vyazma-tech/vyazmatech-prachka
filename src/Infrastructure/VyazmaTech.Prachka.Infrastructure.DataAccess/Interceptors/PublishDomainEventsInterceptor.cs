@@ -1,17 +1,18 @@
 ﻿using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using VyazmaTech.Prachka.Domain.Kernel;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Interceptors;
 
 public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 {
-    private readonly IPublisher _publisher;
+    private readonly IServiceScopeFactory _scopeFactory;
 
-    public PublishDomainEventsInterceptor(IPublisher publisher)
+    public PublishDomainEventsInterceptor(IServiceScopeFactory scopeFactory)
     {
-        _publisher = publisher;
+        _scopeFactory = scopeFactory;
     }
 
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
@@ -42,8 +43,11 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 
         entities.ForEach(entity => entity.ClearDomainEvents());
 
+        using IServiceScope scope = _scopeFactory.CreateScope();
+        IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+
         var tasks = domainEvents
-            .Select(e => _publisher.Publish(e, cancellationToken))
+            .Select(e => publisher.Publish(e, cancellationToken))
             .Select(t => t.AsTask())
             .ToList();
 

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <ItemGroup>
+        <PackageReference Include="Hangfire.AspNetCore"/>
+        <PackageReference Include="Hangfire.PostgreSql"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj"/>
+        <ProjectReference Include="..\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
+    </ItemGroup>
+</Project>

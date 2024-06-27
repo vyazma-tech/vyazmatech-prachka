@@ -1,4 +1,4 @@
-﻿namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Queues.Jobs;
+﻿namespace VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
 public interface IQueueJob
 {

@@ -24,14 +24,11 @@ public class ChangeActivityBoundariesTests : TestBase
 
     public ChangeActivityBoundariesTests(CoreDatabaseFixture fixture) : base(fixture)
     {
-        var dateTimeProvider = new Mock<IDateTimeProvider>();
         var queues = new Mock<IQueueRepository>();
         var persistenceContext = new Mock<IPersistenceContext>();
         persistenceContext.Setup(x => x.Queues).Returns(queues.Object);
 
-        _handler = new ChangeQueueActivityBoundariesCommandHandler(
-            dateTimeProvider.Object,
-            fixture.PersistenceContext);
+        _handler = new ChangeQueueActivityBoundariesCommandHandler(fixture.PersistenceContext);
     }
 
     [Fact]
