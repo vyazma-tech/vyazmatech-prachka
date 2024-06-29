@@ -37,21 +37,23 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                     b.UseTpcMappingStrategy();
                 });
 
-            modelBuilder.Entity("VyazmaTech.Prachka.Infrastructure.DataAccess.Outbox.QueueJobOutboxMessage", b =>
+            modelBuilder.Entity("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.OutboxMessage", b =>
                 {
-                    b.Property<Guid>("QueueId")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("queue_id");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content");
 
                     b.Property<string>("Error")
                         .HasColumnType("text")
                         .HasColumnName("error");
-
-                    b.Property<string>("JobId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("job_id");
 
                     b.Property<DateTime>("OccuredOnUtc")
                         .HasColumnType("timestamp with time zone")
@@ -61,14 +63,48 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("processed_on_utc");
 
-                    b.HasKey("QueueId")
-                        .HasName("pk_queue_job_outbox_messages");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id")
+                        .HasName("pk_outbox_messages");
 
                     b.HasIndex("ProcessedOnUtc")
-                        .HasDatabaseName("ix_queue_job_outbox_messages_processed_on_utc")
-                        .HasFilter("processed_on_utc is not null");
+                        .HasDatabaseName("ix_outbox_messages_processed_on_utc")
+                        .HasFilter("processed_on_utc is null");
 
-                    b.ToTable("queue_job_outbox_messages");
+                    b.ToTable("outbox_messages");
+                });
+
+            modelBuilder.Entity("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.QueueJobMessage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("JobId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("job_id");
+
+                    b.Property<Guid>("QueueId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("queue_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_queue_job_messages");
+
+                    b.HasIndex("QueueId", "JobId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_queue_job_messages_queue_id_job_id")
+                        .HasAnnotation("Npgsql:CreatedConcurrently", true);
+
+                    b.ToTable("queue_job_messages");
                 });
 
             modelBuilder.Entity("VyazmaTech.Prachka.Domain.Core.Orders.Order", b =>

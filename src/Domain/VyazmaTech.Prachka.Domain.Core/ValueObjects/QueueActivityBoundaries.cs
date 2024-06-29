@@ -1,4 +1,5 @@
-﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
+﻿using Newtonsoft.Json;
+using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
@@ -21,12 +22,14 @@ public sealed class QueueActivityBoundaries : ValueObject
     /// <summary>
     /// Gets queue active from time.
     /// </summary>
-    public TimeOnly ActiveFrom { get; }
+    [JsonProperty]
+    public TimeOnly ActiveFrom { get; private set; }
 
     /// <summary>
     /// Gets queue active until time.
     /// </summary>
-    public TimeOnly ActiveUntil { get; }
+    [JsonProperty]
+    public TimeOnly ActiveUntil { get; private set; }
 
     /// <summary>
     /// Validates and creates queue activity boundaries instance.

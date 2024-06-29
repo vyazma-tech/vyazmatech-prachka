@@ -5,7 +5,7 @@ using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.Queues.Events;
 using VyazmaTech.Prachka.Domain.Kernel;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Outbox;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.Factories;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
@@ -35,8 +35,7 @@ internal sealed class ActivityChangedDomainEventHandler : IEventHandler<Activity
 
         ChangeState(queue);
 
-        List<QueueJobOutboxMessage> messages = await _context.QueueJobOutboxMessages
-            .IgnoreQueryFilters()
+        List<QueueJobMessage> messages = await _context.QueueJobMessages
             .Where(x => x.QueueId == notification.QueueId)
             .ToListAsync(cancellationToken);
 
@@ -58,14 +57,14 @@ internal sealed class ActivityChangedDomainEventHandler : IEventHandler<Activity
 
     private void RescheduleJobs(
         ActivityChangedDomainEvent notification,
-        List<QueueJobOutboxMessage> messages)
+        List<QueueJobMessage> messages)
     {
         QueueJobScheduler scheduler = _serviceProvider.GetRequiredService<QueueJobScheduler>();
         var factories = _serviceProvider
-            .GetKeyedServices<SchedulingCommandFactory>(nameof(SchedulingCommandFactory))
+            .GetServices<SchedulingCommandFactory>()
             .ToList();
 
-        foreach (QueueJobOutboxMessage message in messages)
+        foreach (QueueJobMessage message in messages)
         {
             factories.Select(
                     factory => factory.CreateEnclosingCommand(

@@ -11,8 +11,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddQueueScheduling(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<QueueSeedingConfiguration>(configuration.GetSection(QueueSeedingConfiguration.SectionKey));
-        services.Configure<QueueJobOutboxConfiguration>(
-            configuration.GetSection(QueueJobOutboxConfiguration.SectionKey));
+        services.Configure<OutboxConfiguration>(configuration.GetSection(OutboxConfiguration.SectionKey));
 
         services.AddWorkers();
         return services;
@@ -22,8 +21,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddHostedService<OutboxMessagesProcessingBackgroundWorker>();
         services.AddHostedService<QueueSeedingBackgroundWorker>();
+        services.AddHostedService<OutboxMessagePublishingBackgroundWorker>();
 
-        // services.AddHostedService<QueueSchedulingBackgroundWorker>();
         return services;
     }
 }

@@ -54,6 +54,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployment", "deployment", 
 		deployment\stop_database.sh = deployment\stop_database.sh
 		deployment\add_migration.sh = deployment\add_migration.sh
 		deployment\remove_migration.sh = deployment\remove_migration.sh
+		deployment\update_database.sh = deployment\update_database.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Authentication", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj", "{89BAF7FF-A8ED-4121-85DA-A59128D09729}"

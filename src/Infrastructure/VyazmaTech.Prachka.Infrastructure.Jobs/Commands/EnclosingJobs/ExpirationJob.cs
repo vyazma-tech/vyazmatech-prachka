@@ -23,7 +23,7 @@ internal sealed class ExpirationJob : IEntryLifecycleCommand
             _assignmentDate,
             _activityBoundaries.ActiveUntil);
 
-        string jobId = client.Schedule<QueueActivationJob>(
+        string jobId = client.Schedule<QueueExpirationJob>(
             job =>
                 job.ExecuteAsync(_assignmentDate, CancellationToken.None),
             delay: executionDate - timeProvider.UtcNow);

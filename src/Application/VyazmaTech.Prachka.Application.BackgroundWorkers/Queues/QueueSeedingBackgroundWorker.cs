@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Configuration;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Extensions;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
+using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
@@ -36,29 +39,45 @@ internal sealed class QueueSeedingBackgroundWorker : RestartableBackgroundWorker
             nameof(QueueSeedingConfiguration.Delay),
             cts.Cancel);
 
+        await Task.Yield();
+
         while (cts.IsCancellationRequested is false && await timer.WaitForNextTickAsync(cts.Token))
         {
             using IServiceScope scope = _scopeFactory.CreateScope();
             IServiceProvider sp = scope.ServiceProvider;
 
             IPersistenceContext context = sp.GetRequiredService<IPersistenceContext>();
+            IUnitOfWork unitOfWork = sp.GetRequiredService<IUnitOfWork>();
             QueueSeedingConfiguration configuration = _configuration.CurrentValue;
 
             _logger.LogInformation(
                 "Starting queues seeding with configuration {@Configuration}",
                 configuration);
 
+            await using IDbContextTransaction transaction = await unitOfWork.BeginTransactionAsync(cts.Token);
+
             try
             {
                 await SeedQueuesAsync(cts.Token, configuration, context);
-            }
-            catch (Exception e) when (e is not OperationCanceledException or TaskCanceledException)
-            {
-                _logger.LogError(e, "Exception occured during queue seeding");
-                throw;
-            }
+                await transaction.CommitAsync();
 
-            _logger.LogInformation("Finished queue seeding for the next {Days} days", configuration.SeedingInterval);
+                _logger.LogInformation(
+                    "Finished queue seeding for the next {Days} days",
+                    configuration.SeedingInterval);
+            }
+            catch (DomainException e)
+            {
+                _logger.LogError(e, e.Message);
+                await transaction.RollbackAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                _logger.LogError(
+                    "Worker attempted to seed queue with duplicate date with entries {@Entries}",
+                    e.Entries.Select(x => x.Entity));
+
+                await transaction.RollbackAsync();
+            }
         }
     }
 
@@ -78,7 +97,7 @@ internal sealed class QueueSeedingBackgroundWorker : RestartableBackgroundWorker
         for (int day = 1; day <= configuration.SeedingInterval; day++)
         {
             var capacity = Capacity.Create(configuration.DefaultCapacity);
-            AssignmentDate assignmentDate = CreateAssignmentDate(day);
+            AssignmentDate assignmentDate = CreateAssignmentDate(day - 1);
             QueueActivityBoundaries createActivity = CreateActivity(day, configuration);
 
             yield return Queue.Create(

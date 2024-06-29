@@ -23,7 +23,7 @@ internal sealed class RescheduleActivationCommand : IEnclosingLifecycleCommand
 
     public void Execute(IBackgroundJobClient client, IDateTimeProvider timeProvider)
     {
-        DateTime executionDate = IEntryLifecycleCommand.GetDateTimeFromAssignment(
+        DateTime executionDate = IEnclosingLifecycleCommand.GetDateTimeFromAssignment(
             _assignmentDate,
             _activityBoundaries.ActiveFrom);
 

@@ -1,7 +1,6 @@
 ﻿using Hangfire;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
-using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.EntryJobs;
 
 namespace VyazmaTech.Prachka.Infrastructure.Jobs.Commands.EnclosingJobs;
 
@@ -23,7 +22,7 @@ internal sealed class RescheduleExpirationCommand : IEnclosingLifecycleCommand
 
     public void Execute(IBackgroundJobClient client, IDateTimeProvider timeProvider)
     {
-        DateTime executionDate = IEntryLifecycleCommand.GetDateTimeFromAssignment(
+        DateTime executionDate = IEnclosingLifecycleCommand.GetDateTimeFromAssignment(
             _assignmentDate,
             _activityBoundaries.ActiveFrom);
 

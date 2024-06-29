@@ -20,11 +20,8 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddJobCommands(this IServiceCollection services)
     {
-        services.AddKeyedTransient<SchedulingCommandFactory, ActivationCommandFactory>(
-            nameof(SchedulingCommandFactory));
-
-        services.AddKeyedTransient<SchedulingCommandFactory, ExpirationCommandFactory>(
-            nameof(SchedulingCommandFactory));
+        services.AddTransient<SchedulingCommandFactory, ActivationCommandFactory>();
+        services.AddTransient<SchedulingCommandFactory, ExpirationCommandFactory>();
 
         return services;
     }

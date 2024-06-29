@@ -1,17 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Extensions;
-using VyazmaTech.Prachka.Infrastructure.DataAccess.Outbox;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.EntityConfigurations;
 
-public sealed class QueueJobOutboxMessageConfiguration : IEntityTypeConfiguration<QueueJobOutboxMessage>
+public sealed class QueueJobOutboxMessageConfiguration : IEntityTypeConfiguration<QueueJobMessage>
 {
-    public void Configure(EntityTypeBuilder<QueueJobOutboxMessage> builder)
+    public void Configure(EntityTypeBuilder<QueueJobMessage> builder)
     {
-        builder.HasKey(message => message.QueueId);
+        builder.HasKey(message => message.Id);
 
-        builder.HasIndex(message => message.ProcessedOnUtc)
-            .HasFilter($"{nameof(QueueJobOutboxMessage.ProcessedOnUtc)} is not null".ToSnakeCase());
+        builder.HasIndex(
+                message => new
+                {
+                    message.QueueId,
+                    message.JobId
+                })
+            .IsUnique()
+            .IsCreatedConcurrently();
     }
 }

@@ -1,8 +1,8 @@
 ﻿namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Configuration;
 
-public class QueueJobOutboxConfiguration
+public class OutboxConfiguration
 {
-    public const string SectionKey = "Application:QueueJobOutboxConfiguration";
+    public const string SectionKey = "Application:OutboxConfiguration";
 
     public TimeSpan Delay { get; set; }
 
