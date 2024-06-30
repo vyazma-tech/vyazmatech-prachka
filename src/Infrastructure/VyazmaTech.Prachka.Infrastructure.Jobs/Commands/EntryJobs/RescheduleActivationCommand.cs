@@ -27,6 +27,11 @@ internal sealed class RescheduleActivationCommand : IEnclosingLifecycleCommand
             _assignmentDate,
             _activityBoundaries.ActiveFrom);
 
-        client.Reschedule(_jobId, executionDate - timeProvider.UtcNow);
+        DateTime utcNow = timeProvider.UtcNow;
+
+        if (executionDate > utcNow)
+            client.Reschedule(_jobId, executionDate - utcNow);
+        else
+            client.Reschedule(_jobId, utcNow);
     }
 }

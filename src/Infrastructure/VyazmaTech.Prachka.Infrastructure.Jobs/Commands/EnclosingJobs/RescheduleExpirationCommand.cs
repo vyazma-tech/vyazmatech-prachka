@@ -24,8 +24,13 @@ internal sealed class RescheduleExpirationCommand : IEnclosingLifecycleCommand
     {
         DateTime executionDate = IEnclosingLifecycleCommand.GetDateTimeFromAssignment(
             _assignmentDate,
-            _activityBoundaries.ActiveFrom);
+            _activityBoundaries.ActiveUntil);
 
-        client.Reschedule(_jobId, executionDate - timeProvider.UtcNow);
+        DateTime utcNow = timeProvider.UtcNow;
+
+        if (executionDate > utcNow)
+            client.Reschedule(_jobId, executionDate - utcNow);
+        else
+            client.Reschedule(_jobId, utcNow);
     }
 }

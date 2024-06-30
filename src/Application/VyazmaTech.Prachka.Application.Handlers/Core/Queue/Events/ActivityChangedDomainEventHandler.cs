@@ -6,6 +6,7 @@ using VyazmaTech.Prachka.Domain.Core.Queues.Events;
 using VyazmaTech.Prachka.Domain.Kernel;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.EnclosingJobs;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.Factories;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
@@ -49,10 +50,18 @@ internal sealed class ActivityChangedDomainEventHandler : IEventHandler<Activity
         DateTime currentTimeUtc = _timeProvider.UtcNow;
 
         if (currentTimeUtc.AsTimeOnly() < queue.ActivityBoundaries.ActiveFrom)
+        {
             queue.ModifyState(QueueState.Prepared);
+            return;
+        }
 
         if (currentTimeUtc.AsTimeOnly() > queue.ActivityBoundaries.ActiveUntil)
+        {
             queue.ModifyState(QueueState.Closed);
+            return;
+        }
+
+        queue.ModifyState(QueueState.Active);
     }
 
     private void RescheduleJobs(
@@ -64,15 +73,17 @@ internal sealed class ActivityChangedDomainEventHandler : IEventHandler<Activity
             .GetServices<SchedulingCommandFactory>()
             .ToList();
 
-        foreach (QueueJobMessage message in messages)
+        for (int i = 0; i < messages.Count; i++)
         {
-            factories.Select(
-                    factory => factory.CreateEnclosingCommand(
-                        message.JobId,
-                        notification.AssignmentDate,
-                        notification.Current))
-                .ToList()
-                .ForEach(command => scheduler.Reschedule(command));
+            SchedulingCommandFactory factory = factories[i];
+            QueueJobMessage message = messages[i];
+
+            IEnclosingLifecycleCommand command = factory.CreateEnclosingCommand(
+                message.JobId,
+                notification.AssignmentDate,
+                notification.Current);
+
+            scheduler.Reschedule(command);
         }
     }
 }
