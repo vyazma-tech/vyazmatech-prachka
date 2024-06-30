@@ -73,7 +73,7 @@ public class QueueTests
     }
 
     [Fact]
-    public void BulkInsert_ShouldRaiseDomainEvent_WhenInsertSucceededAndMaxCapacityReached()
+    public void BulkInsert_ShouldNotThrow_WhenInsertSucceededAndMaxCapacityReached()
     {
         var orderId = Guid.NewGuid();
         Order order = Create.Order.WithId(orderId).Build();
@@ -87,10 +87,6 @@ public class QueueTests
         queue.BulkInsert([newOrder]);
 
         queue.Orders.Should().Contain(order);
-        queue.DomainEvents.Should()
-            .ContainSingle()
-            .Which.Should()
-            .BeOfType<QueueMaxCapacityReachedDomainEvent>();
     }
 
     [Fact]

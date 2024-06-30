@@ -73,7 +73,7 @@ public sealed class Queue : Entity, IAuditableEntity
         if (orders.Count + _orders.Count > Capacity.Value)
             throw new DomainInvalidOperationException(DomainErrors.Queue.WillOverflow);
 
-        if (IsExpired())
+        if (IsClosed())
             throw new DomainInvalidOperationException(DomainErrors.Queue.Expired);
 
         Order? existingOrder = _orders.FirstOrDefault(orders.Contains);
@@ -82,9 +82,6 @@ public sealed class Queue : Entity, IAuditableEntity
             throw new DomainInvalidOperationException(DomainErrors.Queue.ContainsOrderWithId(existingOrder.Id));
 
         _orders.AddRange(orders);
-
-        if (_orders.Count.Equals(Capacity))
-            Raise(new QueueMaxCapacityReachedDomainEvent(this));
     }
 
     public void RemoveFor(Guid userId, int count)
@@ -122,15 +119,15 @@ public sealed class Queue : Entity, IAuditableEntity
         ActivityBoundaries = activityBoundaries;
     }
 
-    public bool IsExpired()
+    public bool IsClosed()
     {
-        return State == QueueState.Expired;
+        return State == QueueState.Closed;
     }
 
     public void ModifyState(QueueState state)
     {
         if (state == QueueState.Expired)
-            Raise(new QueueExpiredDomainEvent(this));
+            Raise(new QueueExpiredDomainEvent(Id));
 
         State = state;
     }
