@@ -97,7 +97,7 @@ internal sealed class QueueSeedingBackgroundWorker : RestartableBackgroundWorker
         for (int day = 1; day <= configuration.SeedingInterval; day++)
         {
             var capacity = Capacity.Create(configuration.DefaultCapacity);
-            AssignmentDate assignmentDate = CreateAssignmentDate(day - 1);
+            AssignmentDate assignmentDate = CreateAssignmentDate(day);
             QueueActivityBoundaries createActivity = CreateActivity(day, configuration);
 
             yield return Queue.Create(

@@ -35,13 +35,13 @@ public class QueueTests
     }
 
     [Fact]
-    public void BulkInsert_ShouldThrow_WhenQueueExpired()
+    public void BulkInsert_ShouldThrow_WhenQueueClosed()
     {
         var orderId = Guid.NewGuid();
         Order order = Create.Order.WithId(orderId).Build();
         Queue queue = Create.Queue
             .WithCapacity(2)
-            .WithState(QueueState.Expired)
+            .WithState(QueueState.Closed)
             .WithOrders([order])
             .Build();
 
@@ -134,5 +134,32 @@ public class QueueTests
             .ContainSingle()
             .Which.Should()
             .BeOfType<QueueExpiredDomainEvent>();
+    }
+
+    [Fact]
+    public void Create_ShouldRaiseDomainEvent_WhenQueueParametersValid()
+    {
+        // Arrange
+        _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
+        _dateTimeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+
+        var assignmentDate = AssignmentDate.Create(
+            _dateTimeProvider.Object.DateNow.AddDays(1),
+            _dateTimeProvider.Object.DateNow);
+
+        var capacity = Capacity.Create(1);
+
+        var activity = QueueActivityBoundaries.Create(
+            _dateTimeProvider.Object.UtcNow.AsTimeOnly(),
+            _dateTimeProvider.Object.UtcNow.AsTimeOnly().AddHours(1));
+
+        // Act
+        var queue = Queue.Create(capacity, assignmentDate, activity);
+
+        // Assert
+        queue.DomainEvents.Should()
+            .ContainSingle()
+            .Which.Should()
+            .BeOfType<QueueCreatedDomainEvent>();
     }
 }
