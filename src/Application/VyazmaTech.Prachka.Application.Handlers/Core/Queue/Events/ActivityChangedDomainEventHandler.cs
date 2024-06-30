@@ -6,7 +6,6 @@ using VyazmaTech.Prachka.Domain.Core.Queues.Events;
 using VyazmaTech.Prachka.Domain.Kernel;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Models;
-using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.EnclosingJobs;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.Factories;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
@@ -73,17 +72,12 @@ internal sealed class ActivityChangedDomainEventHandler : IEventHandler<Activity
             .GetServices<SchedulingCommandFactory>()
             .ToList();
 
-        for (int i = 0; i < messages.Count; i++)
-        {
-            SchedulingCommandFactory factory = factories[i];
-            QueueJobMessage message = messages[i];
-
-            IEnclosingLifecycleCommand command = factory.CreateEnclosingCommand(
-                message.JobId,
-                notification.AssignmentDate,
-                notification.Current);
-
-            scheduler.Reschedule(command);
-        }
+        factories.Zip(messages)
+            .Select(x => x.First.CreateEnclosingCommand(
+                jobId: x.Second.JobId,
+                assignmentDate: notification.AssignmentDate,
+                activityBoundaries: notification.Current))
+            .ToList()
+            .ForEach(scheduler.Reschedule);
     }
 }
