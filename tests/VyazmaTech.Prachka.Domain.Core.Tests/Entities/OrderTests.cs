@@ -73,12 +73,12 @@ public class OrderTests
     }
 
     [Fact]
-    public void PrologInto_ShouldThrow_WhenOrderTransferIntoExpiredQueue()
+    public void PrologInto_ShouldThrow_WhenOrderTransferIntoClosedQueue()
     {
         Queue orderQueue = Create.Queue.WithCapacity(1).Build();
         Queue targetQueue = Create.Queue
             .WithCapacity(1)
-            .WithState(QueueState.Expired)
+            .WithState(QueueState.Closed)
             .Build();
 
         Order order = Create.Order.WithQueue(orderQueue).Build();

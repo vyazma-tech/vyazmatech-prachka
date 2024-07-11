@@ -17,7 +17,7 @@ public sealed class Queue : Entity, IAuditableEntity
 
     private Queue() { }
 
-    public Queue(
+    private Queue(
         Guid id,
         Capacity capacity,
         AssignmentDate assignmentDate,
@@ -34,6 +34,24 @@ public sealed class Queue : Entity, IAuditableEntity
         State = state;
         ModifiedOnUtc = modifiedOn;
         _orders = [.. orders];
+    }
+
+    public static Queue Create(
+        Capacity capacity,
+        AssignmentDate assignmentDate,
+        QueueActivityBoundaries activityBoundaries)
+    {
+        var queue = new Queue(
+            Guid.NewGuid(),
+            capacity,
+            assignmentDate,
+            activityBoundaries,
+            QueueState.Prepared,
+            []);
+
+        queue.Raise(new QueueCreatedDomainEvent(queue.Id, queue.ActivityBoundaries, queue.AssignmentDate));
+
+        return queue;
     }
 
     public Capacity Capacity { get; private set; }
@@ -55,7 +73,7 @@ public sealed class Queue : Entity, IAuditableEntity
         if (orders.Count + _orders.Count > Capacity.Value)
             throw new DomainInvalidOperationException(DomainErrors.Queue.WillOverflow);
 
-        if (IsExpired())
+        if (IsClosed())
             throw new DomainInvalidOperationException(DomainErrors.Queue.Expired);
 
         Order? existingOrder = _orders.FirstOrDefault(orders.Contains);
@@ -64,9 +82,6 @@ public sealed class Queue : Entity, IAuditableEntity
             throw new DomainInvalidOperationException(DomainErrors.Queue.ContainsOrderWithId(existingOrder.Id));
 
         _orders.AddRange(orders);
-
-        if (_orders.Count.Equals(Capacity))
-            Raise(new QueueMaxCapacityReachedDomainEvent(this));
     }
 
     public void RemoveFor(Guid userId, int count)
@@ -95,30 +110,24 @@ public sealed class Queue : Entity, IAuditableEntity
         Capacity = newCapacity;
     }
 
-    public void ChangeActivityBoundaries(QueueActivityBoundaries activityBoundaries, DateTime currentTimeUtc)
+    public void ChangeActivityBoundaries(QueueActivityBoundaries activityBoundaries)
     {
         if (ActivityBoundaries == activityBoundaries)
             throw new DomainInvalidOperationException(DomainErrors.Queue.InvalidNewActivityBoundaries);
 
-        if (currentTimeUtc.AsTimeOnly() < activityBoundaries.ActiveFrom)
-            ModifyState(QueueState.Prepared);
-
-        if (currentTimeUtc.AsTimeOnly() > activityBoundaries.ActiveUntil)
-            ModifyState(QueueState.Closed);
-
-        State = QueueState.Active;
+        Raise(new ActivityChangedDomainEvent(Id, AssignmentDate, current: activityBoundaries));
         ActivityBoundaries = activityBoundaries;
     }
 
-    public bool IsExpired()
+    public bool IsClosed()
     {
-        return State == QueueState.Expired;
+        return State == QueueState.Closed;
     }
 
     public void ModifyState(QueueState state)
     {
         if (state == QueueState.Expired)
-            Raise(new QueueExpiredDomainEvent(this));
+            Raise(new QueueExpiredDomainEvent(Id));
 
         State = state;
     }

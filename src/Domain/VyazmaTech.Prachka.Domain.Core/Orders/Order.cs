@@ -80,4 +80,14 @@ public sealed class Order : Entity, IAuditableEntity
 
         Status = OrderStatus.Prolonged;
     }
+
+    /// <summary>
+    /// Removes order from current queue. Should
+    /// be only used for not paid order dismissal
+    /// </summary>
+    public void Dismiss()
+    {
+        if (Status == OrderStatus.New)
+            Queue.Remove(this);
+    }
 }

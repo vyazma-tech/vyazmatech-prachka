@@ -38,7 +38,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IUnitOfWork, PersistenceContext>();
         services.AddScoped<IPersistenceContext, PersistenceContext>();
-        services.AddSingleton<PublishDomainEventsInterceptor>();
+        services.AddSingleton<DomainEventsToOutboxMessageInterceptor>();
         services.AddSingleton<AuditableEntityUpdatingInterceptor>();
 
         services.AddTransient<IDateTimeProvider, DefaultTimeProvider>();

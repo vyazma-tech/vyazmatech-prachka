@@ -34,7 +34,7 @@ internal static class ModelBuilderExtensions
         }
     }
 
-    private static string ToSnakeCase(this string s)
+    public static string ToSnakeCase(this string s)
     {
         if (string.IsNullOrEmpty(s))
         {
