@@ -14,8 +14,12 @@ public class PostgresConfiguration
 
     public int Port { get; set; } = default!;
 
+    public string? ConnectionString { get; set; } = default!;
+
     public string ToConnectionString()
     {
-        return $"Host={Host};Port={Port};Database={Database};Username={Username};Password={Password};";
+        return ConnectionString is null
+            ? $"Host={Host};Port={Port};Database={Database};Username={Username};Password={Password};"
+            : ConnectionString;
     }
 }

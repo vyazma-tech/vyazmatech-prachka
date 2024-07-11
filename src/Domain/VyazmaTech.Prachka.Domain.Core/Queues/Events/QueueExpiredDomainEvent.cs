@@ -8,10 +8,10 @@ namespace VyazmaTech.Prachka.Domain.Core.Queues.Events;
 /// </summary>
 public sealed class QueueExpiredDomainEvent : IDomainEvent
 {
-    public QueueExpiredDomainEvent(Queue queue)
+    public QueueExpiredDomainEvent(Guid id)
     {
-        Queue = queue;
+        Id = id;
     }
 
-    public Queue Queue { get; }
+    public Guid Id { get; }
 }

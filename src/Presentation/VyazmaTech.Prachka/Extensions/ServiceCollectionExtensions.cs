@@ -30,7 +30,7 @@ internal static class ServiceCollectionExtensions
             (sp, o) =>
             {
                 o.UseNpgsql(sp.GetRequiredService<PostgresConfiguration>().ToConnectionString())
-                    .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>())
+                    .AddInterceptors(sp.GetRequiredService<DomainEventsToOutboxMessageInterceptor>())
                     .AddInterceptors(sp.GetRequiredService<AuditableEntityUpdatingInterceptor>());
             });
 

@@ -2,23 +2,16 @@
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
-using VyazmaTech.Prachka.Domain.Kernel;
 using static VyazmaTech.Prachka.Application.Contracts.Core.Queues.Commands.ChangeQueueActivityBoundaries;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Queue.Commands.ChangeQueueActivityBoundaries;
 
-internal sealed class ChangeQueueActivityBoundariesCommandHandler : ICommandHandler<
-    Contracts.Core.Queues.Commands.ChangeQueueActivityBoundaries.Command,
-    Contracts.Core.Queues.Commands.ChangeQueueActivityBoundaries.Response>
+internal sealed class ChangeQueueActivityBoundariesCommandHandler : ICommandHandler<Command, Response>
 {
     private readonly IPersistenceContext _persistenceContext;
-    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public ChangeQueueActivityBoundariesCommandHandler(
-        IDateTimeProvider dateTimeProvider,
-        IPersistenceContext persistenceContext)
+    public ChangeQueueActivityBoundariesCommandHandler(IPersistenceContext persistenceContext)
     {
-        _dateTimeProvider = dateTimeProvider;
         _persistenceContext = persistenceContext;
     }
 
@@ -31,7 +24,7 @@ internal sealed class ChangeQueueActivityBoundariesCommandHandler : ICommandHand
             request.ActiveFrom,
             request.ActiveUntil);
 
-        queue.ChangeActivityBoundaries(activityBoundaries, _dateTimeProvider.UtcNow);
+        queue.ChangeActivityBoundaries(activityBoundaries);
 
         await _persistenceContext.SaveChangesAsync(cancellationToken);
 

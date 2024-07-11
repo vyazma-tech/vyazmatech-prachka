@@ -5,4 +5,8 @@
         <ProjectReference Include="..\VyazmaTech.Prachka.Domain.Kernel\VyazmaTech.Prachka.Domain.Kernel.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Newtonsoft.Json"/>
+    </ItemGroup>
+
 </Project>

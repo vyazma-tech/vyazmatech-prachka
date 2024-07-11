@@ -1,4 +1,5 @@
-﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
+﻿using Newtonsoft.Json;
+using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
@@ -21,7 +22,8 @@ public sealed class AssignmentDate : ValueObject
     /// <summary>
     /// Gets queue date.
     /// </summary>
-    public DateOnly Value { get; }
+    [JsonProperty]
+    public DateOnly Value { get; private set; }
 
     /// <summary>
     /// Validates and creates queue date instance.

@@ -2,8 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Configuration;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Extensions;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 
@@ -29,10 +31,26 @@ public class CoreDatabaseFixture : DatabaseFixture
 
     protected override void ConfigureServices(IServiceCollection services)
     {
-        services.AddDatabase(
-            x =>
-                x.UseNpgsql(Container.GetConnectionString()));
-        services.AddInfrastructure();
+        ReplacePostgresConfiguration(services);
+
+        services
+            .AddDatabase(
+                x =>
+                    x.UseNpgsql(Container.GetConnectionString()));
+
+        services
+            .AddInfrastructure()
+            .AddJobs();
+    }
+
+    private void ReplacePostgresConfiguration(IServiceCollection services)
+    {
+        var postgresConfiguration = new PostgresConfiguration
+        {
+            ConnectionString = Container.GetConnectionString()
+        };
+
+        services.AddSingleton(postgresConfiguration);
     }
 
     protected override DbConnection CreateConnection()

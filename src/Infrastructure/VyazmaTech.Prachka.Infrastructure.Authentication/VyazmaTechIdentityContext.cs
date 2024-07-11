@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using VyazmaTech.Prachka.Infrastructure.Authentication.Extensions;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Models;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Outbox;
 
@@ -16,10 +15,4 @@ internal sealed class VyazmaTechIdentityContext
     }
 
     public DbSet<OutboxMessage> OutboxMessages { get; init; } = null!;
-
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        builder.UseSnakeCaseNamingConvention();
-        base.OnModelCreating(builder);
-    }
 }

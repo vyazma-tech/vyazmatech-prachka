@@ -36,7 +36,7 @@ internal sealed class OutboxMessagesProcessingBackgroundWorker : BackgroundServi
 
             List<OutboxMessage> messages = await context.OutboxMessages
                 .Where(m => m.ProcessedOnUtc == null)
-                .Take(1)
+                .Take(10)
                 .ToListAsync(stoppingToken);
 
             foreach (OutboxMessage message in messages)

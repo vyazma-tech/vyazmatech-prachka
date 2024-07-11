@@ -2,6 +2,7 @@ using VyazmaTech.Prachka.Application.BackgroundWorkers.Extensions;
 using VyazmaTech.Prachka.Application.Handlers.Extensions;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Extensions;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Extensions;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 using VyazmaTech.Prachka.Presentation.Authentication.Extensions;
 using VyazmaTech.Prachka.Presentation.Authorization;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
@@ -13,17 +14,12 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Host.AddSerilog();
 builder.Configuration.AddJsonFile("features.json");
 
-// if (bool.Parse(Environment.GetEnvironmentVariable("VYAZMATECH_WORKERS_ENABLED")!))
-// {
-builder.Services
-    .AddWorkersConfiguration(builder.Configuration)
-    .AddWorkers();
-
-// }
 builder.Services
     .AddInfrastructure()
     .AddPostgresConfiguration(builder.Configuration)
-    .AddDatabase();
+    .AddDatabase()
+    .AddJobs()
+    .AddQueueScheduling(builder.Configuration);
 
 builder.Services
     .AddIdentityConfiguration(builder.Configuration);
