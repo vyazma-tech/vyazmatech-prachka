@@ -8,9 +8,14 @@ internal sealed class SecretManagerConfigurationProvider : ConfigurationProvider
 
         foreach (SecretEntry secret in secrets)
         {
-            data[secret.Key] = secret.Value;
+            data[Normalize(secret.Key)] = secret.Value;
         }
 
         Data = data;
+    }
+
+    private static string Normalize(string key)
+    {
+        return key.Replace("__", ConfigurationPath.KeyDelimiter, StringComparison.Ordinal);
     }
 }
