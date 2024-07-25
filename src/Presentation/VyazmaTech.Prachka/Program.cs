@@ -6,6 +6,7 @@ using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 using VyazmaTech.Prachka.Presentation.Authentication.Extensions;
 using VyazmaTech.Prachka.Presentation.Authorization;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
+using VyazmaTech.Prachka.Presentation.WebAPI.Configuration.Secrets;
 using VyazmaTech.Prachka.Presentation.WebAPI.Extensions;
 using VyazmaTech.Prachka.Presentation.WebAPI.Helpers;
 
@@ -13,6 +14,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.AddSerilog();
 builder.Configuration.AddJsonFile("features.json");
+await SecretConfigurationBuilder.AddConfiguration(builder.Environment, builder.Configuration);
 
 builder.Services
     .AddInfrastructure()

@@ -36,25 +36,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Presenta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka", "src\Presentation\VyazmaTech.Prachka\VyazmaTech.Prachka.csproj", "{01543956-3B90-4425-904D-8DF3E3E3BA2F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{48C48F42-04B1-4B9E-93EB-C8F6A397B351}"
-	ProjectSection(SolutionItems) = preProject
-		docker\docker-compose.yml = docker\docker-compose.yml
-		docker\build.dockerfile = docker\build.dockerfile
-		docker\build.dockerfile.dockerignore = docker\build.dockerfile.dockerignore
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Application.BackgroundWorkers", "src\Application\VyazmaTech.Prachka.Application.BackgroundWorkers\VyazmaTech.Prachka.Application.BackgroundWorkers.csproj", "{5DD10590-2621-4E5B-9759-57F6D732FE3C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deployment", "deployment", "{BDD8E4AF-E268-419B-A9EB-29640C57B17C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{BDD8E4AF-E268-419B-A9EB-29640C57B17C}"
 	ProjectSection(SolutionItems) = preProject
-		deployment\run_container.sh = deployment\run_container.sh
-		deployment\run_database.sh = deployment\run_database.sh
-		deployment\run_prod.sh = deployment\run_prod.sh
-		deployment\run_test.sh = deployment\run_test.sh
-		deployment\stop_database.sh = deployment\stop_database.sh
-		deployment\add_migration.sh = deployment\add_migration.sh
-		deployment\remove_migration.sh = deployment\remove_migration.sh
-		deployment\update_database.sh = deployment\update_database.sh
+		scripts\add_migration.sh = scripts\add_migration.sh
+		scripts\remove_migration.sh = scripts\remove_migration.sh
+		scripts\update_database.sh = scripts\update_database.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Authentication", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj", "{89BAF7FF-A8ED-4121-85DA-A59128D09729}"
@@ -81,6 +69,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{1D5E44
 		Directory.Packages.props = Directory.Packages.props
 		README.md = README.md
 		VyazmaTech.sln.DotSettings = VyazmaTech.sln.DotSettings
+		.github\workflows\staging.yml = .github\workflows\staging.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Tests.Tools", "tests\VyazmaTech.Prachka.Tests.Tools\VyazmaTech.Prachka.Tests.Tools.csproj", "{FC6B7750-C30B-4090-A09E-9E89B1285C25}"

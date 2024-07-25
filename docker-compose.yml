@@ -1,9 +1,9 @@
 ﻿version: '3.9'
 
 services:
-  tn-postgres:
+  vyazmatech-postgres:
     image: postgres:latest
-    container_name: tn-postgres
+    container_name: vyazmatech-postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -11,14 +11,14 @@ services:
     volumes:
       - ./.containers/database:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "6532:5432"
     restart: unless-stopped
     networks:
-      - tn
+      - vyazmatech-network
   
-  tn-seq:
+  vyazmatech-seq:
     image: datalust/seq:latest
-    container_name: tn-seq
+    container_name: vyazmatech-seq
     environment:
       - ACCEPT_EULA=Y
     ports:
@@ -26,9 +26,9 @@ services:
       - "8081:80"
     restart: unless-stopped
     networks:
-      - tn
+      - vyazmatech-network
 
 networks:
-  tn:
-    name: tn
+  vyazmatech-network:
+    name: vyazmatech-network
     driver: bridge
