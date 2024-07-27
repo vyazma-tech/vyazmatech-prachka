@@ -16,6 +16,6 @@ public class PostgresConfiguration
 
     public string ToConnectionString()
     {
-        return $"Pooling=true;Maximum Pool Size=10;Host={Host};Port={Port};Database={Database};Username={Username};Password={Password};";
+        return $"Host={Host};Port={Port};Database={Database};Username={Username};Password={Password};Pooling=true;Maximum Pool Size=10;";
     }
 }

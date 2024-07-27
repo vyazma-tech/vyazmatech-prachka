@@ -36,6 +36,12 @@ builder.Services
     .AddMiddlewares()
     .AddEndpoints();
 
+builder.Services.AddCors(o => o
+    .AddDefaultPolicy(x => x
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()));
+
 WebApplication app = builder.Build().ConfigureApp();
 await using (AsyncServiceScope scope = app.Services.CreateAsyncScope())
 {

@@ -16,6 +16,7 @@ public static class ApplicationBuilderExtensions
             .UseMiddleware<RequestLogContextMiddleware>()
             .UseMiddleware<GlobalExceptionHandlingMiddleware>()
             .UseRouting()
+            .UseCors()
             .UseAuthorization()
             .UseEndpoints()
             .UseSwaggerGen()

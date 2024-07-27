@@ -92,7 +92,6 @@ jobs:
             --name vyazmatech-prachka \
             -e ASPNETCORE_ENVIRONMENT=Staging \
             -d \
-            -p 5290:5290 \
             -t \
             -v "$HOME"/Logs/vyazmatech-prachka:/app/logs \
             --network vyazmatech-network \
