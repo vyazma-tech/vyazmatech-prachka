@@ -1,6 +1,7 @@
 ﻿using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.Users;
+using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 
 namespace VyazmaTech.Prachka.Tests.Tools.FluentBuilders;
 
@@ -40,5 +41,19 @@ internal sealed class OrderFluentBuilder : AbstractFluentBuilder<Order>
     {
         WithProperty(x => x.CreationDateTime, completionDate);
         return this;
+    }
+
+    public OrderFluentBuilder WithPrice(double price)
+    {
+        WithProperty(x => x.Price, price);
+        return this;
+    }
+
+    public override Order Build()
+    {
+        if (Entity.Price is null)
+            WithProperty(x => x.Price, Price.Default);
+
+        return base.Build();
     }
 }

@@ -8,4 +8,5 @@ public record OrderDto(
     Guid QueueId,
     string Status,
     DateOnly CreationDate,
-    DateTime? ModifiedOn);
+    DateTime? ModifiedOn,
+    double? Price);

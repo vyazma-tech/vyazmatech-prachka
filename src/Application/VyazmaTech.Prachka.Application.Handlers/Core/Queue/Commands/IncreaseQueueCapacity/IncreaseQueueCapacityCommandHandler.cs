@@ -7,8 +7,8 @@ using static VyazmaTech.Prachka.Application.Contracts.Core.Queues.Commands.Incre
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Queue.Commands.IncreaseQueueCapacity;
 
 internal sealed class IncreaseQueueCapacityCommandHandler : ICommandHandler<
-    Contracts.Core.Queues.Commands.IncreaseQueueCapacity.Command,
-    Contracts.Core.Queues.Commands.IncreaseQueueCapacity.Response>
+    Command,
+    Response>
 {
     private readonly IPersistenceContext _persistenceContext;
 

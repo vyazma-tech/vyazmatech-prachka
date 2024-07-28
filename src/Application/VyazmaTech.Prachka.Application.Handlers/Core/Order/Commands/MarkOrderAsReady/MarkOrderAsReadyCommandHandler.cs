@@ -6,7 +6,7 @@ using static VyazmaTech.Prachka.Application.Contracts.Core.Orders.Commands.MarkO
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Order.Commands.MarkOrderAsReady;
 
 internal sealed class MarkOrderAsReadyCommandHandler : ICommandHandler<
-    Contracts.Core.Orders.Commands.MarkOrderAsReady.Command, Contracts.Core.Orders.Commands.MarkOrderAsReady.Response>
+    Command, Response>
 {
     private readonly IPersistenceContext _persistenceContext;
 

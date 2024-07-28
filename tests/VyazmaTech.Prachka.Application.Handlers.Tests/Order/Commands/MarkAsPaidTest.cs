@@ -28,7 +28,7 @@ public class MarkAsPaidTest : TestBase
     public async Task Handle_ShouldThrow_WhenOrderNotFound()
     {
         var orderId = Guid.NewGuid();
-        var command = new MarkOrderAsPaid.Command(orderId);
+        var command = new MarkOrderAsPaid.Command(orderId, 0);
 
         Func<Task<MarkOrderAsPaid.Response>>
             action = async () => await _handler.Handle(command, CancellationToken.None);
@@ -61,7 +61,7 @@ public class MarkAsPaidTest : TestBase
         PersistenceContext.Orders.InsertRange([order]);
         await PersistenceContext.SaveChangesAsync(CancellationToken.None);
 
-        var command = new MarkOrderAsPaid.Command(order.Id);
+        var command = new MarkOrderAsPaid.Command(order.Id, 180);
 
         // Act
         MarkOrderAsPaid.Response response = await _handler.Handle(command, CancellationToken.None);

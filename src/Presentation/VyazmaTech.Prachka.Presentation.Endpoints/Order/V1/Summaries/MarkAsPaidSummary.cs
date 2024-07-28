@@ -10,7 +10,7 @@ internal sealed class MarkAsPaidSummary : Summary<MarkAsPaidEndpoint>
     public MarkAsPaidSummary()
     {
         Summary = "Mark order as paid.";
-        Description = "This endpoint marks order with specified id as paid.";
+        Description = "This endpoint marks order with specified id as paid and set it's price.";
         Response<OrderDto>();
         Response<ValidationProblemDetails>(StatusCodes.Status400BadRequest, "Parameters were not in correct format");
     }

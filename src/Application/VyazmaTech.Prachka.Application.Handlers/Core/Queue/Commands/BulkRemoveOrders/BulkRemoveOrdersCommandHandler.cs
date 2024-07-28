@@ -8,7 +8,7 @@ using static VyazmaTech.Prachka.Application.Contracts.Core.Queues.Commands.BulkR
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Queue.Commands.BulkRemoveOrders;
 
 internal sealed class BulkRemoveOrdersCommandHandler : ICommandHandler<
-    Contracts.Core.Queues.Commands.BulkRemoveOrders.Command, Contracts.Core.Queues.Commands.BulkRemoveOrders.Response>
+    Command, Response>
 {
     private readonly IPersistenceContext _context;
     private readonly ICurrentUser _currentUser;

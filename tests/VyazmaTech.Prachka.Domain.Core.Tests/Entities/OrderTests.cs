@@ -30,13 +30,36 @@ public class OrderTests
     {
         Order order = Create.Order.WithStatus(OrderStatus.New).Build();
 
-        order.MakePayment();
+        order.MakePayment(0);
 
         order.Status.Should().Be(OrderStatus.Paid);
         order.DomainEvents.Should()
             .ContainSingle()
             .Which.Should()
             .BeOfType<OrderPaidDomainEvent>();
+    }
+
+    [Fact]
+    public void MakePayment_ShouldSetPrice_WhenPriceIsValid()
+    {
+        Order order = Create.Order.WithStatus(OrderStatus.New).Build();
+
+        order.MakePayment(180);
+
+        order.Price.Value.Should().Be(180);
+    }
+
+    [Fact]
+    public void MakePayment_ShouldThrow_WhenPriceIsInvalid()
+    {
+        Order order = Create.Order.WithStatus(OrderStatus.New).Build();
+
+        Action action = () => order.MakePayment(-1);
+
+        action.Should()
+            .Throw<UserInvalidInputException>()
+            .Which.Error.Should()
+            .Be(DomainErrors.Price.NegativePrice);
     }
 
     [Fact]

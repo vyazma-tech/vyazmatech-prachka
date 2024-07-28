@@ -5,8 +5,8 @@ using static VyazmaTech.Prachka.Application.Contracts.Core.Orders.Commands.Prolo
 
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Order.Commands.ProlongOrder;
 
-internal sealed class ProlongOrderCommandHandler : ICommandHandler<Contracts.Core.Orders.Commands.ProlongOrder.Command,
-    Contracts.Core.Orders.Commands.ProlongOrder.Response>
+internal sealed class ProlongOrderCommandHandler : ICommandHandler<Command,
+    Response>
 {
     private readonly IPersistenceContext _persistenceContext;
 

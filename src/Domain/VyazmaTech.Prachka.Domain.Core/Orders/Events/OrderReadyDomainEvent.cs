@@ -8,10 +8,10 @@ namespace VyazmaTech.Prachka.Domain.Core.Orders.Events;
 /// </summary>
 public sealed class OrderReadyDomainEvent : IDomainEvent
 {
-    public OrderReadyDomainEvent(Orders.Order order)
+    public OrderReadyDomainEvent(Order order)
     {
         Order = order;
     }
 
-    public Orders.Order Order { get; }
+    public Order Order { get; }
 }
