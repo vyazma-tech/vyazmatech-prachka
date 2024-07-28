@@ -5,6 +5,7 @@
     TelegramUsername: @bobster,
     Fullname: Bobby Shmurda,
     QueueId: Guid_3,
-    Status: Prolonged
+    Status: Prolonged,
+    Comment: Заказ переведен в другую очередь, потому что у сотрудников прачечной не хватило времени выполнить заказ. Следите за статусом заказа
   }
 }

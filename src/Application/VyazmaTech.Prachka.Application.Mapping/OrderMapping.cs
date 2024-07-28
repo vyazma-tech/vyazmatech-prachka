@@ -18,7 +18,8 @@ public static class OrderMapping
             order.Status.ToString(),
             order.CreationDate,
             order.ModifiedOnUtc,
-            order.Price == Price.Default ? null : order.Price.Value);
+            order.Price == Price.Default ? null : order.Price.Value,
+            order.Comment);
     }
 
     public static PagedResponse<OrderDto> ToPagedResponse(

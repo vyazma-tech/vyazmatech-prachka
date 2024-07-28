@@ -28,6 +28,7 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(order => order.CreationDateTime);
         builder.Property(order => order.CreationDate);
         builder.Property(order => order.ModifiedOnUtc);
+        builder.Property(order => order.Comment);
 
         builder.HasIndex("queue_id", "user_id")
             .IsUnique(false);

@@ -40,7 +40,7 @@ public class MarkAsPaidTest : TestBase
     {
         // Arrange
         Domain.Core.Queues.Queue queue = Create.Queue
-            .WithCapacity(1)
+            .WithCapacity(2)
             .WithActivityBoundaries(TimeOnly.Parse("10:00"), TimeOnly.Parse("12:00"))
             .Build();
 
@@ -49,7 +49,14 @@ public class MarkAsPaidTest : TestBase
             .WithTelegramUsername("@bobster")
             .Build();
 
-        Domain.Core.Orders.Order order = Create.Order
+        var firstOrder = Create.Order
+            .WithId(Guid.NewGuid())
+            .WithUser(user)
+            .WithQueue(queue)
+            .WithStatus(OrderStatus.New)
+            .Build();
+
+        var secondOrder = Create.Order
             .WithId(Guid.NewGuid())
             .WithUser(user)
             .WithQueue(queue)
@@ -58,10 +65,10 @@ public class MarkAsPaidTest : TestBase
 
         PersistenceContext.Queues.InsertRange([queue]);
         PersistenceContext.Users.Insert(user);
-        PersistenceContext.Orders.InsertRange([order]);
+        PersistenceContext.Orders.InsertRange([firstOrder, secondOrder]);
         await PersistenceContext.SaveChangesAsync(CancellationToken.None);
 
-        var command = new MarkOrderAsPaid.Command(order.Id, 180);
+        var command = new MarkOrderAsPaid.Command(secondOrder.Id, 180);
 
         // Act
         MarkOrderAsPaid.Response response = await _handler.Handle(command, CancellationToken.None);

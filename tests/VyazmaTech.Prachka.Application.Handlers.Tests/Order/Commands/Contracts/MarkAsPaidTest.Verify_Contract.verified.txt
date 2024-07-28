@@ -6,6 +6,7 @@
     Fullname: Bobby Shmurda,
     QueueId: Guid_3,
     Status: Paid,
-    Price: 180.0
+    Price: 180.0,
+    Comment: ФИО: Bobby Shmurda TG: @bobster Порядковый номер: 2
   }
 }

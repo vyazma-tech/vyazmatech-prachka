@@ -9,4 +9,5 @@ public record OrderDto(
     string Status,
     DateOnly CreationDate,
     DateTime? ModifiedOn,
-    double? Price);
+    double? Price,
+    string? Comment);
