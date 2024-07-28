@@ -4,13 +4,14 @@ using VyazmaTech.Prachka.Application.Core.Errors;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Orders;
+using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
 using static VyazmaTech.Prachka.Application.Contracts.Core.Queues.Commands.BulkInsertOrders;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Queue.Commands.BulkInsertOrders;
 
 internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<
-    Contracts.Core.Queues.Commands.BulkInsertOrders.Command, Contracts.Core.Queues.Commands.BulkInsertOrders.Response>
+    Command, Response>
 {
     private readonly IPersistenceContext _context;
     private readonly ICurrentUser _currentUser;
@@ -60,7 +61,8 @@ internal sealed class BulkInsertOrdersCommandHandler : ICommandHandler<
                 default!,
                 user,
                 OrderStatus.New,
-                dateTimeProvider.UtcNow);
+                dateTimeProvider.UtcNow,
+                Price.Default);
 
             orders.Add(order);
         }

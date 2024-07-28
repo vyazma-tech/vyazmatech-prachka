@@ -27,6 +27,10 @@ public static class ValidationErrors
         public static Error OrderIdIsRequired => Error.Validation(
             $"{nameof(MarkOrderAsPaid)}.{nameof(OrderIdIsRequired)}",
             "The order identifier is required.");
+
+        public static Error NegativePrice => Error.Validation(
+            $"{nameof(MarkOrderAsPaid)}.{nameof(NegativePrice)}",
+            "The order price should not be negative.");
     }
 
     public static class CreateUser

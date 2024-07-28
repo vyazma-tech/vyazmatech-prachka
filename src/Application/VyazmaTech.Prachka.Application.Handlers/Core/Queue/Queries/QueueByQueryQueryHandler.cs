@@ -1,5 +1,4 @@
 ﻿using VyazmaTech.Prachka.Application.Contracts.Common;
-using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Dto.Core.Queue;
 using VyazmaTech.Prachka.Application.Mapping;
@@ -7,7 +6,7 @@ using static VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries.QueueB
 
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Queue.Queries;
 
-internal sealed class QueueByQueryQueryHandler : IQueryHandler<QueueByQuery.Query, QueueByQuery.Response>
+internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, Response>
 {
     private readonly IPersistenceContext _persistenceContext;
 

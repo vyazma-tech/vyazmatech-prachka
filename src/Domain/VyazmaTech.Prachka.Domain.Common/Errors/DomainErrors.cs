@@ -180,4 +180,11 @@ public static class DomainErrors
             $"{nameof(User)}.{nameof(NotFound)}",
             "The user with the specified identifier was not found.");
     }
+
+    public static class Price
+    {
+        public static Error NegativePrice => Error.Validation(
+            $"{nameof(Price)}.{nameof(NegativePrice)}",
+            "Order price cannot be negative");
+    }
 }

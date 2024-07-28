@@ -20,10 +20,15 @@ public sealed class OrderConfiguration : IEntityTypeConfiguration<Order>
             .HasForeignKey("queue_id")
             .HasPrincipalKey(queue => queue.Id);
 
+        builder.ComplexProperty(order => order.Price)
+            .Property(x => x.Value)
+            .HasColumnName("price");
+
         builder.Property(order => order.Status).HasDefaultValue(OrderStatus.New);
         builder.Property(order => order.CreationDateTime);
         builder.Property(order => order.CreationDate);
         builder.Property(order => order.ModifiedOnUtc);
+        builder.Property(order => order.Comment);
 
         builder.HasIndex("queue_id", "user_id")
             .IsUnique(false);

@@ -5,7 +5,7 @@ namespace VyazmaTech.Prachka.Application.Contracts.Core.Orders.Commands;
 
 public static class MarkOrderAsPaid
 {
-    public record struct Command(Guid Id) : IValidatableRequest<Response>;
+    public record struct Command(Guid Id, double Price) : IValidatableRequest<Response>;
 
     public record struct Response(OrderDto Order);
 }

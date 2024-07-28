@@ -9,7 +9,7 @@ using VyazmaTech.Prachka.Presentation.Endpoints.Order.V1.Models;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Order.V1;
 
-internal class MarkAsPaidEndpoint : Endpoint<OrderWithIdRequest, OrderDto>
+internal class MarkAsPaidEndpoint : Endpoint<MarkAsPaidRequest, OrderDto>
 {
     private const string FeatureName = "MarkAsPaid";
     private readonly ISender _sender;
@@ -27,9 +27,9 @@ internal class MarkAsPaidEndpoint : Endpoint<OrderWithIdRequest, OrderDto>
         Version(1);
     }
 
-    public override async Task HandleAsync(OrderWithIdRequest req, CancellationToken ct)
+    public override async Task HandleAsync(MarkAsPaidRequest req, CancellationToken ct)
     {
-        var command = new MarkOrderAsPaid.Command(req.OrderId);
+        var command = new MarkOrderAsPaid.Command(req.OrderId, req.Price);
 
         try
         {

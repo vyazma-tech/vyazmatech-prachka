@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
@@ -12,9 +13,11 @@ using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240728154307_add_order_price")]
+    partial class add_order_price
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,10 +113,6 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
             modelBuilder.Entity("VyazmaTech.Prachka.Domain.Core.Orders.Order", b =>
                 {
                     b.HasBaseType("VyazmaTech.Prachka.Domain.Kernel.Entity");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("text")
-                        .HasColumnName("comment");
 
                     b.Property<DateOnly>("CreationDate")
                         .HasColumnType("date")

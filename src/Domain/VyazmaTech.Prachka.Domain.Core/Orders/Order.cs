@@ -4,6 +4,7 @@ using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Orders.Events;
 using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Core.Users;
+using VyazmaTech.Prachka.Domain.Core.ValueObjects;
 using VyazmaTech.Prachka.Domain.Kernel;
 
 #pragma warning disable CS8618
@@ -20,6 +21,8 @@ public sealed class Order : Entity, IAuditableEntity
         User user,
         OrderStatus status,
         DateTime creationDateTimeUtc,
+        Price price,
+        string? comment = null,
         DateTime? modifiedOn = null)
         : base(id)
     {
@@ -28,6 +31,8 @@ public sealed class Order : Entity, IAuditableEntity
         Status = status;
         CreationDateTime = creationDateTimeUtc;
         CreationDate = creationDateTimeUtc.AsDateOnly();
+        Price = price;
+        Comment = comment;
         ModifiedOnUtc = modifiedOn;
     }
 
@@ -43,16 +48,24 @@ public sealed class Order : Entity, IAuditableEntity
 
     public DateTime? ModifiedOnUtc { get; }
 
+    public Price Price { get; private set; }
+
+    public string? Comment { get; private set; }
+
     /// <summary>
     /// Pays order and raises <see cref="OrderPaidDomainEvent" />.
     /// </summary>
     /// <remarks>returns failure result, when order is already is paid.</remarks>
-    public void MakePayment()
+    public void MakePayment(double price, string comment)
     {
         if (Status == OrderStatus.Paid)
             throw new DomainInvalidOperationException(DomainErrors.Order.AlreadyPaid);
 
+        var model = Price.Create(price);
+
         Status = OrderStatus.Paid;
+        Price = model;
+        Comment = comment;
         Raise(new OrderPaidDomainEvent(this));
     }
 
@@ -66,6 +79,7 @@ public sealed class Order : Entity, IAuditableEntity
             throw new DomainInvalidOperationException(DomainErrors.Order.IsReady);
 
         Status = OrderStatus.Ready;
+        Comment = $"Ваш заказ переведен в статус Готов";
         Raise(new OrderReadyDomainEvent(this));
     }
 
@@ -78,6 +92,7 @@ public sealed class Order : Entity, IAuditableEntity
         Queue.Remove(this);
         queue.BulkInsert([this]);
 
+        Comment = "Заказ переведен в другую очередь, потому что у сотрудников прачечной не хватило времени выполнить заказ. Следите за статусом заказа";
         Status = OrderStatus.Prolonged;
     }
 
