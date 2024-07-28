@@ -1,1 +1,0 @@
-./run_container.sh "tn-api-test" 5290 Staging

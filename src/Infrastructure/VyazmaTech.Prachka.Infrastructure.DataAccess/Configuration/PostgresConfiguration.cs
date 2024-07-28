@@ -19,7 +19,7 @@ public class PostgresConfiguration
     public string ToConnectionString()
     {
         return ConnectionString is null
-            ? $"Host={Host};Port={Port};Database={Database};Username={Username};Password={Password};"
+            ? $"Host={Host};Port={Port};Database={Database};Username={Username};Password={Password};Pooling=true;Maximum Pool Size=10;"
             : ConnectionString;
     }
 }
