@@ -1,10 +1,8 @@
-﻿namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Configuration;
+﻿namespace VyazmaTech.Prachka.Infrastructure.Jobs.Configuration;
 
 public class QueueSeedingConfiguration
 {
     public const string SectionKey = "Application:SchedulingConfiguration";
-
-    public TimeSpan Delay { get; set; }
 
     public TimeOnly WeekdayActiveFrom { get; set; }
 
