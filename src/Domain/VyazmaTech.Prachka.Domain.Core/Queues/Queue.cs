@@ -86,12 +86,19 @@ public sealed class Queue : Entity, IAuditableEntity
 
     public void RemoveFor(Guid userId, int count)
     {
-        var userOrders = _orders.Where(x => x.User.Id.Equals(userId)).ToHashSet();
+        var userOrders = _orders
+            .Where(x => x.User.Id.Equals(userId))
+            .Where(x => x.Status == OrderStatus.New)
+            .ToHashSet();
 
         if (userOrders.Count < count)
             throw new DomainInvalidOperationException(DomainErrors.Queue.NotEnoughOrders(count));
 
-        _orders.RemoveAll(x => userOrders.Contains(x));
+        var ordersToRemove = userOrders
+            .Take(count)
+            .ToList();
+
+        _orders.RemoveAll(x => ordersToRemove.Contains(x));
     }
 
     internal void Remove(Order order)
