@@ -5,6 +5,7 @@
     TelegramUsername: @bobster,
     Fullname: Bobby Shmurda,
     QueueId: Guid_3,
-    Status: Ready
+    Status: Ready,
+    Comment: Ваш заказ переведен в статус Готов
   }
 }

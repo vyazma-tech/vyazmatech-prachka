@@ -26,17 +26,65 @@ public class OrderTests
     }
 
     [Fact]
+    public void MakeReady_ShouldSetComment_WhenOrderIsNotAlreadyReady()
+    {
+        Order order = Create.Order.WithStatus(OrderStatus.Paid).Build();
+
+        order.MakeReady();
+
+        order.Status.Should().Be(OrderStatus.Ready);
+        order.Comment.Should().Be($"Ваш заказ переведен в статус Готов");
+        order.DomainEvents.Should()
+            .ContainSingle()
+            .Which.Should()
+            .BeOfType<OrderReadyDomainEvent>();
+    }
+
+    [Fact]
     public void MakePayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid()
     {
         Order order = Create.Order.WithStatus(OrderStatus.New).Build();
 
-        order.MakePayment();
+        order.MakePayment(0, string.Empty);
 
         order.Status.Should().Be(OrderStatus.Paid);
         order.DomainEvents.Should()
             .ContainSingle()
             .Which.Should()
             .BeOfType<OrderPaidDomainEvent>();
+    }
+
+    [Fact]
+    public void MakePayment_ShouldSetPrice_WhenPriceIsValid()
+    {
+        Order order = Create.Order.WithStatus(OrderStatus.New).Build();
+
+        order.MakePayment(180, string.Empty);
+
+        order.Price.Value.Should().Be(180);
+    }
+
+    [Fact]
+    public void MakePayment_ShouldThrow_WhenPriceIsInvalid()
+    {
+        Order order = Create.Order.WithStatus(OrderStatus.New).Build();
+
+        Action action = () => order.MakePayment(-1, string.Empty);
+
+        action.Should()
+            .Throw<UserInvalidInputException>()
+            .Which.Error.Should()
+            .Be(DomainErrors.Price.NegativePrice);
+    }
+
+    [Fact]
+    public void MakePayment_ShouldSetComment_WhenPriceIsValid()
+    {
+        Order order = Create.Order.WithStatus(OrderStatus.New).Build();
+
+        order.MakePayment(180, "Hey there! Im using Vyazmatech.Prachka");
+
+        order.Comment.Should().Be("Hey there! Im using Vyazmatech.Prachka");
     }
 
     [Fact]
@@ -118,5 +166,23 @@ public class OrderTests
         order.Status.Should().Be(OrderStatus.Prolonged);
         orderQueue.Orders.Should().NotContain(order);
         targetQueue.Orders.Should().Contain(order);
+    }
+
+    [Fact]
+    public void ProlongInto_ShouldSetComment_WhenTransferSucceeded()
+    {
+        Queue orderQueue = Create.Queue.WithCapacity(1).Build();
+        Queue targetQueue = Create.Queue.WithCapacity(1).Build();
+        Order order = Create.Order.WithQueue(orderQueue).Build();
+        orderQueue.BulkInsert([order]);
+
+        order.ProlongInto(targetQueue);
+
+        order.Status.Should().Be(OrderStatus.Prolonged);
+        orderQueue.Orders.Should().NotContain(order);
+        targetQueue.Orders.Should().Contain(order);
+        order.Comment.Should()
+            .Be(
+                "Заказ переведен в другую очередь, потому что у сотрудников прачечной не хватило времени выполнить заказ. Следите за статусом заказа");
     }
 }

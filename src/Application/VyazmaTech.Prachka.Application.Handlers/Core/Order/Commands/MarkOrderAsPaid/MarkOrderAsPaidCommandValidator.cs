@@ -11,5 +11,9 @@ public class MarkOrderAsPaidCommandValidator : AbstractValidator<Contracts.Core.
         RuleFor(x => x.Id)
             .NotEmpty()
             .WithError(ValidationErrors.MarkOrderAsPaid.OrderIdIsRequired);
+
+        RuleFor(x => x.Price)
+            .GreaterThanOrEqualTo(0)
+            .WithError(ValidationErrors.MarkOrderAsPaid.NegativePrice);
     }
 }

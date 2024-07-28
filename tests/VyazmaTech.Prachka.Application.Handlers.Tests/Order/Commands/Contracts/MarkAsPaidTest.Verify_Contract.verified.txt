@@ -1,10 +1,12 @@
-{
+﻿{
   Order: {
     Id: Guid_1,
     UserId: Guid_2,
     TelegramUsername: @bobster,
     Fullname: Bobby Shmurda,
     QueueId: Guid_3,
-    Status: Paid
+    Status: Paid,
+    Price: 180.0,
+    Comment: ФИО: Bobby Shmurda TG: @bobster Порядковый номер: 2
   }
 }

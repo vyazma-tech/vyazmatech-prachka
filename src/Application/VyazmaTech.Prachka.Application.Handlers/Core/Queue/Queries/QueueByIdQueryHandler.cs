@@ -1,12 +1,11 @@
 ﻿using VyazmaTech.Prachka.Application.Contracts.Common;
-using VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Mapping;
 using static VyazmaTech.Prachka.Application.Contracts.Core.Queues.Queries.QueueById;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Queue.Queries;
 
-internal sealed class QueueByIdQueryHandler : IQueryHandler<QueueById.Query, QueueById.Response>
+internal sealed class QueueByIdQueryHandler : IQueryHandler<Query, Response>
 {
     private readonly IPersistenceContext _context;
 

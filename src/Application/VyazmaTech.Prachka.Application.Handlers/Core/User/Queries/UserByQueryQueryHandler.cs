@@ -1,5 +1,4 @@
 ﻿using VyazmaTech.Prachka.Application.Contracts.Common;
-using VyazmaTech.Prachka.Application.Contracts.Core.Users.Queries;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Application.Dto.Core.User;
 using VyazmaTech.Prachka.Application.Mapping;
@@ -7,7 +6,7 @@ using static VyazmaTech.Prachka.Application.Contracts.Core.Users.Queries.UserByQ
 
 namespace VyazmaTech.Prachka.Application.Handlers.Core.User.Queries;
 
-internal sealed class UserByQueryQueryHandler : IQueryHandler<UserByQuery.Query, UserByQuery.Response>
+internal sealed class UserByQueryQueryHandler : IQueryHandler<Query, Response>
 {
     private readonly IPersistenceContext _persistenceContext;
 
