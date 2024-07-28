@@ -104,6 +104,77 @@ public class QueueTests
     }
 
     [Fact]
+    public void RemoveFor_ShouldRemoveUserOrders_WhenUserHasEnoughOrders()
+    {
+        var firstUserId = Guid.NewGuid();
+        Users.User firstUser = Create.User.WithId(firstUserId).Build();
+        Users.User secondUser = Create.User.WithId(Guid.NewGuid()).Build();
+
+        var firstUserOrders = Enumerable.Range(0, 6)
+            .Select(_ => Create.Order
+                .WithUser(firstUser)
+                .Build())
+            .ToList();
+
+        var secondUserOrders = Enumerable.Range(0, 4)
+            .Select(_ => Create.Order
+                .WithUser(secondUser)
+                .Build())
+            .ToList();
+
+        Queue queue = Create.Queue
+            .WithCapacity(10)
+            .WithOrders([..firstUserOrders, ..secondUserOrders])
+            .Build();
+
+        queue.RemoveFor(firstUserId, 5);
+
+        queue.Orders.Should().ContainSingle(x => x.User.Equals(firstUser));
+        queue.Orders.Count.Should().Be(5);
+    }
+
+    [Fact]
+    public void RemoveFor_ShouldThrow_WhenUserHasNotEnoughOrdersInNewState()
+    {
+        var firstUserId = Guid.NewGuid();
+        Users.User firstUser = Create.User.WithId(firstUserId).Build();
+        Users.User secondUser = Create.User.WithId(Guid.NewGuid()).Build();
+
+        var firstUserOrders = Enumerable.Range(0, 5)
+            .Select(_ =>
+                Create.Order
+                    .WithStatus(OrderStatus.New)
+                    .WithUser(firstUser)
+                    .Build())
+            .ToList();
+
+        var secondUserOrders = Enumerable.Range(0, 4)
+            .Select(_ =>
+                Create.Order
+                    .WithUser(secondUser)
+                    .Build())
+            .ToList();
+
+        firstUserOrders.Add(
+            Create.Order
+                .WithUser(firstUser)
+                .WithStatus(OrderStatus.Paid)
+                .Build());
+
+        Queue queue = Create.Queue
+            .WithCapacity(10)
+            .WithOrders([..firstUserOrders, ..secondUserOrders])
+            .Build();
+
+        Action action = () => queue.RemoveFor(firstUserId, 6);
+
+        action.Should()
+            .Throw<DomainInvalidOperationException>()
+            .Which.Error.Should()
+            .Be(DomainErrors.Queue.NotEnoughOrders(6));
+    }
+
+    [Fact]
     public void IncreaseCapacity_ShouldNotThrow_WhenNewCapacityIsGreaterThenCurrent()
     {
         int currentCapacity = 1;
