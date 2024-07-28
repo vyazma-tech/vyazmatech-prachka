@@ -8,9 +8,8 @@ namespace VyazmaTech.Prachka.Application.BackgroundWorkers.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddQueueScheduling(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddOutbox(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<QueueSeedingConfiguration>(configuration.GetSection(QueueSeedingConfiguration.SectionKey));
         services.Configure<OutboxConfiguration>(configuration.GetSection(OutboxConfiguration.SectionKey));
 
         services.AddWorkers();
@@ -20,7 +19,6 @@ public static class ServiceCollectionExtensions
     private static IServiceCollection AddWorkers(this IServiceCollection services)
     {
         services.AddHostedService<OutboxMessagesProcessingBackgroundWorker>();
-        services.AddHostedService<QueueSeedingBackgroundWorker>();
         services.AddHostedService<OutboxMessagePublishingBackgroundWorker>();
 
         return services;

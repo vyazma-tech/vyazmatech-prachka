@@ -1,10 +1,12 @@
 ﻿using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Configuration;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Extensions;
+using VyazmaTech.Prachka.Infrastructure.Jobs.Configuration;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
@@ -32,6 +34,7 @@ public class CoreDatabaseFixture : DatabaseFixture
     protected override void ConfigureServices(IServiceCollection services)
     {
         ReplacePostgresConfiguration(services);
+        var configuration = ReplaceJobsConfiguration();
 
         services
             .AddDatabase(
@@ -40,7 +43,7 @@ public class CoreDatabaseFixture : DatabaseFixture
 
         services
             .AddInfrastructure()
-            .AddJobs();
+            .AddJobs(configuration);
     }
 
     private void ReplacePostgresConfiguration(IServiceCollection services)
@@ -51,6 +54,25 @@ public class CoreDatabaseFixture : DatabaseFixture
         };
 
         services.AddSingleton(postgresConfiguration);
+    }
+
+    private IConfiguration ReplaceJobsConfiguration()
+    {
+        var configuration = new ConfigurationBuilder();
+
+        var collection = new Dictionary<string, string?>
+        {
+            [nameof(QueueSeedingConfiguration.SeedingInterval)] = 10.ToString(),
+            [nameof(QueueSeedingConfiguration.DefaultCapacity)] = 10.ToString(),
+            [nameof(QueueSeedingConfiguration.WeekdayActiveFrom)] = "10:00:00",
+            [nameof(QueueSeedingConfiguration.WeekdayActiveUntil)] = "17:00:00",
+            [nameof(QueueSeedingConfiguration.DayOfActiveFrom)] = "10:00:00",
+            [nameof(QueueSeedingConfiguration.DayOfActiveUntil)] = "17:00:00",
+        };
+
+        configuration.AddInMemoryCollection(collection);
+
+        return configuration.Build();
     }
 
     protected override DbConnection CreateConnection()

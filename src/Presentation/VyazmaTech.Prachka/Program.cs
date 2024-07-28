@@ -20,8 +20,8 @@ builder.Services
     .AddInfrastructure()
     .AddPostgresConfiguration(builder.Configuration)
     .AddDatabase()
-    .AddJobs()
-    .AddQueueScheduling(builder.Configuration);
+    .AddJobs(builder.Configuration)
+    .AddOutbox(builder.Configuration);
 
 builder.Services
     .AddIdentityConfiguration(builder.Configuration);
