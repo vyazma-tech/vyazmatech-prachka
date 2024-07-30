@@ -26,6 +26,16 @@ internal sealed class OrderRepository : IOrderRepository
                ?? throw new NotFoundException(DomainErrors.Order.NotFound);
     }
 
+    public IAsyncEnumerable<Order> QueryByUserAsync(Guid id, CancellationToken token)
+    {
+        return _context.Orders
+            .AsSplitQuery()
+            .Include(x => x.User)
+            .Include(x => x.Queue)
+            .Where(x => x.User.Id == id)
+            .AsAsyncEnumerable();
+    }
+
     public void InsertRange(IReadOnlyCollection<Order> orders)
         => _context.Orders.AddRange(orders);
 

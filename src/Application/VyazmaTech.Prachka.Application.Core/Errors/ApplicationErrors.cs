@@ -35,4 +35,11 @@ public static class ApplicationErrors
                 $"User with Id = {id} has no subscriptions");
         }
     }
+
+    public static class MyOrders
+    {
+        public static Error AnonymousUserCantSeeTheirOrders => Error.Unauthorized(
+            $"{nameof(MyOrders)}.{nameof(AnonymousUserCantSeeTheirOrders)}",
+            $"You cant see your orders but you are logged in");
+    }
 }

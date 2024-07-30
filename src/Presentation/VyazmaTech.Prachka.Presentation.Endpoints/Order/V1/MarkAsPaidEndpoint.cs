@@ -21,7 +21,7 @@ internal class MarkAsPaidEndpoint : Endpoint<MarkAsPaidRequest, OrderDto>
 
     public override void Configure()
     {
-        Patch("paid");
+        Put("paid");
         Policies($"{AuthorizeFeatureAttribute.Prefix}{FeatureScope.Name}:{FeatureName}");
         Group<OrderEndpointGroup>();
         Version(1);

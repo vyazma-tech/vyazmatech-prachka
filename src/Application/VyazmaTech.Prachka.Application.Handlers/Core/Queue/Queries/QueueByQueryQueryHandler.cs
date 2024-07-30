@@ -21,6 +21,7 @@ internal sealed class QueueByQueryQueryHandler : IQueryHandler<Query, Response>
 
         List<QueueDto> queues = await _persistenceContext.Queues
             .QueryFromAsync(request)
+            .OrderBy(x => x.AssignmentDate.Value)
             .Select(x => x.ToDto())
             .ToListAsync(cancellationToken);
 

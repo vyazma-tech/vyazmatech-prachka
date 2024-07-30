@@ -5,6 +5,7 @@
     State: Prepared,
     AssignmentDate: Date_1,
     ActiveFrom: Time_1,
-    ActiveUntil: Time_2
+    ActiveUntil: Time_2,
+    IsNotifyAvailable: false
   }
 }
