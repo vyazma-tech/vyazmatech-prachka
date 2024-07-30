@@ -21,7 +21,7 @@ internal class IncreaseQueueCapacityEndpoint : Endpoint<IncreaseCapacityRequest,
 
     public override void Configure()
     {
-        Patch("capacity");
+        Put("capacity");
         Policies($"{AuthorizeFeatureAttribute.Prefix}{FeatureScope.Name}:{FeatureName}");
         Group<QueueEndpointGroup>();
         Version(1);
