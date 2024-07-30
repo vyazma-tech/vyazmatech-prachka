@@ -16,7 +16,8 @@ public static class QueueMapping
             ModifiedOn: queue.ModifiedOnUtc,
             AssignmentDate: queue.AssignmentDate,
             ActiveFrom: queue.ActivityBoundaries.ActiveFrom,
-            ActiveUntil: queue.ActivityBoundaries.ActiveUntil);
+            ActiveUntil: queue.ActivityBoundaries.ActiveUntil,
+            IsNotifyAvailable: false);
     }
 
     public static QueueWithOrdersDto ToQueueWithOrdersDto(this Queue queue)
