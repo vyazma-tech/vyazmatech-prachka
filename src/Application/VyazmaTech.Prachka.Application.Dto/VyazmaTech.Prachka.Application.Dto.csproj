@@ -2,4 +2,7 @@
     <ItemGroup>
         <Folder Include="Core\"/>
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Core\VyazmaTech.Prachka.Domain.Core.csproj" />
+    </ItemGroup>
 </Project>

@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <PropertyGroup>
+        <NoWarn>$(NoWarn); SA1129</NoWarn>
+    </PropertyGroup>
+    
     <ItemGroup>
         <PackageReference Include="FastEndpoints"/>
         <PackageReference Include="FastEndpoints.Swagger"/>

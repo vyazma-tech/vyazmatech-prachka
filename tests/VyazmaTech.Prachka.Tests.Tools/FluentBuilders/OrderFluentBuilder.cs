@@ -37,12 +37,6 @@ internal sealed class OrderFluentBuilder : AbstractFluentBuilder<Order>
         return this;
     }
 
-    public OrderFluentBuilder WithCompletionDate(DateTime completionDate)
-    {
-        WithProperty(x => x.CreationDateTime, completionDate);
-        return this;
-    }
-
     public OrderFluentBuilder WithPrice(double price)
     {
         WithProperty(x => x.Price, price);
