@@ -9,7 +9,7 @@ using VyazmaTech.Prachka.Presentation.Endpoints.Order.V1.Models;
 
 namespace VyazmaTech.Prachka.Presentation.Endpoints.Order.V1;
 
-internal class MarkAsReadyEndpoint : Endpoint<OrderWithIdRequest, OrderDto>
+internal class MarkAsReadyEndpoint : Endpoint<MarkAsReadyRequest, OrderDto>
 {
     private const string FeatureName = "MarkAsReady";
     private readonly ISender _sender;
@@ -21,13 +21,13 @@ internal class MarkAsReadyEndpoint : Endpoint<OrderWithIdRequest, OrderDto>
 
     public override void Configure()
     {
-        Patch("ready");
+        Put("ready");
         Policies($"{AuthorizeFeatureAttribute.Prefix}{FeatureScope.Name}:{FeatureName}");
         Group<OrderEndpointGroup>();
         Version(1);
     }
 
-    public override async Task HandleAsync(OrderWithIdRequest req, CancellationToken ct)
+    public override async Task HandleAsync(MarkAsReadyRequest req, CancellationToken ct)
     {
         var command = new MarkOrderAsReady.Command(req.OrderId);
 

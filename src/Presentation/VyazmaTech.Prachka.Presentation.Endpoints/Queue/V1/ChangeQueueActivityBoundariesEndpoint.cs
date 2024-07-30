@@ -21,7 +21,7 @@ internal class ChangeQueueActivityBoundariesEndpoint : Endpoint<ChangeActivityBo
 
     public override void Configure()
     {
-        Patch("activity");
+        Put("activity");
         Policies($"{AuthorizeFeatureAttribute.Prefix}{FeatureScope.Name}:{FeatureName}");
         Group<QueueEndpointGroup>();
         Version(1);

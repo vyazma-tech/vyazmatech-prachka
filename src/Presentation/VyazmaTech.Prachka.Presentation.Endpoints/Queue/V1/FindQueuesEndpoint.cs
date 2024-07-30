@@ -39,7 +39,7 @@ internal class FindQueuesEndpoint : Endpoint<FindQueuesRequest, PagedResponse<Qu
     {
         var query = new QueueByQuery.Query(
             SearchFrom: req.SearchFrom ?? _timeProvider.DateNow,
-            Page: req.Page,
+            Page: req.Page ?? 0,
             Limit: req.Limit ?? _recordPerPage);
 
         QueueByQuery.Response response = await _sender.Send(query, ct);
