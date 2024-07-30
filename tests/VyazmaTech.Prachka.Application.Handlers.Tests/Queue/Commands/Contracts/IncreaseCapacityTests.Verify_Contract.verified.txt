@@ -5,6 +5,7 @@
     CurrentCapacity: 1,
     State: Prepared,
     AssignmentDate: Date_1,
-    ActiveUntil: Time_MaxValue
+    ActiveUntil: Time_MaxValue,
+    IsNotifyAvailable: false
   }
 }

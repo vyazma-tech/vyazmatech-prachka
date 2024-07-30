@@ -8,4 +8,5 @@ public record QueueDto(
     DateOnly AssignmentDate,
     TimeOnly ActiveFrom,
     TimeOnly ActiveUntil,
-    DateTime? ModifiedOn);
+    DateTime? ModifiedOn,
+    bool IsNotifyAvailable);
