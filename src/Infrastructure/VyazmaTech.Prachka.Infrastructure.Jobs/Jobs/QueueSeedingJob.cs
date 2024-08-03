@@ -16,13 +16,13 @@ internal sealed class QueueSeedingJob
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<QueueSeedingJob> _logger;
-    private readonly IOptionsMonitor<QueueSeedingConfiguration> _configuration;
+    private readonly IOptionsMonitor<SchedulingConfiguration> _configuration;
     private readonly IDateTimeProvider _timeProvider;
 
     public QueueSeedingJob(
         IServiceScopeFactory scopeFactory,
         ILogger<QueueSeedingJob> logger,
-        IOptionsMonitor<QueueSeedingConfiguration> configuration,
+        IOptionsMonitor<SchedulingConfiguration> configuration,
         IDateTimeProvider timeProvider)
     {
         _scopeFactory = scopeFactory;
@@ -38,7 +38,7 @@ internal sealed class QueueSeedingJob
 
         IPersistenceContext context = sp.GetRequiredService<IPersistenceContext>();
         IUnitOfWork unitOfWork = sp.GetRequiredService<IUnitOfWork>();
-        QueueSeedingConfiguration configuration = _configuration.CurrentValue;
+        SchedulingConfiguration configuration = _configuration.CurrentValue;
 
         _logger.LogInformation(
             "Starting queues seeding with configuration {@Configuration}",
@@ -71,7 +71,7 @@ internal sealed class QueueSeedingJob
     }
 
     private async Task SeedQueuesAsync(
-        QueueSeedingConfiguration configuration,
+        SchedulingConfiguration configuration,
         IPersistenceContext context)
     {
         var queues = CreateQueues(configuration).ToList();
@@ -80,7 +80,7 @@ internal sealed class QueueSeedingJob
         await context.SaveChangesAsync(default);
     }
 
-    private IEnumerable<Queue> CreateQueues(QueueSeedingConfiguration configuration)
+    private IEnumerable<Queue> CreateQueues(SchedulingConfiguration configuration)
     {
         for (int day = 1; day <= configuration.SeedingInterval; day++)
         {
@@ -102,7 +102,7 @@ internal sealed class QueueSeedingJob
         return AssignmentDate.Create(dateTime, _timeProvider.DateNow);
     }
 
-    private QueueActivityBoundaries CreateActivity(int day, QueueSeedingConfiguration configuration)
+    private QueueActivityBoundaries CreateActivity(int day, SchedulingConfiguration configuration)
     {
         DayOfWeek dayOfWeek = _timeProvider.DateNow.AddDays(day).DayOfWeek;
 

@@ -1,3 +1,4 @@
+using VyazmaTech.Platform.Rtc.Extensions;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Extensions;
 using VyazmaTech.Prachka.Application.Handlers.Extensions;
 using VyazmaTech.Prachka.Infrastructure.Authentication.Extensions;
@@ -14,6 +15,7 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.AddSerilog();
 builder.Configuration.AddJsonFile("features.json");
+builder.AddRtc();
 await SecretConfigurationBuilder.AddConfiguration(builder.Environment, builder.Configuration);
 
 builder.Services

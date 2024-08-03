@@ -62,12 +62,12 @@ public class CoreDatabaseFixture : DatabaseFixture
 
         var collection = new Dictionary<string, string?>
         {
-            [nameof(QueueSeedingConfiguration.SeedingInterval)] = 10.ToString(),
-            [nameof(QueueSeedingConfiguration.DefaultCapacity)] = 10.ToString(),
-            [nameof(QueueSeedingConfiguration.WeekdayActiveFrom)] = "10:00:00",
-            [nameof(QueueSeedingConfiguration.WeekdayActiveUntil)] = "17:00:00",
-            [nameof(QueueSeedingConfiguration.DayOfActiveFrom)] = "10:00:00",
-            [nameof(QueueSeedingConfiguration.DayOfActiveUntil)] = "17:00:00",
+            [nameof(SchedulingConfiguration.SeedingInterval)] = 10.ToString(),
+            [nameof(SchedulingConfiguration.DefaultCapacity)] = 10.ToString(),
+            [nameof(SchedulingConfiguration.WeekdayActiveFrom)] = "10:00:00",
+            [nameof(SchedulingConfiguration.WeekdayActiveUntil)] = "17:00:00",
+            [nameof(SchedulingConfiguration.DayOfActiveFrom)] = "10:00:00",
+            [nameof(SchedulingConfiguration.DayOfActiveUntil)] = "17:00:00",
         };
 
         configuration.AddInMemoryCollection(collection);
