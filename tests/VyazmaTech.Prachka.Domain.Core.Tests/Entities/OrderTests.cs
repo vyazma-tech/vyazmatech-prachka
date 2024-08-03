@@ -4,6 +4,7 @@ using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Core.Orders.Events;
 using VyazmaTech.Prachka.Domain.Core.Queues;
+using VyazmaTech.Prachka.Domain.Core.Users;
 using VyazmaTech.Prachka.Tests.Tools.FluentBuilders;
 using Xunit;
 
@@ -14,7 +15,8 @@ public class OrderTests
     [Fact]
     public void MakeReady_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyReady()
     {
-        Order order = Create.Order.WithStatus(OrderStatus.Paid).Build();
+        User user = Create.User.WithFullname("Bobby Shmurda").WithTelegramUsername("@bobster").Build();
+        Order order = Create.Order.WithStatus(OrderStatus.Paid).WithUser(user).Build();
 
         order.MakeReady();
 
@@ -28,7 +30,8 @@ public class OrderTests
     [Fact]
     public void MakeReady_ShouldSetComment_WhenOrderIsNotAlreadyReady()
     {
-        Order order = Create.Order.WithStatus(OrderStatus.Paid).Build();
+        User user = Create.User.WithFullname("Bobby Shmurda").WithTelegramUsername("@bobster").Build();
+        Order order = Create.Order.WithStatus(OrderStatus.Paid).WithUser(user).Build();
 
         order.MakeReady();
 
@@ -43,7 +46,8 @@ public class OrderTests
     [Fact]
     public void MakePayment_ShouldRaiseDomainEvent_WhenOrderIsNotAlreadyPaid()
     {
-        Order order = Create.Order.WithStatus(OrderStatus.New).Build();
+        User user = Create.User.WithFullname("Bobby Shmurda").WithTelegramUsername("@bobster").Build();
+        Order order = Create.Order.WithStatus(OrderStatus.New).WithUser(user).Build();
 
         order.MakePayment(0, string.Empty);
 
@@ -57,7 +61,8 @@ public class OrderTests
     [Fact]
     public void MakePayment_ShouldSetPrice_WhenPriceIsValid()
     {
-        Order order = Create.Order.WithStatus(OrderStatus.New).Build();
+        User user = Create.User.WithFullname("Bobby Shmurda").WithTelegramUsername("@bobster").Build();
+        Order order = Create.Order.WithStatus(OrderStatus.New).WithUser(user).Build();
 
         order.MakePayment(180, string.Empty);
 
@@ -80,7 +85,8 @@ public class OrderTests
     [Fact]
     public void MakePayment_ShouldSetComment_WhenPriceIsValid()
     {
-        Order order = Create.Order.WithStatus(OrderStatus.New).Build();
+        User user = Create.User.WithFullname("Bobby Shmurda").WithTelegramUsername("@bobster").Build();
+        Order order = Create.Order.WithStatus(OrderStatus.New).WithUser(user).Build();
 
         order.MakePayment(180, "Hey there! Im using Vyazmatech.Prachka");
 
