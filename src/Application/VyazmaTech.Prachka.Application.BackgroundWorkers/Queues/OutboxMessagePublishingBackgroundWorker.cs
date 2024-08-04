@@ -67,15 +67,28 @@ internal sealed class OutboxMessagePublishingBackgroundWorker : RestartableBackg
             int processedMessages = 0;
             foreach (OutboxMessage message in messages)
             {
-                IDomainEvent? domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(
-                    message.Content,
-                    SerializerSettings);
+                IDomainEvent? domainEvent;
+                try
+                {
+                    domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(
+                        message.Content,
+                        SerializerSettings);
+                }
+                catch (JsonSerializationException e)
+                {
+                    _logger.LogWarning("Failed to deserialize message with id {Id}", message.Id);
+
+                    message.Error = $"Failed to deserialize message: {e.Message}";
+                    await context.SaveChangesAsync();
+
+                    continue;
+                }
 
                 if (domainEvent is null)
                 {
                     _logger.LogWarning("Failed to deserialize message with id {Id}", message.Id);
 
-                    message.Error = "Failed to deserialize message";
+                    message.Error = $"Failed to deserialize message: null";
                     await context.SaveChangesAsync();
 
                     continue;
