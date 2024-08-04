@@ -1,6 +1,9 @@
-﻿namespace VyazmaTech.Prachka.Infrastructure.Jobs.Configuration;
+﻿using VyazmaTech.Platform.Rtc.Attributes;
 
-public class QueueSeedingConfiguration
+namespace VyazmaTech.Prachka.Infrastructure.Jobs.Configuration;
+
+[RealtimeOption(SectionKey)]
+public class SchedulingConfiguration
 {
     public const string SectionKey = "Application:SchedulingConfiguration";
 

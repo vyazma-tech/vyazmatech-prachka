@@ -78,6 +78,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VyazmaTech.Prachka", "Vyazm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.Jobs", "src\Infrastructure\VyazmaTech.Prachka.Infrastructure.Jobs\VyazmaTech.Prachka.Infrastructure.Jobs.csproj", "{7A214EA5-3A49-471E-B811-F6C408170800}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform", "Platform", "{850D7C58-8A36-4B00-A916-87ACC90EE606}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Platform.Rtc", "src\Platform\VyazmaTech.Platform.Rtc\VyazmaTech.Platform.Rtc.csproj", "{EB0490DC-F325-4F9A-8278-8257CAEC222E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Platform.Exceptions", "src\Platform\VyazmaTech.Platform.Exceptions\VyazmaTech.Platform.Exceptions.csproj", "{54494911-DA14-4D91-984B-1EE0845316F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +117,9 @@ Global
 		{94A9CDDF-FE6D-4E8E-92EC-B220910695FB} = {EEABAF50-E29C-4424-B207-43C8534EB131}
 		{01543956-3B90-4425-904D-8DF3E3E3BA2F} = {94A9CDDF-FE6D-4E8E-92EC-B220910695FB}
 		{7A214EA5-3A49-471E-B811-F6C408170800} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
+		{850D7C58-8A36-4B00-A916-87ACC90EE606} = {EEABAF50-E29C-4424-B207-43C8534EB131}
+		{EB0490DC-F325-4F9A-8278-8257CAEC222E} = {850D7C58-8A36-4B00-A916-87ACC90EE606}
+		{54494911-DA14-4D91-984B-1EE0845316F8} = {850D7C58-8A36-4B00-A916-87ACC90EE606}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -201,5 +210,13 @@ Global
 		{7A214EA5-3A49-471E-B811-F6C408170800}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A214EA5-3A49-471E-B811-F6C408170800}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A214EA5-3A49-471E-B811-F6C408170800}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB0490DC-F325-4F9A-8278-8257CAEC222E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB0490DC-F325-4F9A-8278-8257CAEC222E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB0490DC-F325-4F9A-8278-8257CAEC222E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB0490DC-F325-4F9A-8278-8257CAEC222E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54494911-DA14-4D91-984B-1EE0845316F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54494911-DA14-4D91-984B-1EE0845316F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54494911-DA14-4D91-984B-1EE0845316F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54494911-DA14-4D91-984B-1EE0845316F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
