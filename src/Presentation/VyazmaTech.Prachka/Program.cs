@@ -15,8 +15,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Host.AddSerilog();
 builder.Configuration.AddJsonFile("features.json");
-builder.AddRtc();
 await SecretConfigurationBuilder.AddConfiguration(builder.Environment, builder.Configuration);
+builder.AddRtc();
 
 builder.Services
     .AddInfrastructure()
