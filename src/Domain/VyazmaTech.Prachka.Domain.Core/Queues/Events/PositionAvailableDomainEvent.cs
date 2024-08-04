@@ -8,10 +8,15 @@ namespace VyazmaTech.Prachka.Domain.Core.Queues.Events;
 /// </summary>
 public sealed class PositionAvailableDomainEvent : IDomainEvent
 {
-    public PositionAvailableDomainEvent(Queue queue)
+    private PositionAvailableDomainEvent(Guid id)
     {
-        Queue = queue;
+        Id = id;
     }
 
-    public Queue Queue { get; }
+    public Guid Id { get; private set; }
+
+    public static PositionAvailableDomainEvent From(Queue queue)
+    {
+        return new PositionAvailableDomainEvent(queue.Id);
+    }
 }

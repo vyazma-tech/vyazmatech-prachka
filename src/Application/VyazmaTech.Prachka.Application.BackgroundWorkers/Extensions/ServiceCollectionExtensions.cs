@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VyazmaTech.Prachka.Application.BackgroundWorkers.Configuration;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Integration;
 using VyazmaTech.Prachka.Application.BackgroundWorkers.Queues;
 
@@ -10,8 +9,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddOutbox(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<OutboxConfiguration>(configuration.GetSection(OutboxConfiguration.SectionKey));
-
         services.AddWorkers();
         return services;
     }

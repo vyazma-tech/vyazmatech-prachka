@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Configuration;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Commands.Factories;
-using VyazmaTech.Prachka.Infrastructure.Jobs.Configuration;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
 namespace VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
@@ -13,8 +12,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddJobs(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<QueueSeedingConfiguration>(configuration.GetSection(QueueSeedingConfiguration.SectionKey));
-
         services.AddJobCommands();
         services.AddHangfireJobStorage();
         services.AddQueueJobs();
