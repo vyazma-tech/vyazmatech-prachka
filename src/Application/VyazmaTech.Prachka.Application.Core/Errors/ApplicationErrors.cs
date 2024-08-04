@@ -8,31 +8,31 @@ public static class ApplicationErrors
     {
         public static Error AnonymousUserCantEnter => Error.Unprocessable(
             $"{nameof(BulkInsertOrders)}.{nameof(AnonymousUserCantEnter)}",
-            "Anonymous user can't enter the queue.");
+            "Чтобы встать в очередь, сначала залогинься");
     }
 
     public static class BulkRemoveOrders
     {
         public static Error AnonymousUserCantExit => Error.Unprocessable(
             $"{nameof(BulkInsertOrders)}.{nameof(AnonymousUserCantExit)}",
-            "Anonymous user can't enter the queue.");
+            "Чтобы выйти из очереди, сначала залогинься");
 
         public static Error UnableToRemoveWithExceededQuantity => Error.Unprocessable(
             $"{nameof(BulkRemoveOrders)}.{nameof(UnableToRemoveWithExceededQuantity)}",
-            "Provided order quantity exceeds user order quantity.");
+            "Указанное количество пакетов не соответствует тому количество, с которым ты заходил");
     }
 
     public static class Subscription
     {
         public static Error AnonymousUserCantSubscribe => Error.Unprocessable(
             $"{nameof(Subscription)}.{nameof(AnonymousUserCantSubscribe)}",
-            "Authenticate against the system to subscribe");
+            "Чтобы подписаться на уведомления, сначала залогинься");
 
         public static Error UserHasNoSubscriptions(Guid id)
         {
             return Error.NotFound(
                 $"{nameof(Subscription)}.{nameof(UserHasNoSubscriptions)}",
-                $"User with Id = {id} has no subscriptions");
+                "У тебя нет уведомлений");
         }
     }
 
@@ -40,6 +40,6 @@ public static class ApplicationErrors
     {
         public static Error AnonymousUserCantSeeTheirOrders => Error.Unauthorized(
             $"{nameof(MyOrders)}.{nameof(AnonymousUserCantSeeTheirOrders)}",
-            $"You cant see your orders but you are logged in");
+            "Чтобы посмотреть свои заказы, сначала залогинься");
     }
 }
