@@ -8,10 +8,18 @@ namespace VyazmaTech.Prachka.Domain.Core.Orders.Events;
 /// </summary>
 public sealed class OrderReadyDomainEvent : IDomainEvent
 {
-    public OrderReadyDomainEvent(Order order)
+    public OrderReadyDomainEvent(Guid id, string fullname)
     {
-        Order = order;
+        Id = id;
+        Fullname = fullname;
     }
 
-    public Order Order { get; }
+    public Guid Id { get; }
+
+    public string Fullname { get; }
+
+    public static OrderReadyDomainEvent From(Order order)
+    {
+        return new OrderReadyDomainEvent(order.Id, order.User.Fullname);
+    }
 }

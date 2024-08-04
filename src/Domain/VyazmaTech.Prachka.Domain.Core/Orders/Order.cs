@@ -66,7 +66,7 @@ public sealed class Order : Entity, IAuditableEntity
         Status = OrderStatus.Paid;
         Price = model;
         Comment = comment;
-        Raise(new OrderPaidDomainEvent(this));
+        Raise(OrderPaidDomainEvent.From(this));
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ public sealed class Order : Entity, IAuditableEntity
 
         Status = OrderStatus.Ready;
         Comment = $"Ваш заказ переведен в статус Готов";
-        Raise(new OrderReadyDomainEvent(this));
+        Raise(OrderReadyDomainEvent.From(this));
     }
 
     /// <summary>
