@@ -8,7 +8,7 @@ public static class DomainErrors
         {
             return Error.NotFound(
                 $"{nameof(Entity)}.{nameof(NotFoundFor)}",
-                $"The entity of type {typeof(TEntity)} with {searchInfo} was not found.");
+                $"Не удалось найти сущность {typeof(TEntity).Name} по запросу \"{searchInfo}\"");
         }
     }
 
@@ -16,86 +16,82 @@ public static class DomainErrors
     {
         public static Error NotFound => Error.NotFound(
             $"{nameof(Order)}.{nameof(NotFound)}",
-            "The order with the specified identifier was not found.");
+            "Не удалось найти заказ с данным идентификатором");
 
         public static Error NotFoundForRequest => Error.NotFound(
             $"{nameof(Order)}.{nameof(NotFoundForRequest)}",
-            "The order for this request was not found");
+            "Не удалось найти заказ");
 
         public static Error AlreadyPaid => Error.Conflict(
             $"{nameof(Order)}.{nameof(AlreadyPaid)}",
-            "The order was already paid.");
+            "Заказ уже оплачен");
 
         public static Error IsReady => Error.Conflict(
             $"{nameof(Order)}.{nameof(IsReady)}",
-            "The order is ready.");
+            "Заказ уже готов");
 
         public static Error UnableToTransferIntoSameQueue => Error.Unprocessable(
             $"{nameof(Order)}.{nameof(UnableToTransferIntoSameQueue)}",
-            "The order cannot be transferred into the same queue.");
+            "Нельзя перевести заказ в ту же очередь");
 
         public static Error UnableToTransferIntoFullQueue => Error.Unprocessable(
             $"{nameof(Order)}.{nameof(UnableToTransferIntoFullQueue)}",
-            "The order cannot be transferred into full queue.");
+            "Нельзя перевести заказ в переполненную очередь");
     }
 
     public static class QueueDate
     {
         public static Error InThePast => Error.Validation(
             $"{nameof(QueueDate)}.{nameof(InThePast)}",
-            "The queue date should be later than now");
+            "Дата активности очереди должна быть сегодня или на текущей неделе");
 
         public static Error NotNextWeek => Error.Unprocessable(
             $"{nameof(QueueDate)}.{nameof(NotNextWeek)}",
-            "The queue date should be on this week");
+            "Дата активности очереди должна быть на текущей неделе");
     }
 
     public static class Queue
     {
         public static Error NotFound => Error.NotFound(
             $"{nameof(Queue)}.{nameof(NotFound)}",
-            "The queue with the specified identifier was not found.");
+            "Не удалось найти очередь с данным идентификатором");
 
         public static Error NotFoundForRequest => Error.NotFound(
             $"{nameof(Queue)}.{nameof(NotFoundForRequest)}",
-            "The queue for this request was not found");
+            "Не удалось найти очередь");
 
         public static Error InvalidNewCapacity => Error.Validation(
             $"{nameof(Queue)}.{nameof(InvalidNewCapacity)}",
-            "New queue capacity should not be less then current capacity.");
+            "Новое значение вместимости очереди должно быть больше текущего значения");
 
         public static Error InvalidNewActivityBoundaries => Error.Validation(
             $"{nameof(Queue)}.{nameof(InvalidNewCapacity)}",
-            "New queue activity boundaries should not be equal current activity boundaries.");
-
-        public static Error Overfull => Error.Unprocessable(
-            $"{nameof(Queue)}.{nameof(Overfull)}",
-            "Queue is overfull. You are not able to enter it now.");
+            "Новое значение времени активности очереди должно отличаться от предыдущего");
 
         public static Error NotEnoughOrders(int count) => Error.Unprocessable(
             $"{nameof(Queue)}.{nameof(NotEnoughOrders)}",
-            $"You have not enough orders. You are not able to exit queue with {count} orders");
+            $"У тебя недостаточно заказов в очереди. Ты не можешь покинуть ее с {count} заказами");
 
         public static Error WillOverflow => Error.Unprocessable(
             $"{nameof(Queue)}.{nameof(WillOverflow)}",
-            "Queue has not enough places. You are not able to enter it now.");
+            "В очереди недостаточно места. Ты не можешь войти сейчас");
 
         public static Error Expired => Error.Unprocessable(
             $"{nameof(Queue)}.{nameof(Expired)}",
-            "Queue already expired. You cannot perform this action.");
+            "Очередь уже истекла. Ты не можешь сделать это");
 
         public static Error ContainsOrderWithId(Guid id)
         {
             return Error.Unprocessable(
                 $"{nameof(Queue)}.{nameof(ContainsOrderWithId)}",
-                $"The queue already contains order with OrderId = {id}");
+                $"В очереди уже есть заказ с OrderId = {id}");
         }
 
         public static Error OrderIsNotInQueue(Guid id)
         {
             return Error.Validation(
                 $"{nameof(Queue)}.{nameof(OrderIsNotInQueue)}",
-                $"The queue does not contain order with OrderId = {id}");
+                $"В очереди нет заказа с OrderId = {id}");
         }
     }
 
@@ -103,38 +99,38 @@ public static class DomainErrors
     {
         public static Error NotFound => Error.NotFound(
             $"{nameof(Subscription)}.{nameof(NotFound)}",
-            "The subscription with the specified identifier was not found.");
+            "Не удалость найти уведомление по данному идентификатору");
 
         public static Error NotFoundForRequest => Error.NotFound(
             $"{nameof(Subscription)}.{nameof(NotFoundForRequest)}",
-            "The subscription for this request was not found");
+            "Не удалось найти уведомление");
 
         public static Error ContainsOrderWithId(Guid id)
         {
             return Error.Unprocessable(
                 $"{nameof(Subscription)}.{nameof(ContainsOrderWithId)}",
-                $"Already subscribed on newsletter about order with OrderId = {id}");
+                "Ты уже подписан на уведомления об этом заказе");
         }
 
         public static Error OrderIsNotInSubscription(Guid id)
         {
             return Error.Unprocessable(
                 $"{nameof(Subscription)}.{nameof(OrderIsNotInSubscription)}",
-                $"Not subscribed on newsletter about order with OrderId = {id}");
+                "Ты не подписался на уведомления об этом заказе");
         }
 
         public static Error ContainsQueueWithId(Guid id)
         {
             return Error.Unprocessable(
                 $"{nameof(Subscription)}.{nameof(ContainsQueueWithId)}",
-                $"Already subscribed on newsletter about queue with QueueId = {id}");
+                "Ты уже подписан на уведомления об этой очереди");
         }
 
         public static Error QueueIsNotInSubscription(Guid id)
         {
             return Error.Unprocessable(
                 $"{nameof(Subscription)}.{nameof(QueueIsNotInSubscription)}",
-                $"Not subscribed on newsletter about queue with QueueId = {id}");
+                "Ты не подписался на уведомления об этой очереди");
         }
     }
 
@@ -142,49 +138,49 @@ public static class DomainErrors
     {
         public static Error NullOrEmpty => Error.Validation(
             $"{nameof(TelegramId)}.{nameof(NullOrEmpty)}",
-            "Telegram ID should not be null or empty.");
+            "Telegram ID должен быть числом");
 
         public static Error InvalidFormat => Error.Validation(
             $"{nameof(TelegramId)}.{nameof(InvalidFormat)}",
-            "Telegram username should start with '@'.");
+            "Юзернейм должен начинаться с '@'");
     }
 
     public static class Fullname
     {
         public static Error NameIsNullOrEmpty => Error.Validation(
             $"{nameof(Fullname)}.{nameof(NameIsNullOrEmpty)}",
-            "Name should not be null or empty.");
+            "ФИО не должно быть пустым");
 
         public static Error InvalidNameFormat => Error.Validation(
             $"{nameof(Fullname)}.{nameof(InvalidNameFormat)}",
-            "Name should start with uppercase and contain only letters");
+            "ФИО должно начинаться с большой буквы и содержать только буквы");
     }
 
     public static class Capacity
     {
         public static Error Negative => Error.Validation(
             $"{nameof(Capacity)}.{nameof(Negative)}",
-            "Capacity should be at least zero.");
+            "Вместимость очереди должна быть больше нуля");
     }
 
     public static class QueueActivityBoundaries
     {
         public static Error EmptyRange => Error.Validation(
             $"{nameof(QueueActivityBoundaries)}.{nameof(EmptyRange)}",
-            "The queue activity boundaries should describe time range during the day.");
+            "Значение времени активности очереди должно быть не пустым временным промежутком");
     }
 
     public static class User
     {
         public static Error NotFound => Error.NotFound(
             $"{nameof(User)}.{nameof(NotFound)}",
-            "The user with the specified identifier was not found.");
+            "Не удалось найти юзера по данному идентификатору");
     }
 
     public static class Price
     {
         public static Error NegativePrice => Error.Validation(
             $"{nameof(Price)}.{nameof(NegativePrice)}",
-            "Order price cannot be negative");
+            "Заплаченная студентом сумма не должна быть отрицательной");
     }
 }
