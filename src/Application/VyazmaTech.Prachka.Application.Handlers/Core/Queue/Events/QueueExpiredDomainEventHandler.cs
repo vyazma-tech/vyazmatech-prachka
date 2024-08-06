@@ -35,7 +35,7 @@ internal sealed class QueueExpiredDomainEventHandler : IEventHandler<QueueExpire
         if (queue.Capacity > queue.Orders.Count)
         {
             _logger.LogInformation("Queue has available positions, going to publish event");
-            queue.Raise(PositionAvailableDomainEvent.From(queue));
+            queue.Raise(new PositionAvailableDomainEvent(queue.Id));
         }
 
         await _context.SaveChangesAsync(cancellationToken);
