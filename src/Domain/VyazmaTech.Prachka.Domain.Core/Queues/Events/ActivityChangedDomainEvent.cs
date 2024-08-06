@@ -5,16 +5,19 @@ namespace VyazmaTech.Prachka.Domain.Core.Queues.Events;
 
 public sealed class ActivityChangedDomainEvent : IDomainEvent
 {
-    public ActivityChangedDomainEvent(Guid queueId, AssignmentDate assignmentDate, QueueActivityBoundaries current)
+    public ActivityChangedDomainEvent(
+        Guid queueId,
+        QueueActivityBoundaries activityBoundaries,
+        AssignmentDate assignmentDate)
     {
         QueueId = queueId;
+        ActivityBoundaries = activityBoundaries;
         AssignmentDate = assignmentDate;
-        Current = current;
     }
 
     public Guid QueueId { get; }
 
-    public AssignmentDate AssignmentDate { get; }
+    public QueueActivityBoundaries ActivityBoundaries { get; }
 
-    public QueueActivityBoundaries Current { get; }
+    public AssignmentDate AssignmentDate { get; }
 }

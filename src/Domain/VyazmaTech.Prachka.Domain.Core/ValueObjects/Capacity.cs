@@ -1,4 +1,5 @@
-﻿using VyazmaTech.Prachka.Domain.Common.Abstractions;
+﻿using Newtonsoft.Json;
+using VyazmaTech.Prachka.Domain.Common.Abstractions;
 using VyazmaTech.Prachka.Domain.Common.Errors;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 
@@ -19,7 +20,8 @@ public sealed class Capacity : ValueObject
     /// <summary>
     /// Gets capacity.
     /// </summary>
-    public int Value { get; }
+    [JsonProperty]
+    public int Value { get; private set; }
 
     /// <summary>
     /// Validates capacity and creates capacity instance.

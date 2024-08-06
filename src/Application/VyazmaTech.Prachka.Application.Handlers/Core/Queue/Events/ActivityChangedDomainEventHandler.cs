@@ -76,7 +76,7 @@ internal sealed class ActivityChangedDomainEventHandler : IEventHandler<Activity
             .Select(x => x.First.CreateEnclosingCommand(
                 jobId: x.Second.JobId,
                 assignmentDate: notification.AssignmentDate,
-                activityBoundaries: notification.Current))
+                activityBoundaries: notification.ActivityBoundaries))
             .ToList()
             .ForEach(scheduler.Reschedule);
     }

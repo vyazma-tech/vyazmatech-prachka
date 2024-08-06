@@ -46,7 +46,7 @@ public sealed class ActivityChangedDomainEventHandlerTests : TestBase
         await Context.SaveChangesAsync();
 
         // Act
-        var @event = new ActivityChangedDomainEvent(queueId, queue.AssignmentDate, queue.ActivityBoundaries);
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
         await _handler.Handle(@event, default);
 
         queue = await Context.Queues.FirstAsync(default);
@@ -76,7 +76,7 @@ public sealed class ActivityChangedDomainEventHandlerTests : TestBase
         await Context.SaveChangesAsync();
 
         // Act
-        var @event = new ActivityChangedDomainEvent(queueId, queue.AssignmentDate, queue.ActivityBoundaries);
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
         await _handler.Handle(@event, default);
 
         queue = await Context.Queues.FirstAsync(default);
@@ -106,7 +106,7 @@ public sealed class ActivityChangedDomainEventHandlerTests : TestBase
         await Context.SaveChangesAsync();
 
         // Act
-        var @event = new ActivityChangedDomainEvent(queueId, queue.AssignmentDate, queue.ActivityBoundaries);
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
         await _handler.Handle(@event, default);
 
         queue = await Context.Queues.FirstAsync(default);

@@ -7,6 +7,7 @@ using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 using VyazmaTech.Prachka.Presentation.Authentication.Extensions;
 using VyazmaTech.Prachka.Presentation.Authorization;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
+using VyazmaTech.Prachka.Presentation.Hubs.Extensions;
 using VyazmaTech.Prachka.Presentation.WebAPI.Configuration.Secrets;
 using VyazmaTech.Prachka.Presentation.WebAPI.Extensions;
 using VyazmaTech.Prachka.Presentation.WebAPI.Helpers;
@@ -36,7 +37,8 @@ builder.Services
     .AddApplication(builder.Configuration)
     .AddHandlers()
     .AddMiddlewares()
-    .AddEndpoints();
+    .AddEndpoints()
+    .AddHubs();
 
 builder.Services.AddCors(o => o
     .AddDefaultPolicy(x => x

@@ -115,6 +115,7 @@ public sealed class Queue : Entity, IAuditableEntity
             throw new DomainInvalidOperationException(DomainErrors.Queue.InvalidNewCapacity);
 
         Capacity = newCapacity;
+        Raise(QueueUpdatedDomainEvent.From(this));
     }
 
     public void ChangeActivityBoundaries(QueueActivityBoundaries activityBoundaries)
@@ -122,7 +123,8 @@ public sealed class Queue : Entity, IAuditableEntity
         if (ActivityBoundaries == activityBoundaries)
             throw new DomainInvalidOperationException(DomainErrors.Queue.InvalidNewActivityBoundaries);
 
-        Raise(new ActivityChangedDomainEvent(Id, AssignmentDate, current: activityBoundaries));
+        Raise(new ActivityChangedDomainEvent(Id, activityBoundaries, AssignmentDate));
+        Raise(QueueUpdatedDomainEvent.From(this));
         ActivityBoundaries = activityBoundaries;
     }
 
@@ -137,5 +139,6 @@ public sealed class Queue : Entity, IAuditableEntity
             Raise(new QueueExpiredDomainEvent(Id));
 
         State = state;
+        Raise(QueueUpdatedDomainEvent.From(this));
     }
 }

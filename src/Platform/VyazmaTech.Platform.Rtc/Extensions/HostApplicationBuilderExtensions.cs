@@ -7,7 +7,7 @@ public static class HostApplicationBuilderExtensions
         if (builder.Environment.IsDevelopment() is false)
             builder.Configuration.AddRtcProvider(builder.Environment, builder.Configuration);
 
-        builder.Services.AddRtcServices(builder.Configuration);
+        builder.Services.AddRtcServices(builder.Configuration, builder.Environment);
 
         return builder;
     }
