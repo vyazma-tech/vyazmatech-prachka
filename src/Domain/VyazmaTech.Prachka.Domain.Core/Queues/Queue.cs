@@ -123,9 +123,8 @@ public sealed class Queue : Entity, IAuditableEntity
         if (ActivityBoundaries == activityBoundaries)
             throw new DomainInvalidOperationException(DomainErrors.Queue.InvalidNewActivityBoundaries);
 
-        Raise(new ActivityChangedDomainEvent(Id, activityBoundaries, AssignmentDate));
-        Raise(QueueUpdatedDomainEvent.From(this));
         ActivityBoundaries = activityBoundaries;
+        Raise(new ActivityChangedDomainEvent(Id, activityBoundaries, AssignmentDate));
     }
 
     public bool IsClosed()

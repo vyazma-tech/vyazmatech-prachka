@@ -265,24 +265,6 @@ public class QueueTests
     }
 
     [Fact]
-    public void ChangeActivityBoundaries_Should_RaiseQueueUpdatedDomainEvent()
-    {
-        Queue queue = Create.Queue
-            .WithActivityBoundaries(
-                startDate: _dateTimeProvider.Object.UtcNow.AsTimeOnly(),
-                endDate: _dateTimeProvider.Object.UtcNow.AddSeconds(1).AsTimeOnly())
-            .Build();
-
-        queue.ChangeActivityBoundaries(
-            QueueActivityBoundaries.Create(
-                activeFrom: TimeOnly.Parse("10:00"),
-                activeUntil: TimeOnly.Parse("17:00")));
-
-        queue.DomainEvents.Should()
-            .ContainItemsAssignableTo<QueueUpdatedDomainEvent>();
-    }
-
-    [Fact]
     public void ChangeActivityBoundaries_Should_RaiseActivityChangedDomainEvent()
     {
         Queue queue = Create.Queue
@@ -297,6 +279,8 @@ public class QueueTests
                 activeUntil: TimeOnly.Parse("17:00")));
 
         queue.DomainEvents.Should()
-            .ContainItemsAssignableTo<ActivityChangedDomainEvent>();
+            .ContainSingle()
+            .Which.Should()
+            .BeOfType<ActivityChangedDomainEvent>();
     }
 }

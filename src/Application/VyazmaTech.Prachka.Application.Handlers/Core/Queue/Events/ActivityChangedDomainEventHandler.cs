@@ -48,19 +48,24 @@ internal sealed class ActivityChangedDomainEventHandler : IEventHandler<Activity
     {
         DateTime currentTimeUtc = _timeProvider.UtcNow;
 
-        if (currentTimeUtc.AsTimeOnly() < queue.ActivityBoundaries.ActiveFrom)
+        if (currentTimeUtc.AsTimeOnly() <= queue.ActivityBoundaries.ActiveFrom &&
+            currentTimeUtc.AsDateOnly() <= queue.AssignmentDate)
         {
             queue.ModifyState(QueueState.Prepared);
+
             return;
         }
 
-        if (currentTimeUtc.AsTimeOnly() > queue.ActivityBoundaries.ActiveUntil)
+        if (currentTimeUtc.AsTimeOnly() >= queue.ActivityBoundaries.ActiveUntil &&
+            currentTimeUtc.AsDateOnly() >= queue.AssignmentDate)
         {
             queue.ModifyState(QueueState.Closed);
+
             return;
         }
 
-        queue.ModifyState(QueueState.Active);
+        if (currentTimeUtc.AsDateOnly() == queue.AssignmentDate)
+            queue.ModifyState(QueueState.Active);
     }
 
     private void RescheduleJobs(
