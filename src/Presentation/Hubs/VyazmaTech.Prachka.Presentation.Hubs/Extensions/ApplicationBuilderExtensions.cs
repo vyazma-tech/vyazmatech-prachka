@@ -6,7 +6,7 @@ public static class ApplicationBuilderExtensions
 {
     public static IEndpointRouteBuilder MapHubs(this IEndpointRouteBuilder builder)
     {
-        builder.MapHub<QueueHub>("/hub");
+        builder.MapHub<QueueHub>("/hubs/queues");
         return builder;
     }
 }
