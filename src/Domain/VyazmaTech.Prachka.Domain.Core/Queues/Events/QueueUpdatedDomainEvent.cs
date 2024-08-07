@@ -23,7 +23,7 @@ public sealed class QueueUpdatedDomainEvent : IDomainEvent
         Id = id;
         AssignmentDate = assignmentDate;
         ActivityBoundaries = activityBoundaries;
-        State = state.ToString();
+        State = state;
         Capacity = capacity;
     }
 
@@ -37,7 +37,7 @@ public sealed class QueueUpdatedDomainEvent : IDomainEvent
     public QueueActivityBoundaries ActivityBoundaries { get; private set; }
 
     [JsonProperty]
-    public string State { get; private set; }
+    public QueueState State { get; private set; }
 
     [JsonProperty]
     public Capacity Capacity { get; private set; }

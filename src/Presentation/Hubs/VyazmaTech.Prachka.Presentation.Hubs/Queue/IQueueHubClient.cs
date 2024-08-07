@@ -1,8 +1,8 @@
-using VyazmaTech.Prachka.Domain.Core.Queues.Events;
+using VyazmaTech.Prachka.Presentation.Hubs.Queue.Models;
 
 namespace VyazmaTech.Prachka.Presentation.Hubs.Queue;
 
 public interface IQueueHubClient
 {
-    Task ReceiveQueueUpdated(QueueUpdatedDomainEvent Id);
+    Task ReceiveQueueUpdated(QueueUpdatedModel Id);
 }
