@@ -187,6 +187,19 @@ public class QueueTests
     }
 
     [Fact]
+    public void IncreaseCapacity_Should_RaiseQueueUpdatedDomainEvent()
+    {
+        int currentCapacity = 1;
+        var newCapacity = Capacity.Create(2);
+        Queue queue = Create.Queue.WithCapacity(currentCapacity).Build();
+
+        queue.IncreaseCapacity(newCapacity);
+
+        queue.DomainEvents.Should()
+            .ContainItemsAssignableTo<QueueUpdatedDomainEvent>();
+    }
+
+    [Fact]
     public void ModifyState_ShouldRaiseDomainEvent_WhenQueueExpired()
     {
         _dateTimeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
@@ -202,9 +215,26 @@ public class QueueTests
 
         queue.State.Should().Be(QueueState.Expired);
         queue.DomainEvents.Should()
-            .ContainSingle()
-            .Which.Should()
-            .BeOfType<QueueExpiredDomainEvent>();
+            .ContainItemsAssignableTo<QueueExpiredDomainEvent>();
+    }
+
+    [Theory]
+    [InlineData(QueueState.Prepared)]
+    [InlineData(QueueState.Active)]
+    [InlineData(QueueState.Expired)]
+    [InlineData(QueueState.Closed)]
+    public void ModifyState_Should_RaiseQueueUpdatedDomainEvent(QueueState state)
+    {
+        Queue queue = Create.Queue
+            .WithActivityBoundaries(
+                startDate: _dateTimeProvider.Object.UtcNow.AsTimeOnly(),
+                endDate: _dateTimeProvider.Object.UtcNow.AddSeconds(1).AsTimeOnly())
+            .Build();
+
+        queue.ModifyState(state);
+
+        queue.DomainEvents.Should()
+            .ContainItemsAssignableTo<QueueUpdatedDomainEvent>();
     }
 
     [Fact]
@@ -232,5 +262,41 @@ public class QueueTests
             .ContainSingle()
             .Which.Should()
             .BeOfType<QueueCreatedDomainEvent>();
+    }
+
+    [Fact]
+    public void ChangeActivityBoundaries_Should_RaiseQueueUpdatedDomainEvent()
+    {
+        Queue queue = Create.Queue
+            .WithActivityBoundaries(
+                startDate: _dateTimeProvider.Object.UtcNow.AsTimeOnly(),
+                endDate: _dateTimeProvider.Object.UtcNow.AddSeconds(1).AsTimeOnly())
+            .Build();
+
+        queue.ChangeActivityBoundaries(
+            QueueActivityBoundaries.Create(
+                activeFrom: TimeOnly.Parse("10:00"),
+                activeUntil: TimeOnly.Parse("17:00")));
+
+        queue.DomainEvents.Should()
+            .ContainItemsAssignableTo<QueueUpdatedDomainEvent>();
+    }
+
+    [Fact]
+    public void ChangeActivityBoundaries_Should_RaiseActivityChangedDomainEvent()
+    {
+        Queue queue = Create.Queue
+            .WithActivityBoundaries(
+                startDate: _dateTimeProvider.Object.UtcNow.AsTimeOnly(),
+                endDate: _dateTimeProvider.Object.UtcNow.AddSeconds(1).AsTimeOnly())
+            .Build();
+
+        queue.ChangeActivityBoundaries(
+            QueueActivityBoundaries.Create(
+                activeFrom: TimeOnly.Parse("10:00"),
+                activeUntil: TimeOnly.Parse("17:00")));
+
+        queue.DomainEvents.Should()
+            .ContainItemsAssignableTo<ActivityChangedDomainEvent>();
     }
 }
