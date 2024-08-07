@@ -6,10 +6,16 @@ namespace VyazmaTech.Platform.Rtc.Extensions;
 
 internal static class ServiceCollectionExtensions
 {
-    internal static IServiceCollection AddRtcServices(this IServiceCollection services, IConfiguration configuration)
+    internal static IServiceCollection AddRtcServices(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IHostEnvironment environment)
     {
-        services.AddHostedService<VaultChangeWatcher>();
+        if (environment.IsDevelopment() is false)
+            services.AddHostedService<VaultChangeWatcher>();
+
         services.AddRealTimeOptions(configuration);
+
         return services;
     }
 

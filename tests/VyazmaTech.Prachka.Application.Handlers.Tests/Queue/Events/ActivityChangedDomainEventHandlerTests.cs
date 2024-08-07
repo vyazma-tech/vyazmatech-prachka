@@ -46,13 +46,48 @@ public sealed class ActivityChangedDomainEventHandlerTests : TestBase
         await Context.SaveChangesAsync();
 
         // Act
-        var @event = new ActivityChangedDomainEvent(queueId, queue.AssignmentDate, queue.ActivityBoundaries);
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
         await _handler.Handle(@event, default);
 
         queue = await Context.Queues.FirstAsync(default);
 
         // Assert
         queue.State.Should().Be(QueueState.Active);
+    }
+
+    [Theory]
+    [InlineData(1, QueueState.Closed)]
+    [InlineData(-1, QueueState.Prepared)]
+    public async Task Handle_ShouldNotActivateQueue_WhenCurrentTimeWithinNewBoundariesButDayIsNotTheSame(
+        int dayOffset,
+        QueueState initialQueueState)
+    {
+        // Arrange
+        _timeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
+        _timeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.AddDays(dayOffset));
+
+        var queueId = Guid.NewGuid();
+        var queue = Create.Queue
+            .WithId(queueId)
+            .WithCapacity(1)
+            .WithState(initialQueueState)
+            .WithAssignmentDate(_timeProvider.Object.DateNow)
+            .WithActivityBoundaries(
+                _timeProvider.Object.UtcNow.AddHours(-1).AsTimeOnly(),
+                _timeProvider.Object.UtcNow.AddHours(1).AsTimeOnly())
+            .Build();
+
+        Context.Queues.Add(queue);
+        await Context.SaveChangesAsync();
+
+        // Act
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
+        await _handler.Handle(@event, default);
+
+        queue = await Context.Queues.FirstAsync(default);
+
+        // Assert
+        queue.State.Should().Be(initialQueueState);
     }
 
     [Fact]
@@ -76,13 +111,45 @@ public sealed class ActivityChangedDomainEventHandlerTests : TestBase
         await Context.SaveChangesAsync();
 
         // Act
-        var @event = new ActivityChangedDomainEvent(queueId, queue.AssignmentDate, queue.ActivityBoundaries);
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
         await _handler.Handle(@event, default);
 
         queue = await Context.Queues.FirstAsync(default);
 
         // Assert
         queue.State.Should().Be(QueueState.Prepared);
+    }
+
+    [Fact]
+    public async Task Handle_ShouldNotPrepareQueue_WhenCurrentTimeLessThanNewActiveFromAndDateGreaterThanToday()
+    {
+        // Arrange
+        _timeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
+        _timeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.AddDays(1));
+
+        var initialQueueState = QueueState.Closed;
+        var queueId = Guid.NewGuid();
+        var queue = Create.Queue
+            .WithId(queueId)
+            .WithState(initialQueueState)
+            .WithCapacity(1)
+            .WithAssignmentDate(_timeProvider.Object.DateNow)
+            .WithActivityBoundaries(
+                _timeProvider.Object.UtcNow.AddHours(1).AsTimeOnly(),
+                _timeProvider.Object.UtcNow.AddHours(2).AsTimeOnly())
+            .Build();
+
+        Context.Queues.Add(queue);
+        await Context.SaveChangesAsync();
+
+        // Act
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
+        await _handler.Handle(@event, default);
+
+        queue = await Context.Queues.FirstAsync(default);
+
+        // Assert
+        queue.State.Should().Be(initialQueueState);
     }
 
     [Fact]
@@ -106,12 +173,44 @@ public sealed class ActivityChangedDomainEventHandlerTests : TestBase
         await Context.SaveChangesAsync();
 
         // Act
-        var @event = new ActivityChangedDomainEvent(queueId, queue.AssignmentDate, queue.ActivityBoundaries);
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
         await _handler.Handle(@event, default);
 
         queue = await Context.Queues.FirstAsync(default);
 
         // Assert
         queue.State.Should().Be(QueueState.Closed);
+    }
+
+    [Fact]
+    public async Task Handle_ShouldNotCloseQueue_WhenCurrentTimeGreaterThanNewActiveUntilAndDateLessThanToday()
+    {
+        // Arrange
+        _timeProvider.Setup(x => x.DateNow).Returns(DateTime.UtcNow.AsDateOnly());
+        _timeProvider.Setup(x => x.UtcNow).Returns(DateTime.UtcNow.AddDays(-1));
+
+        var initialQueueState = QueueState.Prepared;
+        var queueId = Guid.NewGuid();
+        var queue = Create.Queue
+            .WithId(queueId)
+            .WithState(initialQueueState)
+            .WithCapacity(1)
+            .WithAssignmentDate(_timeProvider.Object.DateNow)
+            .WithActivityBoundaries(
+                _timeProvider.Object.UtcNow.AddHours(-2).AsTimeOnly(),
+                _timeProvider.Object.UtcNow.AddHours(-1).AsTimeOnly())
+            .Build();
+
+        Context.Queues.Add(queue);
+        await Context.SaveChangesAsync();
+
+        // Act
+        var @event = new ActivityChangedDomainEvent(queueId, queue.ActivityBoundaries, queue.AssignmentDate);
+        await _handler.Handle(@event, default);
+
+        queue = await Context.Queues.FirstAsync(default);
+
+        // Assert
+        queue.State.Should().Be(initialQueueState);
     }
 }

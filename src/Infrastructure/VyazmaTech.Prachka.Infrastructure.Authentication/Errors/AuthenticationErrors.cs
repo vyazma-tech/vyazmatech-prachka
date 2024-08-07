@@ -10,7 +10,7 @@ public static class AuthenticationErrors
         {
             return Error.NotFound(
                 $"{nameof(IdentityUser)}.{nameof(NotFoundFor)}",
-                $"Identity user with search info \"{searchInfo}\" was not found.");
+                $"Не удалось найти identity по '{searchInfo}'");
         }
 
         public static Error Creation(string details)
@@ -24,7 +24,7 @@ public static class AuthenticationErrors
         {
             return Error.Forbidden(
                 $"{nameof(IdentityUser)}.{nameof(NotInRole)}",
-                "Identity user has no granted access");
+                "Тебе так нельзя");
         }
     }
 
@@ -34,7 +34,7 @@ public static class AuthenticationErrors
         {
             return Error.Unauthorized(
                 $"{nameof(IdentityToken)}.{nameof(Refresh)}",
-                "Unauthorized.");
+                "Не авторизован");
         }
     }
 }

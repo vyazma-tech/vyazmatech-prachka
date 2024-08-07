@@ -2,13 +2,14 @@
 using Serilog;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
+using VyazmaTech.Prachka.Presentation.Hubs.Extensions;
 using VyazmaTech.Prachka.Presentation.WebAPI.Middlewares;
 
 namespace VyazmaTech.Prachka.Presentation.WebAPI.Extensions;
 
 public static class ApplicationBuilderExtensions
 {
-    public static WebApplication ConfigureApp(this IApplicationBuilder builder)
+    public static WebApplication ConfigureApp(this WebApplication builder)
     {
         builder
             .UseSerilogRequestLogging()
@@ -22,6 +23,8 @@ public static class ApplicationBuilderExtensions
             .UseSwaggerGen()
             .UseSchedulingDashboard();
 
-        return (WebApplication)builder;
+        builder.MapHubs();
+
+        return builder;
     }
 }
