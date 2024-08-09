@@ -4,16 +4,18 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore"/>
         <PackageReference Include="Newtonsoft.Json"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj"/>
-        <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.Mapping\VyazmaTech.Prachka.Application.Mapping.csproj"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     </ItemGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="VyazmaTech.Prachka.Application.BackgroundWorkers"/>
         <InternalsVisibleTo Include="VyazmaTech.Prachka.Application.Handlers"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.Abstractions\VyazmaTech.Prachka.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj" />
+      <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Kernel\VyazmaTech.Prachka.Domain.Kernel.csproj" />
     </ItemGroup>
 
 </Project>

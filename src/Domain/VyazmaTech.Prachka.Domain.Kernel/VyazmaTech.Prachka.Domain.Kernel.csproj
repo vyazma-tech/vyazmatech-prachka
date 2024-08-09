@@ -4,8 +4,4 @@
         <PackageReference Include="Mediator.Abstractions"/>
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj"/>
-    </ItemGroup>
-
 </Project>
