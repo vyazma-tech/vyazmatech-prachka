@@ -10,7 +10,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.Handlers\VyazmaTech.Prachka.Application.Handlers.csproj"/>
+        <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.Contracts\VyazmaTech.Prachka.Application.Contracts.csproj" />
+        <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj" />
         <ProjectReference Include="..\VyazmaTech.Prachka.Presentation.Authorization\VyazmaTech.Prachka.Presentation.Authorization.csproj"/>
     </ItemGroup>
 

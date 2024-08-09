@@ -75,7 +75,7 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                         .HasDatabaseName("ix_outbox_messages_processed_on_utc")
                         .HasFilter("processed_on_utc is null");
 
-                    b.ToTable("outbox_messages");
+                    b.ToTable("outbox_messages", (string)null);
                 });
 
             modelBuilder.Entity("VyazmaTech.Prachka.Infrastructure.DataAccess.Models.QueueJobMessage", b =>
@@ -104,7 +104,7 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                         .HasDatabaseName("ix_queue_job_messages_queue_id_job_id")
                         .HasAnnotation("Npgsql:CreatedConcurrently", true);
 
-                    b.ToTable("queue_job_messages");
+                    b.ToTable("queue_job_messages", (string)null);
                 });
 
             modelBuilder.Entity("VyazmaTech.Prachka.Domain.Core.Orders.Order", b =>
@@ -153,7 +153,7 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                     b.HasIndex("queue_id", "user_id")
                         .HasDatabaseName("ix_orders_queue_id_user_id");
 
-                    b.ToTable("orders");
+                    b.ToTable("orders", (string)null);
                 });
 
             modelBuilder.Entity("VyazmaTech.Prachka.Domain.Core.Queues.Queue", b =>
@@ -216,7 +216,7 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                         .IsDescending()
                         .HasDatabaseName("ix_queues_assignment_date");
 
-                    b.ToTable("queues");
+                    b.ToTable("queues", (string)null);
                 });
 
             modelBuilder.Entity("VyazmaTech.Prachka.Domain.Core.Users.User", b =>
@@ -266,7 +266,7 @@ namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Migrations
                     b.HasIndex("fullname", "telegram_username")
                         .HasDatabaseName("ix_users_fullname_telegram_username");
 
-                    b.ToTable("users");
+                    b.ToTable("users", (string)null);
                 });
 
             modelBuilder.Entity("VyazmaTech.Prachka.Domain.Core.Orders.Order", b =>

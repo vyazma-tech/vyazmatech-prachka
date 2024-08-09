@@ -2,11 +2,11 @@
     <ItemGroup>
         <PackageReference Include="Hangfire.AspNetCore"/>
         <PackageReference Include="Hangfire.PostgreSql"/>
+        <PackageReference Include="vyazmatech.platform.rtc" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\Application\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj"/>
-        <ProjectReference Include="..\..\Platform\VyazmaTech.Platform.Rtc\VyazmaTech.Platform.Rtc.csproj" />
         <ProjectReference Include="..\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
     </ItemGroup>
 </Project>

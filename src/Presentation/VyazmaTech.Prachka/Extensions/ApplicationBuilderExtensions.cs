@@ -1,5 +1,4 @@
-﻿using FastEndpoints.Swagger;
-using Serilog;
+﻿using Serilog;
 using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 using VyazmaTech.Prachka.Presentation.Endpoints.Extensions;
 using VyazmaTech.Prachka.Presentation.Hubs.Extensions;
@@ -19,8 +18,7 @@ public static class ApplicationBuilderExtensions
             .UseRouting()
             .UseCors()
             .UseAuthorization()
-            .UseEndpoints()
-            .UseSwaggerGen()
+            .UseEndpoints(builder.Environment)
             .UseSchedulingDashboard();
 
         builder.MapHubs();

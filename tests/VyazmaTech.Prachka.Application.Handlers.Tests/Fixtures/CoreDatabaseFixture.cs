@@ -19,6 +19,8 @@ public class CoreDatabaseFixture : DatabaseFixture
 
     public IPersistenceContext PersistenceContext { get; private set; } = null!;
 
+    public IUnitOfWork UnitOfWork { get; private set; } = null!;
+
     public override async Task ResetAsync()
     {
         await base.ResetAsync();
@@ -39,7 +41,9 @@ public class CoreDatabaseFixture : DatabaseFixture
         services
             .AddDatabase(
                 x =>
-                    x.UseNpgsql(Container.GetConnectionString()));
+                    x.UseNpgsql(Container.GetConnectionString())
+                        .EnableSensitiveDataLogging()
+                        .LogTo(Console.WriteLine));
 
         services
             .AddInfrastructure()
@@ -87,5 +91,6 @@ public class CoreDatabaseFixture : DatabaseFixture
 
         Context = Scope.ServiceProvider.GetRequiredService<DatabaseContext>();
         PersistenceContext = Scope.ServiceProvider.GetRequiredService<IPersistenceContext>();
+        UnitOfWork = Scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
     }
 }
