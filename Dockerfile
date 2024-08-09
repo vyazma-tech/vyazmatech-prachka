@@ -7,7 +7,11 @@ COPY ./src ./src
 COPY ./*.sln .
 COPY ./*.props ./
 COPY ./.editorconfig .
+COPY ./nuget.config .
 
+ARG GITHUB_TOKEN
+ARG GITHUB_USERNAME
+RUN dotnet nuget update source github --username $GITHUB_USERNAME --password $GITHUB_TOKEN --store-password-in-clear-text
 RUN dotnet restore "src/Presentation/VyazmaTech.Prachka/VyazmaTech.Prachka.csproj"
 
 ARG GITHUB_TOKEN
