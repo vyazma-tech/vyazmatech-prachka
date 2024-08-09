@@ -53,6 +53,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget-
 
+      - name: configure GitHub nuget repository
+        run: |
+          dotnet nuget update source github --username xvsvg --password ${{ secrets.GH_TOKEN }} --store-password-in-clear-text
+
       - name: Install dependencies
         if: steps.cache-tests.outputs.cache-hit != 'true'
         run: dotnet restore VyazmaTech.sln

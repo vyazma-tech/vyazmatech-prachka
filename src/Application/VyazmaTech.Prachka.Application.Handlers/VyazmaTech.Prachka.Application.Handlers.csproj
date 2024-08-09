@@ -11,7 +11,7 @@
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.Authentication\VyazmaTech.Prachka.Infrastructure.Authentication.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj"/>
         <ProjectReference Include="..\..\Infrastructure\VyazmaTech.Prachka.Infrastructure.Jobs\VyazmaTech.Prachka.Infrastructure.Jobs.csproj"/>
-        <ProjectReference Include="..\..\Presentation\Hubs\VyazmaTech.Prachka.Presentation.Hubs\VyazmaTech.Prachka.Presentation.Hubs.csproj" />
+        <ProjectReference Include="..\..\Presentation\VyazmaTech.Prachka.Presentation.Hubs\VyazmaTech.Prachka.Presentation.Hubs.csproj" />
         <ProjectReference Include="..\VyazmaTech.Prachka.Application.Core\VyazmaTech.Prachka.Application.Core.csproj"/>
         <ProjectReference Include="..\VyazmaTech.Prachka.Application.DataAccess.Contracts\VyazmaTech.Prachka.Application.DataAccess.Contracts.csproj"/>
         <ProjectReference Include="..\VyazmaTech.Prachka.Application.Mapping\VyazmaTech.Prachka.Application.Mapping.csproj"/>

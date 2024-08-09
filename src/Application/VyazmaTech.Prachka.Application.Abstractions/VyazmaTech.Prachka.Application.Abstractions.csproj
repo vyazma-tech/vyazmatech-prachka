@@ -1,11 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Domain\VyazmaTech.Prachka.Domain.Common\VyazmaTech.Prachka.Domain.Common.csproj"/>
-        <ProjectReference Include="..\VyazmaTech.Prachka.Application.Dto\VyazmaTech.Prachka.Application.Dto.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <InternalsVisibleTo Include="VyazmaTech.Prachka.Application.Core"/>
     </ItemGroup>
 

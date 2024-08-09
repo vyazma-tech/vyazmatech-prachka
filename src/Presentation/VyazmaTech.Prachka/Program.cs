@@ -37,7 +37,7 @@ builder.Services
     .AddApplication(builder.Configuration)
     .AddHandlers()
     .AddMiddlewares()
-    .AddEndpoints()
+    .AddEndpoints(builder.Environment)
     .AddHubs();
 
 builder.Services.AddCors(o => o
