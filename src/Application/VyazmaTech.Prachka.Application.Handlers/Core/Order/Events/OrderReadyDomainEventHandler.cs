@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using VyazmaTech.Prachka.Application.Contracts.Common;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts;
-using VyazmaTech.Prachka.Domain.Core.Orders;
 using VyazmaTech.Prachka.Domain.Core.Orders.Events;
 using VyazmaTech.Prachka.Domain.Core.ValueObjects;
+using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 
 namespace VyazmaTech.Prachka.Application.Handlers.Core.Order.Events;
 
@@ -18,7 +18,8 @@ internal sealed class OrderReadyDomainEventHandler : IEventHandler<OrderReadyDom
     public OrderReadyDomainEventHandler(
         IPersistenceContext context,
         IUnitOfWork unitOfWork,
-        ILogger<OrderReadyDomainEventHandler> logger)
+        ILogger<OrderReadyDomainEventHandler> logger,
+        DatabaseContext dbContext)
     {
         _context = context;
         _unitOfWork = unitOfWork;
@@ -34,14 +35,11 @@ internal sealed class OrderReadyDomainEventHandler : IEventHandler<OrderReadyDom
         AssignmentDate assignmentDate = order.Queue.AssignmentDate;
         string userFullname = notification.Fullname;
 
-        IQueryable<Domain.Core.Queues.Queue> queryable = _context.Entities<Domain.Core.Orders.Order>()
-            .Include(x => x.Queue)
-            .Include(x => x.User)
-            .Select(x => x.Queue)
-            .Where(x => x.AssignmentDate.Value > assignmentDate);
-
-        IAsyncEnumerable<Domain.Core.Queues.Queue> allQueues = queryable.AsAsyncEnumerable();
-        IReadOnlyCollection<Guid> ordersToDelete = await GetOrdersToDelete(allQueues, userFullname);
+        List<Guid> ordersToDelete = await _context.Orders
+            .QueryByUserAsync(order.User.Id, cancellationToken)
+            .Where(x => x.Queue.AssignmentDate.Value > assignmentDate && x.User.Fullname == userFullname)
+            .Select(x => x.Id)
+            .ToListAsync();
 
         try
         {
@@ -56,24 +54,5 @@ internal sealed class OrderReadyDomainEventHandler : IEventHandler<OrderReadyDom
         }
 
         await transaction.CommitAsync(cancellationToken);
-    }
-
-    private async Task<IReadOnlyCollection<Guid>> GetOrdersToDelete(
-        IAsyncEnumerable<Domain.Core.Queues.Queue> allQueues,
-        string userFullname)
-    {
-        List<Guid> orders = [];
-        await foreach (Domain.Core.Queues.Queue q in allQueues.Distinct())
-        {
-            IEnumerable<Guid> newOrders = q.Orders
-                .Where(x =>
-                    x.Status == OrderStatus.New &&
-                    x.User.Fullname == userFullname)
-                .Select(x => x.Id);
-
-            orders.AddRange(newOrders);
-        }
-
-        return orders;
     }
 }

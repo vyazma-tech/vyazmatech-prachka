@@ -16,7 +16,7 @@ public sealed class OrderReadyDomainEventHandlerTests : TestBase
 
     public OrderReadyDomainEventHandlerTests(CoreDatabaseFixture fixture) : base(fixture)
     {
-        _handler = new OrderReadyDomainEventHandler(fixture.PersistenceContext, fixture.UnitOfWork, default!);
+        _handler = new OrderReadyDomainEventHandler(fixture.PersistenceContext, fixture.UnitOfWork, default!, fixture.Context);
     }
 
     [Fact]

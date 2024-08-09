@@ -107,6 +107,12 @@ internal sealed class OutboxMessagePublishingBackgroundWorker : RestartableBackg
                     message.Error = e.Message;
                     await context.SaveChangesAsync();
                 }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Unhandled exception occured with outbox message id {Id}", message.Id);
+                    message.Error = e.Message;
+                    await context.SaveChangesAsync();
+                }
             }
 
             _logger.LogInformation(
