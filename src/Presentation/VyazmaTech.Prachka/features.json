@@ -1,6 +1,12 @@
 {
   "Authorization": {
     "FeatureScopes": {
+      "Reports": {
+        "GetReports": [
+          "admin",
+          "employee"
+        ]
+      },
       "Identity": {
         "ChangeRole": [
           "admin",

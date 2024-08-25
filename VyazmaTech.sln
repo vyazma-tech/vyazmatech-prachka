@@ -77,6 +77,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Presentation.Hubs", "src\Presentation\VyazmaTech.Prachka.Presentation.Hubs\VyazmaTech.Prachka.Presentation.Hubs.csproj", "{C11D3463-B278-41E3-9329-46430278766D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VyazmaTech.Prachka.Infrastructure.DataAccess.Tests", "tests\VyazmaTech.Prachka.Infrastructure.DataAccess.Tests\VyazmaTech.Prachka.Infrastructure.DataAccess.Tests.csproj", "{FFD51600-978C-405A-89FA-E05C9DFF741A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,7 @@ Global
 		{01543956-3B90-4425-904D-8DF3E3E3BA2F} = {94A9CDDF-FE6D-4E8E-92EC-B220910695FB}
 		{7A214EA5-3A49-471E-B811-F6C408170800} = {23FCA160-3F5F-4BC0-867D-71FEB0C21271}
 		{C11D3463-B278-41E3-9329-46430278766D} = {9BAB97D1-2A60-4AF8-9DB9-3810F8364B2D}
+		{FFD51600-978C-405A-89FA-E05C9DFF741A} = {2DD18CEA-A937-4A4C-9F28-5A350E3AF182}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0F170000-5942-4D4D-86BF-EA819CA2A0E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -205,5 +208,9 @@ Global
 		{C11D3463-B278-41E3-9329-46430278766D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C11D3463-B278-41E3-9329-46430278766D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C11D3463-B278-41E3-9329-46430278766D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFD51600-978C-405A-89FA-E05C9DFF741A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFD51600-978C-405A-89FA-E05C9DFF741A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFD51600-978C-405A-89FA-E05C9DFF741A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFD51600-978C-405A-89FA-E05C9DFF741A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

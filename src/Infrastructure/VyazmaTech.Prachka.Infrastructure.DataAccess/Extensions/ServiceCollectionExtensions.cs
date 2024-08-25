@@ -45,6 +45,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IQueueRepository, QueueRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IReportRepository, ReportRepository>();
 
         return services;
     }

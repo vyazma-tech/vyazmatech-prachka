@@ -11,6 +11,8 @@ public interface IPersistenceContext
 
     IUserRepository Users { get; }
 
+    IReportRepository Reports { get; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     DbSet<TModel> Entities<TModel>()
