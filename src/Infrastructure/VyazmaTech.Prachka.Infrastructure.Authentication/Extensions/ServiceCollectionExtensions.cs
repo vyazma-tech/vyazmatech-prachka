@@ -27,6 +27,7 @@ public static class ServiceCollectionExtensions
                                                           "Identity postgres not configured.");
 
         services.AddScoped<IAuthenticationService, TelegramAuthenticationService>();
+        services.AddScoped<IBanUserService, BanUserService>();
         services.AddSingleton<IntegrationEventToOutboxMessageInterceptor>();
 
         services.AddDbContext<VyazmaTechIdentityContext>(

@@ -79,4 +79,11 @@ public static class ValidationErrors
             $"{nameof(BulkRemoveOrders)}.{nameof(OrderQuantityShouldBePositive)}",
             "Чтобы выйти из очереди укажи количество пакетов");
     }
+
+    public static class BanUser
+    {
+        public static Error InvalidUsername => Error.Validation(
+            $"{nameof(BanUser)}.{nameof(InvalidUsername)}",
+            "Юзернейм должен начинаться с '@' и не быть пустой строкой");
+    }
 }

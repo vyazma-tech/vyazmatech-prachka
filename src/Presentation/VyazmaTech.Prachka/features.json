@@ -9,6 +9,12 @@
         "GetAllRoles": [
           "admin",
           "moderator"
+        ],
+        "BanUser": [
+          "admin"
+        ],
+        "UnbanUser": [
+          "admin"
         ]
       },
       "Orders": {

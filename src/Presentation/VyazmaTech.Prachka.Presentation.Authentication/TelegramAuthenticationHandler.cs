@@ -21,6 +21,7 @@ public class TelegramAuthenticationHandler : AuthenticationHandler<TelegramAuthe
 
         IAuthenticationService authService = services.GetRequiredService<IAuthenticationService>();
         ICurrentUserManager userManager = services.GetRequiredService<ICurrentUserManager>();
+        IBanUserService banService = services.GetRequiredService<IBanUserService>();
 
         string? authorizationHeader = Request.Headers.Authorization.ToString();
 
@@ -36,13 +37,20 @@ public class TelegramAuthenticationHandler : AuthenticationHandler<TelegramAuthe
             return Task.FromResult(AuthenticateResult.NoResult());
         }
 
-        if (authService.DecodePrincipal(token) is null)
+        ClaimsPrincipal? principal = authService.DecodePrincipal(token);
+        if (principal is null)
         {
             return Task.FromResult(AuthenticateResult.Fail("Invalid token"));
         }
 
+        string username = principal.Claims.First(x => x.Type == ClaimTypes.Name).Value;
+        if (banService.IsBanned(username))
+        {
+            return Task.FromResult(AuthenticateResult.Fail("You are banned"));
+        }
+
         JwtSecurityToken? securityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
-        var principal = new ClaimsPrincipal(new ClaimsIdentity(securityToken.Claims, "Jwt"));
+        principal = new ClaimsPrincipal(new ClaimsIdentity(securityToken.Claims, "Jwt"));
 
         userManager.Authenticate(principal);
         return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(principal, Scheme.Name)));

@@ -15,4 +15,6 @@ internal sealed class VyazmaTechIdentityContext
     }
 
     public DbSet<OutboxMessage> OutboxMessages { get; init; } = null!;
+
+    public DbSet<BannedUser.BannedUser> BannedUsers { get; init; } = null!;
 }
