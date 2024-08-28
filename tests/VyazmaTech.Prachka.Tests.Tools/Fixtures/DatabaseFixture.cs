@@ -4,9 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 using Respawn;
 using Testcontainers.PostgreSql;
-using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures.Extensions;
+using VyazmaTech.Prachka.Tests.Tools.Fixtures.Extensions;
+using Xunit;
 
-namespace VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
+namespace VyazmaTech.Prachka.Tests.Tools.Fixtures;
 
 public abstract class DatabaseFixture : IAsyncLifetime
 {

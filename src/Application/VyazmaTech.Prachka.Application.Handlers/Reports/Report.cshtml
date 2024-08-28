@@ -1,0 +1,37 @@
+@using System.Globalization
+@model VyazmaTech.Prachka.Application.Dto.Reports.ReportDto
+
+@{
+    int processed = 0;
+    IFormatProvider provider = CultureInfo.CreateSpecificCulture("ru-RU");
+}
+
+<div>
+    <h1>Отчет @Model.ReportFrom.ToString("Y", provider) - @Model.ReportDue.ToString("Y", provider)</h1>
+    @for (var month = Model.ReportFrom.Month; month <= Model.ReportDue.Month; month++)
+    {
+        if (Model.Reports.Count <= processed)
+            continue;
+
+        <div class="table-container">
+            <h3>@Model.ReportFrom.AddMonths(processed).ToString("MMMM", provider)</h3>
+            <br/>
+            <table>
+                <tr>
+                    <th>ФИО</th>
+                    <th>Стоимость</th>
+                    <th>Дата создания</th>
+                </tr>
+                @foreach (var item in Model.Reports[processed].LineItems)
+                {
+                    <tr>
+                        <td>@item.Fullname</td>
+                        <td>@item.OrderPrice</td>
+                        <td>@item.CreatedAt.AddHours(3).ToString("F", provider)</td>
+                    </tr>
+                }
+            </table>
+        </div>
+        processed++;
+    }
+</div>

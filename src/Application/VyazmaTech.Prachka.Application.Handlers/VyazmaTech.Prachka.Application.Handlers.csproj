@@ -1,8 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
+    <PropertyGroup>
+        <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    </PropertyGroup>
+    
     <ItemGroup>
         <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
         <PackageReference Include="Mediator.SourceGenerator" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive"/>
+        <PackageReference Include="QuestPDF" />
+        <PackageReference Include="QuestPDF.HTML" />
+        <PackageReference Include="Razor.Templating.Core" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,9 +27,5 @@
     <ItemGroup>
         <InternalsVisibleTo Include="Presentation.Endpoints"/>
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Folder Include="Core\"/>
     </ItemGroup>
 </Project>

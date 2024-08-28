@@ -34,12 +34,13 @@ internal sealed class OrderFluentBuilder : AbstractFluentBuilder<Order>
     public OrderFluentBuilder WithCreationDate(DateOnly creationDate)
     {
         WithProperty(x => x.CreationDate, creationDate);
+        WithProperty(x => x.CreationDateTime, creationDate.ToDateTime(TimeOnly.Parse("10:00"), DateTimeKind.Utc));
         return this;
     }
 
     public OrderFluentBuilder WithPrice(double price)
     {
-        WithProperty(x => x.Price, price);
+        WithProperty(x => x.Price, Price.Create(price));
         return this;
     }
 
