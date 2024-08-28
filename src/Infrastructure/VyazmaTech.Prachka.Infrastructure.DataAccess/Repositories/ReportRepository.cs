@@ -2,8 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using VyazmaTech.Prachka.Application.DataAccess.Contracts.Repositories;
 using VyazmaTech.Prachka.Application.Dto.Reports;
 using VyazmaTech.Prachka.Domain.Core.Orders;
-using VyazmaTech.Prachka.Domain.Core.ValueObjects;
-using VyazmaTech.Prachka.Domain.Kernel;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 
 namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Repositories;

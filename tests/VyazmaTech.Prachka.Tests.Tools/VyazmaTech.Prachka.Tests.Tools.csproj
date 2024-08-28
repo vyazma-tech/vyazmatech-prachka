@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <PackageReference Include="GenFu"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Npgsql" />
         <PackageReference Include="Respawn" />
         <PackageReference Include="Testcontainers.PostgreSql" />
@@ -25,11 +26,5 @@
     <ItemGroup>
         <InternalsVisibleTo Include="VyazmaTech.Prachka.Domain.Core.Tests"/>
         <InternalsVisibleTo Include="VyazmaTech.Prachka.Application.Handlers.Tests"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="Microsoft.Extensions.DependencyInjection">
-        <HintPath>C:\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.6\Microsoft.Extensions.DependencyInjection.dll</HintPath>
-      </Reference>
     </ItemGroup>
 </Project>
