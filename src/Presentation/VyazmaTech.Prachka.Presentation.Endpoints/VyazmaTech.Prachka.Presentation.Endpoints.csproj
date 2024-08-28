@@ -15,4 +15,9 @@
         <ProjectReference Include="..\VyazmaTech.Prachka.Presentation.Authorization\VyazmaTech.Prachka.Presentation.Authorization.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Reports\V1\Models\" />
+      <Folder Include="Reports\V1\Summaries\" />
+    </ItemGroup>
+
 </Project>

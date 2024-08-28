@@ -13,11 +13,13 @@ internal sealed class PersistenceContext : IPersistenceContext, IUnitOfWork
         DatabaseContext context,
         IQueueRepository queues,
         IOrderRepository orders,
-        IUserRepository users)
+        IUserRepository users,
+        IReportRepository reports)
     {
         Queues = queues;
         Orders = orders;
         Users = users;
+        Reports = reports;
         _context = context;
     }
 
@@ -26,6 +28,8 @@ internal sealed class PersistenceContext : IPersistenceContext, IUnitOfWork
     public IOrderRepository Orders { get; }
 
     public IUserRepository Users { get; }
+
+    public IReportRepository Reports { get; }
 
     public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
     {

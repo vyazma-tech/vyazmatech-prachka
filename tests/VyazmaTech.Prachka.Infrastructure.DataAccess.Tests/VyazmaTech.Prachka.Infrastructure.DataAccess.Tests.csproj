@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector"/>
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="Moq" />
+        <PackageReference Include="xunit"/>
+        <PackageReference Include="xunit.runner.visualstudio"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Infrastructure\VyazmaTech.Prachka.Infrastructure.DataAccess\VyazmaTech.Prachka.Infrastructure.DataAccess.csproj" />
+      <ProjectReference Include="..\VyazmaTech.Prachka.Tests.Tools\VyazmaTech.Prachka.Tests.Tools.csproj" />
+    </ItemGroup>
+
+</Project>

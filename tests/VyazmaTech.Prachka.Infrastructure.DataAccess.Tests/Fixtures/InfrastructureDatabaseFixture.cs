@@ -1,26 +1,18 @@
-﻿using System.Data.Common;
+using System.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VyazmaTech.Prachka.Application.DataAccess.Contracts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Configuration;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Contexts;
 using VyazmaTech.Prachka.Infrastructure.DataAccess.Extensions;
-using VyazmaTech.Prachka.Infrastructure.Jobs.Configuration;
-using VyazmaTech.Prachka.Infrastructure.Jobs.Extensions;
 using VyazmaTech.Prachka.Tests.Tools.Fixtures;
 
-namespace VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
+namespace VyazmaTech.Prachka.Infrastructure.DataAccess.Tests.Fixtures;
 
-public class CoreDatabaseFixture : DatabaseFixture
+public class InfrastructureDatabaseFixture : DatabaseFixture
 {
     public DatabaseContext Context { get; private set; } = null!;
 
     public AsyncServiceScope Scope { get; private set; }
-
-    public IPersistenceContext PersistenceContext { get; private set; } = null!;
-
-    public IUnitOfWork UnitOfWork { get; private set; } = null!;
 
     public override async Task ResetAsync()
     {
@@ -37,7 +29,6 @@ public class CoreDatabaseFixture : DatabaseFixture
     protected override void ConfigureServices(IServiceCollection services)
     {
         ReplacePostgresConfiguration(services);
-        var configuration = ReplaceJobsConfiguration();
 
         services
             .AddDatabase(
@@ -47,8 +38,7 @@ public class CoreDatabaseFixture : DatabaseFixture
                         .LogTo(Console.WriteLine));
 
         services
-            .AddInfrastructure()
-            .AddJobs(configuration);
+            .AddInfrastructure();
     }
 
     private void ReplacePostgresConfiguration(IServiceCollection services)
@@ -59,25 +49,6 @@ public class CoreDatabaseFixture : DatabaseFixture
         };
 
         services.AddSingleton(postgresConfiguration);
-    }
-
-    private IConfiguration ReplaceJobsConfiguration()
-    {
-        var configuration = new ConfigurationBuilder();
-
-        var collection = new Dictionary<string, string?>
-        {
-            [nameof(SchedulingConfiguration.SeedingInterval)] = 10.ToString(),
-            [nameof(SchedulingConfiguration.DefaultCapacity)] = 10.ToString(),
-            [nameof(SchedulingConfiguration.WeekdayActiveFrom)] = "10:00:00",
-            [nameof(SchedulingConfiguration.WeekdayActiveUntil)] = "17:00:00",
-            [nameof(SchedulingConfiguration.DayOfActiveFrom)] = "10:00:00",
-            [nameof(SchedulingConfiguration.DayOfActiveUntil)] = "17:00:00",
-        };
-
-        configuration.AddInMemoryCollection(collection);
-
-        return configuration.Build();
     }
 
     protected override DbConnection CreateConnection()
@@ -91,7 +62,5 @@ public class CoreDatabaseFixture : DatabaseFixture
         await Scope.UseDatabase();
 
         Context = Scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-        PersistenceContext = Scope.ServiceProvider.GetRequiredService<IPersistenceContext>();
-        UnitOfWork = Scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
     }
 }

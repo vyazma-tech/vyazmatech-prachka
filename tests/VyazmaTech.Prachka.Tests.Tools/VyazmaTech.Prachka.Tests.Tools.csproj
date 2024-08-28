@@ -6,11 +6,17 @@
 
     <ItemGroup>
         <PackageReference Include="GenFu"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+        <PackageReference Include="Npgsql" />
+        <PackageReference Include="Respawn" />
+        <PackageReference Include="Testcontainers.PostgreSql" />
+        <PackageReference Include="xunit.extensibility.core" />
     </ItemGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="VyazmaTech.Prachka.Domain.Core.Tests"/>
         <InternalsVisibleTo Include="VyazmaTech.Prachka.Application.Handlers.Tests"/>
+        <InternalsVisibleTo Include="VyazmaTech.Prachka.Infrastructure.DataAccess.Tests"/>
     </ItemGroup>
 
     <ItemGroup>

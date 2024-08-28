@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Data.Common;
 
-namespace VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures.Extensions;
+namespace VyazmaTech.Prachka.Tests.Tools.Fixtures.Extensions;
 
 public static class DbConnectionExtensions
 {

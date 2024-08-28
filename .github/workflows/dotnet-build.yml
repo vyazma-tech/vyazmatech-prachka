@@ -42,7 +42,7 @@ jobs:
         uses: actions/setup-dotnet@v1
         if: steps.cache-tests.outputs.cache-hit != 'true'
         with:
-          dotnet-version: 8.0.302
+          dotnet-version: 8.0.206
 
       - name: Cache nuget packages
         uses: actions/cache@v3
