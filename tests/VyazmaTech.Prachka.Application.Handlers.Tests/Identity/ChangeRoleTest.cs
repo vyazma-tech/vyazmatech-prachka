@@ -29,7 +29,6 @@ public class ChangeRoleTest : TestBase
             Guid.Empty,
             string.Empty,
             string.Empty,
-            string.Empty,
             string.Empty);
 
         var currentUser = new AdminUser(user.Id);
@@ -54,7 +53,6 @@ public class ChangeRoleTest : TestBase
             Guid.Empty,
             string.Empty,
             string.Empty,
-            string.Empty,
             string.Empty);
 
         var currentUser = new ModeratorUser(user.Id);
@@ -77,7 +75,6 @@ public class ChangeRoleTest : TestBase
     {
         var user = new IdentityUserDto(
             Guid.Empty,
-            string.Empty,
             string.Empty,
             string.Empty,
             string.Empty);

@@ -23,6 +23,6 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<Command, Resp
         IdentityTokenModel tokens = await _service.GetUserTokensAsync(user.TelegramUsername, cancellationToken);
         string role = await _service.GetUserRoleAsync(user.TelegramUsername, cancellationToken);
 
-        return new Response(user.ToDto(role), tokens.ToDto());
+        return new Response(user.ToDto(), tokens.ToDto(role));
     }
 }

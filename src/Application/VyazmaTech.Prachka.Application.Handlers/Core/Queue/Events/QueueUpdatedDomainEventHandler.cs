@@ -24,7 +24,8 @@ internal sealed class QueueUpdatedDomainEventHandler : IEventHandler<QueueUpdate
             ActiveFrom: notification.ActivityBoundaries.ActiveFrom,
             ActiveUntil: notification.ActivityBoundaries.ActiveUntil,
             State: notification.State.ToString(),
-            Capacity: notification.Capacity);
+            MaxCapacity: notification.Capacity,
+            CurrentCapacity: notification.CurrentCapacity);
 
         await _context.Clients.All.ReceiveQueueUpdated(queueUpdatedModel);
     }

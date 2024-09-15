@@ -20,6 +20,8 @@ internal sealed class LoginQueryHandler : IQueryHandler<Query, Response>
         IdentityTokenModel tokens = await _service
             .GetUserTokensAsync(request.Username, cancellationToken);
 
-        return new Response(tokens.ToDto());
+        string role = await _service.GetUserRoleAsync(request.Username, cancellationToken);
+
+        return new Response(tokens.ToDto(role));
     }
 }

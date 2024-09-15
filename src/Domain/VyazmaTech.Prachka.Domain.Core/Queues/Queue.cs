@@ -82,6 +82,7 @@ public sealed class Queue : Entity, IAuditableEntity
             throw new DomainInvalidOperationException(DomainErrors.Queue.ContainsOrderWithId(existingOrder.Id));
 
         _orders.AddRange(orders);
+        Raise(QueueUpdatedDomainEvent.From(this));
     }
 
     public void RemoveFor(Guid userId, int count)
@@ -99,6 +100,7 @@ public sealed class Queue : Entity, IAuditableEntity
             .ToList();
 
         _orders.RemoveAll(x => ordersToRemove.Contains(x));
+        Raise(QueueUpdatedDomainEvent.From(this));
     }
 
     internal void Remove(Order order)

@@ -20,6 +20,6 @@ internal sealed class RefreshTokenQueryHandler : IQueryHandler<Query, Response>
         IdentityTokenModel tokens = await _service
             .RefreshToken(request.AccessToken, request.RefreshToken);
 
-        return new Response(tokens.ToDto());
+        return new Response(tokens.ToDto(string.Empty));
     }
 }
