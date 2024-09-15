@@ -6,4 +6,5 @@ public sealed record QueueUpdatedModel(
     TimeOnly ActiveFrom,
     TimeOnly ActiveUntil,
     string State,
-    int Capacity);
+    int CurrentCapacity,
+    int MaxCapacity);
