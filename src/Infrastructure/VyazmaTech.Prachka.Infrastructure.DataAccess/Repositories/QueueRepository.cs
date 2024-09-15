@@ -29,7 +29,12 @@ internal sealed class QueueRepository : IQueueRepository
     }
 
     public async Task<Queue?> FindByAssignmentDate(AssignmentDate assignmentDate, CancellationToken token)
-        => await _context.Queues.FirstOrDefaultAsync(x => x.AssignmentDate == assignmentDate, token);
+    {
+        return await _context.Queues
+            .Include(x => x.Orders)
+            .AsSplitQuery()
+            .FirstOrDefaultAsync(x => x.AssignmentDate == assignmentDate, token);
+    }
 
     public IAsyncEnumerable<Queue> QueryByTelegramUsername(
         TelegramUsername username,

@@ -44,7 +44,7 @@ internal class RegisterEndpoint : Endpoint<RegisterRequest, RegisterResponse>
             var registrationResponse = new RegisterResponse(
                 registerResponse.User.Id,
                 registerResponse.User.Fullname,
-                registerResponse.User.Role,
+                registerResponse.Tokens.Role,
                 registerResponse.User.TelegramUsername,
                 registerResponse.User.TelegramImageUrl,
                 registerResponse.Tokens.AccessToken,

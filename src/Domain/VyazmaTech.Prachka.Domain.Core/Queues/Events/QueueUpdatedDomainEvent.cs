@@ -18,13 +18,15 @@ public sealed class QueueUpdatedDomainEvent : IDomainEvent
         AssignmentDate assignmentDate,
         QueueActivityBoundaries activityBoundaries,
         QueueState state,
-        Capacity capacity)
+        Capacity capacity,
+        int currentCapacity)
     {
         Id = id;
         AssignmentDate = assignmentDate;
         ActivityBoundaries = activityBoundaries;
         State = state;
         Capacity = capacity;
+        CurrentCapacity = currentCapacity;
     }
 
     [JsonProperty]
@@ -42,6 +44,9 @@ public sealed class QueueUpdatedDomainEvent : IDomainEvent
     [JsonProperty]
     public Capacity Capacity { get; private set; }
 
+    [JsonProperty]
+    public int CurrentCapacity { get; private set; }
+
     public static QueueUpdatedDomainEvent From(Queue queue)
     {
         return new QueueUpdatedDomainEvent(
@@ -49,6 +54,7 @@ public sealed class QueueUpdatedDomainEvent : IDomainEvent
             queue.AssignmentDate,
             queue.ActivityBoundaries,
             queue.State,
-            queue.Capacity);
+            queue.Capacity,
+            queue.Orders.Count);
     }
 }

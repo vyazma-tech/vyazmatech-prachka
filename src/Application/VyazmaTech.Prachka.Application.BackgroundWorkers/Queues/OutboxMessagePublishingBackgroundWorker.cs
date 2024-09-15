@@ -116,7 +116,7 @@ internal sealed class OutboxMessagePublishingBackgroundWorker : RestartableBackg
             }
 
             _logger.LogInformation(
-                "Finished processing outbox messages. Processed {processedMessages} messages",
+                "Finished processing outbox messages. Processed {ProcessedMessages} messages",
                 processedMessages);
         }
     }

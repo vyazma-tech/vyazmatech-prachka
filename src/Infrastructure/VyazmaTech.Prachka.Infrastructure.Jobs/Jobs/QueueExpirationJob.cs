@@ -6,7 +6,7 @@ namespace VyazmaTech.Prachka.Infrastructure.Jobs.Jobs;
 
 internal sealed class QueueExpirationJob : QueueStateModificationJob
 {
-    public QueueExpirationJob(IPersistenceContext context, ILogger<QueueStateModificationJob> logger)
+    public QueueExpirationJob(IPersistenceContext context, ILogger<QueueExpirationJob> logger)
         : base(context, logger) { }
 
     protected override async Task ModifyStateAsync(Queue queue, CancellationToken token)
