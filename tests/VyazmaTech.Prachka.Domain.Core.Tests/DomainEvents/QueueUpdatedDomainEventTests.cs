@@ -44,5 +44,6 @@ public sealed class QueueUpdatedDomainEventTests
         domainEvent.Which.AssignmentDate.Should().Be(queue.AssignmentDate);
         domainEvent.Which.ActivityBoundaries.Should().Be(queue.ActivityBoundaries);
         domainEvent.Which.State.Should().Be(queue.State);
+        domainEvent.Which.CurrentCapacity.Should().Be(0);
     }
 }
