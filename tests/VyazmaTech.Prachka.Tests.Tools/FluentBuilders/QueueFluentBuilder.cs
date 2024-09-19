@@ -29,6 +29,12 @@ internal sealed class QueueFluentBuilder : AbstractFluentBuilder<Queue>
         return this;
     }
 
+    public QueueFluentBuilder WithCreationDate(DateOnly date)
+    {
+        WithProperty(x => x.CreationDate, date);
+        return this;
+    }
+
     public QueueFluentBuilder WithActivityBoundaries(TimeOnly startDate, TimeOnly endDate)
     {
         WithProperty(x => x.ActivityBoundaries, _activityBoundaries.WithRange(startDate, endDate));
