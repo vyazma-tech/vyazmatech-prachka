@@ -28,7 +28,7 @@ internal sealed class MyOrdersQueryHandler : IQueryHandler<Query, Response>
 
         List<MyOrdersDto> orders = await _context.Orders
             .QueryByUserAsync(userId.Value, cancellationToken)
-            .GroupBy(x => x.Queue.CreationDate)
+            .GroupBy(x => x.Queue.AssignmentDate.Value)
             .OrderByDescending(x => x.Key)
             .SelectAwait(async group =>
                 new MyOrdersDto(
