@@ -38,6 +38,12 @@ internal sealed class OrderFluentBuilder : AbstractFluentBuilder<Order>
         return this;
     }
 
+    public OrderFluentBuilder WithModification(DateTime time)
+    {
+        WithProperty(x => x.ModifiedOnUtc, time);
+        return this;
+    }
+
     public OrderFluentBuilder WithPrice(double price)
     {
         WithProperty(x => x.Price, Price.Create(price));
