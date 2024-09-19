@@ -28,7 +28,8 @@ internal sealed class MyOrdersQueryHandler : IQueryHandler<Query, Response>
 
         List<MyOrdersDto> orders = await _context.Orders
             .QueryByUserAsync(userId.Value, cancellationToken)
-            .GroupBy(x => x.CreationDate)
+            .GroupBy(x => x.Queue.AssignmentDate.Value)
+            .OrderByDescending(x => x.Key)
             .SelectAwait(async group =>
                 new MyOrdersDto(
                     Date: group.Key,
@@ -47,8 +48,9 @@ internal sealed class MyOrdersQueryHandler : IQueryHandler<Query, Response>
                     Status: order.Status.ToString(),
                     Comment: order.Comment,
                     CreationDate: order.CreationDate,
-                    ModificationDate: order.ModifiedOnUtc,
+                    ModificationDate: order.ModifiedOnUtc?.ToLocalTime(),
                     isNotifyAvailable: false))
+            .OrderByDescending(x => x.CreationDate)
             .ToListAsync(token);
     }
 }

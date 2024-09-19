@@ -1,3 +1,4 @@
+#pragma warning disable CA1506
 using FluentAssertions;
 using Moq;
 using VyazmaTech.Prachka.Application.Abstractions.Identity;
@@ -8,6 +9,7 @@ using VyazmaTech.Prachka.Application.Handlers.Core.Order.Queries;
 using VyazmaTech.Prachka.Application.Handlers.Tests.Fixtures;
 using VyazmaTech.Prachka.Domain.Common.Exceptions;
 using VyazmaTech.Prachka.Domain.Core.Orders;
+using VyazmaTech.Prachka.Domain.Core.Queues;
 using VyazmaTech.Prachka.Domain.Kernel;
 using VyazmaTech.Prachka.Tests.Tools.FluentBuilders;
 
@@ -45,6 +47,65 @@ public sealed class MyOrdersTests : TestBase
         // Assert
         var exception = await action.Should().ThrowAsync<IdentityException>();
         exception.Which.Error.Should().Be(ApplicationErrors.MyOrders.AnonymousUserCantSeeTheirOrders);
+    }
+
+    [Fact]
+    public async Task Handle_Should_GroupByQueueDate_And_SortInDescendingOrder()
+    {
+        // Arrange
+        var userId = Guid.NewGuid();
+        _currentUser.Setup(x => x.Id).Returns(userId);
+
+        var user = Create.User
+            .WithFullname("Bobby Shmurda")
+            .WithTelegramUsername("@bobster")
+            .WithId(userId)
+            .Build();
+
+        var queues = Enumerable.Range(1, 2)
+            .Select(x =>
+                Create.Queue
+                    .WithCapacity(10)
+                    .WithCreationDate(DateTime.UtcNow.AsDateOnly().AddDays(x))
+                    .WithAssignmentDate(DateTime.UtcNow.AsDateOnly().AddDays(x))
+                    .WithActivityBoundaries(TimeOnly.MinValue, TimeOnly.MaxValue)
+                    .WithState(QueueState.Active)
+                    .Build())
+            .ToList();
+
+        var firstDayOrders = Enumerable.Range(1, 10)
+            .Select(x =>
+                Create.Order
+                    .WithUser(user)
+                    .WithCreationDate(DateTime.UtcNow.AsDateOnly().AddDays(x))
+                    .WithModification(DateTime.UtcNow)
+                    .Build());
+
+        var secondDayOrders = Enumerable.Range(1, 10)
+            .Select(x =>
+                Create.Order
+                    .WithUser(user)
+                    .WithCreationDate(DateTime.UtcNow.AsDateOnly().AddDays(x))
+                    .WithModification(DateTime.UtcNow)
+                    .Build());
+
+        queues.First().BulkInsert([..firstDayOrders]);
+        queues.Last().BulkInsert([..secondDayOrders]);
+        PersistenceContext.Queues.InsertRange(queues);
+        await PersistenceContext.SaveChangesAsync(default);
+
+        // Act
+        var query = default(MyOrders.Query);
+        var response = await _handler.Handle(query, default);
+
+        // Assert
+        response.History.Should()
+            .HaveCount(2)
+            .And.Subject.Should()
+            .AllSatisfy(queue =>
+                queue.Orders.Should()
+                    .BeInDescendingOrder(x =>
+                        x.CreationDate));
     }
 
     [Fact]
