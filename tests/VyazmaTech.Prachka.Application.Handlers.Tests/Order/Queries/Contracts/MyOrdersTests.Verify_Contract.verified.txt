@@ -1,7 +1,6 @@
 ﻿{
   History: [
     {
-      Date: Date_1,
       Orders: [
         {
           Status: New,
@@ -52,12 +51,7 @@
           Status: New,
           CreationDate: Date_1,
           isNotifyAvailable: false
-        }
-      ]
-    },
-    {
-      Date: Date_2,
-      Orders: [
+        },
         {
           Status: New,
           CreationDate: Date_2,
