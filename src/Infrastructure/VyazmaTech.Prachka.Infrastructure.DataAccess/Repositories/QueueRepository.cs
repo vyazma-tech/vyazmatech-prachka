@@ -73,9 +73,9 @@ internal sealed class QueueRepository : IQueueRepository
         IQueryable<Queue> queryable = _context.Queues.Include(x => x.Orders);
 
         queryable = queryable.Where(x => x.AssignmentDate.Value >= specification.SearchFrom)
+            .OrderBy(x => x.AssignmentDate.Value)
             .Skip(specification.Page * specification.Limit)
-            .Take(specification.Limit)
-            .OrderByDescending(x => x.AssignmentDate.Value);
+            .Take(specification.Limit);
 
         return queryable;
     }
