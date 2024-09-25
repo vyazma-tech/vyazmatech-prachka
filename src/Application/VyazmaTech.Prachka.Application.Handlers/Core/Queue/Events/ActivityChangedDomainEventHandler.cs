@@ -29,9 +29,11 @@ internal sealed class ActivityChangedDomainEventHandler : IEventHandler<Activity
 
     public async ValueTask Handle(ActivityChangedDomainEvent notification, CancellationToken cancellationToken)
     {
-        Domain.Core.Queues.Queue queue = await _context.Queues.FirstAsync(
-            x => x.Id == notification.QueueId,
-            cancellationToken);
+        Domain.Core.Queues.Queue queue = await _context.Queues
+            .Include(x => x.Orders)
+            .FirstAsync(
+                x => x.Id == notification.QueueId,
+                cancellationToken);
 
         ChangeState(queue);
 
